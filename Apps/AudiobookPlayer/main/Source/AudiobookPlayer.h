@@ -43,6 +43,9 @@ enum class PlaybackReason : uint8_t {
     Shutdown,
     OpenFailed,
     Seeked,
+    // Output write failed (e.g. codec rebind on headset attach): park paused
+    // on the same track instead of autoplay-advancing.
+    WriteFailed,
 };
 
 struct Chapter {
@@ -89,6 +92,9 @@ struct PlaybackState {
     // position: holding the output stream open without writing repeats the
     // final DMA buffer on this hardware.
     std::atomic<bool> paused{false};
+    // Set by the playback thread after an output error parked playback; the
+    // poll timer persists the sidecar at the interruption point.
+    std::atomic<bool> pendingErrorSave{false};
 
     // Snapshot so playlist iteration never holds the mutex through writes.
     std::mutex playlistMutex;

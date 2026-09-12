@@ -219,8 +219,25 @@ static PlaybackReason runFileOnce(PlaybackState* state, const std::string& path,
                      !state->skipPrev.load() &&
                      state->seekRequestMs.load() < 0);
             if (werr != ERROR_NONE) {
-                if (werr != ERROR_TIMEOUT) {
-                    LOG_E(TAG, "audio_stream_write failed: %d", werr);
+                // A stalled or rejected write (e.g. the codec rebinds when a
+                // headset is attached) must not read as end-of-file: autoplay
+                // would skip the track. Attribute the exit to whichever
+                // control requested it, else a genuine output error.
+                if (state->shutdown.load()) {
+                    reason = PlaybackReason::Shutdown;
+                } else if (state->stopRequested.load()) {
+                    reason = PlaybackReason::Stopped;
+                } else if (state->skipNext.exchange(false)) {
+                    reason = PlaybackReason::SkippedNext;
+                } else if (state->skipPrev.exchange(false)) {
+                    reason = PlaybackReason::SkippedPrev;
+                } else if (state->seekRequestMs.load() >= 0) {
+                    reason = PlaybackReason::Seeked;
+                } else {
+                    if (werr != ERROR_TIMEOUT) {
+                        LOG_E(TAG, "audio_stream_write failed: %d", werr);
+                    }
+                    reason = PlaybackReason::WriteFailed;
                 }
                 break;
             }
@@ -278,7 +295,8 @@ static void runPlaylist(PlaybackState* state) {
         PlaybackReason reason = runFileOnce(state, path, startBytes, startMs);
         startBytes = 0;
         startMs = 0;
-        if (reason != PlaybackReason::Stopped) {
+        if (reason != PlaybackReason::Stopped &&
+            reason != PlaybackReason::WriteFailed) {
             state->paused.store(false);
         }
 
@@ -314,6 +332,13 @@ static void runPlaylist(PlaybackState* state) {
                     return;
                 }
                 break;
+            case PlaybackReason::WriteFailed:
+                // Park paused on the same track at the interruption point;
+                // Play resumes there once the output is available again.
+                state->stopRequested.store(false);
+                state->paused.store(true);
+                state->pendingErrorSave.store(true);
+                return;
             case PlaybackReason::Seeked: {
                 // Restart the SAME track: translate ms to bytes via the
                 // learned bytes-per-ms.

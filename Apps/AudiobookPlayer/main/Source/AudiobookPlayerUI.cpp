@@ -66,6 +66,14 @@ static void pollTimerCb(lv_timer_t* timer) {
     if (tactility_audio_consume_play_pause_request()) {
         handlePlayPauseToggle(self);
     }
+    // The playback thread parked after an output error (e.g. codec rebind on
+    // headset attach): persist the interruption point and tell the user.
+    if (self->playback.pendingErrorSave.exchange(false)) {
+        maybeSaveSidecarNow(self);
+        if (self->statusLabel != nullptr) {
+            lv_label_set_text(self->statusLabel, "Output changed - paused");
+        }
+    }
     refreshFromPlaybackState(self);
     updateProgressUi(self);
     // Track external volume changes (e.g. headset buttons) on the slider.

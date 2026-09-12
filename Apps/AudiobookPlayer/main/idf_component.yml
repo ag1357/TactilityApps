@@ -1,0 +1,5 @@
+dependencies:
+  # Header-only at link time: the app ELF keeps these undefined and the
+  # firmware resolves them from kernel module symbol tables at load.
+  espressif/esp_audio_codec: "2.4.0"
+  espressif/cjson: "^1.7"

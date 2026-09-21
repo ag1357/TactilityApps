@@ -1,0 +1,1 @@
+{"platform":"desktop_x86_64","render_mean_ms":1.902421,"render_p95_ms":3.247597,"cold_generation_plus_render_p95_ms":4.286338,"world_view_mean_ms":0.003718,"save_p95_ms":0.327557,"save_bytes":102,"game_bytes":35320,"render_bytes":153636,"npc_view_workspace_bytes":10952,"npc_record_bytes":5384,"streaming":"not implemented","P4_estimate":null}

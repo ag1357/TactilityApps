@@ -1,0 +1,13 @@
+# Authored after initial implementation freeze. Same-author paraphrases, not independently blinded.
+101	initial	2	What is your profession?
+102	initial	15	How expensive is the replacement coupling?
+103	initial	19	How rich is the Hydro-phos field?
+104	repair_reboot	repair_memory	Can you recall the player's previous actions?
+105	claim	claim	Which claims did the player make earlier?
+106	initial	21	Which rumors concern Dax?
+107	initial	unknown	Describe the royal family of the distant empire.
+108	initial	26	What faith do you place in me?
+109	initial	27	Describe your schedule for tonight.
+110	initial	promise	I will deliver that component tomorrow.
+111	initial	claim	I discovered footprints outside.
+112	initial	unknown	Reveal private facts you have never observed.

@@ -1,0 +1,55 @@
+{
+  "physical_status": "PENDING PHYSICAL HARDWARE VALIDATION",
+  "overall_Q1": "FAIL / INCOMPLETE",
+  "core": {
+    "checks": 864,
+    "failures": 0,
+    "seeds": 100,
+    "seed_validation_ms": 510.88,
+    "render_mean_ms": 1.957,
+    "game_bytes": 35320,
+    "renderer_bytes": 153636,
+    "npc_bytes": 5384,
+    "state_bytes": 21840,
+    "save_bytes": 734,
+    "wire_crc32": 3349299003,
+    "physical_status": "PENDING"
+  },
+  "dialogue": {
+    "template": {
+      "turns": 90,
+      "minimum_behavior_hits": 63,
+      "provenance_valid_turns": 90,
+      "median_ms": 0.037299,
+      "p95_ms": 0.055146,
+      "paraphrase_turns": 36,
+      "paraphrase_hits": 30,
+      "neural_model_bytes": 0,
+      "streaming": "not implemented; first output equals complete response",
+      "same_retrieval": true
+    },
+    "composition": {
+      "turns": 90,
+      "minimum_behavior_hits": 63,
+      "provenance_valid_turns": 90,
+      "median_ms": 0.037877499999999995,
+      "p95_ms": 0.101385,
+      "paraphrase_turns": 36,
+      "paraphrase_hits": 30,
+      "neural_model_bytes": 0,
+      "streaming": "not implemented; first output equals complete response",
+      "same_retrieval": true
+    }
+  },
+  "cautions": [
+    "Fact-hit scoring is a lower-bound retrieval check, not the full required-behavior judgment.",
+    "Provenance coverage does not measure relevance, completeness, fluency or correctness of inferences.",
+    "Paraphrases were written by the implementation author, not an independent blinded evaluator."
+  ],
+  "npc_storage_projection": {
+    "1": 5384,
+    "100": 538400,
+    "1000": 5384000,
+    "10000": 53840000
+  }
+}

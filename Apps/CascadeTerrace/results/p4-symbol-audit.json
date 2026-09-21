@@ -1,0 +1,5 @@
+{
+  "import_count": 80,
+  "missing_from_source_exports": [],
+  "scope": "source table membership; runtime modules and firmware version still require validation"
+}

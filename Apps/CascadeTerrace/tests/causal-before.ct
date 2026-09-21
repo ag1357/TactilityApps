@@ -1,0 +1,39 @@
+# All walk commands generate movement input, not teleports.
+kyra
+say What is your occupation?
+snapshot results/kyra-dialogue.ppm
+say I noticed lights along the ridge.
+say I will bring a coupling tomorrow.
+leave
+# Ambient accumulation + condensing are real gameplay operations.
+wait 200
+condense 9
+wait 200
+condense 9
+wait 200
+condense 9
+wait 200
+condense 9
+wait 200
+condense 9
+wait 200
+condense 9
+wait 200
+condense 9
+walk 22000 -75000
+site 1
+site 2
+buy coupling
+snapshot results/market.ppm
+site 1
+walk 22000 -75000
+site 0
+morning
+kyra
+leave
+walk 22000 -96500
+repair
+say What do you remember about the player?
+snapshot results/repaired.ppm
+save
+quit

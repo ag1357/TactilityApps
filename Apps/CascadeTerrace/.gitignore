@@ -1,0 +1,15 @@
+build/
+*.save.*
+*.tmp
+results/*.ppm
+results/*.mp4
+results/*.png
+.tactility/
+
+build-p4/
+sdkconfig
+sdkconfig.old
+dependencies.lock
+managed_components/
+results/*.zip
+build-p4*/

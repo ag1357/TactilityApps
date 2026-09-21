@@ -1,0 +1,2 @@
+   text	   data	    bss	    dec	    hex	filename
+  64033	   3272	 278136	 345441	  54561	build/cascade

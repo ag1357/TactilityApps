@@ -1,0 +1,16 @@
+# This file runs in a fresh OS process with --load.
+kyra
+say Can you recall the player's previous actions?
+snapshot results/reloaded-memory.ppm
+say What is known about the distant empire?
+say Which rumors have you heard about Dax?
+snapshot results/rumor.ppm
+leave
+walk 22000 -75000
+walk -22000 -75000
+snapshot results/valley.ppm
+new 73
+walk 22000 -75000
+walk -22000 -75000
+snapshot results/alternate-seed.ppm
+quit

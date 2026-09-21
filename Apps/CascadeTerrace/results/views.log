@@ -1,0 +1,11 @@
+COMMAND walk 22000 -75000: OK
+COMMAND walk -22000 -75000: OK
+COMMAND look 160: OK
+COMMAND snapshot results/station-waterfall.ppm: OK
+COMMAND look 100: OK
+COMMAND snapshot results/terraces.ppm: OK
+COMMAND new 73: OK
+COMMAND walk 22000 -75000: OK
+COMMAND walk -22000 -75000: OK
+COMMAND look 160: OK
+COMMAND snapshot results/alternate-seed.ppm: OK

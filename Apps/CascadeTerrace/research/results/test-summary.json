@@ -1,0 +1,545 @@
+{
+  "oracle": {
+    "n": 1344,
+    "accuracy": {
+      "entity": 1.0,
+      "relation": 1.0,
+      "op": 1.0,
+      "epistemic": 1.0,
+      "act": 1.0,
+      "negation": 1.0,
+      "hypothetical": 1.0,
+      "second_entity": 1.0,
+      "intervention": 1.0,
+      "second_relation": 1.0,
+      "frame": 1.0,
+      "argument": 1.0,
+      "answer": 1.0,
+      "provenance": 1.0,
+      "correct_abstention": 1.0
+    },
+    "counts": {
+      "unsupported_propositions": 0,
+      "emitted_propositions": 1421,
+      "truth_leaks": 0,
+      "realizer_omissions": 0,
+      "retrieval_gold": 1421,
+      "retrieval_hit": 1421,
+      "retrieval_selected": 1421,
+      "retrieval_relevant": 1421,
+      "entity": 1344,
+      "relation": 1344,
+      "op": 1344,
+      "epistemic": 1344,
+      "act": 1344,
+      "negation": 1344,
+      "hypothetical": 1344,
+      "second_entity": 1344,
+      "intervention": 1344,
+      "second_relation": 1344,
+      "frame": 1344,
+      "argument": 1344,
+      "answer": 1344,
+      "provenance": 1344,
+      "correct_abstention": 1344
+    },
+    "classes": {
+      "direct_fact": {
+        "correct": 32,
+        "n": 32
+      },
+      "relationship": {
+        "correct": 32,
+        "n": 32
+      },
+      "source": {
+        "correct": 32,
+        "n": 32
+      },
+      "belief": {
+        "correct": 32,
+        "n": 32
+      },
+      "rumor": {
+        "correct": 32,
+        "n": 32
+      },
+      "unknown": {
+        "correct": 32,
+        "n": 32
+      },
+      "out_of_world": {
+        "correct": 32,
+        "n": 32
+      },
+      "pronoun": {
+        "correct": 32,
+        "n": 32
+      },
+      "multi_turn_referent": {
+        "correct": 32,
+        "n": 32
+      },
+      "multiple_relation": {
+        "correct": 32,
+        "n": 32
+      },
+      "temporal": {
+        "correct": 32,
+        "n": 32
+      },
+      "negation": {
+        "correct": 32,
+        "n": 32
+      },
+      "contradiction": {
+        "correct": 32,
+        "n": 32
+      },
+      "corroboration": {
+        "correct": 32,
+        "n": 32
+      },
+      "causal": {
+        "correct": 32,
+        "n": 32
+      },
+      "consequence": {
+        "correct": 32,
+        "n": 32
+      },
+      "counterfactual": {
+        "correct": 32,
+        "n": 32
+      },
+      "player_claim": {
+        "correct": 32,
+        "n": 32
+      },
+      "observed_evidence": {
+        "correct": 32,
+        "n": 32
+      },
+      "promise": {
+        "correct": 32,
+        "n": 32
+      },
+      "broken_promise": {
+        "correct": 32,
+        "n": 32
+      },
+      "relationship_change": {
+        "correct": 32,
+        "n": 32
+      },
+      "state_change": {
+        "correct": 32,
+        "n": 32
+      },
+      "post_save_recall": {
+        "correct": 32,
+        "n": 32
+      },
+      "ambiguity": {
+        "correct": 32,
+        "n": 32
+      },
+      "authority_escalation": {
+        "correct": 32,
+        "n": 32
+      },
+      "belief_update": {
+        "correct": 32,
+        "n": 32
+      },
+      "source_followup": {
+        "correct": 32,
+        "n": 32
+      },
+      "assertion": {
+        "correct": 32,
+        "n": 32
+      },
+      "commitment": {
+        "correct": 32,
+        "n": 32
+      },
+      "random_composition": {
+        "correct": 384,
+        "n": 384
+      }
+    },
+    "latency_ms": {
+      "mean": 0.003532217261904762,
+      "p95": 0.004688
+    },
+    "errors": {
+      "none": 1344
+    },
+    "candidate_completeness": 1.0,
+    "retrieval_relevance": 1.0
+  },
+  "B": {
+    "n": 1344,
+    "accuracy": {
+      "entity": 1.0,
+      "relation": 0.9761904761904762,
+      "op": 0.8318452380952381,
+      "epistemic": 0.9761904761904762,
+      "act": 1.0,
+      "negation": 1.0,
+      "hypothetical": 1.0,
+      "second_entity": 1.0,
+      "intervention": 1.0,
+      "second_relation": 0.9761904761904762,
+      "frame": 0.9523809523809523,
+      "argument": 1.0,
+      "answer": 0.9761904761904762,
+      "provenance": 1.0,
+      "correct_abstention": 0.9761904761904762
+    },
+    "counts": {
+      "unsupported_propositions": 0,
+      "emitted_propositions": 1389,
+      "truth_leaks": 0,
+      "realizer_omissions": 0,
+      "retrieval_gold": 1421,
+      "retrieval_hit": 1389,
+      "retrieval_selected": 1389,
+      "retrieval_relevant": 1389,
+      "entity": 1344,
+      "relation": 1312,
+      "op": 1118,
+      "epistemic": 1312,
+      "act": 1344,
+      "negation": 1344,
+      "hypothetical": 1344,
+      "second_entity": 1344,
+      "intervention": 1344,
+      "second_relation": 1312,
+      "frame": 1280,
+      "argument": 1344,
+      "answer": 1312,
+      "provenance": 1344,
+      "correct_abstention": 1312
+    },
+    "classes": {
+      "direct_fact": {
+        "correct": 32,
+        "n": 32
+      },
+      "relationship": {
+        "correct": 32,
+        "n": 32
+      },
+      "source": {
+        "correct": 32,
+        "n": 32
+      },
+      "belief": {
+        "correct": 32,
+        "n": 32
+      },
+      "rumor": {
+        "correct": 0,
+        "n": 32
+      },
+      "unknown": {
+        "correct": 32,
+        "n": 32
+      },
+      "out_of_world": {
+        "correct": 32,
+        "n": 32
+      },
+      "pronoun": {
+        "correct": 32,
+        "n": 32
+      },
+      "multi_turn_referent": {
+        "correct": 32,
+        "n": 32
+      },
+      "multiple_relation": {
+        "correct": 32,
+        "n": 32
+      },
+      "temporal": {
+        "correct": 32,
+        "n": 32
+      },
+      "negation": {
+        "correct": 32,
+        "n": 32
+      },
+      "contradiction": {
+        "correct": 32,
+        "n": 32
+      },
+      "corroboration": {
+        "correct": 32,
+        "n": 32
+      },
+      "causal": {
+        "correct": 32,
+        "n": 32
+      },
+      "consequence": {
+        "correct": 32,
+        "n": 32
+      },
+      "counterfactual": {
+        "correct": 32,
+        "n": 32
+      },
+      "player_claim": {
+        "correct": 32,
+        "n": 32
+      },
+      "observed_evidence": {
+        "correct": 32,
+        "n": 32
+      },
+      "promise": {
+        "correct": 32,
+        "n": 32
+      },
+      "broken_promise": {
+        "correct": 32,
+        "n": 32
+      },
+      "relationship_change": {
+        "correct": 32,
+        "n": 32
+      },
+      "state_change": {
+        "correct": 32,
+        "n": 32
+      },
+      "post_save_recall": {
+        "correct": 32,
+        "n": 32
+      },
+      "ambiguity": {
+        "correct": 32,
+        "n": 32
+      },
+      "authority_escalation": {
+        "correct": 32,
+        "n": 32
+      },
+      "belief_update": {
+        "correct": 32,
+        "n": 32
+      },
+      "source_followup": {
+        "correct": 32,
+        "n": 32
+      },
+      "assertion": {
+        "correct": 32,
+        "n": 32
+      },
+      "commitment": {
+        "correct": 32,
+        "n": 32
+      },
+      "random_composition": {
+        "correct": 384,
+        "n": 384
+      }
+    },
+    "latency_ms": {
+      "mean": 0.009797733630952382,
+      "p95": 0.017153
+    },
+    "errors": {
+      "none": 1312,
+      "semantic_parse": 32
+    },
+    "candidate_completeness": 0.9774806474313863,
+    "retrieval_relevance": 1.0
+  },
+  "C": {
+    "n": 1344,
+    "accuracy": {
+      "entity": 1.0,
+      "relation": 0.9285714285714286,
+      "op": 0.8809523809523809,
+      "epistemic": 0.9761904761904762,
+      "act": 1.0,
+      "negation": 1.0,
+      "hypothetical": 1.0,
+      "second_entity": 1.0,
+      "intervention": 1.0,
+      "second_relation": 0.9761904761904762,
+      "frame": 0.9047619047619048,
+      "argument": 1.0,
+      "answer": 0.8809523809523809,
+      "provenance": 1.0,
+      "correct_abstention": 0.9047619047619048
+    },
+    "counts": {
+      "unsupported_propositions": 0,
+      "emitted_propositions": 1133,
+      "truth_leaks": 0,
+      "realizer_omissions": 0,
+      "retrieval_gold": 1421,
+      "retrieval_hit": 1133,
+      "retrieval_selected": 1133,
+      "retrieval_relevant": 1133,
+      "entity": 1344,
+      "relation": 1248,
+      "op": 1184,
+      "epistemic": 1312,
+      "act": 1344,
+      "negation": 1344,
+      "hypothetical": 1344,
+      "second_entity": 1344,
+      "intervention": 1344,
+      "second_relation": 1312,
+      "frame": 1216,
+      "argument": 1344,
+      "answer": 1184,
+      "provenance": 1344,
+      "correct_abstention": 1216
+    },
+    "classes": {
+      "direct_fact": {
+        "correct": 0,
+        "n": 32
+      },
+      "relationship": {
+        "correct": 32,
+        "n": 32
+      },
+      "source": {
+        "correct": 32,
+        "n": 32
+      },
+      "belief": {
+        "correct": 32,
+        "n": 32
+      },
+      "rumor": {
+        "correct": 0,
+        "n": 32
+      },
+      "unknown": {
+        "correct": 32,
+        "n": 32
+      },
+      "out_of_world": {
+        "correct": 32,
+        "n": 32
+      },
+      "pronoun": {
+        "correct": 32,
+        "n": 32
+      },
+      "multi_turn_referent": {
+        "correct": 32,
+        "n": 32
+      },
+      "multiple_relation": {
+        "correct": 0,
+        "n": 32
+      },
+      "temporal": {
+        "correct": 32,
+        "n": 32
+      },
+      "negation": {
+        "correct": 32,
+        "n": 32
+      },
+      "contradiction": {
+        "correct": 0,
+        "n": 32
+      },
+      "corroboration": {
+        "correct": 32,
+        "n": 32
+      },
+      "causal": {
+        "correct": 32,
+        "n": 32
+      },
+      "consequence": {
+        "correct": 0,
+        "n": 32
+      },
+      "counterfactual": {
+        "correct": 32,
+        "n": 32
+      },
+      "player_claim": {
+        "correct": 32,
+        "n": 32
+      },
+      "observed_evidence": {
+        "correct": 32,
+        "n": 32
+      },
+      "promise": {
+        "correct": 32,
+        "n": 32
+      },
+      "broken_promise": {
+        "correct": 32,
+        "n": 32
+      },
+      "relationship_change": {
+        "correct": 32,
+        "n": 32
+      },
+      "state_change": {
+        "correct": 32,
+        "n": 32
+      },
+      "post_save_recall": {
+        "correct": 32,
+        "n": 32
+      },
+      "ambiguity": {
+        "correct": 32,
+        "n": 32
+      },
+      "authority_escalation": {
+        "correct": 32,
+        "n": 32
+      },
+      "belief_update": {
+        "correct": 32,
+        "n": 32
+      },
+      "source_followup": {
+        "correct": 32,
+        "n": 32
+      },
+      "assertion": {
+        "correct": 32,
+        "n": 32
+      },
+      "commitment": {
+        "correct": 32,
+        "n": 32
+      },
+      "random_composition": {
+        "correct": 384,
+        "n": 384
+      }
+    },
+    "latency_ms": {
+      "mean": 0.023305744047619047,
+      "p95": 0.028507
+    },
+    "errors": {
+      "semantic_parse": 128,
+      "none": 1184,
+      "operator_policy": 32
+    },
+    "candidate_completeness": 0.7973258268824771,
+    "retrieval_relevance": 1.0
+  }
+}

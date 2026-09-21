@@ -1,5 +1,6 @@
 /* Tactility 0.8.0-dev native external application; no separate game runtime. */
 #include "game.h"
+#include "semantic.h"
 #include "render.h"
 #include <app/event.h>
 #include <app/paths.h>
@@ -181,6 +182,9 @@ int main(int argc, char** argv) {
     int qualify = argc > 1 && !strcmp(argv[1], "--qualify");
     for (int i = 1; i < argc; i++)
         if (!strcmp(argv[i], "--experimental-composition")) experimental = 1;
+        else if (!strcmp(argv[i], "--patched-cognition")) experimental = 2;
+        else if (!strcmp(argv[i], "--general-cognition")) experimental = 3;
+        else if (!strcmp(argv[i], "--learned-cognition")) experimental = 4;
     char dir[256], asset[256];
     if (app_paths_get_user_data_directory("ag1357.cascadeterrace", dir, sizeof(dir)) == ERROR_NONE) mkdir(dir, 0755);
     app_paths_get_user_data_path("ag1357.cascadeterrace", "cascade.save", save_base, sizeof(save_base));
@@ -190,6 +194,10 @@ int main(int argc, char** argv) {
             qualify = 1;
             fclose(flag);
         }
+    }
+    if (app_paths_get_assets_path("ag1357.cascadeterrace", "cognition.mode", asset, sizeof(asset)) == ERROR_NONE) {
+        FILE* mode_file=fopen(asset,"rb");
+        if(mode_file){int m=fgetc(mode_file);if(m>='0'&&m<='4')experimental=m-'0';fclose(mode_file);}
     }
     if (app_paths_get_user_data_path("ag1357.cascadeterrace", "qualification.jsonl", asset, sizeof(asset)) == ERROR_NONE) telemetry = fopen(asset, "ab");
     if (app_paths_get_assets_path("ag1357.cascadeterrace", "kyra.mesh", asset, sizeof(asset)) == ERROR_NONE) render_load_assets(asset);
@@ -211,6 +219,15 @@ int main(int argc, char** argv) {
     memory_print_stats();
     emit("{\"type\":\"heap\",\"internal_free\":%u,\"psram_free\":%u}\n", (unsigned)heap_caps_get_free_size(MALLOC_CAP_INTERNAL), (unsigned)heap_caps_get_free_size(MALLOC_CAP_SPIRAM));
     if (qualify) {
+        emit("{\"type\":\"cognition_config\",\"mode\":%d,\"model_bytes\":101432,\"view_bytes\":%zu,\"result_bytes\":%zu,\"context_bytes\":%zu}\n",experimental,sizeof(CgView),sizeof(CgResult),sizeof(CgContext));
+        /* Language probes exercise actual local mode with the live authorized view.
+           They carry no expected answers and do not alter the player's game. */
+        const char* probes[]={"What is your occupation?","What is the source of that?","What is Oren occupation?","What is their relationship?","What is the weather on Mars?"};
+        Conversation probe_context={0}; Reply probe_reply;
+        for(int i=0;i<5;i++){
+            t=micros();dialogue(g,&probe_context,probes[i],experimental,&probe_reply);
+            emit("{\"type\":\"cognition_sample\",\"mode\":%d,\"probe\":%d,\"us\":%llu,\"count\":%u,\"abstained\":%u,\"text_crc32\":%u}\n",experimental,i,(unsigned long long)(micros()-t),probe_reply.count,probe_reply.abstained,crc32(probe_reply.text,strlen(probe_reply.text)));
+        }
         for (int i = 0; i < 120; i++) {
             t = micros();
             render(r, g);

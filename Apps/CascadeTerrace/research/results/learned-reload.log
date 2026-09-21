@@ -1,0 +1,7 @@
+COMMAND kyra: OK
+DIALOGUE 0.0533 ms | Recall player event.
+[memory] player: event = station intake. [memory] player: other = replacement coupling. 
+COMMAND say Recall player event.: OK
+DIALOGUE 0.0390 ms | Remember player event.
+[memory] player: event = station intake. [memory] player: other = replacement coupling. 
+COMMAND say Remember player event.: OK

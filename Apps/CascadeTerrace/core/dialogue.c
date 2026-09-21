@@ -237,6 +237,8 @@ static void realize(const Fact* f, int comp, char* out, size_t cap) {
     }
 }
 void dialogue(Game* g, Conversation* c, const char* input, int comp, Reply* out) {
+    if (comp == 2) { cognition_dialogue(g,c,input,out); return; }
+    if (comp == 3 || comp == 4) { general_dialogue(g,c,input,comp,out); return; }
     memset(out, 0, sizeof(*out));
     Tokens raw, q;
     tokenize(input, &raw, 0);

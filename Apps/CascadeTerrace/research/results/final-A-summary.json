@@ -1,0 +1,7 @@
+{
+  "n": 1344,
+  "exact_evidence_match": 0.26264880952380953,
+  "provenance_ids_valid": 1.0,
+  "mean_ms": 0.018361404761904763,
+  "caveat": "Citation matching is an upper bound, NOT semantic proposition correctness. Private patch frame/operator interfaces are not equivalent to the general schema. No per-stage accuracy fabricated."
+}

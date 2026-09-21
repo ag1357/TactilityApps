@@ -210,6 +210,12 @@ int main(int argc, char** argv) {
             load = 1;
         else if (!strcmp(argv[i], "--baseline"))
             comp = 0;
+        else if (!strcmp(argv[i], "--patched-cognition"))
+            comp = 2;
+        else if (!strcmp(argv[i], "--general-cognition"))
+            comp = 3;
+        else if (!strcmp(argv[i], "--learned-cognition"))
+            comp = 4;
         else if (!strcmp(argv[i], "--experimental-composition"))
             comp = 1;
         else if (i + 1 < argc) {

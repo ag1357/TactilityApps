@@ -9,6 +9,9 @@ if b[:4]!=b'\x7fELF' or b[4]!=1 or struct.unpack_from('<H',b,18)[0]!=243:raise S
 if len(b)>4*1024*1024:raise SystemExit('Binary exceeds 4 MiB')
 out=root/'build/ag1357.cascadeterrace.app';out.parent.mkdir(exist_ok=True)
 with tarfile.open(out,'w',format=tarfile.USTAR_FORMAT) as tar:
+ if '--mode' in sys.argv:
+  mode=int(sys.argv[sys.argv.index('--mode')+1]);assert 0<=mode<=4
+  marker=tarfile.TarInfo('assets/cognition.mode');marker.size=1;marker.mtime=0;tar.addfile(marker,io.BytesIO(str(mode).encode()))
  if '--qualification' in sys.argv:
   marker=tarfile.TarInfo('assets/qualification.flag');marker.size=1;tar.addfile(marker,io.BytesIO(b'1'))
  for src,dst in [(root/'manifest.properties','manifest.properties'),(elf,'bin/esp32p4/cascadeterrace.elf')]+[(p,'assets/'+p.name) for p in sorted((root/'assets').iterdir()) if p.is_file()]:

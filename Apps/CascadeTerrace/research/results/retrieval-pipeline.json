@@ -1,0 +1,855 @@
+{
+  "purpose": "actual common C downstream audit for controlled retrieval benchmark",
+  "checks": 36,
+  "identical_method_outputs": true,
+  "all_provenance_valid": true,
+  "timing_scope": "No performance claims; primary retrieval timings remain retrieval.json",
+  "rows": [
+    {
+      "records": 100,
+      "authorized_entity": 1,
+      "method": "linear_stream",
+      "materialized_bytes": 2560,
+      "working_view_bytes": 10384,
+      "result": [
+        [
+          3,
+          19
+        ],
+        [
+          0,
+          0
+        ],
+        [
+          1,
+          1
+        ],
+        "[knowledge] entity 0: relationship = 0. [knowledge] entity 0: other = 0. "
+      ],
+      "provenance_valid": true
+    },
+    {
+      "records": 100,
+      "authorized_entity": 1,
+      "method": "id_index",
+      "materialized_bytes": 2560,
+      "working_view_bytes": 10384,
+      "result": [
+        [
+          3,
+          19
+        ],
+        [
+          0,
+          0
+        ],
+        [
+          1,
+          1
+        ],
+        "[knowledge] entity 0: relationship = 0. [knowledge] entity 0: other = 0. "
+      ],
+      "provenance_valid": true
+    },
+    {
+      "records": 100,
+      "authorized_entity": 1,
+      "method": "aethersparse_occurrence_plane",
+      "materialized_bytes": 2560,
+      "working_view_bytes": 10384,
+      "result": [
+        [
+          3,
+          19
+        ],
+        [
+          0,
+          0
+        ],
+        [
+          1,
+          1
+        ],
+        "[knowledge] entity 0: relationship = 0. [knowledge] entity 0: other = 0. "
+      ],
+      "provenance_valid": true
+    },
+    {
+      "records": 100,
+      "authorized_entity": 3,
+      "method": "linear_stream",
+      "materialized_bytes": 2560,
+      "working_view_bytes": 10384,
+      "result": [
+        [
+          41,
+          57,
+          60
+        ],
+        [
+          0,
+          0,
+          1
+        ],
+        [
+          1,
+          1,
+          1
+        ],
+        "[knowledge] entity 2: relationship = 0. [knowledge] entity 2: other = 0. [knowledge] entity 2: relationship = 1. "
+      ],
+      "provenance_valid": true
+    },
+    {
+      "records": 100,
+      "authorized_entity": 3,
+      "method": "id_index",
+      "materialized_bytes": 2560,
+      "working_view_bytes": 10384,
+      "result": [
+        [
+          41,
+          57,
+          60
+        ],
+        [
+          0,
+          0,
+          1
+        ],
+        [
+          1,
+          1,
+          1
+        ],
+        "[knowledge] entity 2: relationship = 0. [knowledge] entity 2: other = 0. [knowledge] entity 2: relationship = 1. "
+      ],
+      "provenance_valid": true
+    },
+    {
+      "records": 100,
+      "authorized_entity": 3,
+      "method": "aethersparse_occurrence_plane",
+      "materialized_bytes": 2560,
+      "working_view_bytes": 10384,
+      "result": [
+        [
+          41,
+          57,
+          60
+        ],
+        [
+          0,
+          0,
+          1
+        ],
+        [
+          1,
+          1,
+          1
+        ],
+        "[knowledge] entity 2: relationship = 0. [knowledge] entity 2: other = 0. [knowledge] entity 2: relationship = 1. "
+      ],
+      "provenance_valid": true
+    },
+    {
+      "records": 100,
+      "authorized_entity": 5,
+      "method": "linear_stream",
+      "materialized_bytes": 2560,
+      "working_view_bytes": 10384,
+      "result": [
+        [
+          95,
+          98
+        ],
+        [
+          0,
+          1
+        ],
+        [
+          1,
+          1
+        ],
+        "[knowledge] entity 4: other = 0. [knowledge] entity 4: relationship = 1. "
+      ],
+      "provenance_valid": true
+    },
+    {
+      "records": 100,
+      "authorized_entity": 5,
+      "method": "id_index",
+      "materialized_bytes": 2560,
+      "working_view_bytes": 10384,
+      "result": [
+        [
+          95,
+          98
+        ],
+        [
+          0,
+          1
+        ],
+        [
+          1,
+          1
+        ],
+        "[knowledge] entity 4: other = 0. [knowledge] entity 4: relationship = 1. "
+      ],
+      "provenance_valid": true
+    },
+    {
+      "records": 100,
+      "authorized_entity": 5,
+      "method": "aethersparse_occurrence_plane",
+      "materialized_bytes": 2560,
+      "working_view_bytes": 10384,
+      "result": [
+        [
+          95,
+          98
+        ],
+        [
+          0,
+          1
+        ],
+        [
+          1,
+          1
+        ],
+        "[knowledge] entity 4: other = 0. [knowledge] entity 4: relationship = 1. "
+      ],
+      "provenance_valid": true
+    },
+    {
+      "records": 1000,
+      "authorized_entity": 1,
+      "method": "linear_stream",
+      "materialized_bytes": 2560,
+      "working_view_bytes": 10384,
+      "result": [
+        [
+          3,
+          19
+        ],
+        [
+          0,
+          0
+        ],
+        [
+          1,
+          1
+        ],
+        "[knowledge] entity 0: relationship = 0. [knowledge] entity 0: other = 0. "
+      ],
+      "provenance_valid": true
+    },
+    {
+      "records": 1000,
+      "authorized_entity": 1,
+      "method": "id_index",
+      "materialized_bytes": 2560,
+      "working_view_bytes": 10384,
+      "result": [
+        [
+          3,
+          19
+        ],
+        [
+          0,
+          0
+        ],
+        [
+          1,
+          1
+        ],
+        "[knowledge] entity 0: relationship = 0. [knowledge] entity 0: other = 0. "
+      ],
+      "provenance_valid": true
+    },
+    {
+      "records": 1000,
+      "authorized_entity": 1,
+      "method": "aethersparse_occurrence_plane",
+      "materialized_bytes": 2560,
+      "working_view_bytes": 10384,
+      "result": [
+        [
+          3,
+          19
+        ],
+        [
+          0,
+          0
+        ],
+        [
+          1,
+          1
+        ],
+        "[knowledge] entity 0: relationship = 0. [knowledge] entity 0: other = 0. "
+      ],
+      "provenance_valid": true
+    },
+    {
+      "records": 1000,
+      "authorized_entity": 26,
+      "method": "linear_stream",
+      "materialized_bytes": 2560,
+      "working_view_bytes": 10384,
+      "result": [
+        [
+          513,
+          516
+        ],
+        [
+          0,
+          1
+        ],
+        [
+          1,
+          1
+        ],
+        "[knowledge] entity 25: other = 0. [knowledge] entity 25: relationship = 1. "
+      ],
+      "provenance_valid": true
+    },
+    {
+      "records": 1000,
+      "authorized_entity": 26,
+      "method": "id_index",
+      "materialized_bytes": 2560,
+      "working_view_bytes": 10384,
+      "result": [
+        [
+          513,
+          516
+        ],
+        [
+          0,
+          1
+        ],
+        [
+          1,
+          1
+        ],
+        "[knowledge] entity 25: other = 0. [knowledge] entity 25: relationship = 1. "
+      ],
+      "provenance_valid": true
+    },
+    {
+      "records": 1000,
+      "authorized_entity": 26,
+      "method": "aethersparse_occurrence_plane",
+      "materialized_bytes": 2560,
+      "working_view_bytes": 10384,
+      "result": [
+        [
+          513,
+          516
+        ],
+        [
+          0,
+          1
+        ],
+        [
+          1,
+          1
+        ],
+        "[knowledge] entity 25: other = 0. [knowledge] entity 25: relationship = 1. "
+      ],
+      "provenance_valid": true
+    },
+    {
+      "records": 1000,
+      "authorized_entity": 50,
+      "method": "linear_stream",
+      "materialized_bytes": 2560,
+      "working_view_bytes": 10384,
+      "result": [
+        [
+          988,
+          991
+        ],
+        [
+          1,
+          0
+        ],
+        [
+          1,
+          1
+        ],
+        "[knowledge] entity 49: other = 1. [knowledge] entity 49: relationship = 0. "
+      ],
+      "provenance_valid": true
+    },
+    {
+      "records": 1000,
+      "authorized_entity": 50,
+      "method": "id_index",
+      "materialized_bytes": 2560,
+      "working_view_bytes": 10384,
+      "result": [
+        [
+          988,
+          991
+        ],
+        [
+          1,
+          0
+        ],
+        [
+          1,
+          1
+        ],
+        "[knowledge] entity 49: other = 1. [knowledge] entity 49: relationship = 0. "
+      ],
+      "provenance_valid": true
+    },
+    {
+      "records": 1000,
+      "authorized_entity": 50,
+      "method": "aethersparse_occurrence_plane",
+      "materialized_bytes": 2560,
+      "working_view_bytes": 10384,
+      "result": [
+        [
+          988,
+          991
+        ],
+        [
+          1,
+          0
+        ],
+        [
+          1,
+          1
+        ],
+        "[knowledge] entity 49: other = 1. [knowledge] entity 49: relationship = 0. "
+      ],
+      "provenance_valid": true
+    },
+    {
+      "records": 10000,
+      "authorized_entity": 1,
+      "method": "linear_stream",
+      "materialized_bytes": 2560,
+      "working_view_bytes": 10384,
+      "result": [
+        [
+          3,
+          19
+        ],
+        [
+          0,
+          0
+        ],
+        [
+          1,
+          1
+        ],
+        "[knowledge] entity 0: relationship = 0. [knowledge] entity 0: other = 0. "
+      ],
+      "provenance_valid": true
+    },
+    {
+      "records": 10000,
+      "authorized_entity": 1,
+      "method": "id_index",
+      "materialized_bytes": 2560,
+      "working_view_bytes": 10384,
+      "result": [
+        [
+          3,
+          19
+        ],
+        [
+          0,
+          0
+        ],
+        [
+          1,
+          1
+        ],
+        "[knowledge] entity 0: relationship = 0. [knowledge] entity 0: other = 0. "
+      ],
+      "provenance_valid": true
+    },
+    {
+      "records": 10000,
+      "authorized_entity": 1,
+      "method": "aethersparse_occurrence_plane",
+      "materialized_bytes": 2560,
+      "working_view_bytes": 10384,
+      "result": [
+        [
+          3,
+          19
+        ],
+        [
+          0,
+          0
+        ],
+        [
+          1,
+          1
+        ],
+        "[knowledge] entity 0: relationship = 0. [knowledge] entity 0: other = 0. "
+      ],
+      "provenance_valid": true
+    },
+    {
+      "records": 10000,
+      "authorized_entity": 251,
+      "method": "linear_stream",
+      "materialized_bytes": 2560,
+      "working_view_bytes": 10384,
+      "result": [
+        [
+          5016,
+          5019
+        ],
+        [
+          1,
+          0
+        ],
+        [
+          1,
+          1
+        ],
+        "[knowledge] entity 250: other = 1. [knowledge] entity 250: relationship = 0. "
+      ],
+      "provenance_valid": true
+    },
+    {
+      "records": 10000,
+      "authorized_entity": 251,
+      "method": "id_index",
+      "materialized_bytes": 2560,
+      "working_view_bytes": 10384,
+      "result": [
+        [
+          5016,
+          5019
+        ],
+        [
+          1,
+          0
+        ],
+        [
+          1,
+          1
+        ],
+        "[knowledge] entity 250: other = 1. [knowledge] entity 250: relationship = 0. "
+      ],
+      "provenance_valid": true
+    },
+    {
+      "records": 10000,
+      "authorized_entity": 251,
+      "method": "aethersparse_occurrence_plane",
+      "materialized_bytes": 2560,
+      "working_view_bytes": 10384,
+      "result": [
+        [
+          5016,
+          5019
+        ],
+        [
+          1,
+          0
+        ],
+        [
+          1,
+          1
+        ],
+        "[knowledge] entity 250: other = 1. [knowledge] entity 250: relationship = 0. "
+      ],
+      "provenance_valid": true
+    },
+    {
+      "records": 10000,
+      "authorized_entity": 500,
+      "method": "linear_stream",
+      "materialized_bytes": 2560,
+      "working_view_bytes": 10384,
+      "result": [
+        [
+          9994,
+          9997
+        ],
+        [
+          1,
+          0
+        ],
+        [
+          1,
+          1
+        ],
+        "[knowledge] entity 499: other = 1. [knowledge] entity 499: relationship = 0. "
+      ],
+      "provenance_valid": true
+    },
+    {
+      "records": 10000,
+      "authorized_entity": 500,
+      "method": "id_index",
+      "materialized_bytes": 2560,
+      "working_view_bytes": 10384,
+      "result": [
+        [
+          9994,
+          9997
+        ],
+        [
+          1,
+          0
+        ],
+        [
+          1,
+          1
+        ],
+        "[knowledge] entity 499: other = 1. [knowledge] entity 499: relationship = 0. "
+      ],
+      "provenance_valid": true
+    },
+    {
+      "records": 10000,
+      "authorized_entity": 500,
+      "method": "aethersparse_occurrence_plane",
+      "materialized_bytes": 2560,
+      "working_view_bytes": 10384,
+      "result": [
+        [
+          9994,
+          9997
+        ],
+        [
+          1,
+          0
+        ],
+        [
+          1,
+          1
+        ],
+        "[knowledge] entity 499: other = 1. [knowledge] entity 499: relationship = 0. "
+      ],
+      "provenance_valid": true
+    },
+    {
+      "records": 100000,
+      "authorized_entity": 1,
+      "method": "linear_stream",
+      "materialized_bytes": 2560,
+      "working_view_bytes": 10384,
+      "result": [
+        [
+          3,
+          19
+        ],
+        [
+          0,
+          0
+        ],
+        [
+          1,
+          1
+        ],
+        "[knowledge] entity 0: relationship = 0. [knowledge] entity 0: other = 0. "
+      ],
+      "provenance_valid": true
+    },
+    {
+      "records": 100000,
+      "authorized_entity": 1,
+      "method": "id_index",
+      "materialized_bytes": 2560,
+      "working_view_bytes": 10384,
+      "result": [
+        [
+          3,
+          19
+        ],
+        [
+          0,
+          0
+        ],
+        [
+          1,
+          1
+        ],
+        "[knowledge] entity 0: relationship = 0. [knowledge] entity 0: other = 0. "
+      ],
+      "provenance_valid": true
+    },
+    {
+      "records": 100000,
+      "authorized_entity": 1,
+      "method": "aethersparse_occurrence_plane",
+      "materialized_bytes": 2560,
+      "working_view_bytes": 10384,
+      "result": [
+        [
+          3,
+          19
+        ],
+        [
+          0,
+          0
+        ],
+        [
+          1,
+          1
+        ],
+        "[knowledge] entity 0: relationship = 0. [knowledge] entity 0: other = 0. "
+      ],
+      "provenance_valid": true
+    },
+    {
+      "records": 100000,
+      "authorized_entity": 2501,
+      "method": "linear_stream",
+      "materialized_bytes": 2560,
+      "working_view_bytes": 10384,
+      "result": [
+        [
+          50008,
+          50011
+        ],
+        [
+          1,
+          0
+        ],
+        [
+          1,
+          1
+        ],
+        "[knowledge] entity 2500: other = 1. [knowledge] entity 2500: relationship = 0. "
+      ],
+      "provenance_valid": true
+    },
+    {
+      "records": 100000,
+      "authorized_entity": 2501,
+      "method": "id_index",
+      "materialized_bytes": 2560,
+      "working_view_bytes": 10384,
+      "result": [
+        [
+          50008,
+          50011
+        ],
+        [
+          1,
+          0
+        ],
+        [
+          1,
+          1
+        ],
+        "[knowledge] entity 2500: other = 1. [knowledge] entity 2500: relationship = 0. "
+      ],
+      "provenance_valid": true
+    },
+    {
+      "records": 100000,
+      "authorized_entity": 2501,
+      "method": "aethersparse_occurrence_plane",
+      "materialized_bytes": 2560,
+      "working_view_bytes": 10384,
+      "result": [
+        [
+          50008,
+          50011
+        ],
+        [
+          1,
+          0
+        ],
+        [
+          1,
+          1
+        ],
+        "[knowledge] entity 2500: other = 1. [knowledge] entity 2500: relationship = 0. "
+      ],
+      "provenance_valid": true
+    },
+    {
+      "records": 100000,
+      "authorized_entity": 5000,
+      "method": "linear_stream",
+      "materialized_bytes": 2560,
+      "working_view_bytes": 10384,
+      "result": [
+        [
+          99981,
+          99997,
+          100000
+        ],
+        [
+          0,
+          0,
+          1
+        ],
+        [
+          1,
+          1,
+          1
+        ],
+        "[knowledge] entity 4999: relationship = 0. [knowledge] entity 4999: other = 0. [knowledge] entity 4999: relationship = 1. "
+      ],
+      "provenance_valid": true
+    },
+    {
+      "records": 100000,
+      "authorized_entity": 5000,
+      "method": "id_index",
+      "materialized_bytes": 2560,
+      "working_view_bytes": 10384,
+      "result": [
+        [
+          99981,
+          99997,
+          100000
+        ],
+        [
+          0,
+          0,
+          1
+        ],
+        [
+          1,
+          1,
+          1
+        ],
+        "[knowledge] entity 4999: relationship = 0. [knowledge] entity 4999: other = 0. [knowledge] entity 4999: relationship = 1. "
+      ],
+      "provenance_valid": true
+    },
+    {
+      "records": 100000,
+      "authorized_entity": 5000,
+      "method": "aethersparse_occurrence_plane",
+      "materialized_bytes": 2560,
+      "working_view_bytes": 10384,
+      "result": [
+        [
+          99981,
+          99997,
+          100000
+        ],
+        [
+          0,
+          0,
+          1
+        ],
+        [
+          1,
+          1,
+          1
+        ],
+        "[knowledge] entity 4999: relationship = 0. [knowledge] entity 4999: other = 0. [knowledge] entity 4999: relationship = 1. "
+      ],
+      "provenance_valid": true
+    }
+  ]
+}

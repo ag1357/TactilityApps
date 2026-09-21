@@ -1,0 +1,20 @@
+COMMAND kyra: OK
+DIALOGUE 0.0635 ms | Can you recall the player's previous actions?
+[memory] player commitment | status | broken [memory] player | repaired | station intake [memory] player | broke a promise | replacement coupling
+COMMAND say Can you recall the player's previous actions?: OK
+COMMAND snapshot results/reloaded-memory.ppm: OK
+DIALOGUE 0.0529 ms | What is known about the distant empire?
+I don't have enough knowledge to answer that. Could you ask about something I have observed?
+COMMAND say What is known about the distant empire?: OK
+DIALOGUE 0.0669 ms | Which rumors have you heard about Dax?
+[rumor] Dax | location | the upper terrace on the incident evening
+COMMAND say Which rumors have you heard about Dax?: OK
+COMMAND snapshot results/rumor.ppm: OK
+COMMAND leave: OK
+COMMAND walk 22000 -75000: OK
+COMMAND walk -22000 -75000: OK
+COMMAND snapshot results/valley.ppm: OK
+COMMAND new 73: OK
+COMMAND walk 22000 -75000: OK
+COMMAND walk -22000 -75000: OK
+COMMAND snapshot results/alternate-seed.ppm: OK

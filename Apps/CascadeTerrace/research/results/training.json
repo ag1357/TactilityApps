@@ -1,0 +1,764 @@
+{
+  "architecture": "1536 hashed word/bigram buckets x 64 shared embedding; pooled ReLU; 6 independent linear heads",
+  "parameters": 101294,
+  "quantized_bytes": 101432,
+  "float_training_bytes": 405176,
+  "head_sizes": [
+    13,
+    19,
+    6,
+    3,
+    2,
+    3
+  ],
+  "heads": [
+    "operator",
+    "relation",
+    "epistemic",
+    "speech_act",
+    "negation",
+    "intervention"
+  ],
+  "training_worlds": 160,
+  "training_utterances": 6720,
+  "validation_worlds": 32,
+  "epochs": 60,
+  "selected_epoch": 2,
+  "selection": "validation joint frame-head accuracy",
+  "best_validation_joint_heads": 1.0,
+  "seconds": 3.546576976776123,
+  "history": [
+    {
+      "epoch": 1,
+      "validation_joint": 0.8125,
+      "validation_heads": [
+        0.9761904761904762,
+        0.9382440476190477,
+        0.9419642857142857,
+        0.9761904761904762,
+        1.0,
+        0.9761904761904762
+      ]
+    },
+    {
+      "epoch": 2,
+      "validation_joint": 1.0,
+      "validation_heads": [
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0
+      ]
+    },
+    {
+      "epoch": 3,
+      "validation_joint": 1.0,
+      "validation_heads": [
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0
+      ]
+    },
+    {
+      "epoch": 4,
+      "validation_joint": 1.0,
+      "validation_heads": [
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0
+      ]
+    },
+    {
+      "epoch": 5,
+      "validation_joint": 1.0,
+      "validation_heads": [
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0
+      ]
+    },
+    {
+      "epoch": 6,
+      "validation_joint": 1.0,
+      "validation_heads": [
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0
+      ]
+    },
+    {
+      "epoch": 7,
+      "validation_joint": 1.0,
+      "validation_heads": [
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0
+      ]
+    },
+    {
+      "epoch": 8,
+      "validation_joint": 1.0,
+      "validation_heads": [
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0
+      ]
+    },
+    {
+      "epoch": 9,
+      "validation_joint": 1.0,
+      "validation_heads": [
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0
+      ]
+    },
+    {
+      "epoch": 10,
+      "validation_joint": 1.0,
+      "validation_heads": [
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0
+      ]
+    },
+    {
+      "epoch": 11,
+      "validation_joint": 1.0,
+      "validation_heads": [
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0
+      ]
+    },
+    {
+      "epoch": 12,
+      "validation_joint": 1.0,
+      "validation_heads": [
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0
+      ]
+    },
+    {
+      "epoch": 13,
+      "validation_joint": 1.0,
+      "validation_heads": [
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0
+      ]
+    },
+    {
+      "epoch": 14,
+      "validation_joint": 1.0,
+      "validation_heads": [
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0
+      ]
+    },
+    {
+      "epoch": 15,
+      "validation_joint": 1.0,
+      "validation_heads": [
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0
+      ]
+    },
+    {
+      "epoch": 16,
+      "validation_joint": 1.0,
+      "validation_heads": [
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0
+      ]
+    },
+    {
+      "epoch": 17,
+      "validation_joint": 1.0,
+      "validation_heads": [
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0
+      ]
+    },
+    {
+      "epoch": 18,
+      "validation_joint": 1.0,
+      "validation_heads": [
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0
+      ]
+    },
+    {
+      "epoch": 19,
+      "validation_joint": 1.0,
+      "validation_heads": [
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0
+      ]
+    },
+    {
+      "epoch": 20,
+      "validation_joint": 1.0,
+      "validation_heads": [
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0
+      ]
+    },
+    {
+      "epoch": 21,
+      "validation_joint": 1.0,
+      "validation_heads": [
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0
+      ]
+    },
+    {
+      "epoch": 22,
+      "validation_joint": 1.0,
+      "validation_heads": [
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0
+      ]
+    },
+    {
+      "epoch": 23,
+      "validation_joint": 1.0,
+      "validation_heads": [
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0
+      ]
+    },
+    {
+      "epoch": 24,
+      "validation_joint": 1.0,
+      "validation_heads": [
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0
+      ]
+    },
+    {
+      "epoch": 25,
+      "validation_joint": 1.0,
+      "validation_heads": [
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0
+      ]
+    },
+    {
+      "epoch": 26,
+      "validation_joint": 1.0,
+      "validation_heads": [
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0
+      ]
+    },
+    {
+      "epoch": 27,
+      "validation_joint": 1.0,
+      "validation_heads": [
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0
+      ]
+    },
+    {
+      "epoch": 28,
+      "validation_joint": 1.0,
+      "validation_heads": [
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0
+      ]
+    },
+    {
+      "epoch": 29,
+      "validation_joint": 1.0,
+      "validation_heads": [
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0
+      ]
+    },
+    {
+      "epoch": 30,
+      "validation_joint": 1.0,
+      "validation_heads": [
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0
+      ]
+    },
+    {
+      "epoch": 31,
+      "validation_joint": 1.0,
+      "validation_heads": [
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0
+      ]
+    },
+    {
+      "epoch": 32,
+      "validation_joint": 1.0,
+      "validation_heads": [
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0
+      ]
+    },
+    {
+      "epoch": 33,
+      "validation_joint": 1.0,
+      "validation_heads": [
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0
+      ]
+    },
+    {
+      "epoch": 34,
+      "validation_joint": 1.0,
+      "validation_heads": [
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0
+      ]
+    },
+    {
+      "epoch": 35,
+      "validation_joint": 1.0,
+      "validation_heads": [
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0
+      ]
+    },
+    {
+      "epoch": 36,
+      "validation_joint": 1.0,
+      "validation_heads": [
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0
+      ]
+    },
+    {
+      "epoch": 37,
+      "validation_joint": 1.0,
+      "validation_heads": [
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0
+      ]
+    },
+    {
+      "epoch": 38,
+      "validation_joint": 1.0,
+      "validation_heads": [
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0
+      ]
+    },
+    {
+      "epoch": 39,
+      "validation_joint": 1.0,
+      "validation_heads": [
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0
+      ]
+    },
+    {
+      "epoch": 40,
+      "validation_joint": 1.0,
+      "validation_heads": [
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0
+      ]
+    },
+    {
+      "epoch": 41,
+      "validation_joint": 1.0,
+      "validation_heads": [
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0
+      ]
+    },
+    {
+      "epoch": 42,
+      "validation_joint": 1.0,
+      "validation_heads": [
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0
+      ]
+    },
+    {
+      "epoch": 43,
+      "validation_joint": 1.0,
+      "validation_heads": [
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0
+      ]
+    },
+    {
+      "epoch": 44,
+      "validation_joint": 1.0,
+      "validation_heads": [
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0
+      ]
+    },
+    {
+      "epoch": 45,
+      "validation_joint": 1.0,
+      "validation_heads": [
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0
+      ]
+    },
+    {
+      "epoch": 46,
+      "validation_joint": 1.0,
+      "validation_heads": [
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0
+      ]
+    },
+    {
+      "epoch": 47,
+      "validation_joint": 1.0,
+      "validation_heads": [
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0
+      ]
+    },
+    {
+      "epoch": 48,
+      "validation_joint": 1.0,
+      "validation_heads": [
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0
+      ]
+    },
+    {
+      "epoch": 49,
+      "validation_joint": 1.0,
+      "validation_heads": [
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0
+      ]
+    },
+    {
+      "epoch": 50,
+      "validation_joint": 1.0,
+      "validation_heads": [
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0
+      ]
+    },
+    {
+      "epoch": 51,
+      "validation_joint": 1.0,
+      "validation_heads": [
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0
+      ]
+    },
+    {
+      "epoch": 52,
+      "validation_joint": 1.0,
+      "validation_heads": [
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0
+      ]
+    },
+    {
+      "epoch": 53,
+      "validation_joint": 1.0,
+      "validation_heads": [
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0
+      ]
+    },
+    {
+      "epoch": 54,
+      "validation_joint": 1.0,
+      "validation_heads": [
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0
+      ]
+    },
+    {
+      "epoch": 55,
+      "validation_joint": 1.0,
+      "validation_heads": [
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0
+      ]
+    },
+    {
+      "epoch": 56,
+      "validation_joint": 1.0,
+      "validation_heads": [
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0
+      ]
+    },
+    {
+      "epoch": 57,
+      "validation_joint": 1.0,
+      "validation_heads": [
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0
+      ]
+    },
+    {
+      "epoch": 58,
+      "validation_joint": 1.0,
+      "validation_heads": [
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0
+      ]
+    },
+    {
+      "epoch": 59,
+      "validation_joint": 1.0,
+      "validation_heads": [
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0
+      ]
+    },
+    {
+      "epoch": 60,
+      "validation_joint": 1.0,
+      "validation_heads": [
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0
+      ]
+    }
+  ],
+  "seed": 72191,
+  "int8_embedding_scale": 0.010435384698212147,
+  "int8_output_scale": 0.011634319089353085,
+  "training_ids_sha256": "6a301d01b2a9bb9663f1a2dca49a924ddee17a6b0180563561e745683bc323e8",
+  "test_or_final_loaded": false,
+  "confidence": "uncalibrated margin; not used to authorize propositions",
+  "limitations": [
+    "bag of word/bigram order, no learned long-term recurrent state",
+    "entity binding supplied by deterministic data-driven linker",
+    "second relation has no learned head; evaluated as failure",
+    "int8 activations average with truncation, no floating point in C inference"
+  ]
+}

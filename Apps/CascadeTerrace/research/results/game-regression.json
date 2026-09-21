@@ -1,0 +1,32 @@
+{
+  "0": {
+    "n": 168,
+    "fact_hit": 120,
+    "provenance": 168,
+    "note": "Fact hits, not full semantic acceptance."
+  },
+  "1": {
+    "n": 168,
+    "fact_hit": 120,
+    "provenance": 168,
+    "note": "Fact hits, not full semantic acceptance."
+  },
+  "2": {
+    "n": 168,
+    "fact_hit": 168,
+    "provenance": 168,
+    "note": "Fact hits, not full semantic acceptance."
+  },
+  "3": {
+    "n": 168,
+    "fact_hit": 45,
+    "provenance": 168,
+    "note": "Fact hits, not full semantic acceptance."
+  },
+  "4": {
+    "n": 168,
+    "fact_hit": 27,
+    "provenance": 168,
+    "note": "Fact hits, not full semantic acceptance."
+  }
+}

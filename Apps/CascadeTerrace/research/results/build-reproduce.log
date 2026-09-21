@@ -1,0 +1,1 @@
+cc -Icore -DCG_TRAINED_MODEL -O2 -g -std=c11 -Wall -Wextra -Werror -Wno-misleading-indentation -shared -fPIC research/rung_a/adapter.c build/rung_a.o core/semantic.c core/decision.c -o build/librunga.so

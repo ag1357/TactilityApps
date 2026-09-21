@@ -1,0 +1,82 @@
+{
+  "qualification": "Q1 INCOMPLETE; Q2 PENDING PHYSICAL VALIDATION",
+  "starting_commit": "feab7c0c161a0e8b8f3dedef6249a38b8f5b5f24",
+  "implementation_checkpoint": "22372fe0150108886678b4227ea9104396142bb7",
+  "default_mode": 0,
+  "promotion_gate": {
+    "B": {
+      "passed": false,
+      "reasons": [
+        "required classes below 80%: rumor",
+        "Cascade regression below existing baseline"
+      ]
+    },
+    "C": {
+      "passed": false,
+      "reasons": [
+        "exact answer below 90%",
+        "required classes below 80%: direct_fact, rumor, multiple_relation, contradiction, consequence",
+        "Cascade regression below existing baseline",
+        "learned model does not beat deterministic baseline"
+      ]
+    }
+  },
+  "architecture_selected_for_production": null,
+  "scope": "Research checkpoint; no general free-text cognition success claimed",
+  "memory": {
+    "semantic_view_bytes_desktop": 10384,
+    "result_trace_bytes_desktop": 2672,
+    "frame_bytes_desktop": 28,
+    "context_bytes_desktop": 12,
+    "neural_parameters": 101294,
+    "neural_storage_bytes_int8": 101432,
+    "learned_inference_local_arrays_bytes": 440,
+    "input_feature_buffer_bytes": 320,
+    "max_embedding_additions": 10240,
+    "head_macs_per_inference": 2944,
+    "max_graph_depth": 12,
+    "max_facts": 64,
+    "max_trace_steps": 64,
+    "max_output_propositions": 8,
+    "legacy_authorized_view_bytes": 10952,
+    "experimental_bridge_static_workspace_bytes": 24008,
+    "existing_npc_persistent_bytes": 5384,
+    "new_persistent_neural_state_bytes": 0,
+    "context_persistence": "12-byte live context is ephemeral. Meaningful memory persists in original game journal, not neural weights or generated prose.",
+    "stack_note": "Compiler reports in stack-usage.txt; per-function values are not simultaneous peaks. Nested parser/features plus call frames roughly 3KB on desktop; physical high-water mark pending.",
+    "p4_residency_note": "External ELF code/model/rodata placement is controlled by Tactility loader. Do not assume model is memory mapped from SD. Budget full 101432 model bytes plus loader allocations until measured."
+  },
+  "npc_storage_projections": {
+    "1": 5384,
+    "100": 538400,
+    "1000": 5384000,
+    "10000": 53840000
+  },
+  "p4": {
+    "status": "P4 BUILD PRODUCED; PENDING PHYSICAL VALIDATION",
+    "binary_bytes": 177056,
+    "package_bytes": 194560,
+    "elf_sha256": "33360ecf014930a4579bddcef44e79a399fe40eaab15b65a9464b2e4c92c4433",
+    "package_sha256": "bb3ba313e4d883a6553569addd10f832611d205d1583ab0d186e71499848dc1f",
+    "format": "Tactility manifest v0.3 / USTAR / esp32p4 external ELF"
+  },
+  "physical_measurements": null,
+  "optional_experiments": {
+    "LTC_AGI_V3": "NOT IMPLEMENTED. Single learned candidate loses to deterministic baseline; recurrence has no evidence of fixing lexical/syntax errors. No superiority claim.",
+    "AetherSparse": "Controlled isolated occurrence-plane benchmark completed; no full-runtime adoption.",
+    "AetherCore": "Architectural reuse of typed workspace, legal mask, bounded execution, evidence and verifier; no historical controller code dependency.",
+    "Jev": "Jev-inspired typed decision model only; no reproduction claim."
+  },
+  "known_post_freeze_findings": [
+    "Unrecognized secondary relation sentinel CG_OTHER also matches legacy OTHER facts; gameplay recall can emit extra unrelated memories. Frozen experimental candidate retained as failed, not silently repaired from held-out outcomes.",
+    "Legacy adapter has no causal equations and does not manufacture them; game counterfactuals abstain.",
+    "Legacy object prose is truncated to 95 characters in adapter; source IDs have no complete name registry; temporal metadata absent.",
+    "Experimental modes do not commit free-text assertions/promises into game state. Original default keeps existing behavior.",
+    "No learned entity/referent/argument heads; binding is deterministic. No secondary-relation head, no calibrated uncertainty.",
+    "Finite synthetic templates and small AND causal graphs do not establish open-ended language or general intelligence.",
+    "Final world identities/graphs are disjoint; final surface templates share the test challenge bank, so final is world-held, not a separately authored blind-language benchmark.",
+    "Reported absence of unsupported propositions is limited to this authorized schema/oracle/verifier; it does not certify all conversational implications.",
+    "Query-only context state has no learned recurrence; post-save synthetic labels are not used as evidence of process persistence. Actual separate-process game logs provide that evidence."
+  ],
+  "next_step": "Keep bounded executor as a research interface. First make game facts/events use complete canonical relation/entity/causal/source metadata, add independently authored language worlds and abstention tests, then test a contextual span/argument encoder. Do not scale the existing pooled classifier."
+}

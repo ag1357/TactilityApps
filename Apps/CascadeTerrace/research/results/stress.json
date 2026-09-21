@@ -1,0 +1,5048 @@
+{
+  "checks": 1008,
+  "passed": 1008,
+  "failed": 0,
+  "properties": [
+    {
+      "name": "identity_equivariance_mode0",
+      "pass": true,
+      "detail": "direct_fact"
+    },
+    {
+      "name": "identity_equivariance_mode0",
+      "pass": true,
+      "detail": "direct_fact"
+    },
+    {
+      "name": "identity_equivariance_mode0",
+      "pass": true,
+      "detail": "direct_fact"
+    },
+    {
+      "name": "identity_equivariance_mode0",
+      "pass": true,
+      "detail": "relationship"
+    },
+    {
+      "name": "identity_equivariance_mode0",
+      "pass": true,
+      "detail": "relationship"
+    },
+    {
+      "name": "identity_equivariance_mode0",
+      "pass": true,
+      "detail": "relationship"
+    },
+    {
+      "name": "identity_equivariance_mode0",
+      "pass": true,
+      "detail": "source"
+    },
+    {
+      "name": "identity_equivariance_mode0",
+      "pass": true,
+      "detail": "source"
+    },
+    {
+      "name": "identity_equivariance_mode0",
+      "pass": true,
+      "detail": "source"
+    },
+    {
+      "name": "identity_equivariance_mode0",
+      "pass": true,
+      "detail": "belief"
+    },
+    {
+      "name": "identity_equivariance_mode0",
+      "pass": true,
+      "detail": "belief"
+    },
+    {
+      "name": "identity_equivariance_mode0",
+      "pass": true,
+      "detail": "belief"
+    },
+    {
+      "name": "identity_equivariance_mode0",
+      "pass": true,
+      "detail": "rumor"
+    },
+    {
+      "name": "identity_equivariance_mode0",
+      "pass": true,
+      "detail": "rumor"
+    },
+    {
+      "name": "identity_equivariance_mode0",
+      "pass": true,
+      "detail": "rumor"
+    },
+    {
+      "name": "identity_equivariance_mode0",
+      "pass": true,
+      "detail": "unknown"
+    },
+    {
+      "name": "identity_equivariance_mode0",
+      "pass": true,
+      "detail": "unknown"
+    },
+    {
+      "name": "identity_equivariance_mode0",
+      "pass": true,
+      "detail": "unknown"
+    },
+    {
+      "name": "identity_equivariance_mode0",
+      "pass": true,
+      "detail": "out_of_world"
+    },
+    {
+      "name": "identity_equivariance_mode0",
+      "pass": true,
+      "detail": "out_of_world"
+    },
+    {
+      "name": "identity_equivariance_mode0",
+      "pass": true,
+      "detail": "out_of_world"
+    },
+    {
+      "name": "identity_equivariance_mode0",
+      "pass": true,
+      "detail": "multiple_relation"
+    },
+    {
+      "name": "identity_equivariance_mode0",
+      "pass": true,
+      "detail": "multiple_relation"
+    },
+    {
+      "name": "identity_equivariance_mode0",
+      "pass": true,
+      "detail": "multiple_relation"
+    },
+    {
+      "name": "identity_equivariance_mode0",
+      "pass": true,
+      "detail": "temporal"
+    },
+    {
+      "name": "identity_equivariance_mode0",
+      "pass": true,
+      "detail": "temporal"
+    },
+    {
+      "name": "identity_equivariance_mode0",
+      "pass": true,
+      "detail": "temporal"
+    },
+    {
+      "name": "identity_equivariance_mode0",
+      "pass": true,
+      "detail": "negation"
+    },
+    {
+      "name": "identity_equivariance_mode0",
+      "pass": true,
+      "detail": "negation"
+    },
+    {
+      "name": "identity_equivariance_mode0",
+      "pass": true,
+      "detail": "negation"
+    },
+    {
+      "name": "identity_equivariance_mode0",
+      "pass": true,
+      "detail": "contradiction"
+    },
+    {
+      "name": "identity_equivariance_mode0",
+      "pass": true,
+      "detail": "contradiction"
+    },
+    {
+      "name": "identity_equivariance_mode0",
+      "pass": true,
+      "detail": "contradiction"
+    },
+    {
+      "name": "identity_equivariance_mode0",
+      "pass": true,
+      "detail": "corroboration"
+    },
+    {
+      "name": "identity_equivariance_mode0",
+      "pass": true,
+      "detail": "corroboration"
+    },
+    {
+      "name": "identity_equivariance_mode0",
+      "pass": true,
+      "detail": "corroboration"
+    },
+    {
+      "name": "identity_equivariance_mode0",
+      "pass": true,
+      "detail": "causal"
+    },
+    {
+      "name": "identity_equivariance_mode0",
+      "pass": true,
+      "detail": "causal"
+    },
+    {
+      "name": "identity_equivariance_mode0",
+      "pass": true,
+      "detail": "causal"
+    },
+    {
+      "name": "identity_equivariance_mode0",
+      "pass": true,
+      "detail": "consequence"
+    },
+    {
+      "name": "identity_equivariance_mode0",
+      "pass": true,
+      "detail": "consequence"
+    },
+    {
+      "name": "identity_equivariance_mode0",
+      "pass": true,
+      "detail": "consequence"
+    },
+    {
+      "name": "identity_equivariance_mode0",
+      "pass": true,
+      "detail": "counterfactual"
+    },
+    {
+      "name": "identity_equivariance_mode0",
+      "pass": true,
+      "detail": "counterfactual"
+    },
+    {
+      "name": "identity_equivariance_mode0",
+      "pass": true,
+      "detail": "counterfactual"
+    },
+    {
+      "name": "identity_equivariance_mode0",
+      "pass": true,
+      "detail": "player_claim"
+    },
+    {
+      "name": "identity_equivariance_mode0",
+      "pass": true,
+      "detail": "player_claim"
+    },
+    {
+      "name": "identity_equivariance_mode0",
+      "pass": true,
+      "detail": "player_claim"
+    },
+    {
+      "name": "identity_equivariance_mode0",
+      "pass": true,
+      "detail": "observed_evidence"
+    },
+    {
+      "name": "identity_equivariance_mode0",
+      "pass": true,
+      "detail": "observed_evidence"
+    },
+    {
+      "name": "identity_equivariance_mode0",
+      "pass": true,
+      "detail": "observed_evidence"
+    },
+    {
+      "name": "identity_equivariance_mode0",
+      "pass": true,
+      "detail": "promise"
+    },
+    {
+      "name": "identity_equivariance_mode0",
+      "pass": true,
+      "detail": "promise"
+    },
+    {
+      "name": "identity_equivariance_mode0",
+      "pass": true,
+      "detail": "promise"
+    },
+    {
+      "name": "identity_equivariance_mode0",
+      "pass": true,
+      "detail": "broken_promise"
+    },
+    {
+      "name": "identity_equivariance_mode0",
+      "pass": true,
+      "detail": "broken_promise"
+    },
+    {
+      "name": "identity_equivariance_mode0",
+      "pass": true,
+      "detail": "broken_promise"
+    },
+    {
+      "name": "identity_equivariance_mode0",
+      "pass": true,
+      "detail": "relationship_change"
+    },
+    {
+      "name": "identity_equivariance_mode0",
+      "pass": true,
+      "detail": "relationship_change"
+    },
+    {
+      "name": "identity_equivariance_mode0",
+      "pass": true,
+      "detail": "relationship_change"
+    },
+    {
+      "name": "identity_equivariance_mode0",
+      "pass": true,
+      "detail": "state_change"
+    },
+    {
+      "name": "identity_equivariance_mode0",
+      "pass": true,
+      "detail": "state_change"
+    },
+    {
+      "name": "identity_equivariance_mode0",
+      "pass": true,
+      "detail": "state_change"
+    },
+    {
+      "name": "identity_equivariance_mode0",
+      "pass": true,
+      "detail": "post_save_recall"
+    },
+    {
+      "name": "identity_equivariance_mode0",
+      "pass": true,
+      "detail": "post_save_recall"
+    },
+    {
+      "name": "identity_equivariance_mode0",
+      "pass": true,
+      "detail": "post_save_recall"
+    },
+    {
+      "name": "identity_equivariance_mode0",
+      "pass": true,
+      "detail": "ambiguity"
+    },
+    {
+      "name": "identity_equivariance_mode0",
+      "pass": true,
+      "detail": "ambiguity"
+    },
+    {
+      "name": "identity_equivariance_mode0",
+      "pass": true,
+      "detail": "ambiguity"
+    },
+    {
+      "name": "identity_equivariance_mode0",
+      "pass": true,
+      "detail": "authority_escalation"
+    },
+    {
+      "name": "identity_equivariance_mode0",
+      "pass": true,
+      "detail": "authority_escalation"
+    },
+    {
+      "name": "identity_equivariance_mode0",
+      "pass": true,
+      "detail": "authority_escalation"
+    },
+    {
+      "name": "identity_equivariance_mode0",
+      "pass": true,
+      "detail": "belief_update"
+    },
+    {
+      "name": "identity_equivariance_mode0",
+      "pass": true,
+      "detail": "belief_update"
+    },
+    {
+      "name": "identity_equivariance_mode0",
+      "pass": true,
+      "detail": "belief_update"
+    },
+    {
+      "name": "identity_equivariance_mode0",
+      "pass": true,
+      "detail": "assertion"
+    },
+    {
+      "name": "identity_equivariance_mode0",
+      "pass": true,
+      "detail": "assertion"
+    },
+    {
+      "name": "identity_equivariance_mode0",
+      "pass": true,
+      "detail": "assertion"
+    },
+    {
+      "name": "identity_equivariance_mode0",
+      "pass": true,
+      "detail": "commitment"
+    },
+    {
+      "name": "identity_equivariance_mode0",
+      "pass": true,
+      "detail": "commitment"
+    },
+    {
+      "name": "identity_equivariance_mode0",
+      "pass": true,
+      "detail": "commitment"
+    },
+    {
+      "name": "identity_equivariance_mode0",
+      "pass": true,
+      "detail": "random_composition"
+    },
+    {
+      "name": "identity_equivariance_mode0",
+      "pass": true,
+      "detail": "random_composition"
+    },
+    {
+      "name": "identity_equivariance_mode0",
+      "pass": true,
+      "detail": "random_composition"
+    },
+    {
+      "name": "identity_equivariance_mode0",
+      "pass": true,
+      "detail": "random_composition"
+    },
+    {
+      "name": "identity_equivariance_mode0",
+      "pass": true,
+      "detail": "random_composition"
+    },
+    {
+      "name": "identity_equivariance_mode0",
+      "pass": true,
+      "detail": "random_composition"
+    },
+    {
+      "name": "identity_equivariance_mode0",
+      "pass": true,
+      "detail": "random_composition"
+    },
+    {
+      "name": "identity_equivariance_mode0",
+      "pass": true,
+      "detail": "random_composition"
+    },
+    {
+      "name": "identity_equivariance_mode0",
+      "pass": true,
+      "detail": "random_composition"
+    },
+    {
+      "name": "identity_equivariance_mode0",
+      "pass": true,
+      "detail": "random_composition"
+    },
+    {
+      "name": "identity_equivariance_mode0",
+      "pass": true,
+      "detail": "random_composition"
+    },
+    {
+      "name": "identity_equivariance_mode0",
+      "pass": true,
+      "detail": "random_composition"
+    },
+    {
+      "name": "identity_equivariance_mode0",
+      "pass": true,
+      "detail": "random_composition"
+    },
+    {
+      "name": "identity_equivariance_mode0",
+      "pass": true,
+      "detail": "random_composition"
+    },
+    {
+      "name": "identity_equivariance_mode0",
+      "pass": true,
+      "detail": "random_composition"
+    },
+    {
+      "name": "identity_equivariance_mode0",
+      "pass": true,
+      "detail": "random_composition"
+    },
+    {
+      "name": "identity_equivariance_mode0",
+      "pass": true,
+      "detail": "random_composition"
+    },
+    {
+      "name": "identity_equivariance_mode0",
+      "pass": true,
+      "detail": "random_composition"
+    },
+    {
+      "name": "identity_equivariance_mode0",
+      "pass": true,
+      "detail": "random_composition"
+    },
+    {
+      "name": "identity_equivariance_mode0",
+      "pass": true,
+      "detail": "random_composition"
+    },
+    {
+      "name": "identity_equivariance_mode0",
+      "pass": true,
+      "detail": "random_composition"
+    },
+    {
+      "name": "identity_equivariance_mode0",
+      "pass": true,
+      "detail": "random_composition"
+    },
+    {
+      "name": "identity_equivariance_mode0",
+      "pass": true,
+      "detail": "random_composition"
+    },
+    {
+      "name": "identity_equivariance_mode0",
+      "pass": true,
+      "detail": "random_composition"
+    },
+    {
+      "name": "identity_equivariance_mode0",
+      "pass": true,
+      "detail": "random_composition"
+    },
+    {
+      "name": "identity_equivariance_mode0",
+      "pass": true,
+      "detail": "random_composition"
+    },
+    {
+      "name": "identity_equivariance_mode0",
+      "pass": true,
+      "detail": "random_composition"
+    },
+    {
+      "name": "identity_equivariance_mode0",
+      "pass": true,
+      "detail": "random_composition"
+    },
+    {
+      "name": "identity_equivariance_mode0",
+      "pass": true,
+      "detail": "random_composition"
+    },
+    {
+      "name": "identity_equivariance_mode0",
+      "pass": true,
+      "detail": "random_composition"
+    },
+    {
+      "name": "identity_equivariance_mode0",
+      "pass": true,
+      "detail": "random_composition"
+    },
+    {
+      "name": "identity_equivariance_mode0",
+      "pass": true,
+      "detail": "random_composition"
+    },
+    {
+      "name": "identity_equivariance_mode0",
+      "pass": true,
+      "detail": "random_composition"
+    },
+    {
+      "name": "identity_equivariance_mode0",
+      "pass": true,
+      "detail": "random_composition"
+    },
+    {
+      "name": "identity_equivariance_mode0",
+      "pass": true,
+      "detail": "random_composition"
+    },
+    {
+      "name": "identity_equivariance_mode0",
+      "pass": true,
+      "detail": "random_composition"
+    },
+    {
+      "name": "identity_equivariance_mode1",
+      "pass": true,
+      "detail": "direct_fact"
+    },
+    {
+      "name": "identity_equivariance_mode1",
+      "pass": true,
+      "detail": "direct_fact"
+    },
+    {
+      "name": "identity_equivariance_mode1",
+      "pass": true,
+      "detail": "direct_fact"
+    },
+    {
+      "name": "identity_equivariance_mode1",
+      "pass": true,
+      "detail": "relationship"
+    },
+    {
+      "name": "identity_equivariance_mode1",
+      "pass": true,
+      "detail": "relationship"
+    },
+    {
+      "name": "identity_equivariance_mode1",
+      "pass": true,
+      "detail": "relationship"
+    },
+    {
+      "name": "identity_equivariance_mode1",
+      "pass": true,
+      "detail": "source"
+    },
+    {
+      "name": "identity_equivariance_mode1",
+      "pass": true,
+      "detail": "source"
+    },
+    {
+      "name": "identity_equivariance_mode1",
+      "pass": true,
+      "detail": "source"
+    },
+    {
+      "name": "identity_equivariance_mode1",
+      "pass": true,
+      "detail": "belief"
+    },
+    {
+      "name": "identity_equivariance_mode1",
+      "pass": true,
+      "detail": "belief"
+    },
+    {
+      "name": "identity_equivariance_mode1",
+      "pass": true,
+      "detail": "belief"
+    },
+    {
+      "name": "identity_equivariance_mode1",
+      "pass": true,
+      "detail": "rumor"
+    },
+    {
+      "name": "identity_equivariance_mode1",
+      "pass": true,
+      "detail": "rumor"
+    },
+    {
+      "name": "identity_equivariance_mode1",
+      "pass": true,
+      "detail": "rumor"
+    },
+    {
+      "name": "identity_equivariance_mode1",
+      "pass": true,
+      "detail": "unknown"
+    },
+    {
+      "name": "identity_equivariance_mode1",
+      "pass": true,
+      "detail": "unknown"
+    },
+    {
+      "name": "identity_equivariance_mode1",
+      "pass": true,
+      "detail": "unknown"
+    },
+    {
+      "name": "identity_equivariance_mode1",
+      "pass": true,
+      "detail": "out_of_world"
+    },
+    {
+      "name": "identity_equivariance_mode1",
+      "pass": true,
+      "detail": "out_of_world"
+    },
+    {
+      "name": "identity_equivariance_mode1",
+      "pass": true,
+      "detail": "out_of_world"
+    },
+    {
+      "name": "identity_equivariance_mode1",
+      "pass": true,
+      "detail": "multiple_relation"
+    },
+    {
+      "name": "identity_equivariance_mode1",
+      "pass": true,
+      "detail": "multiple_relation"
+    },
+    {
+      "name": "identity_equivariance_mode1",
+      "pass": true,
+      "detail": "multiple_relation"
+    },
+    {
+      "name": "identity_equivariance_mode1",
+      "pass": true,
+      "detail": "temporal"
+    },
+    {
+      "name": "identity_equivariance_mode1",
+      "pass": true,
+      "detail": "temporal"
+    },
+    {
+      "name": "identity_equivariance_mode1",
+      "pass": true,
+      "detail": "temporal"
+    },
+    {
+      "name": "identity_equivariance_mode1",
+      "pass": true,
+      "detail": "negation"
+    },
+    {
+      "name": "identity_equivariance_mode1",
+      "pass": true,
+      "detail": "negation"
+    },
+    {
+      "name": "identity_equivariance_mode1",
+      "pass": true,
+      "detail": "negation"
+    },
+    {
+      "name": "identity_equivariance_mode1",
+      "pass": true,
+      "detail": "contradiction"
+    },
+    {
+      "name": "identity_equivariance_mode1",
+      "pass": true,
+      "detail": "contradiction"
+    },
+    {
+      "name": "identity_equivariance_mode1",
+      "pass": true,
+      "detail": "contradiction"
+    },
+    {
+      "name": "identity_equivariance_mode1",
+      "pass": true,
+      "detail": "corroboration"
+    },
+    {
+      "name": "identity_equivariance_mode1",
+      "pass": true,
+      "detail": "corroboration"
+    },
+    {
+      "name": "identity_equivariance_mode1",
+      "pass": true,
+      "detail": "corroboration"
+    },
+    {
+      "name": "identity_equivariance_mode1",
+      "pass": true,
+      "detail": "causal"
+    },
+    {
+      "name": "identity_equivariance_mode1",
+      "pass": true,
+      "detail": "causal"
+    },
+    {
+      "name": "identity_equivariance_mode1",
+      "pass": true,
+      "detail": "causal"
+    },
+    {
+      "name": "identity_equivariance_mode1",
+      "pass": true,
+      "detail": "consequence"
+    },
+    {
+      "name": "identity_equivariance_mode1",
+      "pass": true,
+      "detail": "consequence"
+    },
+    {
+      "name": "identity_equivariance_mode1",
+      "pass": true,
+      "detail": "consequence"
+    },
+    {
+      "name": "identity_equivariance_mode1",
+      "pass": true,
+      "detail": "counterfactual"
+    },
+    {
+      "name": "identity_equivariance_mode1",
+      "pass": true,
+      "detail": "counterfactual"
+    },
+    {
+      "name": "identity_equivariance_mode1",
+      "pass": true,
+      "detail": "counterfactual"
+    },
+    {
+      "name": "identity_equivariance_mode1",
+      "pass": true,
+      "detail": "player_claim"
+    },
+    {
+      "name": "identity_equivariance_mode1",
+      "pass": true,
+      "detail": "player_claim"
+    },
+    {
+      "name": "identity_equivariance_mode1",
+      "pass": true,
+      "detail": "player_claim"
+    },
+    {
+      "name": "identity_equivariance_mode1",
+      "pass": true,
+      "detail": "observed_evidence"
+    },
+    {
+      "name": "identity_equivariance_mode1",
+      "pass": true,
+      "detail": "observed_evidence"
+    },
+    {
+      "name": "identity_equivariance_mode1",
+      "pass": true,
+      "detail": "observed_evidence"
+    },
+    {
+      "name": "identity_equivariance_mode1",
+      "pass": true,
+      "detail": "promise"
+    },
+    {
+      "name": "identity_equivariance_mode1",
+      "pass": true,
+      "detail": "promise"
+    },
+    {
+      "name": "identity_equivariance_mode1",
+      "pass": true,
+      "detail": "promise"
+    },
+    {
+      "name": "identity_equivariance_mode1",
+      "pass": true,
+      "detail": "broken_promise"
+    },
+    {
+      "name": "identity_equivariance_mode1",
+      "pass": true,
+      "detail": "broken_promise"
+    },
+    {
+      "name": "identity_equivariance_mode1",
+      "pass": true,
+      "detail": "broken_promise"
+    },
+    {
+      "name": "identity_equivariance_mode1",
+      "pass": true,
+      "detail": "relationship_change"
+    },
+    {
+      "name": "identity_equivariance_mode1",
+      "pass": true,
+      "detail": "relationship_change"
+    },
+    {
+      "name": "identity_equivariance_mode1",
+      "pass": true,
+      "detail": "relationship_change"
+    },
+    {
+      "name": "identity_equivariance_mode1",
+      "pass": true,
+      "detail": "state_change"
+    },
+    {
+      "name": "identity_equivariance_mode1",
+      "pass": true,
+      "detail": "state_change"
+    },
+    {
+      "name": "identity_equivariance_mode1",
+      "pass": true,
+      "detail": "state_change"
+    },
+    {
+      "name": "identity_equivariance_mode1",
+      "pass": true,
+      "detail": "post_save_recall"
+    },
+    {
+      "name": "identity_equivariance_mode1",
+      "pass": true,
+      "detail": "post_save_recall"
+    },
+    {
+      "name": "identity_equivariance_mode1",
+      "pass": true,
+      "detail": "post_save_recall"
+    },
+    {
+      "name": "identity_equivariance_mode1",
+      "pass": true,
+      "detail": "ambiguity"
+    },
+    {
+      "name": "identity_equivariance_mode1",
+      "pass": true,
+      "detail": "ambiguity"
+    },
+    {
+      "name": "identity_equivariance_mode1",
+      "pass": true,
+      "detail": "ambiguity"
+    },
+    {
+      "name": "identity_equivariance_mode1",
+      "pass": true,
+      "detail": "authority_escalation"
+    },
+    {
+      "name": "identity_equivariance_mode1",
+      "pass": true,
+      "detail": "authority_escalation"
+    },
+    {
+      "name": "identity_equivariance_mode1",
+      "pass": true,
+      "detail": "authority_escalation"
+    },
+    {
+      "name": "identity_equivariance_mode1",
+      "pass": true,
+      "detail": "belief_update"
+    },
+    {
+      "name": "identity_equivariance_mode1",
+      "pass": true,
+      "detail": "belief_update"
+    },
+    {
+      "name": "identity_equivariance_mode1",
+      "pass": true,
+      "detail": "belief_update"
+    },
+    {
+      "name": "identity_equivariance_mode1",
+      "pass": true,
+      "detail": "assertion"
+    },
+    {
+      "name": "identity_equivariance_mode1",
+      "pass": true,
+      "detail": "assertion"
+    },
+    {
+      "name": "identity_equivariance_mode1",
+      "pass": true,
+      "detail": "assertion"
+    },
+    {
+      "name": "identity_equivariance_mode1",
+      "pass": true,
+      "detail": "commitment"
+    },
+    {
+      "name": "identity_equivariance_mode1",
+      "pass": true,
+      "detail": "commitment"
+    },
+    {
+      "name": "identity_equivariance_mode1",
+      "pass": true,
+      "detail": "commitment"
+    },
+    {
+      "name": "identity_equivariance_mode1",
+      "pass": true,
+      "detail": "random_composition"
+    },
+    {
+      "name": "identity_equivariance_mode1",
+      "pass": true,
+      "detail": "random_composition"
+    },
+    {
+      "name": "identity_equivariance_mode1",
+      "pass": true,
+      "detail": "random_composition"
+    },
+    {
+      "name": "identity_equivariance_mode1",
+      "pass": true,
+      "detail": "random_composition"
+    },
+    {
+      "name": "identity_equivariance_mode1",
+      "pass": true,
+      "detail": "random_composition"
+    },
+    {
+      "name": "identity_equivariance_mode1",
+      "pass": true,
+      "detail": "random_composition"
+    },
+    {
+      "name": "identity_equivariance_mode1",
+      "pass": true,
+      "detail": "random_composition"
+    },
+    {
+      "name": "identity_equivariance_mode1",
+      "pass": true,
+      "detail": "random_composition"
+    },
+    {
+      "name": "identity_equivariance_mode1",
+      "pass": true,
+      "detail": "random_composition"
+    },
+    {
+      "name": "identity_equivariance_mode1",
+      "pass": true,
+      "detail": "random_composition"
+    },
+    {
+      "name": "identity_equivariance_mode1",
+      "pass": true,
+      "detail": "random_composition"
+    },
+    {
+      "name": "identity_equivariance_mode1",
+      "pass": true,
+      "detail": "random_composition"
+    },
+    {
+      "name": "identity_equivariance_mode1",
+      "pass": true,
+      "detail": "random_composition"
+    },
+    {
+      "name": "identity_equivariance_mode1",
+      "pass": true,
+      "detail": "random_composition"
+    },
+    {
+      "name": "identity_equivariance_mode1",
+      "pass": true,
+      "detail": "random_composition"
+    },
+    {
+      "name": "identity_equivariance_mode1",
+      "pass": true,
+      "detail": "random_composition"
+    },
+    {
+      "name": "identity_equivariance_mode1",
+      "pass": true,
+      "detail": "random_composition"
+    },
+    {
+      "name": "identity_equivariance_mode1",
+      "pass": true,
+      "detail": "random_composition"
+    },
+    {
+      "name": "identity_equivariance_mode1",
+      "pass": true,
+      "detail": "random_composition"
+    },
+    {
+      "name": "identity_equivariance_mode1",
+      "pass": true,
+      "detail": "random_composition"
+    },
+    {
+      "name": "identity_equivariance_mode1",
+      "pass": true,
+      "detail": "random_composition"
+    },
+    {
+      "name": "identity_equivariance_mode1",
+      "pass": true,
+      "detail": "random_composition"
+    },
+    {
+      "name": "identity_equivariance_mode1",
+      "pass": true,
+      "detail": "random_composition"
+    },
+    {
+      "name": "identity_equivariance_mode1",
+      "pass": true,
+      "detail": "random_composition"
+    },
+    {
+      "name": "identity_equivariance_mode1",
+      "pass": true,
+      "detail": "random_composition"
+    },
+    {
+      "name": "identity_equivariance_mode1",
+      "pass": true,
+      "detail": "random_composition"
+    },
+    {
+      "name": "identity_equivariance_mode1",
+      "pass": true,
+      "detail": "random_composition"
+    },
+    {
+      "name": "identity_equivariance_mode1",
+      "pass": true,
+      "detail": "random_composition"
+    },
+    {
+      "name": "identity_equivariance_mode1",
+      "pass": true,
+      "detail": "random_composition"
+    },
+    {
+      "name": "identity_equivariance_mode1",
+      "pass": true,
+      "detail": "random_composition"
+    },
+    {
+      "name": "identity_equivariance_mode1",
+      "pass": true,
+      "detail": "random_composition"
+    },
+    {
+      "name": "identity_equivariance_mode1",
+      "pass": true,
+      "detail": "random_composition"
+    },
+    {
+      "name": "identity_equivariance_mode1",
+      "pass": true,
+      "detail": "random_composition"
+    },
+    {
+      "name": "identity_equivariance_mode1",
+      "pass": true,
+      "detail": "random_composition"
+    },
+    {
+      "name": "identity_equivariance_mode1",
+      "pass": true,
+      "detail": "random_composition"
+    },
+    {
+      "name": "identity_equivariance_mode1",
+      "pass": true,
+      "detail": "random_composition"
+    },
+    {
+      "name": "SCM_SET_intervention",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "SCM_SET_intervention",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "SCM_SET_intervention",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "SCM_SET_intervention",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "SCM_SET_intervention",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "SCM_SET_intervention",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "SCM_SET_intervention",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "SCM_SET_intervention",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "SCM_SET_intervention",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "SCM_SET_intervention",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "SCM_SET_intervention",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "SCM_SET_intervention",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "SCM_SET_intervention",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "SCM_SET_intervention",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "SCM_SET_intervention",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "SCM_SET_intervention",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "SCM_SET_intervention",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "SCM_SET_intervention",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "SCM_SET_intervention",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "SCM_SET_intervention",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "SCM_SET_intervention",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "SCM_SET_intervention",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "SCM_SET_intervention",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "SCM_SET_intervention",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "SCM_SET_intervention",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "SCM_SET_intervention",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "SCM_SET_intervention",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "SCM_SET_intervention",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "SCM_SET_intervention",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "SCM_SET_intervention",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "SCM_SET_intervention",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "SCM_SET_intervention",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "SCM_SET_intervention",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "SCM_SET_intervention",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "SCM_SET_intervention",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "SCM_SET_intervention",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "SCM_SET_intervention",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "SCM_SET_intervention",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "SCM_SET_intervention",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "SCM_SET_intervention",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "SCM_SET_intervention",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "SCM_SET_intervention",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "SCM_SET_intervention",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "SCM_SET_intervention",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "SCM_SET_intervention",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "SCM_SET_intervention",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "SCM_SET_intervention",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "SCM_SET_intervention",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "SCM_SET_intervention",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "SCM_SET_intervention",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "SCM_SET_intervention",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "SCM_SET_intervention",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "SCM_SET_intervention",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "SCM_SET_intervention",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "SCM_SET_intervention",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "SCM_SET_intervention",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "SCM_SET_intervention",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "SCM_SET_intervention",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "SCM_SET_intervention",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "SCM_SET_intervention",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "SCM_SET_intervention",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "SCM_SET_intervention",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "SCM_SET_intervention",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "SCM_SET_intervention",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "SCM_SET_intervention",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "SCM_SET_intervention",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "SCM_SET_intervention",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "SCM_SET_intervention",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "SCM_SET_intervention",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "SCM_SET_intervention",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "SCM_SET_intervention",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "SCM_SET_intervention",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "SCM_SET_intervention",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "SCM_SET_intervention",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "SCM_SET_intervention",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "SCM_SET_intervention",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "SCM_SET_intervention",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "SCM_SET_intervention",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "SCM_SET_intervention",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "SCM_SET_intervention",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "SCM_SET_intervention",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "SCM_SET_intervention",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "SCM_SET_intervention",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "SCM_SET_intervention",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "SCM_SET_intervention",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "SCM_SET_intervention",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "SCM_SET_intervention",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "SCM_SET_intervention",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "SCM_SET_intervention",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "SCM_SET_intervention",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "SCM_SET_intervention",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "SCM_SET_intervention",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "SCM_SET_intervention",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "SCM_SET_intervention",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "SCM_SET_intervention",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "SCM_SET_intervention",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "SCM_SET_intervention",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "SCM_SET_intervention",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "SCM_SET_intervention",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "SCM_SET_intervention",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "SCM_SET_intervention",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "SCM_SET_intervention",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "SCM_SET_intervention",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "SCM_SET_intervention",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "SCM_SET_intervention",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "SCM_SET_intervention",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "SCM_SET_intervention",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "SCM_SET_intervention",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "SCM_SET_intervention",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "SCM_SET_intervention",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "SCM_SET_intervention",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "SCM_SET_intervention",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "SCM_SET_intervention",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "SCM_SET_intervention",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "SCM_SET_intervention",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "SCM_SET_intervention",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "SCM_SET_intervention",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "SCM_SET_intervention",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "SCM_SET_intervention",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "SCM_SET_intervention",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "SCM_SET_intervention",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "SCM_SET_intervention",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "SCM_SET_intervention",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "SCM_SET_intervention",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "SCM_SET_intervention",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "SCM_SET_intervention",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "SCM_SET_intervention",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "SCM_SET_intervention",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "SCM_SET_intervention",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "SCM_SET_intervention",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "SCM_SET_intervention",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "SCM_SET_intervention",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "SCM_SET_intervention",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "SCM_SET_intervention",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "SCM_SET_intervention",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "SCM_SET_intervention",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "SCM_SET_intervention",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "SCM_SET_intervention",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "SCM_SET_intervention",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "SCM_SET_intervention",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "SCM_SET_intervention",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "SCM_SET_intervention",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "SCM_SET_intervention",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "SCM_SET_intervention",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "SCM_SET_intervention",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "SCM_SET_intervention",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "SCM_SET_intervention",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "SCM_SET_intervention",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "SCM_SET_intervention",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "SCM_SET_intervention",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "SCM_SET_intervention",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "SCM_SET_intervention",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "SCM_SET_intervention",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "SCM_SET_intervention",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "SCM_SET_intervention",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "SCM_SET_intervention",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "SCM_SET_intervention",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "SCM_SET_intervention",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "SCM_SET_intervention",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "SCM_SET_intervention",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "SCM_SET_intervention",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "SCM_SET_intervention",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "SCM_SET_intervention",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "SCM_SET_intervention",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "SCM_SET_intervention",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "SCM_SET_intervention",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "SCM_SET_intervention",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "SCM_SET_intervention",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "SCM_SET_intervention",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "SCM_SET_intervention",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "SCM_SET_intervention",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "SCM_SET_intervention",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "SCM_SET_intervention",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "SCM_SET_intervention",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "SCM_SET_intervention",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "SCM_SET_intervention",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "SCM_SET_intervention",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "SCM_SET_intervention",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "SCM_SET_intervention",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "SCM_SET_intervention",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "SCM_SET_intervention",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "SCM_SET_intervention",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "SCM_SET_intervention",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "SCM_SET_intervention",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "SCM_SET_intervention",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "SCM_SET_intervention",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "SCM_SET_intervention",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "SCM_SET_intervention",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "SCM_SET_intervention",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "SCM_SET_intervention",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "SCM_SET_intervention",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "SCM_SET_intervention",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "SCM_SET_intervention",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "SCM_SET_intervention",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "SCM_SET_intervention",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "SCM_SET_intervention",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "SCM_SET_intervention",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "SCM_SET_intervention",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "SCM_SET_intervention",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "SCM_SET_intervention",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "SCM_SET_intervention",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "SCM_SET_intervention",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "SCM_SET_intervention",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "SCM_SET_intervention",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "SCM_SET_intervention",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "SCM_SET_intervention",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "SCM_SET_intervention",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "SCM_SET_intervention",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "SCM_SET_intervention",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "SCM_SET_intervention",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "SCM_SET_intervention",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "SCM_SET_intervention",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "SCM_SET_intervention",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "SCM_SET_intervention",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "SCM_SET_intervention",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "SCM_SET_intervention",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "SCM_SET_intervention",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "SCM_SET_intervention",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "SCM_SET_intervention",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "SCM_SET_intervention",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "SCM_SET_intervention",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "SCM_SET_intervention",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "SCM_SET_intervention",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "SCM_SET_intervention",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "SCM_SET_intervention",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "SCM_SET_intervention",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "SCM_SET_intervention",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "SCM_SET_intervention",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "SCM_SET_intervention",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "SCM_SET_intervention",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "SCM_SET_intervention",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "SCM_SET_intervention",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "SCM_SET_intervention",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "SCM_SET_intervention",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "SCM_SET_intervention",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "SCM_SET_intervention",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "SCM_SET_intervention",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "SCM_SET_intervention",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "SCM_SET_intervention",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "SCM_SET_intervention",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "SCM_SET_intervention",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "SCM_SET_intervention",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "SCM_SET_intervention",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "SCM_SET_intervention",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "SCM_SET_intervention",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "SCM_SET_intervention",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "SCM_SET_intervention",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "SCM_SET_intervention",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "SCM_SET_intervention",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "SCM_SET_intervention",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "SCM_SET_intervention",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "SCM_SET_intervention",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "SCM_SET_intervention",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "SCM_SET_intervention",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "SCM_SET_intervention",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "SCM_SET_intervention",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "SCM_SET_intervention",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "SCM_SET_intervention",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "SCM_SET_intervention",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "SCM_SET_intervention",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "SCM_SET_intervention",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "SCM_SET_intervention",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "SCM_SET_intervention",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "SCM_SET_intervention",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "SCM_SET_intervention",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "SCM_SET_intervention",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "SCM_SET_intervention",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "SCM_SET_intervention",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "SCM_SET_intervention",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "SCM_SET_intervention",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "SCM_SET_intervention",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "SCM_SET_intervention",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "SCM_SET_intervention",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "SCM_SET_intervention",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "SCM_SET_intervention",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "SCM_SET_intervention",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "SCM_SET_intervention",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "SCM_SET_intervention",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "SCM_SET_intervention",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "SCM_SET_intervention",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "SCM_SET_intervention",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "SCM_SET_intervention",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "SCM_SET_intervention",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "SCM_SET_intervention",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "SCM_SET_intervention",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "SCM_SET_intervention",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "SCM_SET_intervention",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "SCM_SET_intervention",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "SCM_SET_intervention",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "SCM_SET_intervention",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "SCM_SET_intervention",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "SCM_SET_intervention",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "SCM_SET_intervention",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "SCM_SET_intervention",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "SCM_SET_intervention",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "SCM_SET_intervention",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "SCM_SET_intervention",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "SCM_SET_intervention",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "SCM_SET_intervention",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "SCM_SET_intervention",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "SCM_SET_intervention",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "SCM_SET_intervention",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "SCM_SET_intervention",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "SCM_SET_intervention",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "SCM_SET_intervention",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "SCM_SET_intervention",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "SCM_SET_intervention",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "SCM_SET_intervention",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "SCM_SET_intervention",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "SCM_SET_intervention",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "SCM_SET_intervention",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "SCM_SET_intervention",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "SCM_SET_intervention",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "SCM_SET_intervention",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "SCM_SET_intervention",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "SCM_SET_intervention",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "SCM_SET_intervention",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "SCM_SET_intervention",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "SCM_SET_intervention",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "SCM_SET_intervention",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "SCM_SET_intervention",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "SCM_SET_intervention",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "SCM_SET_intervention",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "SCM_SET_intervention",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "SCM_SET_intervention",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "SCM_SET_intervention",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "SCM_SET_intervention",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "SCM_SET_intervention",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "SCM_SET_intervention",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "SCM_SET_intervention",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "SCM_SET_intervention",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "SCM_SET_intervention",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "SCM_SET_intervention",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "SCM_SET_intervention",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "SCM_SET_intervention",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "SCM_SET_intervention",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "SCM_SET_intervention",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "SCM_SET_intervention",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "SCM_SET_intervention",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "SCM_SET_intervention",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "SCM_SET_intervention",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "SCM_SET_intervention",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "SCM_SET_intervention",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "SCM_SET_intervention",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "SCM_SET_intervention",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "SCM_SET_intervention",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "SCM_SET_intervention",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "SCM_SET_intervention",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "SCM_SET_intervention",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "SCM_SET_intervention",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "SCM_SET_intervention",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "SCM_SET_intervention",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "SCM_SET_intervention",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "SCM_SET_intervention",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "SCM_SET_intervention",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "SCM_SET_intervention",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "SCM_SET_intervention",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "SCM_SET_intervention",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "SCM_SET_intervention",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "SCM_SET_intervention",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "SCM_SET_intervention",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "SCM_SET_intervention",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "SCM_SET_intervention",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "SCM_SET_intervention",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "SCM_SET_intervention",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "SCM_SET_intervention",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "SCM_SET_intervention",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "SCM_SET_intervention",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "SCM_SET_intervention",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "SCM_SET_intervention",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "SCM_SET_intervention",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "SCM_SET_intervention",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "SCM_SET_intervention",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "SCM_SET_intervention",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "SCM_SET_intervention",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "SCM_SET_intervention",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "SCM_SET_intervention",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "SCM_SET_intervention",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "SCM_SET_intervention",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "SCM_SET_intervention",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "SCM_SET_intervention",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "SCM_SET_intervention",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "SCM_SET_intervention",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "SCM_SET_intervention",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "SCM_SET_intervention",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "SCM_SET_intervention",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "SCM_SET_intervention",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "SCM_SET_intervention",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "SCM_SET_intervention",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "SCM_SET_intervention",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "SCM_SET_intervention",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "SCM_SET_intervention",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "SCM_SET_intervention",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "SCM_SET_intervention",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "SCM_SET_intervention",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "SCM_SET_intervention",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "SCM_SET_intervention",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "SCM_SET_intervention",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "SCM_SET_intervention",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "SCM_SET_intervention",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "SCM_SET_intervention",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "SCM_SET_intervention",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "SCM_SET_intervention",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "SCM_SET_intervention",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "SCM_SET_intervention",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "SCM_SET_intervention",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "SCM_SET_intervention",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "SCM_SET_intervention",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "SCM_SET_intervention",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "SCM_SET_intervention",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "SCM_SET_intervention",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "SCM_SET_intervention",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "SCM_SET_intervention",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "SCM_SET_intervention",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "SCM_SET_intervention",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "SCM_SET_intervention",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "SCM_SET_intervention",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "SCM_SET_intervention",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "SCM_SET_intervention",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "SCM_SET_intervention",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "SCM_SET_intervention",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "SCM_SET_intervention",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "SCM_SET_intervention",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "SCM_SET_intervention",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "SCM_SET_intervention",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "SCM_SET_intervention",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "SCM_SET_intervention",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "SCM_SET_intervention",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "SCM_SET_intervention",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "SCM_SET_intervention",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "SCM_SET_intervention",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "SCM_SET_intervention",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "SCM_SET_intervention",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "SCM_SET_intervention",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "SCM_SET_intervention",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "SCM_SET_intervention",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "SCM_SET_intervention",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "SCM_SET_intervention",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "SCM_SET_intervention",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "SCM_SET_intervention",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "SCM_SET_intervention",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "SCM_SET_intervention",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "SCM_SET_intervention",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "SCM_SET_intervention",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "SCM_SET_intervention",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "SCM_SET_intervention",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "SCM_SET_intervention",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "SCM_SET_intervention",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "SCM_SET_intervention",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "SCM_SET_intervention",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "SCM_SET_intervention",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "SCM_SET_intervention",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "SCM_SET_intervention",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "SCM_SET_intervention",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "SCM_SET_intervention",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "SCM_SET_intervention",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "SCM_SET_intervention",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "SCM_SET_intervention",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "SCM_SET_intervention",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "SCM_SET_intervention",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "SCM_SET_intervention",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "SCM_SET_intervention",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "SCM_SET_intervention",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "SCM_SET_intervention",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "SCM_SET_intervention",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "SCM_SET_intervention",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "SCM_SET_intervention",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "SCM_SET_intervention",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "SCM_SET_intervention",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "SCM_SET_intervention",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "SCM_SET_intervention",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "SCM_SET_intervention",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "SCM_SET_intervention",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "SCM_SET_intervention",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "SCM_SET_intervention",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "SCM_SET_intervention",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "SCM_SET_intervention",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "SCM_SET_intervention",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "SCM_SET_intervention",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "SCM_SET_intervention",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "SCM_SET_intervention",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "SCM_SET_intervention",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "SCM_SET_intervention",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "SCM_SET_intervention",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "SCM_SET_intervention",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "SCM_SET_intervention",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "SCM_SET_intervention",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "SCM_SET_intervention",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "SCM_SET_intervention",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "SCM_SET_intervention",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "SCM_SET_intervention",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "SCM_SET_intervention",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "SCM_SET_intervention",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "SCM_SET_intervention",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "SCM_SET_intervention",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "SCM_SET_intervention",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "SCM_SET_intervention",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "SCM_SET_intervention",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "SCM_SET_intervention",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "SCM_SET_intervention",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "SCM_SET_intervention",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "SCM_SET_intervention",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "SCM_SET_intervention",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "SCM_SET_intervention",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "SCM_SET_intervention",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "SCM_SET_intervention",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "SCM_SET_intervention",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "SCM_SET_intervention",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "SCM_SET_intervention",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "SCM_SET_intervention",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "SCM_SET_intervention",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "SCM_SET_intervention",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "SCM_SET_intervention",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "SCM_SET_intervention",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "SCM_SET_intervention",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "SCM_SET_intervention",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "SCM_SET_intervention",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "SCM_SET_intervention",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "SCM_SET_intervention",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "SCM_SET_intervention",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "SCM_SET_intervention",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "SCM_SET_intervention",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "SCM_SET_intervention",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "SCM_SET_intervention",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "SCM_SET_intervention",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "SCM_SET_intervention",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "SCM_SET_intervention",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "SCM_SET_intervention",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "SCM_SET_intervention",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "SCM_SET_intervention",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "SCM_SET_intervention",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "SCM_SET_intervention",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "SCM_SET_intervention",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "SCM_SET_intervention",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "SCM_SET_intervention",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "SCM_SET_intervention",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "SCM_SET_intervention",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "SCM_SET_intervention",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "SCM_SET_intervention",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "SCM_SET_intervention",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "SCM_SET_intervention",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "SCM_SET_intervention",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "SCM_SET_intervention",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "SCM_SET_intervention",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "SCM_SET_intervention",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "SCM_SET_intervention",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "SCM_SET_intervention",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "SCM_SET_intervention",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "SCM_SET_intervention",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "SCM_SET_intervention",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "SCM_SET_intervention",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "SCM_SET_intervention",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "SCM_SET_intervention",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "SCM_SET_intervention",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "SCM_SET_intervention",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "SCM_SET_intervention",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "SCM_SET_intervention",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "SCM_SET_intervention",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "SCM_SET_intervention",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "SCM_SET_intervention",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "SCM_SET_intervention",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "SCM_SET_intervention",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "SCM_SET_intervention",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "SCM_SET_intervention",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "SCM_SET_intervention",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "SCM_SET_intervention",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "SCM_SET_intervention",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "SCM_SET_intervention",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "SCM_SET_intervention",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "SCM_SET_intervention",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "SCM_SET_intervention",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "SCM_SET_intervention",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "SCM_SET_intervention",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "SCM_SET_intervention",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "SCM_SET_intervention",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "SCM_SET_intervention",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "SCM_SET_intervention",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "SCM_SET_intervention",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "SCM_SET_intervention",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "SCM_SET_intervention",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "SCM_SET_intervention",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "SCM_SET_intervention",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "SCM_SET_intervention",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "SCM_SET_intervention",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "SCM_SET_intervention",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "SCM_SET_intervention",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "SCM_SET_intervention",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "SCM_SET_intervention",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "SCM_SET_intervention",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "SCM_SET_intervention",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "SCM_SET_intervention",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "SCM_SET_intervention",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "SCM_SET_intervention",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "SCM_SET_intervention",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "SCM_SET_intervention",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "SCM_SET_intervention",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "SCM_SET_intervention",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "SCM_SET_intervention",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "SCM_SET_intervention",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "SCM_SET_intervention",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "contradiction_preserves_both",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "conflicting_values_do_not_corroborate",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "same_source_is_not_independent",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "independent_agreement",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "int8_C_numpy_parity",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "int8_C_numpy_parity",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "int8_C_numpy_parity",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "int8_C_numpy_parity",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "int8_C_numpy_parity",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "int8_C_numpy_parity",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "int8_C_numpy_parity",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "int8_C_numpy_parity",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "int8_C_numpy_parity",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "int8_C_numpy_parity",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "int8_C_numpy_parity",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "int8_C_numpy_parity",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "int8_C_numpy_parity",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "int8_C_numpy_parity",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "int8_C_numpy_parity",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "int8_C_numpy_parity",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "int8_C_numpy_parity",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "int8_C_numpy_parity",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "int8_C_numpy_parity",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "int8_C_numpy_parity",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "int8_C_numpy_parity",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "int8_C_numpy_parity",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "int8_C_numpy_parity",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "int8_C_numpy_parity",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "int8_C_numpy_parity",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "int8_C_numpy_parity",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "int8_C_numpy_parity",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "int8_C_numpy_parity",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "int8_C_numpy_parity",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "int8_C_numpy_parity",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "int8_C_numpy_parity",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "int8_C_numpy_parity",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "int8_C_numpy_parity",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "int8_C_numpy_parity",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "int8_C_numpy_parity",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "int8_C_numpy_parity",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "int8_C_numpy_parity",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "int8_C_numpy_parity",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "int8_C_numpy_parity",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "int8_C_numpy_parity",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "int8_C_numpy_parity",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "int8_C_numpy_parity",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "int8_C_numpy_parity",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "int8_C_numpy_parity",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "int8_C_numpy_parity",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "int8_C_numpy_parity",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "int8_C_numpy_parity",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "int8_C_numpy_parity",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "int8_C_numpy_parity",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "int8_C_numpy_parity",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "int8_C_numpy_parity",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "int8_C_numpy_parity",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "int8_C_numpy_parity",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "int8_C_numpy_parity",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "int8_C_numpy_parity",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "int8_C_numpy_parity",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "int8_C_numpy_parity",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "int8_C_numpy_parity",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "int8_C_numpy_parity",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "int8_C_numpy_parity",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "int8_C_numpy_parity",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "int8_C_numpy_parity",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "int8_C_numpy_parity",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "int8_C_numpy_parity",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "int8_C_numpy_parity",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "int8_C_numpy_parity",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "int8_C_numpy_parity",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "int8_C_numpy_parity",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "int8_C_numpy_parity",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "int8_C_numpy_parity",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "int8_C_numpy_parity",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "int8_C_numpy_parity",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "int8_C_numpy_parity",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "int8_C_numpy_parity",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "int8_C_numpy_parity",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "int8_C_numpy_parity",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "int8_C_numpy_parity",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "int8_C_numpy_parity",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "int8_C_numpy_parity",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "int8_C_numpy_parity",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "int8_C_numpy_parity",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "int8_C_numpy_parity",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "int8_C_numpy_parity",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "int8_C_numpy_parity",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "int8_C_numpy_parity",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "int8_C_numpy_parity",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "int8_C_numpy_parity",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "int8_C_numpy_parity",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "int8_C_numpy_parity",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "int8_C_numpy_parity",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "int8_C_numpy_parity",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "int8_C_numpy_parity",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "int8_C_numpy_parity",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "int8_C_numpy_parity",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "int8_C_numpy_parity",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "int8_C_numpy_parity",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "int8_C_numpy_parity",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "int8_C_numpy_parity",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "int8_C_numpy_parity",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "int8_C_numpy_parity",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "int8_C_numpy_parity",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "int8_C_numpy_parity",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "int8_C_numpy_parity",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "int8_C_numpy_parity",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "int8_C_numpy_parity",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "int8_C_numpy_parity",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "int8_C_numpy_parity",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "int8_C_numpy_parity",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "int8_C_numpy_parity",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "int8_C_numpy_parity",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "int8_C_numpy_parity",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "int8_C_numpy_parity",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "int8_C_numpy_parity",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "int8_C_numpy_parity",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "int8_C_numpy_parity",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "int8_C_numpy_parity",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "int8_C_numpy_parity",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "int8_C_numpy_parity",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "int8_C_numpy_parity",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "int8_C_numpy_parity",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "int8_C_numpy_parity",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "int8_C_numpy_parity",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "int8_C_numpy_parity",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "int8_C_numpy_parity",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "int8_C_numpy_parity",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "int8_C_numpy_parity",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "int8_C_numpy_parity",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "int8_C_numpy_parity",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "int8_C_numpy_parity",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "int8_C_numpy_parity",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "int8_C_numpy_parity",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "int8_C_numpy_parity",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "int8_C_numpy_parity",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "int8_C_numpy_parity",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "int8_C_numpy_parity",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "int8_C_numpy_parity",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "int8_C_numpy_parity",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "int8_C_numpy_parity",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "int8_C_numpy_parity",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "int8_C_numpy_parity",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "int8_C_numpy_parity",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "int8_C_numpy_parity",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "int8_C_numpy_parity",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "int8_C_numpy_parity",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "int8_C_numpy_parity",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "int8_C_numpy_parity",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "int8_C_numpy_parity",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "int8_C_numpy_parity",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "int8_C_numpy_parity",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "int8_C_numpy_parity",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "int8_C_numpy_parity",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "int8_C_numpy_parity",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "int8_C_numpy_parity",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "int8_C_numpy_parity",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "int8_C_numpy_parity",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "int8_C_numpy_parity",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "int8_C_numpy_parity",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "int8_C_numpy_parity",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "int8_C_numpy_parity",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "int8_C_numpy_parity",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "int8_C_numpy_parity",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "int8_C_numpy_parity",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "int8_C_numpy_parity",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "int8_C_numpy_parity",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "int8_C_numpy_parity",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "int8_C_numpy_parity",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "int8_C_numpy_parity",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "int8_C_numpy_parity",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "view_never_mutates",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "no_unavailable_secret",
+      "pass": true,
+      "detail": null
+    }
+  ],
+  "scope": "Typed graph correctness and identity equivariance; not evidence of general natural-language comprehension."
+}

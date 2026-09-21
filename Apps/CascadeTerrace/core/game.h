@@ -154,6 +154,8 @@ void world_advance(Game*, int64_t game_ms);
 int validate_world(const Generated*, char*, size_t);
 void npc_view(const Game*, NpcView*);
 void dialogue(Game*, Conversation*, const char*, int compositional, Reply*);
+void cognition_dialogue(Game*, Conversation*, const char*, Reply*);
+void general_dialogue(Game*, Conversation*, const char*, int, Reply*);
 int save_game(Game*, const char*);
 int load_game(Game*, const char*);
 size_t state_encode(const State*, uint8_t*, size_t);

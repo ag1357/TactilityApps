@@ -1,0 +1,16 @@
+Apps/CascadeTerrace/core/decision.c:12:6:cg_predict	496	static
+Apps/CascadeTerrace/core/semantic.c:12:13:lower	48	static
+Apps/CascadeTerrace/core/semantic.c:13:12:word	48	static
+Apps/CascadeTerrace/core/semantic.c:14:12:any	208	static
+Apps/CascadeTerrace/core/semantic.c:73:12:consult.isra	8	static
+Apps/CascadeTerrace/core/semantic.c:9:10:cg_hash	32	static
+Apps/CascadeTerrace/core/semantic.c:10:5:cg_fact_index	8	static
+Apps/CascadeTerrace/core/semantic.c:78:12:derive	128	dynamic,bounded
+Apps/CascadeTerrace/core/semantic.c:151:6:cg_realize.part.0.constprop	368	dynamic,bounded
+Apps/CascadeTerrace/core/semantic.c:61:5:cg_features	1328	dynamic,bounded
+Apps/CascadeTerrace/core/semantic.c:17:6:cg_parse	1376	static
+Apps/CascadeTerrace/core/semantic.c:86:10:cg_legal_mask	16	static
+Apps/CascadeTerrace/core/semantic.c:136:5:cg_verify	64	static
+Apps/CascadeTerrace/core/semantic.c:93:6:cg_execute	768	dynamic,bounded
+Apps/CascadeTerrace/core/semantic.c:151:6:cg_realize	8	static
+Apps/CascadeTerrace/core/semantic.c:162:6:cg_respond	96	static

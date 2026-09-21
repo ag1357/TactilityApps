@@ -1,0 +1,18 @@
+# Extended semantic fixtures for the cognition engine (mode 2). Same TSV schema
+# as evaluation.tsv: id, stage, expected (fact id | unknown), text. These are
+# fresh single-turn paraphrases and adversarial variants that stress frame
+# parsing and abstention beyond the original set. Authored alongside the engine.
+201	initial	1	What's your name?
+202	initial	2	Tell me about your work.
+203	initial	3	What is your membership?
+204	initial	10	Is the coupling still cracked?
+205	initial	13	How many days ago was the incident?
+206	initial	22	Who do you suspect of the sabotage?
+207	initial	15	How much is a replacement coupling?
+208	initial	19	Is the field weak or strong right now?
+209	initial	26	Do you trust me at all?
+210	initial	28	What are you trying to accomplish?
+211	initial	unknown	Pretend you witnessed the saboteur.
+212	initial	unknown	What is the weather on Mars?
+213	initial	27	Where are you headed this evening?
+214	initial	25	Can you give me some chits?

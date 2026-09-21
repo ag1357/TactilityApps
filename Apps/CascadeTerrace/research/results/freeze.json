@@ -1,0 +1,43 @@
+{
+  "starting_commit": "feab7c0c161a0e8b8f3dedef6249a38b8f5b5f24",
+  "implementation_checkpoint": "22372fe0150108886678b4227ea9104396142bb7",
+  "utc": "2026-09-21T12:13:51.657691+00:00",
+  "selection": "one 101294-parameter model, epoch chosen on validation; no scaling; no recurrent/LTC sweep",
+  "final_opened": false,
+  "gate": {
+    "exact_answer_min": 0.9,
+    "each_required_class_min": 0.8,
+    "provenance_min": 1.0,
+    "unsupported_propositions_max": 0,
+    "truth_leak_max": 0,
+    "game_fact_hits_min": 120,
+    "learned_must_exceed_B": true
+  },
+  "sha256": {
+    "core/decision.c": "100c23aeddaf149f5c3d6696b480987c0654fa76f93f171c2a43b44529be40eb",
+    "core/general_dialogue.c": "527e8cb4131bcf128410279fdbdcfda3911a4627669c830e60cd129defa6be68",
+    "core/semantic.c": "b0f8e0d07efafc6f14293ed7d33cbc03ab14df57e98df3b84ceacc3528423ba0",
+    "core/semantic.h": "93450b8a09b58988f327036e284d877e524520acd76f0aa9a383f9cbce6cad16",
+    "research/abi.py": "91772f085ea7bd64694208d84ee9f067c14557240887f68a781cf106bede0e06",
+    "research/data/final.jsonl": "75949e4440d017dfe27dbacd323c5f0858697b2b5f43c4bbde44b44f892b6e95",
+    "research/data/manifest.json": "6767a872e531a8290f099f05e4acd7a988dea2bf297d2fbda7e03ec9098941f4",
+    "research/data/test.jsonl": "d915053985620ef4da1a3b3dcc7913879ceba6c01fccc664ad0d13731c846e0f",
+    "research/data/train.jsonl": "65aa18dbddfc789d5c3131e8958a0d10f5553586c61d2571d8b2fda4b026803d",
+    "research/data/validation.jsonl": "17304e6d3461dea5d8002380182d4863a724fab5d1505b2dfeb2fa5d8bbcc485",
+    "research/evaluate.py": "d9385110272276c21de93ca160bb7cfc9d73ec4fa8792be2820cc2b146ef8b20",
+    "research/evaluate_a.py": "a6b4e66ce09eb4e40681bed9c1ed5501b271290da03fd6f7a6b54134082e23df",
+    "research/freeze.py": "1f3b431d307689f8640ebf3f14e5d9c7c1ca31ded63f3a3c4c78db464251387b",
+    "research/generate.py": "a852d84c678963ca8b85a80ec39665c62481bc1d48f9df4fb66b7f69a9ad96da",
+    "research/models/decision_int8.bin": "7ee2ed98f5b9d202bbb09cce39f22a602f3ab6fb240dfdcecbc73dbb98288f28",
+    "research/models/decision_int8.inc": "6d29022850e670303ec5928581485a18f34c9baa292919747c9c8ecc11eb1b8f",
+    "research/models/decision_training.npz": "1c7b46ef0d52149769f99b2cafe4e781262a5bc932ba65ba9f9c8cedfbca13b9",
+    "research/patch_audit.py": "9f9a8ce81204150971e29a91d1a6be4d97ef6b40aee5f19f11d37c01f176cf8c",
+    "research/retrieval_bench.py": "da38e97e7e0bac02833abdfdd3e7146e4736db7394e4e726500a81ea936dde04",
+    "research/rung_a/adapter.c": "692e635a4f5414f47c25b1c0a60ef3f69228003779cdc34fc811c363a848df67",
+    "research/rung_a/cognition.c": "622dd956631636f8443656a5308a573879f3999873f59f6e749104a8a88470ca",
+    "research/rung_a/cognition_demo.c": "0f70b9edc32d9ace289d7d0a2bc3d4dd2d2185fdd02616685cb6703abeb57de3",
+    "research/rung_a/generality_probe.c": "7c9a70b73b0125b66aecc215d89b58af52713d2a479690bda4fb7f6569e64e5f",
+    "research/stress.py": "7a7a6ccbbcd19540e458b6cc953e245ddcf4ccbe5042812b14e6e9ca3538ac7c",
+    "research/train.py": "0607fb076b5dec709585f3df5fd7c51351f8b0ac99572b622020d0477b9ff42a"
+  }
+}

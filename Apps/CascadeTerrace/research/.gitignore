@@ -1,0 +1,5 @@
+__pycache__/
+*.ppm
+data/*.jsonl
+results/*traces.jsonl
+results/p4-reconfigure.log

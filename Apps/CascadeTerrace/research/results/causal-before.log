@@ -1,0 +1,44 @@
+COMMAND kyra: OK
+DIALOGUE 0.0518 ms | What is your occupation?
+[knowledge] I | occupation | shift technician at the Hydro-phos station
+COMMAND say What is your occupation?: OK
+COMMAND snapshot results/kyra-dialogue.ppm: OK
+DIALOGUE 0.0448 ms | I noticed lights along the ridge.
+[claim] player | said | I noticed lights along the ridge.
+COMMAND say I noticed lights along the ridge.: OK
+DIALOGUE 0.0603 ms | I will bring a coupling tomorrow.
+[memory] player | promised | I will bring a coupling tomorrow.
+COMMAND say I will bring a coupling tomorrow.: OK
+COMMAND leave: OK
+COMMAND wait 200: OK
+COMMAND condense 9: OK
+COMMAND wait 200: OK
+COMMAND condense 9: OK
+COMMAND wait 200: OK
+COMMAND condense 9: OK
+COMMAND wait 200: OK
+COMMAND condense 9: OK
+COMMAND wait 200: OK
+COMMAND condense 9: OK
+COMMAND wait 200: OK
+COMMAND condense 9: OK
+COMMAND wait 200: OK
+COMMAND condense 9: OK
+COMMAND walk 22000 -75000: OK
+COMMAND site 1: OK
+COMMAND site 2: OK
+COMMAND buy coupling: OK
+COMMAND snapshot results/market.ppm: OK
+COMMAND site 1: OK
+COMMAND walk 22000 -75000: OK
+COMMAND site 0: OK
+COMMAND morning: OK
+COMMAND kyra: OK
+COMMAND leave: OK
+COMMAND walk 22000 -96500: OK
+COMMAND repair: OK
+DIALOGUE 0.2083 ms | What do you remember about the player?
+[memory] player commitment | status | broken [memory] player | repaired | station intake [memory] player | broke a promise | replacement coupling
+COMMAND say What do you remember about the player?: OK
+COMMAND snapshot results/repaired.ppm: OK
+COMMAND save: OK

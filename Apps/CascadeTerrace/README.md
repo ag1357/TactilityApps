@@ -1,3 +1,5 @@
+> General cognition research continuation: [measured results, failures and build instructions](docs/GENERAL_COGNITION.md). Modes 2–4 are experimental; mode 0 remains default. Q1 is incomplete and physical qualification remains pending.
+
 # Cascade Terrace — P4 RPG implementation
 
 **Playable implementation checkpoint. Q1 is incomplete; Q2 has no physical results.**

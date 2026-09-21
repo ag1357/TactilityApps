@@ -1,0 +1,19 @@
+== State-tracking: same question, changing world (seed 42) ==
+  [PASS] "What happened to the station?" -> expects "cracked"
+  [PASS] "Do you trust me?" -> expects "0 on a scale"
+  [PASS] "What happened to the station?" -> expects "intact"
+  [PASS] "Do you trust me?" -> expects "30 on a scale"
+
+== Promise lifecycle drives the greeting response ==
+  [PASS] "Hello again." -> expects "pending"
+  [PASS] "Hello again." -> expects "broken"
+
+== Value-level tracking (not a constant) ==
+  [PASS] "Do you trust me?" -> expects "-40 on a scale"
+
+== Provenance + abstention across seeds and variants ==
+  15 seed/variant worlds x 6 questions: provenance leaks = 0
+  30 adversarial/unknowable probes: abstention failures = 0
+
+=================================================
+generality probe: PASS (0 violations)

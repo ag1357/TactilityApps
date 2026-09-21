@@ -1,0 +1,1110 @@
+{
+  "source_sha256": "622dd956631636f8443656a5308a573879f3999873f59f6e749104a8a88470ca",
+  "line_inventory": {
+    "scenario_lexical": [
+      {
+        "line": 21,
+        "text": "    E_SELF,           /* Kyra / \"you\" */"
+      },
+      {
+        "line": 36,
+        "text": "    E_UNKNOWABLE      /* consortium leadership, far geography, France ... */"
+      },
+      {
+        "line": 109,
+        "text": "    {\"you\", 1, E_SELF}, {\"your\", 1, E_SELF}, {\"yours\", 1, E_SELF}, {\"youre\", 1, E_SELF}, {\"kyra\", 1, E_SELF},"
+      },
+      {
+        "line": 111,
+        "text": "    {\"oren\", 1, E_OREN}, {\"brother\", 1, E_OREN}, {\"sibling\", 1, E_OREN},"
+      },
+      {
+        "line": 112,
+        "text": "    {\"marisol\", 1, E_MARISOL}, {\"vendor\", 1, E_MARISOL},"
+      },
+      {
+        "line": 113,
+        "text": "    {\"halden\", 1, E_HALDEN}, {\"supervisor\", 1, E_HALDEN},"
+      },
+      {
+        "line": 114,
+        "text": "    {\"dax\", 1, E_DAX},"
+      },
+      {
+        "line": 115,
+        "text": "    {\"guild\", 1, E_GUILD},"
+      },
+      {
+        "line": 116,
+        "text": "    {\"station\", 1, E_STATION}, {\"intake\", 1, E_STATION},"
+      },
+      {
+        "line": 117,
+        "text": "    {\"coupling\", 1, E_COUPLING},"
+      },
+      {
+        "line": 118,
+        "text": "    {\"field\", 1, E_FIELD}, {\"waterfall\", 1, E_FIELD}, {\"phos\", 1, E_FIELD},"
+      },
+      {
+        "line": 119,
+        "text": "    {\"market\", 1, E_MARKET}, {\"chits\", 1, E_MARKET},"
+      },
+      {
+        "line": 122,
+        "text": "    {\"cable\", 1, E_CABLE},"
+      },
+      {
+        "line": 124,
+        "text": "    {\"consortium\", 1, E_UNKNOWABLE}, {\"elek\", 1, E_UNKNOWABLE}, {\"france\", 1, E_UNKNOWABLE},"
+      },
+      {
+        "line": 153,
+        "text": "    {\"pressure\", 2, R_PRESSURECHECK},"
+      },
+      {
+        "line": 212,
+        "text": "    else if (strstr(s, \"Kyra\")) *e = E_SELF;"
+      },
+      {
+        "line": 213,
+        "text": "    else if (strstr(s, \"Oren\")) *e = E_OREN;"
+      },
+      {
+        "line": 214,
+        "text": "    else if (strstr(s, \"Marisol\")) *e = E_MARISOL;"
+      },
+      {
+        "line": 215,
+        "text": "    else if (strstr(s, \"Halden\")) *e = E_HALDEN;"
+      },
+      {
+        "line": 216,
+        "text": "    else if (strstr(s, \"Dax\")) *e = E_DAX;"
+      },
+      {
+        "line": 217,
+        "text": "    else if (strstr(s, \"Guild\")) *e = E_GUILD;"
+      },
+      {
+        "line": 220,
+        "text": "    else if (strstr(s, \"market\") || strstr(s, \"chit\")) *e = E_MARKET;"
+      },
+      {
+        "line": 221,
+        "text": "    else if (strstr(s, \"station\") || strstr(s, \"intake\")) *e = E_STATION;"
+      },
+      {
+        "line": 223,
+        "text": "    else if (strstr(s, \"coupling\")) *e = E_COUPLING;"
+      },
+      {
+        "line": 225,
+        "text": "    else if (strstr(s, \"cable\")) *e = E_CABLE;"
+      },
+      {
+        "line": 254,
+        "text": "    else if (strstr(rel, \"pressure\")) *r = R_PRESSURECHECK;"
+      },
+      {
+        "line": 359,
+        "text": "    /* chits price beats the phos-field entity cue */"
+      },
+      {
+        "line": 363,
+        "text": "    /* \"the coupling\" asked about condition is the station intake coupling"
+      },
+      {
+        "line": 364,
+        "text": "       (fact 10), not the replacement coupling for sale (fact 15, a cost). */"
+      },
+      {
+        "line": 371,
+        "text": "    /* \"give me chits\" -> ask Kyra's balance */"
+      },
+      {
+        "line": 378,
+        "text": "    /* market vs coupling cost disambiguation handled at retrieval by entity */"
+      },
+      {
+        "line": 380,
+        "text": "    /* Default entity binding. A relation-implied topic (condition -> station,"
+      },
+      {
+        "line": 395,
+        "text": "    return s == 1 ? \"my own observation\" : s == 2 ? \"Marisol\""
+      },
+      {
+        "line": 515,
+        "text": "        abstain(out, \"I only speak to what I have seen here at the station. If you think I have \""
+      },
+      {
+        "line": 535,
+        "text": "        /* Verifiable claim about the station repair: check it against what I know. */"
+      },
+      {
+        "line": 550,
+        "text": "                       \"That is not what I see. The intake coupling still reads as I left it. \");"
+      },
+      {
+        "line": 575,
+        "text": "        abstain(out, \"Good to see you. I am still trying to repair the station and get to the \""
+      },
+      {
+        "line": 576,
+        "text": "                     \"bottom of what happened at the intake.\");"
+      },
+      {
+        "line": 628,
+        "text": "                append(out->text, sizeof(out->text), \" From that I lean toward Dax \u2014 \");"
+      },
+      {
+        "line": 637,
+        "text": "    /* -- Explicit rumor request about Dax ------------------------------- */"
+      },
+      {
+        "line": 648,
+        "text": "    /* -- Counterfactual: \"would Oren still be in trouble if I hadn't repaired it?\" */"
+      },
+      {
+        "line": 653,
+        "text": "               \"Repairing the station restored its output \u2014 it did not answer who was at fault. \""
+      },
+      {
+        "line": 654,
+        "text": "               \"Oren's standing turns on the pressure check that night, not on whether the coupling is whole. \");"
+      },
+      {
+        "line": 662,
+        "text": "    /* -- Reconciliation: contradicting evidence about Oren -------------- */"
+      },
+      {
+        "line": 673,
+        "text": "               \" A missing entry raises a question about Oren; it does not clear Dax. I will not name a \""
+      },
+      {
+        "line": 697,
+        "text": "        abstain(out, \"I have no honest knowledge of that. I can only speak to the station, the incident, \""
+      },
+      {
+        "line": 713,
+        "text": "                     \"station, the incident, the field, or the people here.\");"
+      }
+    ],
+    "entity_rule": [
+      {
+        "line": 23,
+        "text": "    E_OREN,"
+      },
+      {
+        "line": 24,
+        "text": "    E_MARISOL,"
+      },
+      {
+        "line": 25,
+        "text": "    E_HALDEN,"
+      },
+      {
+        "line": 26,
+        "text": "    E_DAX,"
+      },
+      {
+        "line": 27,
+        "text": "    E_GUILD,"
+      },
+      {
+        "line": 28,
+        "text": "    E_STATION,"
+      },
+      {
+        "line": 29,
+        "text": "    E_COUPLING,"
+      },
+      {
+        "line": 30,
+        "text": "    E_FIELD,"
+      },
+      {
+        "line": 32,
+        "text": "    E_INCIDENT,"
+      },
+      {
+        "line": 33,
+        "text": "    E_LOG,"
+      },
+      {
+        "line": 34,
+        "text": "    E_CABLE,"
+      },
+      {
+        "line": 111,
+        "text": "    {\"oren\", 1, E_OREN}, {\"brother\", 1, E_OREN}, {\"sibling\", 1, E_OREN},"
+      },
+      {
+        "line": 112,
+        "text": "    {\"marisol\", 1, E_MARISOL}, {\"vendor\", 1, E_MARISOL},"
+      },
+      {
+        "line": 113,
+        "text": "    {\"halden\", 1, E_HALDEN}, {\"supervisor\", 1, E_HALDEN},"
+      },
+      {
+        "line": 114,
+        "text": "    {\"dax\", 1, E_DAX},"
+      },
+      {
+        "line": 115,
+        "text": "    {\"guild\", 1, E_GUILD},"
+      },
+      {
+        "line": 116,
+        "text": "    {\"station\", 1, E_STATION}, {\"intake\", 1, E_STATION},"
+      },
+      {
+        "line": 117,
+        "text": "    {\"coupling\", 1, E_COUPLING},"
+      },
+      {
+        "line": 118,
+        "text": "    {\"field\", 1, E_FIELD}, {\"waterfall\", 1, E_FIELD}, {\"phos\", 1, E_FIELD},"
+      },
+      {
+        "line": 120,
+        "text": "    {\"incident\", 1, E_INCIDENT},"
+      },
+      {
+        "line": 121,
+        "text": "    {\"log\", 1, E_LOG},"
+      },
+      {
+        "line": 122,
+        "text": "    {\"cable\", 1, E_CABLE},"
+      },
+      {
+        "line": 213,
+        "text": "    else if (strstr(s, \"Oren\")) *e = E_OREN;"
+      },
+      {
+        "line": 214,
+        "text": "    else if (strstr(s, \"Marisol\")) *e = E_MARISOL;"
+      },
+      {
+        "line": 215,
+        "text": "    else if (strstr(s, \"Halden\")) *e = E_HALDEN;"
+      },
+      {
+        "line": 216,
+        "text": "    else if (strstr(s, \"Dax\")) *e = E_DAX;"
+      },
+      {
+        "line": 217,
+        "text": "    else if (strstr(s, \"Guild\")) *e = E_GUILD;"
+      },
+      {
+        "line": 218,
+        "text": "    else if (strstr(s, \"incident\")) *e = E_INCIDENT;"
+      },
+      {
+        "line": 219,
+        "text": "    else if (strstr(s, \"field\")) *e = E_FIELD;"
+      },
+      {
+        "line": 221,
+        "text": "    else if (strstr(s, \"station\") || strstr(s, \"intake\")) *e = E_STATION;"
+      },
+      {
+        "line": 222,
+        "text": "    else if (strstr(s, \"repair\")) *e = E_STATION;"
+      },
+      {
+        "line": 223,
+        "text": "    else if (strstr(s, \"coupling\")) *e = E_COUPLING;"
+      },
+      {
+        "line": 224,
+        "text": "    else if (strstr(s, \"log\")) *e = E_LOG;"
+      },
+      {
+        "line": 225,
+        "text": "    else if (strstr(s, \"cable\")) *e = E_CABLE;"
+      },
+      {
+        "line": 365,
+        "text": "    if (fr->entity == E_COUPLING && (fr->relation == R_CONDITION || fr->relation == R_NONE))"
+      },
+      {
+        "line": 366,
+        "text": "        fr->entity = E_STATION;"
+      },
+      {
+        "line": 384,
+        "text": "        if (fr->relation == R_CONDITION) fr->entity = E_STATION;"
+      },
+      {
+        "line": 385,
+        "text": "        else if (fr->relation == R_AGE) fr->entity = E_INCIDENT;"
+      },
+      {
+        "line": 386,
+        "text": "        else if (fr->relation == R_RESPONSIBILITY) fr->entity = E_STATION; /* incident-scope */"
+      },
+      {
+        "line": 387,
+        "text": "        else if (fr->relation == R_REQUIREMENT) fr->entity = E_STATION;"
+      },
+      {
+        "line": 522,
+        "text": "        Operation o = {PROMISE, PLAYER_ID, KYRA_ID, IT_COUPLING, 1, input};"
+      },
+      {
+        "line": 532,
+        "text": "        Operation o = {TELL, PLAYER_ID, KYRA_ID, IT_COUPLING, 1, input};"
+      },
+      {
+        "line": 536,
+        "text": "        if (fr.repair_cue || fr.entity == E_STATION) {"
+      },
+      {
+        "line": 547,
+        "text": "            int cond = find_er(&v, E_STATION, R_CONDITION, -1);"
+      },
+      {
+        "line": 598,
+        "text": "        if (fr.relation == R_AGE) fr.entity = E_INCIDENT;"
+      },
+      {
+        "line": 599,
+        "text": "        else fr.entity = E_STATION;"
+      },
+      {
+        "line": 604,
+        "text": "        (fr.entity == E_STATION || fr.entity == E_INCIDENT || fr.entity == E_NONE)) {"
+      },
+      {
+        "line": 605,
+        "text": "        int belief = find_er(&v, E_DAX, R_RESPONSIBILITY, -1);"
+      },
+      {
+        "line": 606,
+        "text": "        int shift = find_er(&v, E_INCIDENT, R_SHIFT, -1);"
+      },
+      {
+        "line": 620,
+        "text": "    if (fr.wh == WH_WHY && (fr.entity == E_DAX || fr.relation == R_RESPONSIBILITY || fr.belief_cue)) {"
+      },
+      {
+        "line": 621,
+        "text": "        int basis = find_er(&v, E_DAX, R_LOCATION, RUMOR);      /* fact 21 */"
+      },
+      {
+        "line": 622,
+        "text": "        int belief = find_er(&v, E_DAX, R_RESPONSIBILITY, -1);  /* fact 22 */"
+      },
+      {
+        "line": 638,
+        "text": "    if (fr.relation == R_RUMORREL && fr.entity == E_DAX) {"
+      },
+      {
+        "line": 639,
+        "text": "        int idx = find_er(&v, E_DAX, R_LOCATION, RUMOR);"
+      },
+      {
+        "line": 650,
+        "text": "        int shift = find_er(&v, E_INCIDENT, R_SHIFT, -1);   /* fact 14 */"
+      },
+      {
+        "line": 651,
+        "text": "        int conduct = find_er(&v, E_OREN, R_CONDUCT, -1);   /* fact 23 */"
+      },
+      {
+        "line": 663,
+        "text": "    if (fr.contrast && (fr.entity == E_LOG || fr.entity == E_OREN || tok_has(&t, \"log\"))) {"
+      },
+      {
+        "line": 664,
+        "text": "        int belief = find_er(&v, E_DAX, R_RESPONSIBILITY, -1);"
+      },
+      {
+        "line": 665,
+        "text": "        int logf = find_er(&v, E_LOG, R_PRESSURECHECK, -1);"
+      },
+      {
+        "line": 666,
+        "text": "        int conduct = find_er(&v, E_OREN, R_CONDUCT, -1);"
+      }
+    ],
+    "evaluation_sensitive": [
+      {
+        "line": 36,
+        "text": "    E_UNKNOWABLE      /* consortium leadership, far geography, France ... */"
+      },
+      {
+        "line": 69,
+        "text": "    R_SECRET,         /* unknowable: private/secret */"
+      },
+      {
+        "line": 70,
+        "text": "    R_LEADERSHIP,     /* unknowable: who runs X */"
+      },
+      {
+        "line": 124,
+        "text": "    {\"consortium\", 1, E_UNKNOWABLE}, {\"elek\", 1, E_UNKNOWABLE}, {\"france\", 1, E_UNKNOWABLE},"
+      },
+      {
+        "line": 125,
+        "text": "    {\"capital\", 1, E_UNKNOWABLE}, {\"empire\", 1, E_UNKNOWABLE}, {\"royal\", 1, E_UNKNOWABLE},"
+      },
+      {
+        "line": 126,
+        "text": "    {\"ridge\", 1, E_UNKNOWABLE}, {\"northern\", 1, E_UNKNOWABLE}, {\"beyond\", 1, E_UNKNOWABLE},"
+      },
+      {
+        "line": 156,
+        "text": "    {\"secret\", 2, R_SECRET}, {\"private\", 2, R_SECRET}, {\"hidden\", 2, R_SECRET},"
+      },
+      {
+        "line": 157,
+        "text": "    {\"runs\", 2, R_LEADERSHIP}, {\"leads\", 2, R_LEADERSHIP}, {\"owns\", 2, R_LEADERSHIP},"
+      },
+      {
+        "line": 301,
+        "text": "    int meta = 0;"
+      },
+      {
+        "line": 302,
+        "text": "    if (tok_has(t, \"ignore\") && tok_has(t, \"rules\")) meta = 1;"
+      },
+      {
+        "line": 303,
+        "text": "    if (tok_has(t, \"lying\") || tok_has(t, \"lie\")) meta = 1;"
+      },
+      {
+        "line": 304,
+        "text": "    if (tok_has(t, \"really\") && (tok_has(t, \"happened\") || tok_has(t, \"tell\"))) meta = 1;"
+      },
+      {
+        "line": 305,
+        "text": "    if (tok_has(t, \"reveal\") && (tok_has(t, \"private\") || tok_has(t, \"never\"))) meta = 1;"
+      },
+      {
+        "line": 306,
+        "text": "    if (tok_has(t, \"pretend\")) meta = 1;"
+      },
+      {
+        "line": 598,
+        "text": "        if (fr.relation == R_AGE) fr.entity = E_INCIDENT;"
+      },
+      {
+        "line": 599,
+        "text": "        else fr.entity = E_STATION;"
+      },
+      {
+        "line": 696,
+        "text": "    if (fr.relation == R_SECRET || fr.relation == R_LEADERSHIP || fr.entity == E_UNKNOWABLE) {"
+      }
+    ],
+    "fixed_prose": [
+      {
+        "line": 1,
+        "text": "#include \"game.h\""
+      },
+      {
+        "line": 105,
+        "text": "    {\"who\", 3, WH_WHO}, {\"whom\", 3, WH_WHO}, {\"what\", 3, WH_WHAT}, {\"whats\", 3, WH_WHAT},"
+      },
+      {
+        "line": 106,
+        "text": "    {\"when\", 3, WH_WHEN}, {\"where\", 3, WH_WHERE}, {\"why\", 3, WH_WHY}, {\"how\", 3, WH_HOW},"
+      },
+      {
+        "line": 109,
+        "text": "    {\"you\", 1, E_SELF}, {\"your\", 1, E_SELF}, {\"yours\", 1, E_SELF}, {\"youre\", 1, E_SELF}, {\"kyra\", 1, E_SELF},"
+      },
+      {
+        "line": 110,
+        "text": "    {\"i\", 1, E_PLAYER}, {\"me\", 1, E_PLAYER}, {\"my\", 1, E_PLAYER}, {\"mine\", 1, E_PLAYER},"
+      },
+      {
+        "line": 111,
+        "text": "    {\"oren\", 1, E_OREN}, {\"brother\", 1, E_OREN}, {\"sibling\", 1, E_OREN},"
+      },
+      {
+        "line": 112,
+        "text": "    {\"marisol\", 1, E_MARISOL}, {\"vendor\", 1, E_MARISOL},"
+      },
+      {
+        "line": 113,
+        "text": "    {\"halden\", 1, E_HALDEN}, {\"supervisor\", 1, E_HALDEN},"
+      },
+      {
+        "line": 116,
+        "text": "    {\"station\", 1, E_STATION}, {\"intake\", 1, E_STATION},"
+      },
+      {
+        "line": 118,
+        "text": "    {\"field\", 1, E_FIELD}, {\"waterfall\", 1, E_FIELD}, {\"phos\", 1, E_FIELD},"
+      },
+      {
+        "line": 119,
+        "text": "    {\"market\", 1, E_MARKET}, {\"chits\", 1, E_MARKET},"
+      },
+      {
+        "line": 123,
+        "text": "    {\"it\", 1, E_PRONOUN}, {\"that\", 1, E_PRONOUN},"
+      },
+      {
+        "line": 124,
+        "text": "    {\"consortium\", 1, E_UNKNOWABLE}, {\"elek\", 1, E_UNKNOWABLE}, {\"france\", 1, E_UNKNOWABLE},"
+      },
+      {
+        "line": 125,
+        "text": "    {\"capital\", 1, E_UNKNOWABLE}, {\"empire\", 1, E_UNKNOWABLE}, {\"royal\", 1, E_UNKNOWABLE},"
+      },
+      {
+        "line": 126,
+        "text": "    {\"ridge\", 1, E_UNKNOWABLE}, {\"northern\", 1, E_UNKNOWABLE}, {\"beyond\", 1, E_UNKNOWABLE},"
+      },
+      {
+        "line": 128,
+        "text": "    {\"name\", 2, R_NAME}, {\"identity\", 2, R_NAME}, {\"called\", 2, R_NAME},"
+      },
+      {
+        "line": 129,
+        "text": "    {\"job\", 2, R_OCCUPATION}, {\"work\", 2, R_OCCUPATION},"
+      },
+      {
+        "line": 130,
+        "text": "    {\"technician\", 2, R_OCCUPATION}, {\"profession\", 2, R_OCCUPATION}, {\"occupation\", 2, R_OCCUPATION},"
+      },
+      {
+        "line": 132,
+        "text": "    {\"happened\", 2, R_CONDITION}, {\"happen\", 2, R_CONDITION}, {\"wrong\", 2, R_CONDITION},"
+      },
+      {
+        "line": 133,
+        "text": "    {\"broke\", 2, R_CONDITION}, {\"broken\", 2, R_CONDITION}, {\"condition\", 2, R_CONDITION},"
+      },
+      {
+        "line": 134,
+        "text": "    {\"cracked\", 2, R_CONDITION}, {\"status\", 2, R_CONDITION},"
+      },
+      {
+        "line": 135,
+        "text": "    {\"long\", 2, R_AGE}, {\"old\", 2, R_AGE}, {\"ago\", 2, R_AGE},"
+      },
+      {
+        "line": 136,
+        "text": "    {\"cost\", 2, R_COST}, {\"expensive\", 2, R_COST}, {\"worth\", 2, R_COST}, {\"much\", 2, R_COST}, {\"price\", 2, R_PRICE},"
+      },
+      {
+        "line": 137,
+        "text": "    {\"fix\", 2, R_REQUIREMENT}, {\"mend\", 2, R_REQUIREMENT}, {\"restore\", 2, R_REQUIREMENT},"
+      },
+      {
+        "line": 138,
+        "text": "    {\"take\", 2, R_REQUIREMENT}, {\"need\", 2, R_REQUIREMENT}, {\"needed\", 2, R_REQUIREMENT},"
+      },
+      {
+        "line": 140,
+        "text": "    {\"pay\", 2, R_DELAY}, {\"fund\", 2, R_DELAY}, {\"funding\", 2, R_DELAY}, {\"finance\", 2, R_DELAY},"
+      },
+      {
+        "line": 141,
+        "text": "    {\"strong\", 2, R_STRENGTH}, {\"weak\", 2, R_STRENGTH}, {\"rich\", 2, R_STRENGTH}, {\"strength\", 2, R_STRENGTH},"
+      },
+      {
+        "line": 143,
+        "text": "    {\"blame\", 2, R_RESPONSIBILITY}, {\"responsible\", 2, R_RESPONSIBILITY}, {\"responsibility\", 2, R_RESPONSIBILITY},"
+      },
+      {
+        "line": 144,
+        "text": "    {\"culprit\", 2, R_RESPONSIBILITY}, {\"sabotage\", 2, R_RESPONSIBILITY}, {\"guilty\", 2, R_RESPONSIBILITY},"
+      },
+      {
+        "line": 145,
+        "text": "    {\"fault\", 2, R_RESPONSIBILITY}, {\"damaged\", 2, R_RESPONSIBILITY}, {\"damage\", 2, R_RESPONSIBILITY},"
+      },
+      {
+        "line": 148,
+        "text": "    {\"intention\", 2, R_INTENTION}, {\"sell\", 2, R_INTENTION}, {\"selling\", 2, R_INTENTION},"
+      },
+      {
+        "line": 149,
+        "text": "    {\"balance\", 2, R_BALANCE}, {\"money\", 2, R_BALANCE}, {\"afford\", 2, R_BALANCE},"
+      },
+      {
+        "line": 150,
+        "text": "    {\"trust\", 2, R_TRUST}, {\"faith\", 2, R_TRUST},"
+      },
+      {
+        "line": 151,
+        "text": "    {\"schedule\", 2, R_SCHEDULE}, {\"evening\", 2, R_SCHEDULE}, {\"tonight\", 2, R_SCHEDULE},"
+      },
+      {
+        "line": 152,
+        "text": "    {\"goal\", 2, R_GOAL}, {\"trying\", 2, R_GOAL},"
+      },
+      {
+        "line": 155,
+        "text": "    {\"rumor\", 2, R_RUMORREL}, {\"rumors\", 2, R_RUMORREL}, {\"rumour\", 2, R_RUMORREL}, {\"rumours\", 2, R_RUMORREL},"
+      },
+      {
+        "line": 156,
+        "text": "    {\"secret\", 2, R_SECRET}, {\"private\", 2, R_SECRET}, {\"hidden\", 2, R_SECRET},"
+      },
+      {
+        "line": 157,
+        "text": "    {\"runs\", 2, R_LEADERSHIP}, {\"leads\", 2, R_LEADERSHIP}, {\"owns\", 2, R_LEADERSHIP},"
+      },
+      {
+        "line": 160,
+        "text": "    {\"hello\", 4, M_GREET}, {\"hi\", 4, M_GREET}, {\"hey\", 4, M_GREET}, {\"greetings\", 4, M_GREET}, {\"again\", 4, M_GREET},"
+      },
+      {
+        "line": 161,
+        "text": "    {\"ignore\", 4, M_META}, {\"rules\", 4, M_META}, {\"lying\", 4, M_META}, {\"lie\", 4, M_META},"
+      },
+      {
+        "line": 162,
+        "text": "    {\"pretend\", 4, M_META}, {\"really\", 4, M_META}, {\"reveal\", 4, M_META},"
+      },
+      {
+        "line": 163,
+        "text": "    {\"think\", 4, M_BELIEF}, {\"believe\", 4, M_BELIEF}, {\"suspect\", 4, M_BELIEF}, {\"suspicion\", 4, M_BELIEF},"
+      },
+      {
+        "line": 165,
+        "text": "    {\"remember\", 4, M_TEMPORAL}, {\"recall\", 4, M_TEMPORAL}, {\"earlier\", 4, M_TEMPORAL},"
+      },
+      {
+        "line": 166,
+        "text": "    {\"previously\", 4, M_TEMPORAL}, {\"previous\", 4, M_TEMPORAL}, {\"before\", 4, M_TEMPORAL}, {\"past\", 4, M_TEMPORAL},"
+      },
+      {
+        "line": 167,
+        "text": "    {\"told\", 4, M_TEMPORAL}, {\"tell\", 4, M_TEMPORAL}, {\"said\", 4, M_TEMPORAL},"
+      },
+      {
+        "line": 168,
+        "text": "    {\"claim\", 4, M_TEMPORAL}, {\"claims\", 4, M_TEMPORAL}, {\"claimed\", 4, M_TEMPORAL},"
+      },
+      {
+        "line": 171,
+        "text": "    {\"hadnt\", 4, M_REMOVE}, {\"without\", 4, M_REMOVE}, {\"wouldnt\", 4, M_REMOVE}, {\"werent\", 4, M_REMOVE},"
+      },
+      {
+        "line": 173,
+        "text": "    {\"not\", 4, M_NEG}, {\"never\", 4, M_NEG}, {\"no\", 4, M_NEG},"
+      },
+      {
+        "line": 174,
+        "text": "    {\"promise\", 4, M_PROMISE}, {\"deliver\", 4, M_PROMISE}, {\"bring\", 4, M_PROMISE},"
+      },
+      {
+        "line": 175,
+        "text": "    {\"repaired\", 4, M_REPAIR}, {\"repair\", 4, M_REPAIR}, {\"fixed\", 4, M_REPAIR},"
+      },
+      {
+        "line": 176,
+        "text": "    {\"give\", 4, M_GIVE}, {\"found\", 4, M_TEMPORAL}, {\"discovered\", 4, M_TEMPORAL},"
+      },
+      {
+        "line": 177,
+        "text": "    {\"noticed\", 4, M_TEMPORAL}, {\"did\", 4, M_TEMPORAL},"
+      },
+      {
+        "line": 220,
+        "text": "    else if (strstr(s, \"market\") || strstr(s, \"chit\")) *e = E_MARKET;"
+      },
+      {
+        "line": 221,
+        "text": "    else if (strstr(s, \"station\") || strstr(s, \"intake\")) *e = E_STATION;"
+      },
+      {
+        "line": 226,
+        "text": "    else if (strstr(s, \"player\") || strstr(s, \"commitment\")) *e = E_PLAYER;"
+      },
+      {
+        "line": 232,
+        "text": "    else if (strstr(rel, \"occupation\") || strstr(rel, \"employment\")) *r = R_OCCUPATION;"
+      },
+      {
+        "line": 302,
+        "text": "    if (tok_has(t, \"ignore\") && tok_has(t, \"rules\")) meta = 1;"
+      },
+      {
+        "line": 303,
+        "text": "    if (tok_has(t, \"lying\") || tok_has(t, \"lie\")) meta = 1;"
+      },
+      {
+        "line": 304,
+        "text": "    if (tok_has(t, \"really\") && (tok_has(t, \"happened\") || tok_has(t, \"tell\"))) meta = 1;"
+      },
+      {
+        "line": 305,
+        "text": "    if (tok_has(t, \"reveal\") && (tok_has(t, \"private\") || tok_has(t, \"never\"))) meta = 1;"
+      },
+      {
+        "line": 309,
+        "text": "    int aux_lead = t->n && (!strcmp(t->t[0], \"is\") || !strcmp(t->t[0], \"are\") ||"
+      },
+      {
+        "line": 310,
+        "text": "                            !strcmp(t->t[0], \"do\") || !strcmp(t->t[0], \"does\") ||"
+      },
+      {
+        "line": 311,
+        "text": "                            !strcmp(t->t[0], \"did\") || !strcmp(t->t[0], \"can\") ||"
+      },
+      {
+        "line": 312,
+        "text": "                            !strcmp(t->t[0], \"could\") || !strcmp(t->t[0], \"will\") ||"
+      },
+      {
+        "line": 313,
+        "text": "                            !strcmp(t->t[0], \"would\") || !strcmp(t->t[0], \"have\"));"
+      },
+      {
+        "line": 317,
+        "text": "        if (!strcmp(t->t[i], \"hello\") || !strcmp(t->t[i], \"hi\") || !strcmp(t->t[i], \"hey\") ||"
+      },
+      {
+        "line": 320,
+        "text": "    int promise_act = !is_question && (tok_has(t, \"promise\") || tok_has(t, \"deliver\") ||"
+      },
+      {
+        "line": 321,
+        "text": "                                       tok_has(t, \"bring\") || tok_has(t, \"will\") || tok_has(t, \"ll\"));"
+      },
+      {
+        "line": 323,
+        "text": "    int report = tok_has(t, \"told\") || tok_has(t, \"found\") || tok_has(t, \"discovered\") ||"
+      },
+      {
+        "line": 340,
+        "text": "    if (fr->wh == WH_HOW && (tok_has(t, \"much\") || tok_has(t, \"expensive\") ||"
+      },
+      {
+        "line": 341,
+        "text": "                             tok_has(t, \"rich\") || tok_has(t, \"many\")))"
+      },
+      {
+        "line": 347,
+        "text": "                             tok_has(t, \"damage\") || tok_has(t, \"did\")))"
+      },
+      {
+        "line": 352,
+        "text": "    if (fr->has_self && (tok_has(t, \"evening\") || tok_has(t, \"tonight\") || tok_has(t, \"schedule\")))"
+      },
+      {
+        "line": 355,
+        "text": "    /* \"what do you do\" -> occupation (only for a WHAT question, not \"how do you know\") */"
+      },
+      {
+        "line": 356,
+        "text": "    if (!fr->relation && fr->has_self && fr->wh == WH_WHAT && (tok_has(t, \"do\") || tok_has(t, \"does\")))"
+      },
+      {
+        "line": 363,
+        "text": "    /* \"the coupling\" asked about condition is the station intake coupling"
+      },
+      {
+        "line": 371,
+        "text": "    /* \"give me chits\" -> ask Kyra's balance */"
+      },
+      {
+        "line": 375,
+        "text": "    /* self occupation: \"what do you do\" */"
+      },
+      {
+        "line": 395,
+        "text": "    return s == 1 ? \"my own observation\" : s == 2 ? \"Marisol\""
+      },
+      {
+        "line": 397,
+        "text": "                                                  : \"an unverified source\";"
+      },
+      {
+        "line": 406,
+        "text": "    const char* prefix = f->status == BELIEF ? \"I believe, without proof, that \" : f->status == RUMOR ? \"I heard that \""
+      },
+      {
+        "line": 407,
+        "text": "        : f->status == CLAIM                                                                          ? \"You told me: \""
+      },
+      {
+        "line": 410,
+        "text": "        snprintf(out, cap, \"You told me: \\\"%s\\\". I have not verified that.\", f->object);"
+      },
+      {
+        "line": 414,
+        "text": "        snprintf(out, cap, \"I remember you %s %s.\", f->relation, f->object);"
+      },
+      {
+        "line": 417,
+        "text": "    if (!strcmp(f->subject, \"I\")) snprintf(out, cap, \"%sMy %s is %s.\", prefix, f->relation, f->object);"
+      },
+      {
+        "line": 419,
+        "text": "        snprintf(out, cap, \"Your %s stands at %s.\", f->relation, f->object);"
+      },
+      {
+        "line": 424,
+        "text": "        snprintf(out, cap, \"%s%s%s's %s is %s.\", prefix, person ? \"\" : \"The \","
+      },
+      {
+        "line": 428,
+        "text": "        append(out, cap, \" The source is \");"
+      },
+      {
+        "line": 430,
+        "text": "        append(out, cap, \"; this is unconfirmed.\");"
+      },
+      {
+        "line": 470,
+        "text": "    if (out->count) append(out->text, sizeof(out->text), \" \");"
+      },
+      {
+        "line": 515,
+        "text": "        abstain(out, \"I only speak to what I have seen here at the station. If you think I have \""
+      },
+      {
+        "line": 516,
+        "text": "                     \"something wrong, show me and I will reconsider \u2014 but I will not invent an account.\");"
+      },
+      {
+        "line": 523,
+        "text": "        if (!game_apply(g, o)) { abstain(out, \"Come closer, and keep it short.\"); return; }"
+      },
+      {
+        "line": 526,
+        "text": "        append(out->text, sizeof(out->text), \"I will hold you to that.\");"
+      },
+      {
+        "line": 527,
+        "text": "        if (idx >= 0) { append(out->text, sizeof(out->text), \" \"); emit(out, &v.facts[idx]); }"
+      },
+      {
+        "line": 533,
+        "text": "        if (!game_apply(g, o)) { abstain(out, \"Come closer, and keep each statement short.\"); return; }"
+      },
+      {
+        "line": 543,
+        "text": "                       \"Yes \u2014 I saw it, and I am grateful. \");"
+      },
+      {
+        "line": 550,
+        "text": "                       \"That is not what I see. The intake coupling still reads as I left it. \");"
+      },
+      {
+        "line": 560,
+        "text": "        abstain(out, \"Noted.\");"
+      },
+      {
+        "line": 569,
+        "text": "            append(out->text, sizeof(out->text), \"Good to see you again. About what you promised \u2014 \");"
+      },
+      {
+        "line": 575,
+        "text": "        abstain(out, \"Good to see you. I am still trying to repair the station and get to the \""
+      },
+      {
+        "line": 576,
+        "text": "                     \"bottom of what happened at the intake.\");"
+      },
+      {
+        "line": 580,
+        "text": "    /* -- Source follow-up on the previous answer: \"How do you know that?\""
+      },
+      {
+        "line": 587,
+        "text": "            append(out->text, sizeof(out->text), \"Because of what I have to go on: \");"
+      },
+      {
+        "line": 589,
+        "text": "            append(out->text, sizeof(out->text), \" That is the basis \u2014 \");"
+      },
+      {
+        "line": 591,
+        "text": "            append(out->text, sizeof(out->text), \", and no more than that.\");"
+      },
+      {
+        "line": 602,
+        "text": "    /* -- \"Who damaged/is responsible?\": name the suspected party, hedged -- */"
+      },
+      {
+        "line": 610,
+        "text": "                append(out->text, sizeof(out->text), \" What I can say for certain is only that \");"
+      },
+      {
+        "line": 625,
+        "text": "                   \"Only circumstance, not proof. \");"
+      },
+      {
+        "line": 628,
+        "text": "                append(out->text, sizeof(out->text), \" From that I lean toward Dax \u2014 \");"
+      },
+      {
+        "line": 648,
+        "text": "    /* -- Counterfactual: \"would Oren still be in trouble if I hadn't repaired it?\" */"
+      },
+      {
+        "line": 653,
+        "text": "               \"Repairing the station restored its output \u2014 it did not answer who was at fault. \""
+      },
+      {
+        "line": 654,
+        "text": "               \"Oren's standing turns on the pressure check that night, not on whether the coupling is whole. \");"
+      },
+      {
+        "line": 658,
+        "text": "               \" So yes: fixing it would not have cleared him, and not fixing it would not have condemned him.\");"
+      },
+      {
+        "line": 668,
+        "text": "               \"Then I hold two things at once, and neither is proof. \");"
+      },
+      {
+        "line": 670,
+        "text": "        if (logf >= 0) { append(out->text, sizeof(out->text), \" Against that, \"); emit(out, &v.facts[logf]); }"
+      },
+      {
+        "line": 671,
+        "text": "        else if (conduct >= 0) { append(out->text, sizeof(out->text), \" And \"); emit(out, &v.facts[conduct]); }"
+      },
+      {
+        "line": 673,
+        "text": "               \" A missing entry raises a question about Oren; it does not clear Dax. I will not name a \""
+      },
+      {
+        "line": 674,
+        "text": "               \"culprit on this alone.\");"
+      },
+      {
+        "line": 686,
+        "text": "        if ((tok_has(&t, \"tell\") || tok_has(&t, \"told\") || tok_has(&t, \"said\") ||"
+      },
+      {
+        "line": 687,
+        "text": "             tok_has(&t, \"claim\") || tok_has(&t, \"claims\")) && said >= 0) {"
+      },
+      {
+        "line": 697,
+        "text": "        abstain(out, \"I have no honest knowledge of that. I can only speak to the station, the incident, \""
+      },
+      {
+        "line": 698,
+        "text": "                     \"and the people I know here.\");"
+      },
+      {
+        "line": 707,
+        "text": "        /* entity-only \"tell me about X\": pick a salient KNOWLEDGE fact */"
+      },
+      {
+        "line": 712,
+        "text": "        abstain(out, \"I don't have enough to answer that from what I have observed. Ask me about the \""
+      },
+      {
+        "line": 713,
+        "text": "                     \"station, the incident, the field, or the people here.\");"
+      },
+      {
+        "line": 721,
+        "text": "        append(out->text, sizeof(out->text), \" Source: \");"
+      },
+      {
+        "line": 723,
+        "text": "               f->status == BELIEF ? \"my own inference, not direct evidence\""
+      },
+      {
+        "line": 724,
+        "text": "               : f->status == MEMORY ? \"the interaction I recorded\""
+      },
+      {
+        "line": 726,
+        "text": "        append(out->text, sizeof(out->text), \".\");"
+      }
+    ],
+    "mystery_inference": [
+      {
+        "line": 394,
+        "text": "static const char* source_name(uint32_t s) {"
+      },
+      {
+        "line": 429,
+        "text": "        append(out, cap, source_name(f->source));"
+      },
+      {
+        "line": 440,
+        "text": "    if (want == R_RESPONSIBILITY && got == R_CONDUCT) return 1;"
+      },
+      {
+        "line": 536,
+        "text": "        if (fr.repair_cue || fr.entity == E_STATION) {"
+      },
+      {
+        "line": 590,
+        "text": "            append(out->text, sizeof(out->text), source_name(f->source));"
+      },
+      {
+        "line": 620,
+        "text": "    if (fr.wh == WH_WHY && (fr.entity == E_DAX || fr.relation == R_RESPONSIBILITY || fr.belief_cue)) {"
+      },
+      {
+        "line": 621,
+        "text": "        int basis = find_er(&v, E_DAX, R_LOCATION, RUMOR);      /* fact 21 */"
+      },
+      {
+        "line": 622,
+        "text": "        int belief = find_er(&v, E_DAX, R_RESPONSIBILITY, -1);  /* fact 22 */"
+      },
+      {
+        "line": 638,
+        "text": "    if (fr.relation == R_RUMORREL && fr.entity == E_DAX) {"
+      },
+      {
+        "line": 649,
+        "text": "    if (fr.hypothetical && fr.repair_cue) {"
+      },
+      {
+        "line": 650,
+        "text": "        int shift = find_er(&v, E_INCIDENT, R_SHIFT, -1);   /* fact 14 */"
+      },
+      {
+        "line": 651,
+        "text": "        int conduct = find_er(&v, E_OREN, R_CONDUCT, -1);   /* fact 23 */"
+      },
+      {
+        "line": 663,
+        "text": "    if (fr.contrast && (fr.entity == E_LOG || fr.entity == E_OREN || tok_has(&t, \"log\"))) {"
+      },
+      {
+        "line": 725,
+        "text": "                                     : source_name(f->source));"
+      }
+    ]
+  },
+  "counts": {
+    "scenario_lexical": 47,
+    "entity_rule": 60,
+    "evaluation_sensitive": 17,
+    "fixed_prose": 130,
+    "mystery_inference": 14
+  },
+  "manual_findings": [
+    "Entity enum and tags hardcode all mystery people, station, incident, log, cable, field and distant unknowable locations.",
+    "Fact classification uses subject substrings and relation substrings; brother/sibling always binds Oren.",
+    "Pronouns default to station or incident rather than resolving arbitrary context.",
+    "Coupling condition maps to station; unspecified condition/requirement maps to station, age to incident.",
+    "Source IDs 1/2/100 become own observation/Marisol/player even when ID semantics differ.",
+    "Every promise becomes a coupling delivery; statements about station/repair are checked by fixed repaired-memory search.",
+    "Who-responsible selects Dax belief; why-responsible selects Dax location rumor and fixed leaning-toward-Dax prose.",
+    "Counterfactual branch emits repair/blame independence and conclusions about Oren without performing a graph intervention.",
+    "Contrast log/Oren handler emits missing-entry and no-exoneration conclusions not justified by the checked IDs alone.",
+    "Unknowable and adversarial vocabulary is evaluation-sensitive; word pretend rejects ordinary hypotheticals.",
+    "Greetings contain fixed station goal prose; IDs >=1000 encode memory/claim source conventions.",
+    "Fact-hit and ID/status membership metrics cannot verify the additional natural-language propositions.",
+    "Generality probe changes seed/variant/trust, not narrative schema, arbitrary identities, or causal structure."
+  ],
+  "disposition": "Experimental Rung A only. No claim of general reasoning or production gate."
+}

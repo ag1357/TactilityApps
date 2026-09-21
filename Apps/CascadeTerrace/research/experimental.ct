@@ -1,0 +1,9 @@
+kyra
+say What is your occupation?
+snapshot research/results/general-occupation.ppm
+say What is the source of that?
+snapshot research/results/general-source.ppm
+say What is Oren occupation?
+say What is his relationship?
+say What is the weather on Mars?
+quit

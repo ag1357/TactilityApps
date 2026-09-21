@@ -1,0 +1,18 @@
+COMMAND kyra: OK
+DIALOGUE 0.1313 ms | What is your occupation?
+[knowledge] I: occupation = shift technician at the Hydro-phos station. 
+COMMAND say What is your occupation?: OK
+COMMAND snapshot research/results/general-occupation.ppm: OK
+DIALOGUE 0.0471 ms | What is the source of that?
+[knowledge] I: occupation = shift technician at the Hydro-phos station. Recorded source ID 1 (unidentified source). 
+COMMAND say What is the source of that?: OK
+COMMAND snapshot research/results/general-source.ppm: OK
+DIALOGUE 0.0444 ms | What is Oren occupation?
+[knowledge] Oren: occupation = night-shift operator. 
+COMMAND say What is Oren occupation?: OK
+DIALOGUE 0.0418 ms | What is his relationship?
+I do not have authorized evidence sufficient to answer that.
+COMMAND say What is his relationship?: OK
+DIALOGUE 0.0413 ms | What is the weather on Mars?
+I do not have authorized evidence sufficient to answer that.
+COMMAND say What is the weather on Mars?: OK

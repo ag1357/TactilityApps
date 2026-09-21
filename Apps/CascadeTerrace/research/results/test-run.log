@@ -1,0 +1,29 @@
+{
+  "oracle": {
+    "answer": 1.0,
+    "frame": 1.0,
+    "provenance": 1.0,
+    "errors": {
+      "none": 1344
+    }
+  },
+  "B": {
+    "answer": 0.9761904761904762,
+    "frame": 0.9523809523809523,
+    "provenance": 1.0,
+    "errors": {
+      "none": 1312,
+      "semantic_parse": 32
+    }
+  },
+  "C": {
+    "answer": 0.8809523809523809,
+    "frame": 0.9047619047619048,
+    "provenance": 1.0,
+    "errors": {
+      "semantic_parse": 128,
+      "none": 1184,
+      "operator_policy": 32
+    }
+  }
+}

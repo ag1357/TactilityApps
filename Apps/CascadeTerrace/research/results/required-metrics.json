@@ -1,0 +1,176 @@
+{
+  "oracle": {
+    "semantic_parsing": {
+      "strict_all_supplied_frame_fields": 1.0,
+      "reported_primary_frame_metric": 1.0,
+      "entity": 1.0,
+      "relation": 1.0,
+      "speech_act": 1.0,
+      "epistemic": 1.0,
+      "negation": 1.0,
+      "hypothetical": 1.0
+    },
+    "reference": {
+      "pronoun": 1.0,
+      "multi_turn_referent": 1.0,
+      "ambiguity": 1.0
+    },
+    "retrieval": {
+      "candidate_completeness": 1.0,
+      "selected_relevance": 1.0,
+      "hot_read_bytes": 0
+    },
+    "cognition": {
+      "operator_accuracy": 1.0,
+      "argument_accuracy": 1.0,
+      "causal": 1.0,
+      "counterfactual": 1.0,
+      "contradiction": 1.0,
+      "source": 1.0,
+      "belief_update": 1.0
+    },
+    "epistemics": {
+      "unsupported_propositions": 0,
+      "emitted_propositions": 1445,
+      "truth_canary_leaks": 0,
+      "provenance_valid": 1.0,
+      "correct_unknown": 1.0,
+      "correct_out_of_world": 1.0,
+      "uncertainty": "status preservation measured; numeric confidence is uncalibrated, NOT an uncertainty quality score"
+    },
+    "memory": {
+      "event_retrieval": 1.0,
+      "promise_state": 1.0,
+      "multi_turn_context": 1.0,
+      "real_post_reload": "See general-reload.log and learned-reload.log. Both return repair plus an unwanted OTHER memory; exact recall is not PASS."
+    },
+    "realization": {
+      "omissions": 0,
+      "extra_proposition_check": "schema/verifier only, not independent human annotation",
+      "fluency": "NOT MEASURED"
+    },
+    "system": {
+      "mean_latency_ms": 0.003380517857142857,
+      "p95_latency_ms": 0.004457,
+      "first_output": "Nonstreaming realizer: first output equals complete response; history-bearing tests include preceding turns in timer.",
+      "median_realized_utf8_bytes_per_second": 22212629.350166805,
+      "physical": "PENDING"
+    }
+  },
+  "B": {
+    "semantic_parsing": {
+      "strict_all_supplied_frame_fields": 0.7767857142857143,
+      "reported_primary_frame_metric": 0.9523809523809523,
+      "entity": 1.0,
+      "relation": 0.9761904761904762,
+      "speech_act": 1.0,
+      "epistemic": 0.9761904761904762,
+      "negation": 1.0,
+      "hypothetical": 1.0
+    },
+    "reference": {
+      "pronoun": 1.0,
+      "multi_turn_referent": 1.0,
+      "ambiguity": 1.0
+    },
+    "retrieval": {
+      "candidate_completeness": 0.9778546712802768,
+      "selected_relevance": 1.0,
+      "hot_read_bytes": 0
+    },
+    "cognition": {
+      "operator_accuracy": 0.8244047619047619,
+      "argument_accuracy": 1.0,
+      "causal": 1.0,
+      "counterfactual": 1.0,
+      "contradiction": 1.0,
+      "source": 1.0,
+      "belief_update": 1.0
+    },
+    "epistemics": {
+      "unsupported_propositions": 0,
+      "emitted_propositions": 1413,
+      "truth_canary_leaks": 0,
+      "provenance_valid": 1.0,
+      "correct_unknown": 1.0,
+      "correct_out_of_world": 1.0,
+      "uncertainty": "status preservation measured; numeric confidence is uncalibrated, NOT an uncertainty quality score"
+    },
+    "memory": {
+      "event_retrieval": 1.0,
+      "promise_state": 1.0,
+      "multi_turn_context": 1.0,
+      "real_post_reload": "See general-reload.log and learned-reload.log. Both return repair plus an unwanted OTHER memory; exact recall is not PASS."
+    },
+    "realization": {
+      "omissions": 0,
+      "extra_proposition_check": "schema/verifier only, not independent human annotation",
+      "fluency": "NOT MEASURED"
+    },
+    "system": {
+      "mean_latency_ms": 0.007275808035714286,
+      "p95_latency_ms": 0.011841,
+      "first_output": "Nonstreaming realizer: first output equals complete response; history-bearing tests include preceding turns in timer.",
+      "median_realized_utf8_bytes_per_second": 8383485.448527791,
+      "physical": "PENDING"
+    }
+  },
+  "C": {
+    "semantic_parsing": {
+      "strict_all_supplied_frame_fields": 0.8095238095238095,
+      "reported_primary_frame_metric": 0.9047619047619048,
+      "entity": 1.0,
+      "relation": 0.9285714285714286,
+      "speech_act": 1.0,
+      "epistemic": 0.9761904761904762,
+      "negation": 1.0,
+      "hypothetical": 1.0
+    },
+    "reference": {
+      "pronoun": 1.0,
+      "multi_turn_referent": 1.0,
+      "ambiguity": 1.0
+    },
+    "retrieval": {
+      "candidate_completeness": 0.7785467128027682,
+      "selected_relevance": 1.0,
+      "hot_read_bytes": 0
+    },
+    "cognition": {
+      "operator_accuracy": 0.8809523809523809,
+      "argument_accuracy": 1.0,
+      "causal": 1.0,
+      "counterfactual": 1.0,
+      "contradiction": 0.0,
+      "source": 1.0,
+      "belief_update": 1.0
+    },
+    "epistemics": {
+      "unsupported_propositions": 0,
+      "emitted_propositions": 1125,
+      "truth_canary_leaks": 0,
+      "provenance_valid": 1.0,
+      "correct_unknown": 1.0,
+      "correct_out_of_world": 1.0,
+      "uncertainty": "status preservation measured; numeric confidence is uncalibrated, NOT an uncertainty quality score"
+    },
+    "memory": {
+      "event_retrieval": 1.0,
+      "promise_state": 1.0,
+      "multi_turn_context": 1.0,
+      "real_post_reload": "See general-reload.log and learned-reload.log. Both return repair plus an unwanted OTHER memory; exact recall is not PASS."
+    },
+    "realization": {
+      "omissions": 0,
+      "extra_proposition_check": "schema/verifier only, not independent human annotation",
+      "fluency": "NOT MEASURED"
+    },
+    "system": {
+      "mean_latency_ms": 0.017062859375,
+      "p95_latency_ms": 0.027091,
+      "first_output": "Nonstreaming realizer: first output equals complete response; history-bearing tests include preceding turns in timer.",
+      "median_realized_utf8_bytes_per_second": 4346881.204063734,
+      "physical": "PENDING"
+    }
+  }
+}

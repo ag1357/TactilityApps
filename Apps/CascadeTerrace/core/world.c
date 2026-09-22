@@ -1,4 +1,5 @@
 #include "game.h"
+#include "../content/cascade_adapter.h"
 #include <limits.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -50,12 +51,7 @@ void generate(Generated* w, uint32_t seed, int variant) {
     w->seed = seed;
     w->version = GEN_VERSION;
     w->variant = variant >= 0 ? (uint8_t)(variant % 3) : (uint8_t)(hash32(seed ^ 0xa217U) % 3);
-    int shift = (int)(hash32(seed) % 5) - 2;
-    w->sites[STATION] = (Site) {{22000, 4000, -110000}, 11000, 12000, 11000};
-    w->sites[HOME] = (Site) {{(70 + shift * 5) * 1000, 19000, (-35 + shift * 5) * 1000}, 9000, 9000, 8000};
-    w->sites[MARKET] = (Site) {{(100 - shift * 5) * 1000, 30000, (30 + shift * 5) * 1000}, 14000, 12000, 6000};
-    w->sites[BRIDGE] = (Site) {{0, 3000, -75000}, 18000, 5000, 0};
-    w->sites[TUNNEL] = (Site) {{(-65 + shift * 5) * 1000, 7000, -20000}, 9000, 14000, 6500};
+    if (!cascade_recipe_sites(w,seed)) return;
     Pos nodes[7] = {w->sites[STATION].center, {22000, 3000, -75000}, w->sites[HOME].center, w->sites[MARKET].center, {-22000, 3000, -75000}, w->sites[TUNNEL].center, {-22000, 0, 30000}};
     const int links[][2] = {{0, 1}, {1, 2}, {2, 3}, {1, 4}, {4, 5}, {5, 6}, {6, 4}};
     for (int iz = 0; iz < MAP_N; iz++)

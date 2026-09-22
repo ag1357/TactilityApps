@@ -1,0 +1,28 @@
+{
+  "frames": 120,
+  "player": 101,
+  "peers_seen": [
+    102
+  ],
+  "mean_render_ms": 0.6597460499885225,
+  "wire_sent": 4020,
+  "wire_received": 47145,
+  "public_hash": "aebff02c51165d5f6aeb2a5415a15821a9b62f873e042cbf07ae335fe0703e00",
+  "actions": [
+    {
+      "action": "EXTRACT",
+      "status": 0
+    },
+    {
+      "action": "REPAIR",
+      "status": 0
+    }
+  ],
+  "final_position": {
+    "x": 22000,
+    "y": 4300,
+    "z": -100400,
+    "scope": 65535
+  },
+  "physical": false
+}

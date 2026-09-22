@@ -7,6 +7,17 @@ if [[ $# -ne 1 ]]; then echo 'Usage: scripts/deploy-cm5.sh P4_HOST' >&2; exit 2;
 # hardware qualification run. CASCADE_REBUILD=1 explicitly rebuilds from source.
 if [[ "${CASCADE_REBUILD:-0}" == 1 ]]; then
     scripts/build-p4.sh
+elif [[ ! -f build-p4-native/cascadeterrace.app.elf && -f releases/worldsdk/cascadeterrace.app.elf.gz ]]; then
+    mkdir -p build build-p4-native
+    python3 - <<'UNPACK'
+import gzip,hashlib,json,pathlib
+packed=pathlib.Path('releases/worldsdk/cascadeterrace.app.elf.gz').read_bytes()
+record=json.loads(pathlib.Path('results/worldsdk/p4-build.json').read_text())
+assert hashlib.sha256(packed).hexdigest()==record['compressed_elf_sha256']
+data=gzip.decompress(packed)
+assert hashlib.sha256(data).hexdigest()==record['elf_sha256']
+pathlib.Path('build-p4-native/cascadeterrace.app.elf').write_bytes(data)
+UNPACK
 elif [[ ! -f build-p4-native/cascadeterrace.app.elf && -f research/releases/cascadeterrace.app.elf ]]; then
     mkdir -p build build-p4-native
     cp research/releases/cascadeterrace.app.elf build-p4-native/cascadeterrace.app.elf

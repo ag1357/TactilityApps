@@ -334,3 +334,5 @@ void render_world(Renderer *r,const WsRecipe *world,WsAddress player,int yaw,WsM
     }
     person(player.pos.x/1000.f,player.pos.y/1000.f,player.pos.z/1000.f,0,r->frame/20.f);
 }
+void render_world_peer(WsPos p) { person(p.x/1000.f,p.y/1000.f,p.z/1000.f,1,0); }
+void render_world_marker(WsPos p,uint32_t rgb) { box(p.x/1000.f,p.y/1000.f,p.z/1000.f,.4f,.8f,.4f,rgb); }

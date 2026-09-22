@@ -1,0 +1,225 @@
+{
+  "status": "FAILED",
+  "passed": 1,
+  "tested": 18,
+  "gate": "SDK traversal production promotion blocked when any declared edge fails",
+  "method": "Direct walk edges, 100 mm swept steps using runtime ground and collision. Not a search for alternate routes.",
+  "rows": [
+    {
+      "recipe": "cascade",
+      "from": "station",
+      "to": "bridge",
+      "pass": false,
+      "steps": 135,
+      "stop": [
+        14819,
+        4300,
+        -98618
+      ]
+    },
+    {
+      "recipe": "cascade",
+      "from": "bridge",
+      "to": "home",
+      "pass": false,
+      "steps": 717,
+      "stop": [
+        61705,
+        17399,
+        -39789
+      ]
+    },
+    {
+      "recipe": "cascade",
+      "from": "home",
+      "to": "market",
+      "pass": false,
+      "steps": 93,
+      "stop": [
+        73813,
+        20713,
+        -26630
+      ]
+    },
+    {
+      "recipe": "cascade",
+      "from": "bridge",
+      "to": "tunnel",
+      "pass": false,
+      "steps": 734,
+      "stop": [
+        -55678,
+        6723,
+        -27973
+      ]
+    },
+    {
+      "recipe": "cascade",
+      "from": "home",
+      "to": "lift_base",
+      "pass": false,
+      "steps": 92,
+      "stop": [
+        61628,
+        19300,
+        -38616
+      ]
+    },
+    {
+      "recipe": "cascade",
+      "from": "lift_top",
+      "to": "rooftop",
+      "pass": true,
+      "steps": 252,
+      "stop": [
+        69932,
+        27400,
+        -35030
+      ]
+    },
+    {
+      "recipe": "elek_grid",
+      "from": "tower_0_0",
+      "to": "tower_1_0",
+      "pass": false,
+      "steps": 84,
+      "stop": [
+        7865,
+        300,
+        -159
+      ]
+    },
+    {
+      "recipe": "elek_grid",
+      "from": "tower_0_0",
+      "to": "tower_0_1",
+      "pass": false,
+      "steps": 214,
+      "stop": [
+        -187,
+        300,
+        20686
+      ]
+    },
+    {
+      "recipe": "elek_grid",
+      "from": "tower_0_1",
+      "to": "tower_1_1",
+      "pass": false,
+      "steps": 84,
+      "stop": [
+        8365,
+        300,
+        29916
+      ]
+    },
+    {
+      "recipe": "elek_grid",
+      "from": "tower_0_1",
+      "to": "tower_0_2",
+      "pass": false,
+      "steps": 214,
+      "stop": [
+        313,
+        300,
+        51186
+      ]
+    },
+    {
+      "recipe": "elek_grid",
+      "from": "tower_0_2",
+      "to": "tower_1_2",
+      "pass": false,
+      "steps": 84,
+      "stop": [
+        8900,
+        300,
+        60500
+      ]
+    },
+    {
+      "recipe": "elek_grid",
+      "from": "tower_1_0",
+      "to": "tower_2_0",
+      "pass": false,
+      "steps": 84,
+      "stop": [
+        39365,
+        300,
+        578
+      ]
+    },
+    {
+      "recipe": "elek_grid",
+      "from": "tower_1_0",
+      "to": "tower_1_1",
+      "pass": false,
+      "steps": 193,
+      "stop": [
+        30033,
+        300,
+        20156
+      ]
+    },
+    {
+      "recipe": "elek_grid",
+      "from": "tower_1_1",
+      "to": "tower_2_1",
+      "pass": false,
+      "steps": 84,
+      "stop": [
+        37865,
+        300,
+        29841
+      ]
+    },
+    {
+      "recipe": "elek_grid",
+      "from": "tower_1_1",
+      "to": "tower_1_2",
+      "pass": false,
+      "steps": 219,
+      "stop": [
+        30157,
+        300,
+        51181
+      ]
+    },
+    {
+      "recipe": "elek_grid",
+      "from": "tower_1_2",
+      "to": "tower_2_2",
+      "pass": false,
+      "steps": 84,
+      "stop": [
+        38865,
+        300,
+        60584
+      ]
+    },
+    {
+      "recipe": "elek_grid",
+      "from": "tower_2_0",
+      "to": "tower_2_1",
+      "pass": false,
+      "steps": 224,
+      "stop": [
+        60533,
+        300,
+        21676
+      ]
+    },
+    {
+      "recipe": "elek_grid",
+      "from": "tower_2_1",
+      "to": "tower_2_2",
+      "pass": false,
+      "steps": 207,
+      "stop": [
+        61000,
+        300,
+        51700
+      ]
+    }
+  ]
+}

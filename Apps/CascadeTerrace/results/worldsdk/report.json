@@ -1,0 +1,140 @@
+{
+  "status": "PARTIAL",
+  "starting_commit": "f216216d4b2f407a7684dcfb455833b116a7de1b",
+  "branch": "work/cascade-world-sdk",
+  "q1": "INCOMPLETE",
+  "q2": "PHYSICAL_VALIDATION_PENDING",
+  "gates": {
+    "schema_binary_compiler": "IMPLEMENTED",
+    "deterministic_module_generation": "IMPLEMENTED",
+    "cascade_legacy_site_adapter": "IMPLEMENTED",
+    "continuous_sdk_traversal": "FAILED",
+    "two_rendered_desktop_clients": "IMPLEMENTED",
+    "full_cascade_multiplayer_quest": "NOT_STARTED",
+    "semantic_authority": "IMPLEMENTED",
+    "offline_merge_C_cases_A_to_E": "IMPLEMENTED",
+    "offline_network_upload": "NOT_STARTED",
+    "checkpoint_compaction": "IMPLEMENTED",
+    "owned_room_and_decoration": "PARTIAL",
+    "typed_feed": "PARTIAL",
+    "NPC_schedule_population_social_witness_integration": "NOT_STARTED",
+    "P4_external_app_build": "IMPLEMENTED",
+    "P4_SDK_network_client": "NOT_STARTED",
+    "physical_P4": "PHYSICAL_VALIDATION_PENDING"
+  },
+  "legacy": {
+    "checks": 864,
+    "failures": 0,
+    "seeds": 100,
+    "seed_validation_ms": 506.284,
+    "render_mean_ms": 1.641,
+    "game_bytes": 35320,
+    "renderer_bytes": 153636,
+    "npc_bytes": 5384,
+    "state_bytes": 21840,
+    "save_bytes": 734,
+    "wire_crc32": 3349299003,
+    "physical_status": "PENDING"
+  },
+  "generation": {
+    "status": "PASS",
+    "worlds": 2000,
+    "rejected_malformed_products": 4402,
+    "elapsed_ms": 724.425,
+    "workspace_bytes": 10276,
+    "module_bytes": 64,
+    "limitations": [
+      "Module connectivity is a portal graph, not continuous terrain reachability.",
+      "No P4 runtime parity measurement.",
+      "Two recipe families; not arbitrary world correctness."
+    ]
+  },
+  "navigation": {
+    "status": "FAILED",
+    "passed": 1,
+    "tested": 18,
+    "gate": "SDK traversal production promotion blocked when any declared edge fails",
+    "method": "Direct walk edges, 100 mm swept steps using runtime ground and collision. Not a search for alternate routes."
+  },
+  "state": {
+    "suite": "authority_merge_persistence",
+    "checks": 3767,
+    "status": "PASS",
+    "cases": [
+      "A",
+      "B",
+      "C",
+      "D",
+      "E"
+    ],
+    "state_bytes": 9280,
+    "wire_bytes": 1864
+  },
+  "rendered_clients": {
+    "status": "PASS",
+    "rendered_clients": 2,
+    "frames_each": 120,
+    "independent_positions": true,
+    "peers_rendered": true,
+    "public_hash_equal": true
+  },
+  "network": {
+    "status": "PASS",
+    "checks": 48,
+    "clients": 2,
+    "transport": "TCP loopback; separate OS client processes",
+    "server_restart": true,
+    "public_replica_convergence": true,
+    "private_relationships_sent": false,
+    "limitations": [
+      "No P4 network transport qualification",
+      "No Internet deployment: plaintext transport and movement rate limits pending",
+      "Offline merge verified by C suite; network branch upload is not implemented",
+      "Clients are protocol harnesses, not integrated game clients"
+    ]
+  },
+  "memory": {
+    "recipe_workspace_bytes": 10276,
+    "semantic_state_bytes": 9280,
+    "renderer_bytes": 153636,
+    "legacy_game_bytes": 35320,
+    "save_buffer_bytes": 12000,
+    "save_restore_staging_bytes": 9280,
+    "P4_internal_vs_PSRAM_split": "UNMEASURED",
+    "P4_stack_high_water": "UNMEASURED"
+  },
+  "p4": {
+    "status": "P4 BUILD PRODUCED; PENDING PHYSICAL VALIDATION",
+    "binary_bytes": 181152,
+    "package_bytes": 194560,
+    "elf_sha256": "dae652f7fe13dd1f56c0f0b99a6052d1957c33778946856fda61944b81fa08a2",
+    "package_sha256": "15aab304c25ab433144555a34ca2ca973950807d15e51227c5344985a81de13b",
+    "format": "Tactility manifest v0.3 / USTAR / esp32p4 external ELF",
+    "compressed_elf_bytes": 124286,
+    "compressed_elf_sha256": "4990164e6c6d843902f6cf585a8265d2dc12f1e32d3ac915dcd185c109f9aa21",
+    "starting_commit": "f216216d4b2f407a7684dcfb455833b116a7de1b",
+    "idf_commit": "f21b4c238152dc9e3a24fbad9afe33a3d15f6cfd",
+    "idf_version": "6.1-dev",
+    "sdk_version": "Tactility 0.8.0-dev",
+    "sections": {
+      ".hash": 616,
+      ".dynsym": 1360,
+      ".dynstr": 1241,
+      ".rela.dyn": 5304,
+      ".rela.plt": 984,
+      ".plt": 1344,
+      ".text": 50900,
+      ".rodata": 112640,
+      ".data.rel.ro": 3176,
+      ".got": 16,
+      ".got.plt": 336,
+      ".data": 644,
+      ".bss": 134000
+    },
+    "physical_status": "PHYSICAL_VALIDATION_PENDING",
+    "q1": "INCOMPLETE",
+    "q2": "PHYSICAL_VALIDATION_PENDING",
+    "warning": "SDK LVGL lv_conf.h pragma note; no compilation error. Physical loader/runtime not measured."
+  },
+  "recommendation": "Continue from this published foundation. Keep default generation-v1 gameplay and mode-0 dialogue. Block SDK traversal promotion until compiler emits collision-valid entrance/approach routes. Then attach full game actions and P4 transport to the verified authority boundary."
+}

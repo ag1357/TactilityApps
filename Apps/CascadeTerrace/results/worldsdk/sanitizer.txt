@@ -1,1 +1,1 @@
-{"stage":"traversal","passed":23,"recipe_workspace_bytes":10276,"product_bytes":1200}
+{"stage":"traversal","passed":25,"recipe_workspace_bytes":10276,"product_bytes":1200}

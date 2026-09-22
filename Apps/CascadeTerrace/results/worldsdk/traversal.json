@@ -1,3 +1,1 @@
-cc -O2 -g -std=c11 -Wall -Wextra -Werror -Wno-misleading-indentation world/schema.c world/recipe.c world/geometry.c world/traversal.c tests/world_sdk.c -o build/world_sdk_test
-./build/world_sdk_test
-{"stage":"traversal","passed":23,"recipe_workspace_bytes":10276,"product_bytes":1200}
+{"stage":"traversal","passed":25,"recipe_workspace_bytes":10276,"product_bytes":1200}

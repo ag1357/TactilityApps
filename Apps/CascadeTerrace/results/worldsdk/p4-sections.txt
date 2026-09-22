@@ -1,0 +1,18 @@
+build-p4-native/cascadeterrace.app.elf  :
+section          size     addr
+.hash             616      212
+.dynsym          1360      828
+.dynstr          1241     2188
+.rela.dyn        5304     3432
+.rela.plt         984     8736
+.plt             1344     9728
+.text           50900    11072
+.rodata        112640    61976
+.data.rel.ro     3176   176128
+.got               16   179448
+.got.plt          336   179464
+.data             644   179800
+.bss           134000   180448
+Total          312561
+
+

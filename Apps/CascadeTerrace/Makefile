@@ -56,3 +56,11 @@ build/world_viewer: $(CORE) desktop/world_viewer.c | build
 
 build/world_state_test: $(WORLD_SDK) tests/world_state.c world/state.h | build
 	$(CC) $(CFLAGS) $(filter %.c,$^) -o $@
+
+build/libworldview.so: $(CORE) core/render.h world/state.h | build
+	$(CC) $(CPPFLAGS) $(CFLAGS) -shared -fPIC $(filter %.c,$^) -lm -o $@
+
+build/world_sdk_test build/world_state_test build/libsdk.so build/libworldview.so build/world_viewer build/cascade build/test build/evaluate build/benchmark: $(wildcard world/*.h) content/worlds/cascade.inc
+.PHONY: sdk-test sdk-qualify
+sdk-qualify:
+	./scripts/qualify-world-sdk.sh

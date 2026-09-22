@@ -20,7 +20,12 @@ static void setup(void) {
     s.players[0].inventory[0]=2;s.players[1].inventory[0]=2;
 }
 int main(void) {
-    CHECK(ws_load(&r,ws_product,sizeof(ws_product))==WS_OK);setup();base=s;
+    CHECK(ws_load(&r,ws_product,sizeof(ws_product))==WS_OK);
+    FILE *fixture=fopen("tests/fixtures/world-sdk-v1.hex","r");CHECK(fixture!=NULL);size_t fixture_size=0;unsigned byte;
+    while(fscanf(fixture,"%2x",&byte)==1){CHECK(fixture_size<sizeof(bytes));bytes[fixture_size++]=(uint8_t)byte;}fclose(fixture);
+    CHECK(ws_state_decode(&loaded,&r,bytes,fixture_size)==WS_OK);
+    CHECK(ws_state_encode(&loaded,bytes,sizeof(bytes))==fixture_size);
+    setup();base=s;
     WsOperation repair=op(WS_REPAIR,4,1);WsDisposition d=ws_merge(&s,&base,&r,ctx(101,4,0),repair);
     CHECK(d.status==WS_OK&&d.rewarded&&s.entities[4].health==100); /* A */
     uint32_t hash=ws_state_hash(&s);d=ws_merge(&s,&base,&r,ctx(101,4,0),repair);CHECK(d.status!=WS_OK&&ws_state_hash(&s)==hash); /* E */
@@ -45,6 +50,15 @@ int main(void) {
     for(size_t i=0;i<n;i++)CHECK(ws_state_decode(&loaded,&r,bytes,i)!=WS_OK);
     bytes[n-1]^=1;CHECK(ws_state_decode(&loaded,&r,bytes,n)==WS_FORMAT);bytes[n-1]^=1;
     CHECK(ws_save(&s,"build/sdk-state"));CHECK(ws_restore(&loaded,&r,"build/sdk-state")&&ws_state_hash(&loaded)==ws_state_hash(&s));
+    uint32_t fallback=ws_state_hash(&s);
+    s.revision+=2;CHECK(ws_save(&s,"build/sdk-state"));CHECK(ws_restore(&loaded,&r,"build/sdk-state")&&loaded.revision==s.revision);
+    /* Corrupt whichever slot contains the newer checkpoint. */
+    for(int slot=0;slot<2;slot++) {
+        char path[64];snprintf(path,sizeof(path),"build/sdk-state.%d",slot);FILE *f=fopen(path,"rb");CHECK(f!=NULL);size_t size=fread(bytes,1,sizeof(bytes),f);fclose(f);
+        CHECK(ws_state_decode(&loaded,&r,bytes,size)==WS_OK);
+        if(loaded.revision==s.revision){f=fopen(path,"wb");CHECK(f!=NULL);CHECK(fwrite("torn",1,4,f)==4);fclose(f);}
+    }
+    CHECK(ws_restore(&loaded,&r,"build/sdk-state")&&ws_state_hash(&loaded)==fallback);
     printf("{\"suite\":\"authority_merge_persistence\",\"checks\":%u,\"status\":\"PASS\",\"cases\":[\"A\",\"B\",\"C\",\"D\",\"E\"],\"state_bytes\":%zu,\"wire_bytes\":%zu}\n",checks,sizeof(s),n);
     FILE *report=fopen("results/worldsdk/compaction.json","w");CHECK(report!=NULL);fprintf(report,"{\"semantics\":\"fixed population, exact resolved exceptions; arbitrary unique history is not compressed\",\"rows\":[");
     const int histories[]={10,1000,10000,100000};

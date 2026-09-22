@@ -48,8 +48,25 @@ WsError ws_state_decode(WsState *s,const WsRecipe *recipe,const uint8_t *p,size_
     WsError e=r.bad?WS_FORMAT:ws_state_validate(s,recipe);if(e!=WS_OK)memset(s,0,sizeof(*s));return e;
 }
 int ws_save(const WsState *s,const char *base) {
-    uint8_t *data=malloc(WIRE_CAP);if(!data)return 0;size_t n=ws_state_encode(s,data,WIRE_CAP);
-    char path[512],tmp[520];int k=snprintf(path,sizeof(path),"%s.%u",base,(unsigned)(s->revision&1));if(k<0||(size_t)k>=sizeof(path)){free(data);return 0;}
+    uint8_t *data=malloc(WIRE_CAP);if(!data)return 0;
+    /* Select the older valid slot, independent of how many revisions elapsed
+       since the last save. A corrupt newest slot cannot destroy the fallback. */
+    int newest=-1;uint32_t newest_revision=0;
+    char path[512],tmp[520];
+    for(int i=0;i<2;i++) {
+        int k=snprintf(path,sizeof(path),"%s.%d",base,i);
+        if(k<0||(size_t)k>=sizeof(path)){free(data);return 0;}
+        FILE *old=fopen(path,"rb");if(!old)continue;
+        size_t length=fread(data,1,WIRE_CAP,old);int extra=fgetc(old);fclose(old);
+        if(length<48||extra!=EOF)continue;
+        Reader rd={data,0,length,0};
+        if(get(&rd,4)!=0x31535743U||get(&rd,2)!=WS_SCHEMA||get(&rd,2)!=WS_GENERATOR||get(&rd,4)!=length||get(&rd,4)!=ws_crc(data+16,length-16))continue;
+        rd.n=36;uint32_t revision=get(&rd,4);
+        if(newest<0||revision>=newest_revision){newest=i;newest_revision=revision;}
+    }
+    size_t n=ws_state_encode(s,data,WIRE_CAP);
+    int k=snprintf(path,sizeof(path),"%s.%d",base,newest==0?1:0);
+    if(k<0||(size_t)k>=sizeof(path)){free(data);return 0;}
     snprintf(tmp,sizeof(tmp),"%s.tmp",path);FILE *f=n?fopen(tmp,"wb"):NULL;int ok=0;
     if(f){ok=fwrite(data,1,n,f)==n;if(fflush(f)||fsync(fileno(f)))ok=0;if(fclose(f))ok=0;if(ok)ok=rename(tmp,path)==0;}free(data);return ok;
 }

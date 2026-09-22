@@ -17,6 +17,13 @@ WsError ws_state_validate(const WsState *s,const WsRecipe *r) {
     if(s->player_count>WS_PLAYER_CAP||s->feed_count>WS_FEED_CAP||s->tail_count>WS_TAIL_CAP)return WS_BOUNDS;
     for(int i=0;i<s->count;i++) {const WsEntity *e=&s->entities[i];if(!e->epoch||e->health>100||e->alive>1||e->public_access>1||e->behavior>8||e->reserved||e->revision>s->revision)return WS_BOUNDS;if(e->owner&&player(s,e->owner)<0)return WS_REFERENCE;for(int k=0;k<4;k++)if(e->decor[k]>7)return WS_VERSION;}
     for(int i=0;i<s->player_count;i++) {if(!s->players[i].id)return WS_REFERENCE;for(int j=0;j<i;j++)if(s->players[i].id==s->players[j].id)return WS_DUPLICATE;}
+    for(int i=0;i<s->player_count;i++)for(int j=0;j<s->count;j++)if(s->players[i].completed[j]>s->entities[j].epoch)return WS_BOUNDS;
+    for(int i=0;i<s->player_count;i++)for(int j=0;j<s->player_count;j++) {
+        const WsRelationship *v=&s->relations[i][j];
+        if(v->trust< -1000||v->trust>1000||v->reliability< -1000||v->reliability>1000||v->cooperation< -1000||v->cooperation>1000||v->aggression< -1000||v->aggression>1000||v->confidence>1000||v->promise>1)return WS_BOUNDS;
+    }
+    for(int i=0;i<s->feed_count;i++)if(s->feed[i].target>=s->count||s->feed[i].kind>WS_NEWS_RESERVED||s->feed[i].revision>s->revision)return WS_BOUNDS;
+    for(int i=0;i<s->tail_count;i++)if(s->tail[i].target>=s->count||s->tail[i].action<WS_EXTRACT||s->tail[i].action>WS_KEEP_PROMISE)return WS_BOUNDS;
     return WS_OK;
 }
 static void record(WsState *s,WsContext c,WsOperation op,uint16_t kind) {

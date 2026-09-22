@@ -69,8 +69,12 @@ class World:
             if any(type(v)!=int or v<0 or v>(0xffffffff if i<3 else 65535) for i,v in enumerate(values)):raise ValueError('operation bounds')
             seq,epoch,rev,target,amount,aux=values
             op=Operation(seq,epoch,rev,ACTIONS[msg['action']],target,amount,aux)
+            previous=bytes(self.state)
             d=self.lib.ws_apply(C.byref(self.state),C.byref(self.recipe),Context(player,self.positions[player].at,0),op);status=d.status
-            if not status:self.checkpoint()
+            if not status:
+                try:self.checkpoint()
+                except OSError:
+                    C.memmove(C.byref(self.state),previous,len(previous));raise
         elif cmd!='snapshot':raise ValueError('unknown command')
         return {'ok':status==0,'status':status,**self.snapshot(player)}
 class Handler(socketserver.StreamRequestHandler):

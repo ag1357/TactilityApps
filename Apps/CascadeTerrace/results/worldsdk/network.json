@@ -1,0 +1,572 @@
+{
+  "status": "PASS",
+  "checks": 48,
+  "clients": 2,
+  "transport": "TCP loopback; separate OS client processes",
+  "server_restart": true,
+  "public_replica_convergence": true,
+  "private_relationships_sent": false,
+  "traces": [
+    {
+      "client": 0,
+      "request": {
+        "cmd": "snapshot"
+      },
+      "status": 0,
+      "public_hash": "3bec00c515af81174296480e68ead3ff71c2a9e11c6e4d0abf02b28c89c3f5ba",
+      "revision": 2
+    },
+    {
+      "client": 0,
+      "request": {
+        "cmd": "act",
+        "action": "EXTRACT",
+        "target": 16,
+        "sequence": 1,
+        "epoch": 1,
+        "base_revision": 0,
+        "amount": 10,
+        "aux": 0,
+        "recipe_sha256": "f2868d1408989024e0752be04a4d5e26b8bce4a74ef402198bad2032b5144cb8"
+      },
+      "status": 0,
+      "public_hash": "9e5806dd2d9e90da3f4bd6cdcdd5513cd1aba4ba8778344610c33bdc51ee475a",
+      "revision": 3
+    },
+    {
+      "client": 1,
+      "request": {
+        "cmd": "snapshot"
+      },
+      "status": 0,
+      "public_hash": "9e5806dd2d9e90da3f4bd6cdcdd5513cd1aba4ba8778344610c33bdc51ee475a",
+      "revision": 3
+    },
+    {
+      "client": 1,
+      "request": {
+        "cmd": "act",
+        "action": "EXTRACT",
+        "target": 16,
+        "sequence": 1,
+        "epoch": 1,
+        "base_revision": 3,
+        "amount": 5,
+        "aux": 0,
+        "recipe_sha256": "f2868d1408989024e0752be04a4d5e26b8bce4a74ef402198bad2032b5144cb8"
+      },
+      "status": 0,
+      "public_hash": "f8f1ced37d2c233df47947ef2a3f6cf468012e2ae7824b4ab90e2c09d8ad05a6",
+      "revision": 4
+    },
+    {
+      "client": 0,
+      "request": {
+        "cmd": "snapshot"
+      },
+      "status": 0,
+      "public_hash": "f8f1ced37d2c233df47947ef2a3f6cf468012e2ae7824b4ab90e2c09d8ad05a6",
+      "revision": 4
+    },
+    {
+      "client": 0,
+      "request": {
+        "cmd": "act",
+        "action": "REPAIR",
+        "target": 4,
+        "sequence": 2,
+        "epoch": 1,
+        "base_revision": 0,
+        "amount": 1,
+        "aux": 0,
+        "recipe_sha256": "f2868d1408989024e0752be04a4d5e26b8bce4a74ef402198bad2032b5144cb8"
+      },
+      "status": 0,
+      "public_hash": "d7538cd0f18c69e6029647fd399305d82dcae4dae1dc46b6e8f565f0d3cadff0",
+      "revision": 5
+    },
+    {
+      "client": 1,
+      "request": {
+        "cmd": "snapshot"
+      },
+      "status": 0,
+      "public_hash": "d7538cd0f18c69e6029647fd399305d82dcae4dae1dc46b6e8f565f0d3cadff0",
+      "revision": 5
+    },
+    {
+      "client": 1,
+      "request": {
+        "cmd": "act",
+        "action": "REPAIR",
+        "target": 4,
+        "sequence": 2,
+        "epoch": 1,
+        "base_revision": 5,
+        "amount": 1,
+        "aux": 0,
+        "recipe_sha256": "f2868d1408989024e0752be04a4d5e26b8bce4a74ef402198bad2032b5144cb8"
+      },
+      "status": 7,
+      "public_hash": "d7538cd0f18c69e6029647fd399305d82dcae4dae1dc46b6e8f565f0d3cadff0",
+      "revision": 5
+    },
+    {
+      "client": 0,
+      "request": {
+        "cmd": "snapshot"
+      },
+      "status": 0,
+      "public_hash": "d7538cd0f18c69e6029647fd399305d82dcae4dae1dc46b6e8f565f0d3cadff0",
+      "revision": 5
+    },
+    {
+      "client": 0,
+      "request": {
+        "cmd": "act",
+        "action": "TRANSFER",
+        "target": 16,
+        "sequence": 3,
+        "epoch": 1,
+        "base_revision": 4,
+        "amount": 2,
+        "aux": 102,
+        "recipe_sha256": "f2868d1408989024e0752be04a4d5e26b8bce4a74ef402198bad2032b5144cb8"
+      },
+      "status": 0,
+      "public_hash": "a36e5fd802655518a88609cdce75aedea24de04ee0041b471251c6bb52bd9e10",
+      "revision": 6
+    },
+    {
+      "client": 1,
+      "request": {
+        "cmd": "snapshot"
+      },
+      "status": 0,
+      "public_hash": "a36e5fd802655518a88609cdce75aedea24de04ee0041b471251c6bb52bd9e10",
+      "revision": 6
+    },
+    {
+      "client": 0,
+      "request": {
+        "cmd": "snapshot"
+      },
+      "status": 0,
+      "public_hash": "a36e5fd802655518a88609cdce75aedea24de04ee0041b471251c6bb52bd9e10",
+      "revision": 6
+    },
+    {
+      "client": 0,
+      "request": {
+        "cmd": "act",
+        "action": "TRANSFER",
+        "target": 16,
+        "sequence": 3,
+        "epoch": 1,
+        "base_revision": 6,
+        "amount": 2,
+        "aux": 102,
+        "recipe_sha256": "f2868d1408989024e0752be04a4d5e26b8bce4a74ef402198bad2032b5144cb8"
+      },
+      "status": 8,
+      "public_hash": "a36e5fd802655518a88609cdce75aedea24de04ee0041b471251c6bb52bd9e10",
+      "revision": 6
+    },
+    {
+      "client": 0,
+      "request": {
+        "cmd": "snapshot"
+      },
+      "status": 0,
+      "public_hash": "a36e5fd802655518a88609cdce75aedea24de04ee0041b471251c6bb52bd9e10",
+      "revision": 6
+    },
+    {
+      "client": 0,
+      "request": {
+        "cmd": "snapshot"
+      },
+      "status": 0,
+      "public_hash": "a36e5fd802655518a88609cdce75aedea24de04ee0041b471251c6bb52bd9e10",
+      "revision": 6
+    },
+    {
+      "client": 0,
+      "request": {
+        "cmd": "act",
+        "action": "DAMAGE",
+        "target": 4,
+        "sequence": 4,
+        "epoch": 1,
+        "base_revision": 5,
+        "amount": 1,
+        "aux": 0,
+        "recipe_sha256": "f2868d1408989024e0752be04a4d5e26b8bce4a74ef402198bad2032b5144cb8"
+      },
+      "status": 7,
+      "public_hash": "a36e5fd802655518a88609cdce75aedea24de04ee0041b471251c6bb52bd9e10",
+      "revision": 6
+    },
+    {
+      "client": 0,
+      "request": {
+        "cmd": "move",
+        "dx": 0,
+        "dz": 100
+      },
+      "status": 0,
+      "public_hash": "a36e5fd802655518a88609cdce75aedea24de04ee0041b471251c6bb52bd9e10",
+      "revision": 6
+    },
+    {
+      "client": 0,
+      "request": {
+        "cmd": "move",
+        "dx": 0,
+        "dz": 100
+      },
+      "status": 0,
+      "public_hash": "a36e5fd802655518a88609cdce75aedea24de04ee0041b471251c6bb52bd9e10",
+      "revision": 6
+    },
+    {
+      "client": 0,
+      "request": {
+        "cmd": "move",
+        "dx": 0,
+        "dz": 100
+      },
+      "status": 0,
+      "public_hash": "a36e5fd802655518a88609cdce75aedea24de04ee0041b471251c6bb52bd9e10",
+      "revision": 6
+    },
+    {
+      "client": 0,
+      "request": {
+        "cmd": "move",
+        "dx": 0,
+        "dz": 100
+      },
+      "status": 0,
+      "public_hash": "a36e5fd802655518a88609cdce75aedea24de04ee0041b471251c6bb52bd9e10",
+      "revision": 6
+    },
+    {
+      "client": 0,
+      "request": {
+        "cmd": "move",
+        "dx": 0,
+        "dz": 100
+      },
+      "status": 0,
+      "public_hash": "a36e5fd802655518a88609cdce75aedea24de04ee0041b471251c6bb52bd9e10",
+      "revision": 6
+    },
+    {
+      "client": 0,
+      "request": {
+        "cmd": "move",
+        "dx": 0,
+        "dz": 100
+      },
+      "status": 0,
+      "public_hash": "a36e5fd802655518a88609cdce75aedea24de04ee0041b471251c6bb52bd9e10",
+      "revision": 6
+    },
+    {
+      "client": 0,
+      "request": {
+        "cmd": "move",
+        "dx": 0,
+        "dz": 100
+      },
+      "status": 0,
+      "public_hash": "a36e5fd802655518a88609cdce75aedea24de04ee0041b471251c6bb52bd9e10",
+      "revision": 6
+    },
+    {
+      "client": 0,
+      "request": {
+        "cmd": "move",
+        "dx": 0,
+        "dz": 100
+      },
+      "status": 0,
+      "public_hash": "a36e5fd802655518a88609cdce75aedea24de04ee0041b471251c6bb52bd9e10",
+      "revision": 6
+    },
+    {
+      "client": 0,
+      "request": {
+        "cmd": "move",
+        "dx": 0,
+        "dz": 100
+      },
+      "status": 0,
+      "public_hash": "a36e5fd802655518a88609cdce75aedea24de04ee0041b471251c6bb52bd9e10",
+      "revision": 6
+    },
+    {
+      "client": 0,
+      "request": {
+        "cmd": "move",
+        "dx": 0,
+        "dz": 100
+      },
+      "status": 0,
+      "public_hash": "a36e5fd802655518a88609cdce75aedea24de04ee0041b471251c6bb52bd9e10",
+      "revision": 6
+    },
+    {
+      "client": 0,
+      "request": {
+        "cmd": "move",
+        "dx": 0,
+        "dz": 100
+      },
+      "status": 0,
+      "public_hash": "a36e5fd802655518a88609cdce75aedea24de04ee0041b471251c6bb52bd9e10",
+      "revision": 6
+    },
+    {
+      "client": 0,
+      "request": {
+        "cmd": "move",
+        "dx": 0,
+        "dz": 100
+      },
+      "status": 0,
+      "public_hash": "a36e5fd802655518a88609cdce75aedea24de04ee0041b471251c6bb52bd9e10",
+      "revision": 6
+    },
+    {
+      "client": 0,
+      "request": {
+        "cmd": "move",
+        "dx": 0,
+        "dz": 100
+      },
+      "status": 0,
+      "public_hash": "a36e5fd802655518a88609cdce75aedea24de04ee0041b471251c6bb52bd9e10",
+      "revision": 6
+    },
+    {
+      "client": 0,
+      "request": {
+        "cmd": "move",
+        "dx": 0,
+        "dz": 100
+      },
+      "status": 0,
+      "public_hash": "a36e5fd802655518a88609cdce75aedea24de04ee0041b471251c6bb52bd9e10",
+      "revision": 6
+    },
+    {
+      "client": 0,
+      "request": {
+        "cmd": "move",
+        "dx": 0,
+        "dz": 100
+      },
+      "status": 0,
+      "public_hash": "a36e5fd802655518a88609cdce75aedea24de04ee0041b471251c6bb52bd9e10",
+      "revision": 6
+    },
+    {
+      "client": 0,
+      "request": {
+        "cmd": "move",
+        "dx": 0,
+        "dz": 100
+      },
+      "status": 0,
+      "public_hash": "a36e5fd802655518a88609cdce75aedea24de04ee0041b471251c6bb52bd9e10",
+      "revision": 6
+    },
+    {
+      "client": 0,
+      "request": {
+        "cmd": "move",
+        "dx": 0,
+        "dz": 100
+      },
+      "status": 0,
+      "public_hash": "a36e5fd802655518a88609cdce75aedea24de04ee0041b471251c6bb52bd9e10",
+      "revision": 6
+    },
+    {
+      "client": 0,
+      "request": {
+        "cmd": "move",
+        "dx": 0,
+        "dz": 100
+      },
+      "status": 0,
+      "public_hash": "a36e5fd802655518a88609cdce75aedea24de04ee0041b471251c6bb52bd9e10",
+      "revision": 6
+    },
+    {
+      "client": 0,
+      "request": {
+        "cmd": "move",
+        "dx": 0,
+        "dz": 100
+      },
+      "status": 0,
+      "public_hash": "a36e5fd802655518a88609cdce75aedea24de04ee0041b471251c6bb52bd9e10",
+      "revision": 6
+    },
+    {
+      "client": 0,
+      "request": {
+        "cmd": "move",
+        "dx": 0,
+        "dz": 100
+      },
+      "status": 0,
+      "public_hash": "a36e5fd802655518a88609cdce75aedea24de04ee0041b471251c6bb52bd9e10",
+      "revision": 6
+    },
+    {
+      "client": 1,
+      "request": {
+        "cmd": "move",
+        "dx": 100,
+        "dz": 0
+      },
+      "status": 0,
+      "public_hash": "a36e5fd802655518a88609cdce75aedea24de04ee0041b471251c6bb52bd9e10",
+      "revision": 6
+    },
+    {
+      "client": 1,
+      "request": {
+        "cmd": "move",
+        "dx": 100,
+        "dz": 0
+      },
+      "status": 0,
+      "public_hash": "a36e5fd802655518a88609cdce75aedea24de04ee0041b471251c6bb52bd9e10",
+      "revision": 6
+    },
+    {
+      "client": 1,
+      "request": {
+        "cmd": "move",
+        "dx": 100,
+        "dz": 0
+      },
+      "status": 0,
+      "public_hash": "a36e5fd802655518a88609cdce75aedea24de04ee0041b471251c6bb52bd9e10",
+      "revision": 6
+    },
+    {
+      "client": 1,
+      "request": {
+        "cmd": "move",
+        "dx": 100,
+        "dz": 0
+      },
+      "status": 0,
+      "public_hash": "a36e5fd802655518a88609cdce75aedea24de04ee0041b471251c6bb52bd9e10",
+      "revision": 6
+    },
+    {
+      "client": 1,
+      "request": {
+        "cmd": "move",
+        "dx": 100,
+        "dz": 0
+      },
+      "status": 0,
+      "public_hash": "a36e5fd802655518a88609cdce75aedea24de04ee0041b471251c6bb52bd9e10",
+      "revision": 6
+    },
+    {
+      "client": 1,
+      "request": {
+        "cmd": "move",
+        "dx": 100,
+        "dz": 0
+      },
+      "status": 0,
+      "public_hash": "a36e5fd802655518a88609cdce75aedea24de04ee0041b471251c6bb52bd9e10",
+      "revision": 6
+    },
+    {
+      "client": 1,
+      "request": {
+        "cmd": "move",
+        "dx": 100,
+        "dz": 0
+      },
+      "status": 0,
+      "public_hash": "a36e5fd802655518a88609cdce75aedea24de04ee0041b471251c6bb52bd9e10",
+      "revision": 6
+    },
+    {
+      "client": 1,
+      "request": {
+        "cmd": "move",
+        "dx": 100,
+        "dz": 0
+      },
+      "status": 0,
+      "public_hash": "a36e5fd802655518a88609cdce75aedea24de04ee0041b471251c6bb52bd9e10",
+      "revision": 6
+    },
+    {
+      "client": 1,
+      "request": {
+        "cmd": "move",
+        "dx": 100,
+        "dz": 0
+      },
+      "status": 0,
+      "public_hash": "a36e5fd802655518a88609cdce75aedea24de04ee0041b471251c6bb52bd9e10",
+      "revision": 6
+    },
+    {
+      "client": 1,
+      "request": {
+        "cmd": "move",
+        "dx": 100,
+        "dz": 0
+      },
+      "status": 0,
+      "public_hash": "a36e5fd802655518a88609cdce75aedea24de04ee0041b471251c6bb52bd9e10",
+      "revision": 6
+    },
+    {
+      "client": 0,
+      "request": {
+        "cmd": "snapshot"
+      },
+      "status": 0,
+      "public_hash": "a36e5fd802655518a88609cdce75aedea24de04ee0041b471251c6bb52bd9e10",
+      "revision": 6
+    },
+    {
+      "client": 1,
+      "request": {
+        "cmd": "snapshot"
+      },
+      "status": 0,
+      "public_hash": "a36e5fd802655518a88609cdce75aedea24de04ee0041b471251c6bb52bd9e10",
+      "revision": 6
+    },
+    {
+      "client": 0,
+      "request": "reconnect",
+      "status": null,
+      "public_hash": "a36e5fd802655518a88609cdce75aedea24de04ee0041b471251c6bb52bd9e10",
+      "revision": 6
+    }
+  ],
+  "limitations": [
+    "No P4 network transport qualification",
+    "No Internet deployment: plaintext transport and movement rate limits pending",
+    "Offline merge verified by C suite; network branch upload is not implemented",
+    "Clients are protocol harnesses, not integrated game clients"
+  ]
+}

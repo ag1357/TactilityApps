@@ -1,0 +1,442 @@
+{
+  "schema": 1,
+  "generator": 1,
+  "ancestry": [
+    57830,
+    4,
+    5,
+    6
+  ],
+  "seed": 42,
+  "epoch": 1,
+  "revision": 0,
+  "name": "Elek Grid",
+  "modules": [
+    {
+      "name": "world",
+      "key": 1,
+      "parent": null,
+      "level": "world",
+      "shape": "box",
+      "tags": [],
+      "position": [
+        0,
+        0,
+        0
+      ],
+      "size": [
+        1,
+        1,
+        1
+      ]
+    },
+    {
+      "name": "region",
+      "key": 2,
+      "parent": "world",
+      "level": "region",
+      "shape": "box",
+      "tags": [],
+      "position": [
+        0,
+        0,
+        0
+      ],
+      "size": [
+        1,
+        1,
+        1
+      ]
+    },
+    {
+      "name": "settlement",
+      "key": 3,
+      "parent": "region",
+      "level": "settlement",
+      "shape": "box",
+      "tags": [],
+      "position": [
+        0,
+        0,
+        0
+      ],
+      "size": [
+        1,
+        1,
+        1
+      ]
+    },
+    {
+      "name": "district",
+      "key": 4,
+      "parent": "settlement",
+      "level": "district",
+      "shape": "box",
+      "tags": [],
+      "position": [
+        0,
+        0,
+        0
+      ],
+      "size": [
+        1,
+        1,
+        1
+      ]
+    },
+    {
+      "name": "tower_0_0",
+      "key": 100,
+      "parent": "district",
+      "level": "structure",
+      "shape": "room",
+      "tags": [
+        "Surface.Walk",
+        "Collision.Solid"
+      ],
+      "position": [
+        0,
+        0,
+        0
+      ],
+      "size": [
+        18000,
+        45000,
+        18000
+      ],
+      "phos": "Elek",
+      "affinity": 850,
+      "color": 6706585
+    },
+    {
+      "name": "tower_0_1",
+      "key": 101,
+      "parent": "district",
+      "level": "structure",
+      "shape": "room",
+      "tags": [
+        "Surface.Walk",
+        "Collision.Solid"
+      ],
+      "position": [
+        0,
+        0,
+        30000
+      ],
+      "size": [
+        18000,
+        50000,
+        18000
+      ],
+      "phos": "Elek",
+      "affinity": 850,
+      "color": 6706585
+    },
+    {
+      "name": "tower_0_2",
+      "key": 102,
+      "parent": "district",
+      "level": "structure",
+      "shape": "room",
+      "tags": [
+        "Surface.Walk",
+        "Collision.Solid"
+      ],
+      "position": [
+        0,
+        0,
+        60000
+      ],
+      "size": [
+        18000,
+        55000,
+        18000
+      ],
+      "phos": "Elek",
+      "affinity": 850,
+      "color": 6706585
+    },
+    {
+      "name": "tower_1_0",
+      "key": 103,
+      "parent": "district",
+      "level": "structure",
+      "shape": "room",
+      "tags": [
+        "Surface.Walk",
+        "Collision.Solid"
+      ],
+      "position": [
+        30000,
+        0,
+        0
+      ],
+      "size": [
+        18000,
+        50000,
+        18000
+      ],
+      "phos": "Elek",
+      "affinity": 850,
+      "color": 6706585
+    },
+    {
+      "name": "tower_1_1",
+      "key": 104,
+      "parent": "district",
+      "level": "structure",
+      "shape": "room",
+      "tags": [
+        "Surface.Walk",
+        "Collision.Solid"
+      ],
+      "position": [
+        30000,
+        0,
+        30000
+      ],
+      "size": [
+        18000,
+        55000,
+        18000
+      ],
+      "phos": "Elek",
+      "affinity": 850,
+      "color": 6706585
+    },
+    {
+      "name": "tower_1_2",
+      "key": 105,
+      "parent": "district",
+      "level": "structure",
+      "shape": "room",
+      "tags": [
+        "Surface.Walk",
+        "Collision.Solid"
+      ],
+      "position": [
+        30000,
+        0,
+        60000
+      ],
+      "size": [
+        18000,
+        60000,
+        18000
+      ],
+      "phos": "Elek",
+      "affinity": 850,
+      "color": 6706585
+    },
+    {
+      "name": "tower_2_0",
+      "key": 106,
+      "parent": "district",
+      "level": "structure",
+      "shape": "room",
+      "tags": [
+        "Surface.Walk",
+        "Collision.Solid"
+      ],
+      "position": [
+        60000,
+        0,
+        0
+      ],
+      "size": [
+        18000,
+        55000,
+        18000
+      ],
+      "phos": "Elek",
+      "affinity": 850,
+      "color": 6706585
+    },
+    {
+      "name": "tower_2_1",
+      "key": 107,
+      "parent": "district",
+      "level": "structure",
+      "shape": "room",
+      "tags": [
+        "Surface.Walk",
+        "Collision.Solid"
+      ],
+      "position": [
+        60000,
+        0,
+        30000
+      ],
+      "size": [
+        18000,
+        60000,
+        18000
+      ],
+      "phos": "Elek",
+      "affinity": 850,
+      "color": 6706585
+    },
+    {
+      "name": "tower_2_2",
+      "key": 108,
+      "parent": "district",
+      "level": "structure",
+      "shape": "room",
+      "tags": [
+        "Surface.Walk",
+        "Collision.Solid"
+      ],
+      "position": [
+        60000,
+        0,
+        60000
+      ],
+      "size": [
+        18000,
+        65000,
+        18000
+      ],
+      "phos": "Elek",
+      "affinity": 850,
+      "color": 6706585
+    },
+    {
+      "name": "skywalk",
+      "key": 200,
+      "parent": "district",
+      "level": "object",
+      "shape": "plane",
+      "tags": [
+        "Surface.Walk"
+      ],
+      "position": [
+        30000,
+        30000,
+        30000
+      ],
+      "size": [
+        48000,
+        500,
+        4000
+      ],
+      "phos": "Elek"
+    },
+    {
+      "name": "apartment",
+      "key": 201,
+      "parent": "tower_1_1",
+      "level": "room",
+      "shape": "room",
+      "tags": [
+        "Surface.Walk",
+        "Collision.Solid",
+        "Scope.Interior",
+        "Property.Ownable"
+      ],
+      "position": [
+        0,
+        0,
+        0
+      ],
+      "size": [
+        8000,
+        3000,
+        8000
+      ]
+    },
+    {
+      "name": "worker",
+      "key": 202,
+      "parent": "district",
+      "level": "object",
+      "shape": "box",
+      "tags": [
+        "Entity.NPC"
+      ],
+      "position": [
+        0,
+        0,
+        12000
+      ],
+      "size": [
+        600,
+        1700,
+        600
+      ],
+      "phos": "Elek",
+      "affinity": 800
+    }
+  ],
+  "links": [
+    [
+      "tower_0_0",
+      "tower_1_0",
+      "walk"
+    ],
+    [
+      "tower_0_0",
+      "tower_0_1",
+      "walk"
+    ],
+    [
+      "tower_0_1",
+      "tower_1_1",
+      "walk"
+    ],
+    [
+      "tower_0_1",
+      "tower_0_2",
+      "walk"
+    ],
+    [
+      "tower_0_2",
+      "tower_1_2",
+      "walk"
+    ],
+    [
+      "tower_1_0",
+      "tower_2_0",
+      "walk"
+    ],
+    [
+      "tower_1_0",
+      "tower_1_1",
+      "walk"
+    ],
+    [
+      "tower_1_1",
+      "tower_2_1",
+      "walk"
+    ],
+    [
+      "tower_1_1",
+      "tower_1_2",
+      "walk"
+    ],
+    [
+      "tower_1_2",
+      "tower_2_2",
+      "walk"
+    ],
+    [
+      "tower_2_0",
+      "tower_2_1",
+      "walk"
+    ],
+    [
+      "tower_2_1",
+      "tower_2_2",
+      "walk"
+    ],
+    [
+      "tower_1_1",
+      "skywalk",
+      "lift"
+    ],
+    [
+      "tower_1_1",
+      "apartment",
+      "portal"
+    ]
+  ]
+}

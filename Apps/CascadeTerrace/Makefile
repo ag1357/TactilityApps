@@ -4,7 +4,7 @@ CPPFLAGS += -Icore -DCG_TRAINED_MODEL
 SDL_CFLAGS ?= $(shell sdl2-config --cflags)
 SDL_LIBS ?= $(shell sdl2-config --libs)
 SEMANTIC = core/semantic.c core/decision.c
-WORLD_SDK = world/schema.c world/recipe.c world/geometry.c
+WORLD_SDK = world/schema.c world/recipe.c world/geometry.c world/traversal.c
 CORE = $(WORLD_SDK) content/cascade_adapter.c $(SEMANTIC) core/general_dialogue.c research/rung_a/cognition.c core/world.c core/state.c core/dialogue.c core/persistence.c core/render.c
 all: build/cascade build/test
 build/world_sdk_test: $(WORLD_SDK) tests/world_sdk.c world/sdk.h | build
@@ -50,3 +50,6 @@ build/libsdk.so: $(WORLD_SDK) world/sdk.h | build
 	$(CC) $(CFLAGS) -shared -fPIC $(filter %.c,$^) -o $@
 
 build/cascade build/test build/evaluate build/benchmark: content/worlds/cascade.inc
+
+build/world_viewer: $(CORE) desktop/world_viewer.c | build
+	$(CC) $(CPPFLAGS) $(CFLAGS) $(SDL_CFLAGS) $(filter %.c,$^) $(SDL_LIBS) -lm -o $@

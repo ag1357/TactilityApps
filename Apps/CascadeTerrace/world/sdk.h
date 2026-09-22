@@ -49,5 +49,10 @@ void ws_boxes(const WsModule*,WsBoxFn,void*);
 int ws_collision(const WsRecipe*,WsAddress,int32_t);
 int ws_surface(const WsRecipe*,WsAddress,int32_t,int32_t*);
 uint16_t ws_witness(const WsRecipe*,WsAddress,WsAddress,uint16_t,uint16_t);
+typedef struct { WsAddress at,destination; uint32_t remaining; } WsTraveler;
+int ws_ground(const WsRecipe*,WsAddress,int32_t,int32_t*);
+int ws_move(const WsRecipe*,WsAddress*,int32_t,int32_t);
+int ws_use_link(const WsRecipe*,WsTraveler*);
+void ws_travel_tick(WsTraveler*,uint32_t);
 /* All coordinates are bounded local millimetres, not global float positions. */
 #endif

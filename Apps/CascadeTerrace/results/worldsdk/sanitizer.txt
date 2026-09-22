@@ -1,2 +1,1 @@
-{"stage":"compiler","passed":9,"recipe_workspace_bytes":10276,"product_bytes":1200}
-LeakSanitizer unavailable under executor ptrace; ASan/UBSan run with detect_leaks=0.
+{"stage":"traversal","passed":23,"recipe_workspace_bytes":10276,"product_bytes":1200}

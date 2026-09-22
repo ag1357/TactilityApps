@@ -305,3 +305,32 @@ int screenshot(const Renderer* r, const char* path) {
     }
     return fclose(f) == 0;
 }
+
+static void world_box(void *ctx,WsPos p,WsPos s,uint32_t c) {
+    WsMetrics *m=ctx;m->triangles+=10;m->vertices+=8;
+    box(p.x/1000.f,p.y/1000.f,p.z/1000.f,s.x/2000.f,s.y/1000.f,s.z/2000.f,c);
+}
+void render_world(Renderer *r,const WsRecipe *world,WsAddress player,int yaw,WsMetrics *metrics) {
+    memset(metrics,0,sizeof(*metrics));rr=r;r->triangles=r->pixels_written=0;r->frame++;
+    r->yaw=yaw*.01745329252f;r->pitch=-.19f;cy=cosf(r->yaw);sy=sinf(r->yaw);cp=cosf(r->pitch);sp=sinf(r->pitch);light=1;
+    r->camera_x=player.pos.x/1000.f-6*sy;r->camera_z=player.pos.z/1000.f-6*cy;r->camera_y=player.pos.y/1000.f+4.3f;
+    for(int i=0;i<W*H;i++){r->pixels[i]=0x6393;r->depth[i]=65535;}
+    for(uint16_t i=0;i<world->count;i++) {
+        WsModule m;ws_materialize(world,i,&m);if((m.kind>>8)<WS_STRUCTURE)continue;
+        if(player.scope==UINT16_MAX&&(m.flags&WS_INTERIOR))continue;
+        if(player.scope!=UINT16_MAX&&i!=player.scope&&m.parent!=player.scope)continue;
+        WsFidelity f=ws_fidelity(m.pos,player.pos,(m.flags&WS_INTERIOR)!=0);
+        if(f==WS_UNLOADED)continue;
+        if(f==WS_PROXY){metrics->proxy++;world_box(metrics,m.pos,m.size,m.color);}
+        else {if(f==WS_ACTIVE)metrics->active++;else metrics->materialized++;ws_boxes(&m,world_box,metrics);}
+    }
+    if(player.scope==UINT16_MAX) for(uint16_t i=0;i<world->link_count;i++) {
+        WsLink l=world->links[i];if(l.kind)continue;WsModule a,b;ws_materialize(world,l.a,&a);ws_materialize(world,l.b,&b);
+        float dx=(b.pos.x-a.pos.x)/1000.f,dz=(b.pos.z-a.pos.z)/1000.f,d=sqrtf(dx*dx+dz*dz);if(d<.1f)continue;
+        float ox=-dz*2/d,oz=dx*2/d;
+        V aa={a.pos.x/1000.f,a.pos.y/1000.f+.3f,a.pos.z/1000.f},bb={b.pos.x/1000.f,b.pos.y/1000.f+.3f,b.pos.z/1000.f};
+        quad((V){aa.x+ox,aa.y,aa.z+oz},(V){bb.x+ox,bb.y,bb.z+oz},(V){bb.x-ox,bb.y,bb.z-oz},(V){aa.x-ox,aa.y,aa.z-oz},0xaaa394,1);
+        metrics->triangles+=2;metrics->vertices+=4;
+    }
+    person(player.pos.x/1000.f,player.pos.y/1000.f,player.pos.z/1000.f,0,r->frame/20.f);
+}

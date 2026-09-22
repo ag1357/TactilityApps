@@ -106,7 +106,11 @@
       ],
       "phos": "Elek",
       "affinity": 850,
-      "color": 6706585
+      "color": 6706585,
+      "jitter": [
+        500,
+        500
+      ]
     },
     {
       "name": "tower_0_1",
@@ -130,7 +134,11 @@
       ],
       "phos": "Elek",
       "affinity": 850,
-      "color": 6706585
+      "color": 6706585,
+      "jitter": [
+        500,
+        500
+      ]
     },
     {
       "name": "tower_0_2",
@@ -154,7 +162,11 @@
       ],
       "phos": "Elek",
       "affinity": 850,
-      "color": 6706585
+      "color": 6706585,
+      "jitter": [
+        500,
+        500
+      ]
     },
     {
       "name": "tower_1_0",
@@ -178,7 +190,11 @@
       ],
       "phos": "Elek",
       "affinity": 850,
-      "color": 6706585
+      "color": 6706585,
+      "jitter": [
+        500,
+        500
+      ]
     },
     {
       "name": "tower_1_1",
@@ -202,7 +218,11 @@
       ],
       "phos": "Elek",
       "affinity": 850,
-      "color": 6706585
+      "color": 6706585,
+      "jitter": [
+        500,
+        500
+      ]
     },
     {
       "name": "tower_1_2",
@@ -226,7 +246,11 @@
       ],
       "phos": "Elek",
       "affinity": 850,
-      "color": 6706585
+      "color": 6706585,
+      "jitter": [
+        500,
+        500
+      ]
     },
     {
       "name": "tower_2_0",
@@ -250,7 +274,11 @@
       ],
       "phos": "Elek",
       "affinity": 850,
-      "color": 6706585
+      "color": 6706585,
+      "jitter": [
+        500,
+        500
+      ]
     },
     {
       "name": "tower_2_1",
@@ -274,7 +302,11 @@
       ],
       "phos": "Elek",
       "affinity": 850,
-      "color": 6706585
+      "color": 6706585,
+      "jitter": [
+        500,
+        500
+      ]
     },
     {
       "name": "tower_2_2",
@@ -298,7 +330,11 @@
       ],
       "phos": "Elek",
       "affinity": 850,
-      "color": 6706585
+      "color": 6706585,
+      "jitter": [
+        500,
+        500
+      ]
     },
     {
       "name": "skywalk",

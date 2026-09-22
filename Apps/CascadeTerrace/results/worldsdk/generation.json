@@ -1,0 +1,63 @@
+{
+  "status": "PASS",
+  "worlds": 2000,
+  "rejected_malformed_products": 4402,
+  "elapsed_ms": 843.589,
+  "workspace_bytes": 10276,
+  "module_bytes": 64,
+  "vectors": [
+    {
+      "recipe": "cascade",
+      "seed": 0,
+      "product_sha256": "9bd54ce9a0b3ff8c5538014678536ec45570af2648781a67feb5a923c3e46c1a",
+      "materialized_sha256": "0093b7dfbe6ec2109cf83c8ae782619a5c9547d422e7fd936558658b92c7df4c"
+    },
+    {
+      "recipe": "cascade",
+      "seed": 1,
+      "product_sha256": "7b0c0db24bc7d229e3120cf4e01e80ac49f06d0c37c3e8b7a355d6f4ec9647fe",
+      "materialized_sha256": "7aabbb42ce4949da98b6e1ebc119a4bf8b45b65c0e569110c0d904cfab383cad"
+    },
+    {
+      "recipe": "cascade",
+      "seed": 42,
+      "product_sha256": "f2868d1408989024e0752be04a4d5e26b8bce4a74ef402198bad2032b5144cb8",
+      "materialized_sha256": "7aabbb42ce4949da98b6e1ebc119a4bf8b45b65c0e569110c0d904cfab383cad"
+    },
+    {
+      "recipe": "cascade",
+      "seed": 999,
+      "product_sha256": "0c1961647e3d66e851ba2ec95e4840195bae1f60c22ea8cd696494d0153fa3c3",
+      "materialized_sha256": "2f2d7ab580892db6129722e216cb476d546023b0d1f7aa4e444691c1cb902c46"
+    },
+    {
+      "recipe": "elek_grid",
+      "seed": 0,
+      "product_sha256": "583e8ba0b13daaa1df96554f66bfb86b8e146e557bdb3146c89b783ddb5c55cd",
+      "materialized_sha256": "382bdd8634650d2f5f9323e1b1e2db8d92cb405fa113bfefb73afbc85ed7fa78"
+    },
+    {
+      "recipe": "elek_grid",
+      "seed": 1,
+      "product_sha256": "dd984c1626a3d61e51ff2984232048642b986d7e938d8dd78634275d8e480354",
+      "materialized_sha256": "d42d0a9f79c733173074654e00717d729eed0e71ced8f8eaecd1f72f3334b125"
+    },
+    {
+      "recipe": "elek_grid",
+      "seed": 42,
+      "product_sha256": "7eb9768b302c8d9d3106e12416c489eee9fbec1ab994b97ac2827b51883c9d18",
+      "materialized_sha256": "658c910d83ccb19c2c05f4a9bcc1ce4633c8c419eded41ac96085e9b716db93e"
+    },
+    {
+      "recipe": "elek_grid",
+      "seed": 999,
+      "product_sha256": "20e5a11f0fac73385bf201eabee02660fddeffd3035f4e31f7003f3f76d399ec",
+      "materialized_sha256": "57157ba1633b9d7e0dade4573b7775902a7f3f568e56689bad3ab345d093b13e"
+    }
+  ],
+  "limitations": [
+    "Module connectivity is a portal graph, not continuous terrain reachability.",
+    "No P4 runtime parity measurement.",
+    "Two recipe families; not arbitrary world correctness."
+  ]
+}

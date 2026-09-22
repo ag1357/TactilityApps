@@ -44,5 +44,10 @@ WsError ws_load(WsRecipe*,const uint8_t*,size_t);
 void ws_materialize(const WsRecipe*,uint16_t,WsModule*);
 int ws_route(const WsRecipe*,uint16_t,uint16_t,const uint8_t*,uint16_t*,size_t);
 WsFidelity ws_fidelity(WsPos,WsPos,int);
+typedef void (*WsBoxFn)(void*,WsPos,WsPos,uint32_t);
+void ws_boxes(const WsModule*,WsBoxFn,void*);
+int ws_collision(const WsRecipe*,WsAddress,int32_t);
+int ws_surface(const WsRecipe*,WsAddress,int32_t,int32_t*);
+uint16_t ws_witness(const WsRecipe*,WsAddress,WsAddress,uint16_t,uint16_t);
 /* All coordinates are bounded local millimetres, not global float positions. */
 #endif

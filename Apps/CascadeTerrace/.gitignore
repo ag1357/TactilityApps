@@ -15,3 +15,5 @@ results/*.zip
 build-p4*/
 build-p4-native/
 research/results/p4-build.log
+
+__pycache__/

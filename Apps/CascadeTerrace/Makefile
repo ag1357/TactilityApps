@@ -4,7 +4,7 @@ CPPFLAGS += -Icore -DCG_TRAINED_MODEL
 SDL_CFLAGS ?= $(shell sdl2-config --cflags)
 SDL_LIBS ?= $(shell sdl2-config --libs)
 SEMANTIC = core/semantic.c core/decision.c
-WORLD_SDK = world/schema.c world/recipe.c
+WORLD_SDK = world/schema.c world/recipe.c world/geometry.c
 CORE = $(SEMANTIC) core/general_dialogue.c research/rung_a/cognition.c core/world.c core/state.c core/dialogue.c core/persistence.c core/render.c
 all: build/cascade build/test
 build/world_sdk_test: $(WORLD_SDK) tests/world_sdk.c world/sdk.h | build
@@ -45,3 +45,6 @@ build/cognition_demo: $(CORE) research/rung_a/cognition_demo.c | build
 	$(CC) $(CPPFLAGS) $(CFLAGS) $(filter %.c,$^) -lm -o $@
 build/generality_probe: $(CORE) research/rung_a/generality_probe.c | build
 	$(CC) $(CPPFLAGS) $(CFLAGS) $(filter %.c,$^) -lm -o $@
+
+build/libsdk.so: $(WORLD_SDK) world/sdk.h | build
+	$(CC) $(CFLAGS) -shared -fPIC $(filter %.c,$^) -o $@

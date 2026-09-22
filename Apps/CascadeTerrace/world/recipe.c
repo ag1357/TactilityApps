@@ -75,6 +75,7 @@ WsError ws_load(WsRecipe *r,const uint8_t *p,size_t n) {
 }
 WsFidelity ws_fidelity(WsPos a,WsPos b,int interior) {
     int64_t x=(int64_t)a.x-b.x,y=(int64_t)a.y-b.y,z=(int64_t)a.z-b.z;
+    if(x>180000||x< -180000||y>180000||y< -180000||z>180000||z< -180000) return WS_UNLOADED;
     uint64_t d=(uint64_t)(x*x+y*y+z*z);
     if(d<25000ULL*25000) return WS_ACTIVE;
     if(interior) return WS_UNLOADED;

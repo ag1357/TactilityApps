@@ -13,3 +13,4 @@ python3 tools/worldsdk/network_test.py
 python3 tools/worldsdk/rendered_test.py > results/worldsdk/rendered-network.json
 # This is a release gate, not an optional result that can be hidden by aggregation.
 python3 tools/worldsdk/navigation_probe.py
+python3 tools/worldsdk/adversarial_test.py

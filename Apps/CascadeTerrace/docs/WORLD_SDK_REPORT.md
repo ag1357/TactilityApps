@@ -1,21 +1,27 @@
 # World SDK checkpoint report
 
-**PARTIAL. Continuous SDK traversal failed its promotion gate: 1/18 declared
-walk edges passes.** Default Cascade gameplay remains on its validated legacy
-terrain routes. The new SDK multiplayer fixture has not replaced the normal game.
-Q1 remains INCOMPLETE; Q2 and physical P4 qualification remain pending.
+**First implementation gate PASSED: 18/18 declared walk edges traverse with
+runtime ground and collision, and the 15 adversarial spatial cases pass with
+impossible connections failing generation cleanly.** The SDK spatial/access
+abstraction is repaired: topology generates access ports before geometry,
+module `pos.y` is the walkable top surface, corridors resolve to the most
+local path, and reachability is capability-aware. Default Cascade gameplay
+remains on its validated legacy terrain routes; the SDK multiplayer fixture
+has not replaced the normal game. Macro geography, resource/ecology, the
+nonlocal Phos edge and physical P4 qualification remain pending.
 
 | Area | Status | Evidence |
 |---|---|---|
 | Finite schema, 128-bit ancestry IDs, binary compiler | IMPLEMENTED | Two recipe products; unknown extensions rejected |
 | Deterministic module generation | IMPLEMENTED | 2,000 seed/recipe cases; 4,402 malformed products rejected; host/C parity vectors |
-| Continuous SDK walkability | FAILED | 1/18 direct edges passes; wall/entrance and floor-height integration gap |
+| Continuous SDK walkability | IMPLEMENTED | 18/18 direct edges pass; 56 focused C checks incl. ports, capability reachability, direct walks |
+| Adversarial spatial cases | IMPLEMENTED | 15/15 generated cases; slope/port/blockage/vendor impossibilities fail generation cleanly |
 | Default game compatibility | IMPLEMENTED | 864 assertions, 100 seed validations; repair/save/process-exit/reload replay |
-| Shared renderer/collision, scoped rooms/lift | PARTIAL | 25 focused checks; two recipe viewers; global traversal gate fails |
+| Shared renderer/collision, scoped rooms/lift | IMPLEMENTED | Port-aware geometry shared by renderer and collision; two recipe viewers |
 | Two rendered desktop clients | IMPLEMENTED | 120 frames each; peers rendered; independent positions; shared extraction/repair and equal public hashes |
 | Server semantic authority | IMPLEMENTED | 48 protocol checks including transfers, replay rejection, reconnect/restart |
 | Offline merge | PARTIAL | C cases A–E pass; server-retained-base network protocol not implemented |
-| Save/checkpoint compaction | IMPLEMENTED | 3,767 authority/persistence checks; old fixture; torn-slot recovery; mixed histories through 100,000 operations |
+| Save/checkpoint compaction | IMPLEMENTED | 3,767 authority/persistence checks; v1 fixture regenerated for the revised recipe; torn-slot recovery; mixed histories through 100,000 operations |
 | Owned room, decorations, typed feed | PARTIAL | C persistence and server fixture; complete normal-game UI/visitation pending |
 | Complete Cascade multiplayer quest | NOT_STARTED | Existing single-player arc preserved |
 | NPC population/schedule/social/witness integration | NOT_STARTED | Partial types/helpers exist; no complete integrated subsystem |
@@ -50,15 +56,17 @@ executor's ptrace setup, so those runs used `detect_leaks=0`. New C files pass
 strict warnings and formatting; Python passes Ruff F/E9 checks. The P4 SDK emits
 its existing LVGL configuration pragma note but no compile error.
 
-The recommendation is to continue from this foundation while blocking SDK
-traversal promotion. Generate routes through real entrances, validate continuous
-collision on both settlements and adversarial layouts, then connect the normal
-Cascade actions and native P4 transport to the verified authority layer. Do not
-expand cognition research or hide the failed navigation gate behind the passing
-schema and protocol results.
+The recommendation is to continue from this foundation with the traversal gate
+passed. Next gate is macro geography: express mountain/valley, plains,
+river/watershed, lake or wetland, forest distribution, cave, ruin, two
+settlements and a wilderness route between them through compact recipes and
+seeded modifiers, proving the hierarchy without settlement-specific engine
+logic. Then bridge the normal Cascade actions and native P4 transport to the
+verified authority layer. Do not expand cognition research or claim physical
+P4 results from desktop measurements.
 
 Machine-readable results and traces: `results/worldsdk/report.json`,
-`generation.json`, `navigation.json`, `network.json`, `client-1.json`,
-`client-2.json`, `compaction.json`, `state.json`, and `p4-build.json`.
-Exact source hashes, release artifact hashes, build commands and pending work
-are preserved in the P4 record and `FACTORY_CONTINUATION.md`.
+`generation.json`, `navigation.json`, `adversarial.json`, `network.json`,
+`client-1.json`, `client-2.json`, `compaction.json`, `state.json`, and
+`p4-build.json`. Exact source hashes, release artifact hashes, build commands
+and pending work are preserved in the P4 record and `FACTORY_CONTINUATION.md`.

@@ -1,3 +1,1 @@
-cc -Icore -DCG_TRAINED_MODEL -O2 -g -std=c11 -Wall -Wextra -Werror -Wno-misleading-indentation world/schema.c world/recipe.c world/geometry.c world/traversal.c world/state.c world/persistence.c content/cascade_adapter.c core/semantic.c core/decision.c core/general_dialogue.c research/rung_a/cognition.c core/world.c core/state.c core/dialogue.c core/persistence.c core/render.c tests/test.c -lm -o build/test
-./build/test
-{"checks":864,"failures":0,"seeds":100,"seed_validation_ms":506.284,"render_mean_ms":1.641,"game_bytes":35320,"renderer_bytes":153636,"npc_bytes":5384,"state_bytes":21840,"save_bytes":734,"wire_crc32":3349299003,"physical_status":"PENDING"}
+{"checks":864,"failures":0,"seeds":100,"seed_validation_ms":690.385,"render_mean_ms":2.978,"game_bytes":35320,"renderer_bytes":153636,"npc_bytes":5384,"state_bytes":21840,"save_bytes":734,"wire_crc32":3349299003,"physical_status":"PENDING"}

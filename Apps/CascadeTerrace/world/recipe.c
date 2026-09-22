@@ -71,7 +71,8 @@ WsError ws_validate(const WsRecipe* r) {
             else if (ws_route(r, (uint16_t)first, (uint16_t)i, 0, path, WS_CAP) <= 0)
                 return WS_DISCONNECTED;
         }
-    return WS_OK;
+    /* Declared walk edges must be realizable as continuous space. */
+    return ws_topology(r);
 }
 WsError ws_load(WsRecipe* r, const uint8_t* p, size_t n) {
     /* Transactional: validate bytes before touching output; caller stages final validation. */

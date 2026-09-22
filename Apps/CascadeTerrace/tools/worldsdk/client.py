@@ -254,7 +254,7 @@ def main():
                         lib.render_world_marker(
                             Pos(
                                 m.pos.x + (-2000 if slot & 1 else 2000),
-                                m.pos.y + 300,
+                                m.pos.y,
                                 m.pos.z + (-2000 if slot & 2 else 2000),
                             ),
                             0x66BBCC,

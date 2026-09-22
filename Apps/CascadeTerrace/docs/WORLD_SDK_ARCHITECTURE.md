@@ -107,14 +107,23 @@ proves exact state reconstruction for those operations, not compression of
 arbitrary unique content, arbitrary population growth, or a global historical
 archive. Saved current fields are not inferred from descriptive damage classes.
 
-## Failed integration gate
+## Traversal integration gate
 
-`navigation_probe.py` uses actual swept collision and ground queries. Only 1/18
-original declared walk edges passes direct traversal. Graph connectivity alone
-was insufficient: room walls and floor elevations need compiler-generated
-entrance/approach paths. The compiler currently validates bounded types, IDs,
-references and graph connectivity; it does not certify continuous traversal.
-Both SDK settlement products are **experimental candidates**, not promoted world
-releases. `qualify-world-sdk.sh` exits nonzero on this gate. The default Cascade
-adapter only imports the original five site dimensions, and keeps generation-v1
-terrain routes, which still pass their existing physical reachability tests.
+`navigation_probe.py` uses actual swept collision and ground queries. All 18/18
+declared walk edges pass direct traversal, and `adversarial_test.py` passes its
+15 generated spatial cases with impossible connections failing generation
+cleanly. The repair was an abstraction change, not per-module exceptions: a
+module's `pos.y` is its walkable top surface; topology is generated before
+geometry, so every declared walk edge crossing a room wall cuts a 4000 mm
+doorway port (visual openings are collision openings) and every room keeps a
+default public south entrance; approach corridors are boundary-anchored between
+endpoint surfaces; and where corridor bands overlap, the most local path
+provides the ground, with exact ties resolving to the higher deck and the
+ceiling filter keeping walkers below unreachable decks. The compiler mirrors
+the runtime walk-edge validation bit-exactly, and `ws_validate` rejects
+unrealizable content fail-closed, including NPCs sealed in rooms without
+public access. Both SDK settlement products remain **experimental candidates**
+until the macro geography and later gates pass. `qualify-world-sdk.sh` exits
+nonzero if any gate fails. The default Cascade adapter only imports the
+original five site dimensions, and keeps generation-v1 terrain routes, which
+still pass their existing physical reachability tests.

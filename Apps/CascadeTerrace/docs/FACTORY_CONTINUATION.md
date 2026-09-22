@@ -6,9 +6,12 @@ This handoff describes its containing checkpoint. Resolve the exact current
 checkpoint with `git rev-parse HEAD` after fetching this branch; do not start
 again from the cognition branch. No unpublished context is required.
 
-**Status: PARTIAL. The SDK continuous-traversal promotion gate FAILED (1/18).**
-The normal Cascade game remains playable and passes its original suite. Q1
-remains INCOMPLETE; Q2 and all physical P4 claims remain pending. The two-client
+**Status: FIRST IMPLEMENTATION GATE PASSED.** The SDK continuous-traversal
+promotion gate passes 18/18 declared walk edges, and the adversarial spatial
+suite passes 15/15 with impossible connections failing generation cleanly.
+The normal Cascade game remains playable and passes its original suite. Macro
+geography, resource/ecology proof, the nonlocal Phos edge, the complete
+multiplayer quest and all physical P4 claims remain pending. The two-client
 SDK fixture is not the full Kyra/intake multiplayer game.
 
 ## Published checkpoints
@@ -23,6 +26,7 @@ SDK fixture is not the full Kyra/intake multiplayer game.
 | F: semantic authority/TCP protocol fixture | 987195d8763e99cd29906593a0a2a13b2a7168ee |
 | G: checkpoint recovery and compaction | ef5cbc0cb22f3c691646dbae7518871e8a9ca5ed |
 | H: rendered multiplayer foundation, qualification and this handoff | containing commit; full game integration remains incomplete |
+| I: spatial/access repair, 18/18 traversal, adversarial suite | containing commit of this update; resolve with `git rev-parse HEAD` |
 
 ## Build and reproduce
 
@@ -34,11 +38,11 @@ python3 tools/worldsdk/sdk.py schema
 ./scripts/qualify-world-sdk.sh
 ```
 
-The qualification script intentionally exits **1** at the known failed continuous
-navigation gate after writing all preceding results. Do not change it to ignore
-that failure. Results are in `results/worldsdk/`. It needs a C11 compiler, Python
-standard library, and an SDL2 runtime for the rendered clients. No model training,
-cloud cognition or GPU is required.
+The qualification script now exits **0** with the traversal and adversarial
+gates green. Do not change it to ignore a failure if one reappears; it must
+exit nonzero when any gate fails. Results are in `results/worldsdk/`. It needs
+a C11 compiler, Python standard library, and an SDL2 runtime for the rendered
+clients. No model training, cloud cognition or GPU is required.
 
 For the normal desktop game and standalone SDK viewer, install SDL2 development
 headers and run:
@@ -72,19 +76,22 @@ python3 tools/worldsdk/client.py build/cascade.cws
 WASD moves; arrows turn; E uses nearby lift/portal; 1 extracts, 2 repairs, 3
 transfers to the other player, 4 places a Hydro decoration in an owned room.
 The server assigns the first unowned interior to a joining player. This fixture
-has no integrated dialogue, economy/trade UI or complete quest. Generic corridor
-paths are not yet reliably traversable. Use the C suite for owned-room persistence
-and all five offline-merge scenarios; do not claim a complete manual room visit.
+has no integrated dialogue, economy/trade UI or complete quest. Corridor paths
+are traversable by swept movement; manual visits of owned rooms still rely on
+the C suite for persistence and all five offline-merge scenarios.
 
 ```sh
 python3 tools/worldsdk/network_test.py
 python3 tools/worldsdk/rendered_test.py
 python3 tools/worldsdk/navigation_probe.py
+python3 tools/worldsdk/adversarial_test.py
 ```
 
 The first test uses two protocol client processes, real TCP, reconnect and a
 terminated/restarted server. The second uses two actual SDL-rendered processes.
-The final probe is expected to fail until traversal compilation is fixed.
+The third is the release gate over all declared walk edges; it must pass. The
+fourth generates the fifteen adversarial spatial cases and must pass with the
+impossible connections failing generation cleanly.
 Resume tokens are local `.keys` files excluded from Git. The server only binds
 loopback. Internet deployment, rate limiting and offline branch upload are absent.
 
@@ -142,19 +149,31 @@ A native P4 SDK-mode client remains to be integrated and measured.
 - `tools/worldsdk/`: finite source compiler, inspection, generators, probes,
   authority transport and rendered clients. No hidden assets or trained models.
 
-**Next gate:** generate collision-valid entrance/approach waypoints from the same
-module geometry. The current direct center-to-center links hit walls and some
-floor transitions disagree with surface heights. Read `navigation.json` stop
-positions, implement a general compiler/navigation fix, then rerun both recipes
-and adversarial generated layouts. Do not add exceptions for the failed names.
-Do not promote candidates while `navigation_probe.py` fails.
+**Next gate: macro geography.** Express, through compact recipes and seeded
+modifiers only, at least a mountain/valley region, plains region,
+river/watershed, lake or wetland, forest distribution, cave, ruin, two
+settlements and a wilderness route between them. Prove the hierarchy
+(world/region/settlement/district) with the same engine: no settlement-specific
+logic. The spatial foundation now enforces topology-before-geometry (declared
+walk edges cut 4000 mm ports into room walls; every room keeps a default public
+south entrance), the surface convention (`pos.y` is the walkable top),
+corridor locality (overlapping bands resolve to the nearest centerline, exact
+ties to the higher deck), capability-aware reachability
+(`ws_reachable`: WALK/ABILITY/CONDITIONAL/INACCESSIBLE/INVALID) and hard
+constraints with compiler parity (`ws_topology` + `validate_walk_edge`: one
+local frame per edge, legal port fit, ramp steps ≤ 800 mm, slope ≤ 45°, no
+unrelated solid on the direct route, NPCs need baseline public access). Keep
+`navigation_probe.py` and `adversarial_test.py` green while adding content;
+do not add exceptions for named modules.
 
-After that: bridge the existing game's Phos/evidence/economy/quest actions into
-this single semantic authority, replace the separate fixture with an experimental
-normal-game multiplayer mode, implement P4 network transport, and qualify it.
-Expand NPC profiles/schedules and observation provenance only after the authority
-and traversal boundaries are sound. Geometry fidelity labels do not yet implement
-cold storage streaming, NPC simulation LOD, or full room chunk eviction.
+After that: the resource/ecology conservation proof, the nonlocal Phos edge,
+then bridging the existing game's Phos/evidence/economy/quest actions into
+this single semantic authority, replacing the separate fixture with an
+experimental normal-game multiplayer mode, implementing P4 network transport,
+and qualifying it physically. Expand NPC profiles/schedules and observation
+provenance only after the authority and traversal boundaries are sound.
+Geometry fidelity labels do not yet implement cold storage streaming, NPC
+simulation LOD, or full room chunk eviction.
 
 The SDK witness function is a distance/attention/conspicuousness gate with coarse
 128-sample occlusion. It is not yet connected to NPC knowledge records and does
@@ -175,11 +194,16 @@ python3 tools/worldsdk/sdk.py validate content/worlds/example.json
 python3 tools/worldsdk/sdk.py compile content/worlds/example.json --output build/example.cws
 ```
 
-Compiler validation currently certifies types/IDs/bounds/topological connectivity,
-not continuous gameplay. Add the candidate to the runtime geometry/navigation
-harness before any release. Changed recipe hashes require explicit compatibility
-or migration work; never silently reinterpret old checkpoint data. Preserve the
-v1 save fixture and earlier published products.
+Compiler validation currently certifies types/IDs/bounds/topological connectivity
+and, with bit-exact runtime parity, the realizability of every declared walk
+edge: local frames, legal ports, enterable ramp steps, walkable slopes,
+unblocked direct routes and baseline public access for NPCs. It does not
+certify continuous gameplay beyond the probe's swept-edge walks; run new
+content through the navigation probe and adversarial harness before any
+release. Changed recipe hashes require explicit compatibility or migration
+work; never silently reinterpret old checkpoint data. The v1 save fixture is
+regenerated whenever the recipe CRC changes (decode against the old product,
+re-bind the CRC, re-encode); never hand-edit it.
 
 ## Physical validation still required
 

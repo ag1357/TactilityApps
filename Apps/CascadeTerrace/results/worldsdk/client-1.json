@@ -4,10 +4,10 @@
   "peers_seen": [
     102
   ],
-  "mean_render_ms": 0.6597460499885225,
+  "mean_render_ms": 0.8727676916350902,
   "wire_sent": 4020,
-  "wire_received": 47145,
-  "public_hash": "aebff02c51165d5f6aeb2a5415a15821a9b62f873e042cbf07ae335fe0703e00",
+  "wire_received": 47304,
+  "public_hash": "5d73ccbd5115e87a308c7a7b6e10c6471db486bd70df3dad71c518c956af5b8d",
   "actions": [
     {
       "action": "EXTRACT",
@@ -20,7 +20,7 @@
   ],
   "final_position": {
     "x": 22000,
-    "y": 4300,
+    "y": 4000,
     "z": -100400,
     "scope": 65535
   },

@@ -1,0 +1,86 @@
+{
+  "status": "PASS",
+  "passed": 15,
+  "tested": 15,
+  "gate": "Adversarial spatial cases; impossible connections must fail generation cleanly",
+  "method": "Generated recipes compiled by the same SDK; traversal by 100 mm swept steps with runtime ground and collision.",
+  "rows": [
+    {
+      "case": "flat_street_block",
+      "status": "PASS",
+      "edges": 3
+    },
+    {
+      "case": "steep_hillside",
+      "status": "PASS",
+      "edges": 3
+    },
+    {
+      "case": "cascade_terrace",
+      "status": "PASS",
+      "edges": 6,
+      "lift_arrival_y": 27000
+    },
+    {
+      "case": "tower_multiple_street_elevations",
+      "status": "PASS",
+      "edges": 2
+    },
+    {
+      "case": "bridge_mismatched_building_floors",
+      "status": "PASS",
+      "edges": 2
+    },
+    {
+      "case": "rooftop_route",
+      "status": "PASS",
+      "edges": 2
+    },
+    {
+      "case": "stair_network",
+      "status": "PASS",
+      "edges": 5
+    },
+    {
+      "case": "lift",
+      "status": "PASS",
+      "walk_blocked_at_step": 60
+    },
+    {
+      "case": "cave",
+      "status": "PASS",
+      "stop": [
+        0,
+        3000,
+        100
+      ]
+    },
+    {
+      "case": "tunnel",
+      "status": "PASS",
+      "edges": 2
+    },
+    {
+      "case": "intentionally_inaccessible_secret",
+      "status": "PASS",
+      "secret_scope": 65535
+    },
+    {
+      "case": "jump_required_optional_path",
+      "status": "PASS"
+    },
+    {
+      "case": "latent_apartment",
+      "status": "PASS"
+    },
+    {
+      "case": "vendor_requires_baseline_public_access",
+      "status": "PASS"
+    },
+    {
+      "case": "impossible_requested_connection",
+      "status": "PASS",
+      "rejections": 3
+    }
+  ]
+}

@@ -169,7 +169,7 @@ class World:
                 out = Module()
                 self.lib.ws_materialize(C.byref(self.recipe), i, C.byref(out))
                 return Traveler(
-                    Address(Pos(out.pos.x, out.pos.y + 300, out.pos.z), 65535)
+                    Address(Pos(out.pos.x, out.pos.y, out.pos.z), 65535)
                 )
         raise ValueError("no player spawn")
 

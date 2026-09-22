@@ -96,5 +96,40 @@ int ws_ground(const WsRecipe*, WsAddress, int32_t, int32_t*);
 int ws_move(const WsRecipe*, WsAddress*, int32_t, int32_t);
 int ws_use_link(const WsRecipe*, WsTraveler*);
 void ws_travel_tick(WsTraveler*, uint32_t);
+/* Spatial surfaces: a module's pos.y is the elevation of its walkable top
+   surface. Emitted solid geometry occupies [pos.y - height, pos.y]; room
+   walls extend to [pos.y - WS_FLOOR_MM, pos.y + size.y]. */
+#define WS_FLOOR_MM 300
+/* Access ports: declared walk topology is generated before geometry. Every
+   walk edge crossing a room wall cuts a doorway; every room keeps one
+   default public entrance port on its south wall when it fits. Visual
+   openings are collision openings. */
+#define WS_PORT_MM 4000
+#define WS_PORT_WALL_MM 300
+#define WS_PORT_MAX 96
+typedef enum { WS_WALL_NORTH, WS_WALL_EAST, WS_WALL_SOUTH, WS_WALL_WEST } WsWall;
+enum { WS_PORT_WALK = 0 };
+typedef struct {
+    WsPos pos;
+    uint16_t owner, wall, mode, width;
+} WsPort;
+void ws_geometry(const WsRecipe*, uint16_t, WsBoxFn, void*);
+int ws_ports(const WsRecipe*, uint16_t, WsPort*, int);
+/* Capability-aware reachability: WALK uses baseline walk edges only; ABILITY
+   needs lift/portal links covered by the declared capability set; CONDITIONAL
+   needs capabilities outside the set; INACCESSIBLE has no route between two
+   walk surfaces; INVALID queries a non-walk endpoint. */
+typedef enum {
+    WS_REACH_WALK,
+    WS_REACH_ABILITY,
+    WS_REACH_CONDITIONAL,
+    WS_REACH_INACCESSIBLE,
+    WS_REACH_INVALID
+} WsReach;
+enum { WS_CAP_WALK = 1u, WS_CAP_LIFT = 2u, WS_CAP_PORTAL = 4u };
+WsReach ws_reachable(const WsRecipe*, uint16_t, uint16_t, uint32_t);
+/* Walk-edge realizability: coordinate frames, legal access ports, unblocked
+   direct routes and baseline-walkable slopes. ws_validate calls this. */
+WsError ws_topology(const WsRecipe*);
 /* All coordinates are bounded local millimetres, not global float positions. */
 #endif

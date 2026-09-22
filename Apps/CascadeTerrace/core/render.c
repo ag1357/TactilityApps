@@ -321,14 +321,14 @@ void render_world(Renderer *r,const WsRecipe *world,WsAddress player,int yaw,WsM
         if(player.scope!=UINT16_MAX&&i!=player.scope&&m.parent!=player.scope)continue;
         WsFidelity f=ws_fidelity(m.pos,player.pos,(m.flags&WS_INTERIOR)!=0);
         if(f==WS_UNLOADED)continue;
-        if(f==WS_PROXY){metrics->proxy++;world_box(metrics,m.pos,m.size,m.color);}
-        else {if(f==WS_ACTIVE)metrics->active++;else metrics->materialized++;ws_boxes(&m,world_box,metrics);}
+        if(f==WS_PROXY){metrics->proxy++;world_box(metrics,(WsPos){m.pos.x,m.pos.y-m.size.y/2,m.pos.z},m.size,m.color);}
+        else {if(f==WS_ACTIVE)metrics->active++;else metrics->materialized++;ws_geometry(world,i,world_box,metrics);}
     }
     if(player.scope==UINT16_MAX) for(uint16_t i=0;i<world->link_count;i++) {
         WsLink l=world->links[i];if(l.kind)continue;WsModule a,b;ws_materialize(world,l.a,&a);ws_materialize(world,l.b,&b);
         float dx=(b.pos.x-a.pos.x)/1000.f,dz=(b.pos.z-a.pos.z)/1000.f,d=sqrtf(dx*dx+dz*dz);if(d<.1f)continue;
         float ox=-dz*2/d,oz=dx*2/d;
-        V aa={a.pos.x/1000.f,a.pos.y/1000.f+.3f,a.pos.z/1000.f},bb={b.pos.x/1000.f,b.pos.y/1000.f+.3f,b.pos.z/1000.f};
+        V aa={a.pos.x/1000.f,a.pos.y/1000.f,a.pos.z/1000.f},bb={b.pos.x/1000.f,b.pos.y/1000.f,b.pos.z/1000.f};
         quad((V){aa.x+ox,aa.y,aa.z+oz},(V){bb.x+ox,bb.y,bb.z+oz},(V){bb.x-ox,bb.y,bb.z-oz},(V){aa.x-ox,aa.y,aa.z-oz},0xaaa394,1);
         metrics->triangles+=2;metrics->vertices+=4;
     }

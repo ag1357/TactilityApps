@@ -2,33 +2,33 @@
   "status": "PASS",
   "worlds": 2000,
   "rejected_malformed_products": 4402,
-  "elapsed_ms": 724.425,
+  "elapsed_ms": 2018.553,
   "workspace_bytes": 10276,
   "module_bytes": 64,
   "vectors": [
     {
       "recipe": "cascade",
       "seed": 0,
-      "product_sha256": "9bd54ce9a0b3ff8c5538014678536ec45570af2648781a67feb5a923c3e46c1a",
-      "materialized_sha256": "0093b7dfbe6ec2109cf83c8ae782619a5c9547d422e7fd936558658b92c7df4c"
+      "product_sha256": "537cff9e28a6911f00d38b395da61a8e89ede7c2db4ee4577c5d66713bea891b",
+      "materialized_sha256": "f736aee5546fac33c28f24428bfd3214f38a7eef52f66a8b777a19185c05a464"
     },
     {
       "recipe": "cascade",
       "seed": 1,
-      "product_sha256": "7b0c0db24bc7d229e3120cf4e01e80ac49f06d0c37c3e8b7a355d6f4ec9647fe",
-      "materialized_sha256": "7aabbb42ce4949da98b6e1ebc119a4bf8b45b65c0e569110c0d904cfab383cad"
+      "product_sha256": "82db4766a3a89b8c039ff7d853cece5ae55157b3150bff35c0f6e7c8c8c95c99",
+      "materialized_sha256": "bd7828eae122d1b2d56ae1fc036034408a5fd689bd77e69b1dcdb52b9b8f32db"
     },
     {
       "recipe": "cascade",
       "seed": 42,
-      "product_sha256": "f2868d1408989024e0752be04a4d5e26b8bce4a74ef402198bad2032b5144cb8",
-      "materialized_sha256": "7aabbb42ce4949da98b6e1ebc119a4bf8b45b65c0e569110c0d904cfab383cad"
+      "product_sha256": "ab4bbc8e939ceb6e6dd84343309bacce2a19b8269cfb97d898a69d4c1be8af8e",
+      "materialized_sha256": "bd7828eae122d1b2d56ae1fc036034408a5fd689bd77e69b1dcdb52b9b8f32db"
     },
     {
       "recipe": "cascade",
       "seed": 999,
-      "product_sha256": "0c1961647e3d66e851ba2ec95e4840195bae1f60c22ea8cd696494d0153fa3c3",
-      "materialized_sha256": "2f2d7ab580892db6129722e216cb476d546023b0d1f7aa4e444691c1cb902c46"
+      "product_sha256": "b8d6df17b3fb6e020ca63c41f19dd937686482aea89fa49683ad82cb26e2e9ff",
+      "materialized_sha256": "23a481faf13f3bc5c40692ae2f676845972898be84c0cf504df9ef172812d65f"
     },
     {
       "recipe": "elek_grid",

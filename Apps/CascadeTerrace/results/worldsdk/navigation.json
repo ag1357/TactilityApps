@@ -1,6 +1,6 @@
 {
-  "status": "FAILED",
-  "passed": 1,
+  "status": "PASS",
+  "passed": 18,
   "tested": 18,
   "gate": "SDK traversal production promotion blocked when any declared edge fails",
   "method": "Direct walk edges, 100 mm swept steps using runtime ground and collision. Not a search for alternate routes.",
@@ -9,60 +9,60 @@
       "recipe": "cascade",
       "from": "station",
       "to": "bridge",
-      "pass": false,
-      "steps": 135,
+      "pass": true,
+      "steps": 416,
       "stop": [
-        14819,
-        4300,
-        -98618
+        35,
+        3000,
+        -75056
       ]
     },
     {
       "recipe": "cascade",
       "from": "bridge",
       "to": "home",
-      "pass": false,
-      "steps": 717,
+      "pass": true,
+      "steps": 813,
       "stop": [
-        61705,
-        17399,
-        -39789
+        69918,
+        19000,
+        -35047
       ]
     },
     {
       "recipe": "cascade",
       "from": "home",
       "to": "market",
-      "pass": false,
-      "steps": 93,
+      "pass": true,
+      "steps": 721,
       "stop": [
-        73813,
-        20713,
-        -26630
+        99949,
+        30000,
+        29890
       ]
     },
     {
       "recipe": "cascade",
       "from": "bridge",
       "to": "tunnel",
-      "pass": false,
-      "steps": 734,
+      "pass": true,
+      "steps": 858,
       "stop": [
-        -55678,
-        6723,
-        -27973
+        -64957,
+        7000,
+        -20036
       ]
     },
     {
       "recipe": "cascade",
       "from": "home",
       "to": "lift_base",
-      "pass": false,
-      "steps": 92,
+      "pass": true,
+      "steps": 252,
       "stop": [
-        61628,
-        19300,
-        -38616
+        47068,
+        11000,
+        -44970
       ]
     },
     {
@@ -73,7 +73,7 @@
       "steps": 252,
       "stop": [
         69932,
-        27400,
+        27000,
         -35030
       ]
     },
@@ -81,59 +81,59 @@
       "recipe": "elek_grid",
       "from": "tower_0_0",
       "to": "tower_1_0",
-      "pass": false,
-      "steps": 84,
+      "pass": true,
+      "steps": 317,
       "stop": [
-        7865,
-        300,
-        -159
+        30883,
+        0,
+        994
       ]
     },
     {
       "recipe": "elek_grid",
       "from": "tower_0_0",
       "to": "tower_0_1",
-      "pass": false,
-      "steps": 214,
+      "pass": true,
+      "steps": 307,
       "stop": [
-        -187,
-        300,
-        20686
+        -3,
+        0,
+        29893
       ]
     },
     {
       "recipe": "elek_grid",
       "from": "tower_0_1",
       "to": "tower_1_1",
-      "pass": false,
-      "steps": 84,
+      "pass": true,
+      "steps": 297,
       "stop": [
-        8365,
-        300,
-        29916
+        29403,
+        0,
+        29502
       ]
     },
     {
       "recipe": "elek_grid",
       "from": "tower_0_1",
       "to": "tower_0_2",
-      "pass": false,
-      "steps": 214,
+      "pass": true,
+      "steps": 307,
       "stop": [
-        313,
-        300,
-        51186
+        497,
+        0,
+        60393
       ]
     },
     {
       "recipe": "elek_grid",
       "from": "tower_0_2",
       "to": "tower_1_2",
-      "pass": false,
-      "steps": 84,
+      "pass": true,
+      "steps": 299,
       "stop": [
-        8900,
-        300,
+        30400,
+        0,
         60500
       ]
     },
@@ -141,84 +141,84 @@
       "recipe": "elek_grid",
       "from": "tower_1_0",
       "to": "tower_2_0",
-      "pass": false,
-      "steps": 84,
+      "pass": true,
+      "steps": 287,
       "stop": [
-        39365,
-        300,
-        578
+        59413,
+        0,
+        -494
       ]
     },
     {
       "recipe": "elek_grid",
       "from": "tower_1_0",
       "to": "tower_1_1",
-      "pass": false,
-      "steps": 193,
+      "pass": true,
+      "steps": 287,
       "stop": [
-        30033,
-        300,
-        20156
+        29506,
+        0,
+        29413
       ]
     },
     {
       "recipe": "elek_grid",
       "from": "tower_1_1",
       "to": "tower_2_1",
-      "pass": false,
-      "steps": 84,
+      "pass": true,
+      "steps": 317,
       "stop": [
-        37865,
-        300,
-        29841
+        60883,
+        0,
+        30994
       ]
     },
     {
       "recipe": "elek_grid",
       "from": "tower_1_1",
       "to": "tower_1_2",
-      "pass": false,
-      "steps": 219,
+      "pass": true,
+      "steps": 312,
       "stop": [
-        30157,
-        300,
-        51181
+        30495,
+        0,
+        60388
       ]
     },
     {
       "recipe": "elek_grid",
       "from": "tower_1_2",
       "to": "tower_2_2",
-      "pass": false,
-      "steps": 84,
+      "pass": true,
+      "steps": 307,
       "stop": [
-        38865,
-        300,
-        60584
+        60893,
+        0,
+        60997
       ]
     },
     {
       "recipe": "elek_grid",
       "from": "tower_2_0",
       "to": "tower_2_1",
-      "pass": false,
-      "steps": 224,
+      "pass": true,
+      "steps": 317,
       "stop": [
-        60533,
-        300,
-        21676
+        60994,
+        0,
+        30883
       ]
     },
     {
       "recipe": "elek_grid",
       "from": "tower_2_1",
       "to": "tower_2_2",
-      "pass": false,
-      "steps": 207,
+      "pass": true,
+      "steps": 299,
       "stop": [
         61000,
-        300,
-        51700
+        0,
+        60900
       ]
     }
   ]

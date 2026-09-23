@@ -1,0 +1,82 @@
+skip submodule check on internal CI
+Executing action: reconfigure
+Running cmake in directory /tmp/cascade-integration/Apps/CascadeTerrace/build-p4-native
+Executing "cmake -G Ninja -DPYTHON_DEPS_CHECKED=1 -DPYTHON=/root/.espressif/python_env/idf6.1_py3.12_env/bin/python -DESP_PLATFORM=1 -DCT_RASTER_REFERENCE=OFF -DCCACHE_ENABLE=False /tmp/cascade-integration/Apps/CascadeTerrace"...
+-- Minimal build - OFF
+-- Building ESP-IDF components for target esp32p4
+-- ESP-TEE is currently supported only on the esp32c6;esp32h2;esp32c5 SoCs
+-- Project sdkconfig file /tmp/cascade-integration/Apps/CascadeTerrace/sdkconfig
+Loading defaults file /tmp/cascade-integration/Apps/CascadeTerrace/sdkconfig.defaults...
+NOTE: /tmp/kconfgen_tmp8zd7rxo4:15: CONFIG_ESP_SYSTEM_MEMPROT_FEATURE_LOCK was replaced with CONFIG_ESP_SYSTEM_MEMPROT_PMS_LOCK
+NOTE: unknown kconfig symbol 'FATFS_LFN_HEAP' assigned to 'y' in /tmp/cascade-integration/Apps/CascadeTerrace/sdkconfig.defaults
+NOTE: unknown kconfig symbol 'FATFS_VOLUME_COUNT' assigned to '3' in /tmp/cascade-integration/Apps/CascadeTerrace/sdkconfig.defaults
+NOTE: Kconfig parser version: 1
+NOTE: Kconfig defaults policy: use sdkconfig
+NOTE: Status: Finished with notifications
+NOTE: /tmp/cascade-deps/esp-idf/components/esp_system/Kconfig:201: ESP_SYSTEM_MEMPROT_PMS_LOCK has user-set value n from /tmp/kconfgen_tmp8zd7rxo4 but is not visible (disabled dependency)
+NOTE: /tmp/cascade-deps/esp-idf/components/freertos/Kconfig:7: FREERTOS_SMP has user-set value n from /tmp/kconfgen_tmp8zd7rxo4 but is not visible (disabled dependency)
+-- Adding linker script /tmp/cascade-deps/esp-idf/components/riscv/ld/rom.api.ld
+-- App "cascadeterrace" version: 14576b2-dirty
+-- USING O3
+-- Adding linker script /tmp/cascade-deps/esp-idf/components/esp_system/ld/esp32p4/memory.ld.in
+--   -> Preprocessing .in script: /tmp/cascade-deps/esp-idf/components/esp_system/ld/esp32p4/memory.ld.in
+-- Adding linker script /tmp/cascade-deps/esp-idf/components/esp_system/ld/esp32p4/sections.ld.in
+--   -> Preprocessing .in script: /tmp/cascade-deps/esp-idf/components/esp_system/ld/esp32p4/sections.ld.in
+--   -> Applying ldgen processing: /tmp/cascade-integration/Apps/CascadeTerrace/build-p4-native/esp-idf/esp_system/ld/sections.ld.in
+-- Adding linker script /tmp/cascade-deps/esp-idf/components/esp_rom/esp32p4/ld/esp32p4.rom.ld
+-- Adding linker script /tmp/cascade-deps/esp-idf/components/esp_rom/esp32p4/ld/esp32p4.rom.api.ld
+-- Adding linker script /tmp/cascade-deps/esp-idf/components/esp_rom/esp32p4/ld/esp32p4.rom.rvfp.ld
+-- Adding linker script /tmp/cascade-deps/esp-idf/components/esp_rom/esp32p4/ld/esp32p4.rom.wdt.ld
+-- Adding linker script /tmp/cascade-deps/esp-idf/components/esp_rom/esp32p4/ld/esp32p4.rom.systimer.ld
+-- Adding linker script /tmp/cascade-deps/esp-idf/components/esp_rom/esp32p4/ld/esp32p4.rom.version.ld
+-- Adding linker script /tmp/cascade-deps/esp-idf/components/esp_rom/esp32p4/ld/esp32p4.rom.libc.ld
+-- Adding linker script /tmp/cascade-deps/esp-idf/components/esp_rom/esp32p4/ld/esp32p4.rom.newlib.ld
+-- Adding linker script /tmp/cascade-deps/esp-idf/components/soc/esp32p4/ld/esp32p4.peripherals.ld
+CMake Warning at /tmp/cascade-deps/esp-idf/tools/cmake/component_validation.cmake:86 (message):
+  Include directory
+  '/tmp/cascade-deps/TactilitySDK/Modules/lvgl-module/include' belongs to
+  component lvgl-module but is being used by component TactilitySDK.  It is
+  recommended to define the component dependency for 'TactilitySDK' on the
+  component lvgl-module, i.e.  'idf_component_register(...  REQUIRES
+  lvgl-module)' in the CMakeLists.txt of TactilitySDK, and specify the
+  included directory as idf_component_register(...  INCLUDE_DIRS <dir
+  relative to component>) in the CMakeLists.txt of component lvgl-module.
+Call Stack (most recent call first):
+  /tmp/cascade-deps/esp-idf/tools/cmake/component_validation.cmake:130 (__component_validation_check_include_dirs)
+  /tmp/cascade-deps/esp-idf/CMakeLists.txt:338 (__component_validation_run_checks)
+
+
+-- Components: TactilitySDK app-module app_update bootloader bootloader_support crypt-module cxx efuse esp_app_format esp_blockdev esp_bootloader_format esp_common esp_driver_gpio esp_hal_dma esp_hal_i2c esp_hal_lcd esp_hal_mspi esp_hal_timg esp_hal_wdt esp_hw_support esp_libc esp_mm esp_partition esp_pm esp_rom esp_security esp_stdio esp_system esp_timer esp_usb_cdc_rom_console esptool_py freertos gps-module hal heap log lvgl-module lvgl-window-manager-module main mbedtls partition_table pthread riscv service-module soc spi_flash
+-- Component paths: /tmp/cascade-deps/TactilitySDK /tmp/cascade-deps/TactilitySDK/Modules/app-module /tmp/cascade-deps/esp-idf/components/app_update /tmp/cascade-deps/esp-idf/components/bootloader /tmp/cascade-deps/esp-idf/components/bootloader_support /tmp/cascade-deps/TactilitySDK/Modules/crypt-module /tmp/cascade-deps/esp-idf/components/cxx /tmp/cascade-deps/esp-idf/components/efuse /tmp/cascade-deps/esp-idf/components/esp_app_format /tmp/cascade-deps/esp-idf/components/esp_blockdev /tmp/cascade-deps/esp-idf/components/esp_bootloader_format /tmp/cascade-deps/esp-idf/components/esp_common /tmp/cascade-deps/esp-idf/components/esp_driver_gpio /tmp/cascade-deps/esp-idf/components/esp_hal_dma /tmp/cascade-deps/esp-idf/components/esp_hal_i2c /tmp/cascade-deps/esp-idf/components/esp_hal_lcd /tmp/cascade-deps/esp-idf/components/esp_hal_mspi /tmp/cascade-deps/esp-idf/components/esp_hal_timg /tmp/cascade-deps/esp-idf/components/esp_hal_wdt /tmp/cascade-deps/esp-idf/components/esp_hw_support /tmp/cascade-deps/esp-idf/components/esp_libc /tmp/cascade-deps/esp-idf/components/esp_mm /tmp/cascade-deps/esp-idf/components/esp_partition /tmp/cascade-deps/esp-idf/components/esp_pm /tmp/cascade-deps/esp-idf/components/esp_rom /tmp/cascade-deps/esp-idf/components/esp_security /tmp/cascade-deps/esp-idf/components/esp_stdio /tmp/cascade-deps/esp-idf/components/esp_system /tmp/cascade-deps/esp-idf/components/esp_timer /tmp/cascade-deps/esp-idf/components/esp_usb_cdc_rom_console /tmp/cascade-deps/esp-idf/components/esptool_py /tmp/cascade-deps/esp-idf/components/freertos /tmp/cascade-deps/TactilitySDK/Modules/gps-module /tmp/cascade-deps/esp-idf/components/hal /tmp/cascade-deps/esp-idf/components/heap /tmp/cascade-deps/esp-idf/components/log /tmp/cascade-deps/TactilitySDK/Modules/lvgl-module /tmp/cascade-deps/TactilitySDK/Modules/lvgl-window-manager-module /tmp/cascade-integration/Apps/CascadeTerrace/main /tmp/cascade-deps/esp-idf/components/mbedtls /tmp/cascade-deps/esp-idf/components/partition_table /tmp/cascade-deps/esp-idf/components/pthread /tmp/cascade-deps/esp-idf/components/riscv /tmp/cascade-deps/TactilitySDK/Modules/service-module /tmp/cascade-deps/esp-idf/components/soc /tmp/cascade-deps/esp-idf/components/spi_flash
+-- Configuring done (3.2s)
+-- Generating done (0.2s)
+-- Build files have been written to: /tmp/cascade-integration/Apps/CascadeTerrace/build-p4-native
+Executing action: elf
+Running ninja in directory /tmp/cascade-integration/Apps/CascadeTerrace/build-p4-native
+Executing "ninja elf"...
+[1/20] Building C object esp-idf/main/CMakeFiles/__idf_main.dir/__/content/cascade_adapter.c.obj
+[2/20] Building C object esp-idf/main/CMakeFiles/__idf_main.dir/__/world/schema.c.obj
+[3/20] Building C object esp-idf/main/CMakeFiles/__idf_main.dir/__/world/resource.c.obj
+[4/20] Building C object esp-idf/main/CMakeFiles/__idf_main.dir/__/world/state.c.obj
+[5/20] Building C object esp-idf/main/CMakeFiles/__idf_main.dir/__/world/persistence.c.obj
+[6/20] Building C object esp-idf/main/CMakeFiles/__idf_main.dir/__/core/general_dialogue.c.obj
+[7/20] Building C object esp-idf/main/CMakeFiles/__idf_main.dir/__/world/traversal.c.obj
+[8/20] Building C object esp-idf/main/CMakeFiles/__idf_main.dir/__/world/geometry.c.obj
+[9/20] Building C object esp-idf/main/CMakeFiles/__idf_main.dir/__/world/recipe.c.obj
+[10/20] Building C object esp-idf/main/CMakeFiles/__idf_main.dir/semantic-portable.c.obj
+[11/20] Building C object esp-idf/main/CMakeFiles/__idf_main.dir/__/core/decision.c.obj
+[12/20] Building C object esp-idf/main/CMakeFiles/__idf_main.dir/__/core/dialogue.c.obj
+[13/20] Building C object esp-idf/main/CMakeFiles/__idf_main.dir/__/core/persistence.c.obj
+[14/20] Building C object esp-idf/main/CMakeFiles/__idf_main.dir/main.c.obj
+In file included from /tmp/cascade-deps/TactilitySDK/Libraries/lvgl/include/src/lv_init.h:16,
+                 from /tmp/cascade-deps/TactilitySDK/Libraries/lvgl/include/lvgl.h:21,
+                 from /tmp/cascade-integration/Apps/CascadeTerrace/main/main.c:10:
+/tmp/cascade-deps/TactilitySDK/Libraries/lvgl/include/src/lv_conf_internal.h:65:17: note: '#pragma message: Possible failure to include lv_conf.h, please read the comment in this file if you get errors'
+   65 |         #pragma message("Possible failure to include lv_conf.h, please read the comment in this file if you get errors")
+      |                 ^~~~~~~
+[15/20] Building C object esp-idf/main/CMakeFiles/__idf_main.dir/__/core/world.c.obj
+[16/20] Building C object esp-idf/main/CMakeFiles/__idf_main.dir/__/core/state.c.obj
+[17/20] Building C object esp-idf/main/CMakeFiles/__idf_main.dir/__/research/rung_a/cognition.c.obj
+[18/20] Building C object esp-idf/main/CMakeFiles/__idf_main.dir/__/core/render.c.obj
+[19/20] Linking C static library esp-idf/main/libmain.a
+[20/20] Build ELF: cascadeterrace.app.elf

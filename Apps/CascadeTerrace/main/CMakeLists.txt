@@ -11,3 +11,7 @@ tactility_component_register(SRCS "main.c" "../world/schema.c" "../world/recipe.
 target_compile_definitions(${COMPONENT_LIB} PRIVATE CG_TRAINED_MODEL)
 
 target_compile_options(${COMPONENT_LIB} PRIVATE -Wno-misleading-indentation)
+
+# Qualification fallback; default uses conservative incremental row spans.
+option(CT_RASTER_REFERENCE "Use original bounding-box raster traversal" OFF)
+target_compile_definitions(${COMPONENT_LIB} PRIVATE CT_RASTER_REFERENCE=$<BOOL:${CT_RASTER_REFERENCE}>)

@@ -1,0 +1,22 @@
+{
+  "world_sdk_exit_code": 0,
+  "legacy_checks": 864,
+  "legacy_seeds": 100,
+  "navigation": [
+    18,
+    18
+  ],
+  "adversarial": [
+    15,
+    15
+  ],
+  "p4_build": "PASS",
+  "p4_physical": "PENDING",
+  "Q1": "INCOMPLETE",
+  "Q2": "PENDING_PHYSICAL",
+  "production_default": "conservative_incremental_spans",
+  "persistent_bytes_added": 0,
+  "framebuffer_bytes_added": 0,
+  "presentation_stage": "UNCHANGED_STAGE_A",
+  "p4_elf_delta_bytes": 984
+}

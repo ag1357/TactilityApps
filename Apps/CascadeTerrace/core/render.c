@@ -1,6 +1,7 @@
 #include "render.h"
 #include "font.inc"
 #include <math.h>
+#include <float.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -67,7 +68,48 @@ static V transform(V v) {
 }
 static P project(V v) { return (P) {120 + v.x * 145 / v.z, 78 - v.y * 145 / v.z, v.z}; }
 static float edge(P a, P b, float x, float y) { return (x - a.x) * (b.y - a.y) - (y - a.y) * (b.x - a.x); }
+/* Conservative row spans. These only remove impossible coverage candidates;
+ * the original float coverage and reciprocal-depth expressions remain below.
+ * Never use a solid color fill before per-pixel depth acceptance.
+ * CT_RASTER_REFERENCE builds the frozen bounding-box traversal for qualification.
+ */
+#ifndef CT_RASTER_REFERENCE
+#define CT_RASTER_REFERENCE 0
+#endif
+#if !CT_RASTER_REFERENCE
+typedef struct { float x, step; int lower; } RasterBound;
+static int raster_bounds(P a, P b, P c, float area, int miny, RasterBound out[3]) {
+    float sign = area > 0 ? 1.f : -1.f;
+    float ax[3] = {(c.y-b.y)*sign, (a.y-c.y)*sign, 0};
+    float by[3] = {-(c.x-b.x)*sign, -(a.x-c.x)*sign, 0};
+    float base[3] = {edge(b,c,.5f,miny+.5f)*sign,
+                     edge(c,a,.5f,miny+.5f)*sign, 0};
+    ax[2] = -ax[0]-ax[1]; by[2] = -by[0]-by[1];
+    base[2] = fabsf(area)-base[0]-base[1];
+    /* Bound all intermediate magnitudes over the viewport. The allowance
+     * covers float subtraction/product/division and at most H incremental
+     * updates, including cancellation in w = 1-u-v. Wide/ill-conditioned
+     * triangles get wider spans (up to the original bounding box), not loss.
+     * Two additional pixels cover conversion and boundary rounding.
+     */
+    float m0 = (W+fabsf(b.x))*fabsf(c.y-b.y)+(H+fabsf(b.y))*fabsf(c.x-b.x);
+    float m1 = (W+fabsf(c.x))*fabsf(a.y-c.y)+(H+fabsf(c.y))*fabsf(a.x-c.x);
+    float allowance[3] = {m0, m1, m0+m1+fabsf(area)};
+    int n = 0;
+    for (int i=0; i<3; ++i) {
+        if (ax[i] == 0) continue; /* Ignoring horizontal constraints is safe. */
+        float error = 1024.f*FLT_EPSILON*(allowance[i]+1.f);
+        float x = (-error-base[i])/ax[i], step = -by[i]/ax[i];
+        if (!isfinite(x) || !isfinite(step)) continue;
+        out[n++] = (RasterBound){x,step,ax[i]>0};
+    }
+    return n;
+}
+#endif
 static void raster(V aa, V bb, V cc, uint32_t col, float shade) {
+#ifdef CT_CAPTURE_RASTER
+    CT_CAPTURE_RASTER(aa,bb,cc,col,shade);
+#endif
     P a = project(aa), b = project(bb), c = project(cc);
     float area = edge(a, b, c.x, c.y);
     if (fabsf(area) < .02f) return;
@@ -80,8 +122,27 @@ static void raster(V aa, V bb, V cc, uint32_t col, float shade) {
     rr->triangles++;
     float ia = 1 / a.z, ib = 1 / b.z, ic = 1 / c.z;
     uint16_t rgb = fog(col, (a.z + b.z + c.z) / 3, shade);
-    for (int y = miny; y <= maxy; y++)
-        for (int x = minx; x <= maxx; x++) {
+#if !CT_RASTER_REFERENCE
+    RasterBound bounds[3];
+    /* Small triangles retain the cheap original path, including motes. */
+    int count = (maxx-minx+1)*(maxy-miny+1) >= 256
+              ? raster_bounds(a,b,c,area,miny,bounds) : 0;
+#endif
+    for (int y = miny; y <= maxy; y++) {
+        int first = minx, last = maxx;
+#if !CT_RASTER_REFERENCE
+        float left = minx, right = maxx;
+        for (int i=0; i<count; ++i) {
+            float x = bounds[i].x;
+            bounds[i].x += bounds[i].step;
+            if (bounds[i].lower) { if (x-2.f > left) left=x-2.f; }
+            else { if (x+2.f < right) right=x+2.f; }
+        }
+        if (left > maxx || right < minx || left > right) continue;
+        /* Cast only after clipping to the viewport; truncation widens a span. */
+        first = (int)left; last = (int)right;
+#endif
+        for (int x = first; x <= last; x++) {
             float u = edge(b, c, x + .5f, y + .5f) / area, v = edge(c, a, x + .5f, y + .5f) / area, w = 1 - u - v;
             if (u < 0 || v < 0 || w < 0) continue;
             float iz = u * ia + v * ib + w * ic;
@@ -93,6 +154,7 @@ static void raster(V aa, V bb, V cc, uint32_t col, float shade) {
                 rr->pixels_written++;
             }
         }
+    }
 }
 static void tri(V a, V b, V c, uint32_t col, float shade) {
     V input[5] = {transform(a), transform(b), transform(c)}, out[5];

@@ -1,0 +1,251 @@
+{
+  "status": "PASS",
+  "physical": "PENDING",
+  "primitive_cases": 12000,
+  "frame_cases": 224,
+  "checks_before_timing": 12226,
+  "color_parity": 1,
+  "depth_parity": 1,
+  "scenes": [
+    {
+      "scene": "cascade",
+      "captured_triangles": 3870,
+      "samples": [
+        {
+          "reference_frame_ms": 2.782843,
+          "candidate_frame_ms": 2.624317,
+          "reference_raster_replay_ms": 1.768957,
+          "candidate_raster_replay_ms": 1.645201
+        },
+        {
+          "reference_frame_ms": 2.765609,
+          "candidate_frame_ms": 2.659575,
+          "reference_raster_replay_ms": 1.64462,
+          "candidate_raster_replay_ms": 1.620209
+        },
+        {
+          "reference_frame_ms": 2.918786,
+          "candidate_frame_ms": 2.800346,
+          "reference_raster_replay_ms": 1.792602,
+          "candidate_raster_replay_ms": 1.514649
+        },
+        {
+          "reference_frame_ms": 3.242241,
+          "candidate_frame_ms": 2.907321,
+          "reference_raster_replay_ms": 1.749886,
+          "candidate_raster_replay_ms": 1.689908
+        },
+        {
+          "reference_frame_ms": 2.767313,
+          "candidate_frame_ms": 2.880249,
+          "reference_raster_replay_ms": 1.684722,
+          "candidate_raster_replay_ms": 1.649064
+        },
+        {
+          "reference_frame_ms": 2.900556,
+          "candidate_frame_ms": 2.636349,
+          "reference_raster_replay_ms": 1.779673,
+          "candidate_raster_replay_ms": 1.67483
+        },
+        {
+          "reference_frame_ms": 2.918587,
+          "candidate_frame_ms": 2.693014,
+          "reference_raster_replay_ms": 1.647908,
+          "candidate_raster_replay_ms": 1.678014
+        }
+      ],
+      "reference_frame_p95_ms": 4.099364,
+      "candidate_frame_p95_ms": 3.625803,
+      "median": {
+        "reference_frame_ms": 2.900556,
+        "candidate_frame_ms": 2.693014,
+        "reference_raster_replay_ms": 1.749886,
+        "candidate_raster_replay_ms": 1.649064
+      },
+      "raster_replay_speedup": 1.0611389248688954,
+      "frame_speedup": 1.0770668106441335
+    },
+    {
+      "scene": "vista",
+      "captured_triangles": 130,
+      "samples": [
+        {
+          "reference_frame_ms": 0.398048,
+          "candidate_frame_ms": 0.318759,
+          "reference_raster_replay_ms": 0.295711,
+          "candidate_raster_replay_ms": 0.209793
+        },
+        {
+          "reference_frame_ms": 0.424351,
+          "candidate_frame_ms": 0.30667,
+          "reference_raster_replay_ms": 0.317646,
+          "candidate_raster_replay_ms": 0.209998
+        },
+        {
+          "reference_frame_ms": 0.413471,
+          "candidate_frame_ms": 0.332841,
+          "reference_raster_replay_ms": 0.287414,
+          "candidate_raster_replay_ms": 0.196608
+        },
+        {
+          "reference_frame_ms": 0.419202,
+          "candidate_frame_ms": 0.335981,
+          "reference_raster_replay_ms": 0.312637,
+          "candidate_raster_replay_ms": 0.2376
+        },
+        {
+          "reference_frame_ms": 0.415911,
+          "candidate_frame_ms": 0.323731,
+          "reference_raster_replay_ms": 0.293901,
+          "candidate_raster_replay_ms": 0.214463
+        },
+        {
+          "reference_frame_ms": 0.489893,
+          "candidate_frame_ms": 0.364777,
+          "reference_raster_replay_ms": 0.297005,
+          "candidate_raster_replay_ms": 0.251175
+        },
+        {
+          "reference_frame_ms": 0.465489,
+          "candidate_frame_ms": 0.327504,
+          "reference_raster_replay_ms": 0.284773,
+          "candidate_raster_replay_ms": 0.197493
+        }
+      ],
+      "reference_frame_p95_ms": 0.649209,
+      "candidate_frame_p95_ms": 0.435719,
+      "median": {
+        "reference_frame_ms": 0.419202,
+        "candidate_frame_ms": 0.327504,
+        "reference_raster_replay_ms": 0.295711,
+        "candidate_raster_replay_ms": 0.209998
+      },
+      "raster_replay_speedup": 1.4081610301050487,
+      "frame_speedup": 1.2799904733987981
+    },
+    {
+      "scene": "cave",
+      "captured_triangles": 133,
+      "samples": [
+        {
+          "reference_frame_ms": 0.525458,
+          "candidate_frame_ms": 0.438116,
+          "reference_raster_replay_ms": 0.451157,
+          "candidate_raster_replay_ms": 0.339385
+        },
+        {
+          "reference_frame_ms": 0.533652,
+          "candidate_frame_ms": 0.704817,
+          "reference_raster_replay_ms": 0.591881,
+          "candidate_raster_replay_ms": 0.361344
+        },
+        {
+          "reference_frame_ms": 0.646283,
+          "candidate_frame_ms": 0.46737,
+          "reference_raster_replay_ms": 0.49904,
+          "candidate_raster_replay_ms": 0.397883
+        },
+        {
+          "reference_frame_ms": 0.57619,
+          "candidate_frame_ms": 0.860271,
+          "reference_raster_replay_ms": 0.694199,
+          "candidate_raster_replay_ms": 0.540506
+        },
+        {
+          "reference_frame_ms": 0.5589,
+          "candidate_frame_ms": 0.476638,
+          "reference_raster_replay_ms": 0.454176,
+          "candidate_raster_replay_ms": 0.353256
+        },
+        {
+          "reference_frame_ms": 0.586915,
+          "candidate_frame_ms": 0.451305,
+          "reference_raster_replay_ms": 0.491562,
+          "candidate_raster_replay_ms": 0.324396
+        },
+        {
+          "reference_frame_ms": 0.556331,
+          "candidate_frame_ms": 0.424511,
+          "reference_raster_replay_ms": 0.47711,
+          "candidate_raster_replay_ms": 0.376751
+        }
+      ],
+      "reference_frame_p95_ms": 0.762524,
+      "candidate_frame_p95_ms": 1.181744,
+      "median": {
+        "reference_frame_ms": 0.5589,
+        "candidate_frame_ms": 0.46737,
+        "reference_raster_replay_ms": 0.491562,
+        "candidate_raster_replay_ms": 0.361344
+      },
+      "raster_replay_speedup": 1.3603712805526036,
+      "frame_speedup": 1.1958405545927209
+    },
+    {
+      "scene": "closeup",
+      "captured_triangles": 169,
+      "samples": [
+        {
+          "reference_frame_ms": 1.067822,
+          "candidate_frame_ms": 1.954257,
+          "reference_raster_replay_ms": 0.916014,
+          "candidate_raster_replay_ms": 0.720448
+        },
+        {
+          "reference_frame_ms": 0.976266,
+          "candidate_frame_ms": 0.71507,
+          "reference_raster_replay_ms": 0.77309,
+          "candidate_raster_replay_ms": 0.590159
+        },
+        {
+          "reference_frame_ms": 0.998594,
+          "candidate_frame_ms": 0.684865,
+          "reference_raster_replay_ms": 0.817815,
+          "candidate_raster_replay_ms": 0.570146
+        },
+        {
+          "reference_frame_ms": 0.9095,
+          "candidate_frame_ms": 0.744649,
+          "reference_raster_replay_ms": 0.844795,
+          "candidate_raster_replay_ms": 0.590716
+        },
+        {
+          "reference_frame_ms": 0.926057,
+          "candidate_frame_ms": 0.723557,
+          "reference_raster_replay_ms": 0.809636,
+          "candidate_raster_replay_ms": 0.677037
+        },
+        {
+          "reference_frame_ms": 0.917131,
+          "candidate_frame_ms": 0.744019,
+          "reference_raster_replay_ms": 0.804899,
+          "candidate_raster_replay_ms": 0.58362
+        },
+        {
+          "reference_frame_ms": 0.937911,
+          "candidate_frame_ms": 0.716594,
+          "reference_raster_replay_ms": 0.857589,
+          "candidate_raster_replay_ms": 0.548563
+        }
+      ],
+      "reference_frame_p95_ms": 1.211824,
+      "candidate_frame_p95_ms": 0.973912,
+      "median": {
+        "reference_frame_ms": 0.937911,
+        "candidate_frame_ms": 0.723557,
+        "reference_raster_replay_ms": 0.817815,
+        "candidate_raster_replay_ms": 0.590159
+      },
+      "raster_replay_speedup": 1.385753669773739,
+      "frame_speedup": 1.296250329967093
+    }
+  ],
+  "host": "Linux-6.18.44-x86_64-with-glibc2.39",
+  "reference_commit": "ca942d39f4d9677a3015739e013818598b820b41",
+  "reference_sha256": "e86fdeac9fbb04ed31ad94feacbdcc5da5404cf725774ed1300ae5fb269e73dc",
+  "candidate_sha256": "80fc746895fa41672c51b56499461b17ab3d9d904bf33de3c3b3a6fbd7aefbf4",
+  "compiler": "cc (Ubuntu 13.3.0-6ubuntu2~24.04) 13.3.0",
+  "sanitized": true,
+  "asan_options": "detect_leaks=0",
+  "timing_note": "Uninstrumented production/reference translation units; raster replay includes shared dispatch and depth clear; seven interleaved 100-frame batches; p95 over 700 individual frame samples."
+}

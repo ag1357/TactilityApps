@@ -50,7 +50,7 @@ Kyra/intake multiplayer game.
 | I: spatial/access repair, 18/18 traversal, adversarial suite | `2886c89` |
 | II: macro geography, sparse rivers, derived route, terrain costs | `5d35f82` |
 | III: regional reservoirs, extraction sites, ecology recovery, ledger | `9862e06` |
-| IV: nonlocal Phos anomaly topology, state-gated traversal, winze lift | containing commit |
+| IV: nonlocal Phos anomaly topology, state-gated traversal, winze lift | `7b85d38` |
 
 ## Build and reproduce
 

@@ -101,6 +101,9 @@ int main(void) {
     bytes[n - 1] ^= 1;
     CHECK(ws_state_decode(&loaded, &r, bytes, n) == WS_FORMAT);
     bytes[n - 1] ^= 1;
+    /* Fresh slots: stale files must not mask slot-selection regressions. */
+    remove("build/sdk-state.0");
+    remove("build/sdk-state.1");
     CHECK(ws_save(&s, "build/sdk-state"));
     CHECK(ws_restore(&loaded, &r, "build/sdk-state") && ws_state_hash(&loaded) == ws_state_hash(&s));
     uint32_t fallback = ws_state_hash(&s);

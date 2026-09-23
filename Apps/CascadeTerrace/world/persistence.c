@@ -276,8 +276,9 @@ int ws_save(const WsState* s, const char* base) {
         fclose(old);
         if (length < 48 || extra != EOF) continue;
         Reader rd = {data, 0, length, 0};
+        unsigned magic = get(&rd, 4);
         unsigned wsv = get(&rd, 2);
-        if (get(&rd, 4) != 0x31535743U || (wsv != 1 && wsv != 2) || get(&rd, 2) != WS_GENERATOR || get(&rd, 4) != length || get(&rd, 4) != ws_crc(data + 16, length - 16)) continue;
+        if (magic != 0x31535743U || (wsv != 1 && wsv != 2) || get(&rd, 2) != WS_GENERATOR || get(&rd, 4) != length || get(&rd, 4) != ws_crc(data + 16, length - 16)) continue;
         rd.n = 36;
         uint32_t revision = get(&rd, 4);
         if (newest < 0 || revision >= newest_revision) {

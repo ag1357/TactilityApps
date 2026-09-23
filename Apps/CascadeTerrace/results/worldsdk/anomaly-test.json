@@ -1,0 +1,21 @@
+{
+  "stage": "anomaly-topology",
+  "checks": 440,
+  "generalized_seeds": [
+    {
+      "seed": 1,
+      "bytes": 1938,
+      "closed_haven_cost": 2703728
+    },
+    {
+      "seed": 3735928559,
+      "bytes": 1938,
+      "closed_haven_cost": 2668819
+    },
+    {
+      "seed": 20260922,
+      "bytes": 1938,
+      "closed_haven_cost": 2665995
+    }
+  ]
+}

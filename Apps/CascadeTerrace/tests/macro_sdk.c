@@ -23,7 +23,7 @@ static unsigned checks;
 #include <string.h>
 
 /* Module indices in generator order (verified by name in the Python gate). */
-enum { M_MOUNTAIN, M_SHOULDER_E, M_SHOULDER_W, M_WATERSHED, M_CAVE, M_KARST, M_DAM, M_PLAINS, M_FOREST, M_WETLAND, M_RUIN, M_GATE, M_E0, M_E1, M_E2, M_E3, M_E4, M_FORD_E, M_FORD_W, M_W1, M_HAVEN };
+enum { M_MOUNTAIN, M_SHOULDER_E, M_SHOULDER_W, M_WATERSHED, M_CAVE, M_KARST, M_DAM, M_PLAINS, M_FOREST, M_WETLAND, M_RUIN, M_GATE, M_E0, M_E1, M_E2, M_E3, M_E4, M_FORD_E, M_FORD_W, M_W1, M_HAVEN, M_PHOS_RUIN };
 
 static int64_t isq(int64_t n) {
     int64_t x = n;
@@ -58,7 +58,19 @@ int main(void) {
     CHECK(ws_load(&b, ws_macro_product, sizeof(ws_macro_product)) == WS_OK);
     /* Determinism across independent loads: identical engine state. */
     CHECK(memcmp(&a, &b, sizeof(WsRecipe)) == 0);
-    CHECK(a.count == 21 && a.link_count == 11);
+    CHECK(a.count == 22 && a.link_count == 13);
+    /* Gate 4 shape: the same 11 walk edges plus the winze lift up the
+       karst flank and one nonlocal anomaly gate anchored to the Phos lode
+       (its own proof suite is tests/anomaly_sdk.c). */
+    {
+        int walks = 0, lifts = 0, gates = 0;
+        for (int i = 0; i < a.link_count; i++) {
+            if (a.links[i].kind == WS_LINK_WALK) walks++;
+            else if (a.links[i].kind == WS_LINK_LIFT) lifts++;
+            else if (a.links[i].kind == WS_LINK_ANOMALY) gates++;
+        }
+        CHECK(walks == 11 && lifts == 1 && gates == 1);
+    }
     CHECK(a.feature_count == 1 && a.exception_count == 5);
     CHECK(a.features[0].kind == WS_FEATURE_RIVER);
     CHECK(a.features[0].width == 12000 && a.features[0].depth == 900);

@@ -6,11 +6,11 @@ This handoff describes its containing checkpoint. Resolve the exact current
 checkpoint with `git rev-parse HEAD` after fetching this branch; do not start
 again from the cognition branch. No unpublished context is required.
 
-**Status: THIRD IMPLEMENTATION GATE PASSED.** The SDK continuous-traversal
+**Status: FOURTH IMPLEMENTATION GATE PASSED.** The SDK continuous-traversal
 promotion gate passes 18/18 declared walk edges, the adversarial spatial
 suite passes 15/15 with impossible connections failing generation cleanly,
 and the macro-geography gate passes: the full §49 hierarchy is generated
-from one seed as a 1,858-byte schema-3 product whose wilderness route is
+from one seed as a 1,938-byte schema-3 product whose wilderness route is
 derived from the generated river (not hand-positioned) and walkable end to
 end, with the terrain cost model proving the route-cost case (nearest
 settlement is not the cheapest destination). The resource/ecology gate
@@ -18,8 +18,19 @@ passes: four geography-derived reservoirs, kind-aware extraction with
 sparse persistent sites, rate-based recovery with deterministic weather
 and pit healing, visible water drawdown on the existing river records,
 and the conservation ledger identity held across chunks, compaction and
-the wire. The normal Cascade game
-remains playable and passes its original suite. The nonlocal Phos edge,
+the wire. The nonlocal Phos topology gate passes: one deterministic
+Phos-rich plane over the karst lode joins the ordinary forest ruin through
+a typed anomaly edge (link kind 3, anchor reservoir index in the reserved
+byte) whose activation is a pure function of the canonical karst Phos
+state (open iff 2×level ≥ capacity), with a separate 1,500 toll under
+CAP_ANOMALY, instant state-gated crossing, ordinary geography and cost
+literals preserved bit-for-bit while closed, live removal on depletion
+with recharge-driven reopening, server authority over use, client-side
+derivation from the public replica, reconnect and restarted-server
+restoration of the closed gate, and fail-closed malformed rejection on
+both the C and Python sides. The normal Cascade game
+remains playable and passes its original suite. The bounded renderer
+evaluation (the mission's ordered stop after Gate 4), creature placement,
 the complete multiplayer quest and all physical P4
 claims remain pending. The two-client SDK fixture is not the full
 Kyra/intake multiplayer game.
@@ -39,6 +50,7 @@ Kyra/intake multiplayer game.
 | I: spatial/access repair, 18/18 traversal, adversarial suite | `2886c89` |
 | II: macro geography, sparse rivers, derived route, terrain costs | `5d35f82` |
 | III: regional reservoirs, extraction sites, ecology recovery, ledger | `9862e06` |
+| IV: nonlocal Phos anomaly topology, state-gated traversal, winze lift | containing commit |
 
 ## Build and reproduce
 
@@ -51,8 +63,9 @@ python3 tools/worldsdk/sdk.py schema
 ```
 
 The qualification script now exits **0** with the traversal, adversarial,
-macro-geography and resource/ecology gates green. Do not change it to ignore
-a failure if one reappears; it must exit nonzero when any gate fails.
+macro-geography, resource/ecology and nonlocal anomaly gates green. Do not
+change it to ignore a failure if one reappears; it must exit nonzero when
+any gate fails.
 Results are in `results/worldsdk/`. It needs a C11 compiler, Python standard
 library, and an SDL2 runtime for the rendered clients. No model training,
 cloud cognition or GPU is required.
@@ -99,20 +112,31 @@ python3 tools/worldsdk/rendered_test.py
 python3 tools/worldsdk/navigation_probe.py
 python3 tools/worldsdk/adversarial_test.py
 python3 tools/worldsdk/macro_test.py
+python3 tools/worldsdk/resource_test.py
+python3 tools/worldsdk/anomaly_test.py
 ```
 
 The first test uses two protocol client processes, real TCP, reconnect and a
-terminated/restarted server. The second uses two actual SDL-rendered processes.
-The third is the release gate over all declared walk edges; it must pass. The
-fourth generates the fifteen adversarial spatial cases and must pass with the
-impossible connections failing generation cleanly. The fifth is the macro
-gate: it regenerates `content/worlds/macro.json`/`macro.inc` from the seed via
+terminated/restarted server, in two phases: the cascade entity-op phase, then
+the macro Gate-4 scenario (both clients walk the derived trail, one rides the
+winze lift, the open gate crosses both ways under server authority, the lode
+is depleted through regional ops, both clients derive the closed gate from the
+public replica, the far seat falls back to the lift, reconnect resumes, and a
+restarted server restores the closed gate). The second uses two actual
+SDL-rendered processes. The third is the release gate over all declared walk
+edges; it must pass. The fourth generates the fifteen adversarial spatial
+cases and must pass with the impossible connections failing generation
+cleanly. The fifth is the macro gate: it regenerates
+`content/worlds/macro.json`/`macro.inc` from the seed via
 `tools/worldsdk/macro.py`, verifies the committed artifacts byte-identically,
 re-derives every route waypoint from the river record, proves C/Python parity
 over the whole river curve and all chunk windows, checks the typed exceptions,
-walks all 11 declared edges by swept steps, verifies the route-cost case, and
-generalizes across three more seeds. `./build/macro_sdk_test` is the C side of
-the same gate (4,418 checks).
+walks all 11 declared walk edges by swept steps, verifies the route-cost case,
+and generalizes across three more seeds. `./build/macro_sdk_test` is the C side
+of the same gate (4,419 checks). The sixth is the resource/ecology parity
+gate; `./build/resource_sdk_test` its C side (322 checks). The seventh is the
+nonlocal anomaly parity gate (440 checks); `./build/anomaly_sdk_test` its C
+side (130 checks with exact literals).
 Resume tokens are local `.keys` files excluded from Git. The server only binds
 loopback. Internet deployment, rate limiting and offline branch upload are absent.
 
@@ -170,7 +194,10 @@ A native P4 SDK-mode client remains to be integrated and measured.
   reliability, public feed, personal objective watermarks, deterministic merge.
 - `resource.c`: regional reservoirs — deterministic weather, drawdown-aware
   river stage, rate-based recovery with pit healing, kind-aware extraction
-  (EXCAVATE/CONVERT/SPEND), and the conservation ledger identity.
+  (EXCAVATE/CONVERT/SPEND), the conservation ledger identity, and the
+  nonlocal anomaly gate (ws_link_open, ws_use_link_state, ws_route_cost_state:
+  open iff 2×level ≥ capacity, instant state-gated crossing, closed gates
+  absent from routing).
 - `persistence.c`: explicit wire codec, semantic hash, two-slot save/recovery;
   conditional version-2 resource section (schema-1 states unchanged).
 - `content/worlds/`: human source plus compiled default Cascade include.
@@ -199,15 +226,52 @@ initial + recovered) is enforced by `ws_state_validate` after every
 operation and tick, across chunks, compaction and save/restore. Resource
 ops bind to the global revision, are region-local for clients, never merge
 offline, and reject dust/duplicate/overflow attempts transactionally. The
-macro product is now 1,858 bytes; the C proof gate runs 322 checks with
+macro product is now 1,938 bytes; the C proof gate runs 322 checks with
 exact literals, the Python parity gate 1,114; schema 1/2 products and
 schema-1 state wires remain byte-compatible with every published artifact.
 
-**Next gate: creature placement and schedules as sparse deterministic
-records** reconstructed per chunk — the same discipline as rivers and
-reservoirs (stable IDs, bounded records, fail-closed validation, bit-exact
-Python parity, probe gates kept green) — followed by the nonlocal Phos edge
-over the now-proven regional Phos stocks. The spatial foundation enforces
+**Nonlocal anomaly gate: PASSED.** The anomaly is product vocabulary: link
+kind 3 with the anchor reservoir index in the link's reserved byte (zero
+for ordinary links, so no wire format changes). The anchor must be a Phos
+reservoir; the gate's seat must lie inside the anchor region (2D) with its
+far end outside and at least three ordinary hops away (ordinary_hops BFS,
+gates excluded); at most one gate per Phos lode; unknown kinds and
+non-anomaly reserved values are rejected. Activation is a pure function of
+the canonical state — open iff 2×level ≥ capacity (the karst lode closes
+between 80,000 and 79,999; NULL/empty state answers declared levels). The
+stateless APIs stay frozen: `ws_use_link` skips gates, `ws_link_cost`
+answers the 1,500 toll only under CAP_ANOMALY, `ws_reachable` classifies
+kind 3 as capability-gated. The state-aware APIs bind the canonical state:
+`ws_use_link_state` crosses an open gate instantly at the seat (locked
+mid-travel, falling back to the ordinary lift when closed),
+`ws_route_cost_state` omits closed gates, `ws_link_open` is the pure
+openness predicate mirrored in Python. The committed gate links the forest
+ruin to the karst Phos plane (derived from the ridge center) across ~473 m
+of unchanged geography, with the winze lift (`trail_e3`↔`phos_ruin`, cost
+3,007) as ordinary access; open, ruin→haven halves to 1,545,498 through
+the gate; closed, every ordinary literal is bit-identical to the
+pre-anomaly product. Depleting the lode through the ordinary regional op
+path (to 28,930) removes the shortcut live for both clients; recharge
+reopens it day by day; save/restore carries the closed state; the server
+binds `use` to `ws_use_link_state` and publishes reservoir levels in the
+public replica so clients derive the same gate state. The C proof gate
+runs 130 checks with exact literals, the Python parity gate 440 (openness
+sweep, toll/routing parity, depletion/recharge, wire round trip, probe
+products, three generalization seeds), and the two-client macro network
+scenario 2,103 checks. The macro product is 1,938 bytes (22 modules, 13
+links: 11 walk, 1 lift, 1 gate); deterministic qualification now rejects
+7,372 malformed products.
+
+**Next: the bounded renderer evaluation the mission ordered at the end of
+Gate 4** — compare the current software-rasterizer path against a
+Jet-derived architecture (CubeCoders' Jet, which needs porting to ESP-IDF 6
+and the P4), including P4 PIE SIMD and PPA presentation/compositing
+opportunities — before any further content gate. After that, the next
+content gate is creature placement and schedules as sparse deterministic
+records reconstructed per chunk — the same discipline as rivers, reservoirs
+and the anomaly edge (stable IDs, bounded records, fail-closed validation,
+bit-exact Python parity, probe gates kept green). The spatial foundation
+enforces
 topology-before-geometry (declared walk edges cut 4000 mm ports into room
 walls; every room keeps a default public south entrance), the surface
 convention (`pos.y` is the walkable top), corridor locality (overlapping
@@ -220,11 +284,10 @@ on the direct route, NPCs need baseline public access). Keep
 `navigation_probe.py`, `adversarial_test.py` and `macro_test.py` green
 while adding content; do not add exceptions for named modules.
 
-After that: the nonlocal Phos edge,
-then bridging the existing game's Phos/evidence/economy/quest actions into
-this single semantic authority, replacing the separate fixture with an
-experimental normal-game multiplayer mode, implementing P4 network transport,
-and qualifying it physically. Expand NPC profiles/schedules and observation
+After that: bridging the existing game's Phos/evidence/economy/quest
+actions into this single semantic authority, replacing the separate fixture
+with an experimental normal-game multiplayer mode, implementing P4 network
+transport, and qualifying it physically. Expand NPC profiles/schedules and observation
 provenance only after the authority and traversal boundaries are sound.
 Geometry fidelity labels do not yet implement cold storage streaming, NPC
 simulation LOD, or full room chunk eviction.

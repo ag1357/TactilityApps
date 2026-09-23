@@ -1,5 +1,6 @@
 #include "state.h"
 #include <limits.h>
+#include <stdlib.h>
 #include <string.h>
 /* Regional resource and ecology layer. Everything here is bookkeeping over
    bounded regional stocks: there is no fluid simulation, no grid and no
@@ -124,6 +125,103 @@ int ws_ledger_check(const WsState* s, const WsRecipe* r) {
     lhs += s->used_total + s->lost_total;
     rhs += s->recovered_total;
     return lhs == rhs;
+}
+
+/* ---- nonlocal anomaly gates (Gate 4) ----
+   A gate is a typed topology edge (link kind WS_LINK_ANOMALY) anchored to a
+   regional Phos reservoir by link.reserved. Openness is a pure function of
+   canonical state: the gate holds while the anchored lode keeps at least
+   half its capacity. Depleting the lode removes the shortcut; recharging
+   restores it. Ordinary geography is never touched either way. */
+
+int ws_link_open(const WsRecipe* r, const WsState* s, uint16_t link) {
+    if (!r || link >= r->link_count || r->links[link].kind != WS_LINK_ANOMALY) return 0;
+    uint16_t anchor = r->links[link].reserved;
+    if (anchor >= r->reservoir_count || r->reservoir_count > WS_RESERVOIR_CAP) return 0;
+    const WsReservoir* v = &r->reservoirs[anchor];
+    if (v->kind != WS_RES_PHOS) return 0;
+    uint32_t level = v->level;
+    if (s && s->reservoir_count == r->reservoir_count) {
+        /* Bound canonical state decides; an unbound or empty state reports
+           the declared levels, exactly like ws_river_stage. */
+        level = s->level[anchor] <= v->capacity ? s->level[anchor] : v->capacity;
+    }
+    return 2 * level >= v->capacity;
+}
+
+int ws_use_link_state(const WsRecipe* r, const WsState* s, WsTraveler* t) {
+    if (t->remaining) return 0;
+    /* Open gates first: at a seat shared with an ordinary lift, an open
+       gate wins (lowest link index among gates). A closed gate is simply
+       absent: the traveler never enters it, and any ordinary link at the
+       same seat still serves. A crossing is instant, like a portal: the
+       destination is reconstructed from its own local region records. */
+    for (uint16_t i = 0; i < r->link_count; i++) {
+        const WsLink* l = &r->links[i];
+        if (l->kind != WS_LINK_ANOMALY || !ws_link_open(r, s, i)) continue;
+        for (int side = 0; side < 2; side++) {
+            uint16_t from = side ? l->b : l->a, to = side ? l->a : l->b;
+            WsModule a, b;
+            ws_materialize(r, from, &a);
+            ws_materialize(r, to, &b);
+            uint16_t scope = (a.flags & WS_INTERIOR) ? from : UINT16_MAX;
+            if (scope != t->at.scope) continue;
+            if (llabs((int64_t)t->at.pos.x - a.pos.x) > 2500 || llabs((int64_t)t->at.pos.z - a.pos.z) > 2500 || llabs((int64_t)t->at.pos.y - a.pos.y) > 1000) continue;
+            t->destination = (WsAddress) {{b.pos.x, b.pos.y, b.pos.z}, (b.flags & WS_INTERIOR) ? to : UINT16_MAX};
+            t->at = t->destination;
+            t->remaining = 0;
+            return 1;
+        }
+    }
+    return ws_use_link(r, t);
+}
+
+int ws_route_cost_state(const WsRecipe* r, const WsState* s, uint16_t a, uint16_t b, uint32_t caps, uint64_t* cost, uint16_t* path, size_t cap) {
+    /* Deterministic Dijkstra with lowest-index tie-breaking over declared
+       topology, mirroring ws_route_cost exactly, except closed gates are
+       absent edges. This is a navigation query over canonical state. */
+    uint64_t dist[WS_CAP];
+    uint16_t prev[WS_CAP];
+    uint8_t done[WS_CAP];
+    if (a >= r->count || b >= r->count || r->count > WS_CAP || r->link_count > WS_LINK_CAP) return 0;
+    for (int i = 0; i < WS_CAP; i++) {
+        dist[i] = UINT64_MAX;
+        prev[i] = UINT16_MAX;
+        done[i] = 0;
+    }
+    dist[a] = 0;
+    for (;;) {
+        int u = -1;
+        for (int i = 0; i < r->count; i++)
+            if (!done[i] && dist[i] < UINT64_MAX && (u < 0 || dist[i] < dist[u])) u = i;
+        if (u < 0) break;
+        done[u] = 1;
+        for (uint16_t i = 0; i < r->link_count; i++) {
+            const WsLink* l = &r->links[i];
+            uint16_t v;
+            if (l->a == (uint16_t)u && !done[l->b]) v = l->b;
+            else if (l->b == (uint16_t)u && !done[l->a]) v = l->a;
+            else continue;
+            if (l->kind == WS_LINK_ANOMALY && !ws_link_open(r, s, i)) continue;
+            uint64_t c = ws_link_cost(r, i, caps);
+            if (c == UINT64_MAX) continue;
+            if (dist[u] + c < dist[v]) {
+                dist[v] = dist[u] + c;
+                prev[v] = (uint16_t)u;
+            }
+        }
+    }
+    if (dist[b] == UINT64_MAX) return 0;
+    uint16_t queue[WS_CAP];
+    size_t n = 0;
+    for (uint16_t at = b;; at = prev[at]) {
+        queue[n++] = at;
+        if (at == a) break;
+    }
+    if (n > cap) return -(int)n;
+    for (size_t i = 0; i < n; i++) path[i] = queue[n - 1 - i];
+    if (cost) *cost = dist[b];
+    return (int)n;
 }
 
 WsDisposition ws_resource_apply(WsState* s, const WsRecipe* r, WsContext c, WsOperation op, int pi) {

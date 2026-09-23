@@ -64,6 +64,17 @@ typedef struct {
 typedef struct {
     uint16_t a, b, kind, reserved;
 } WsLink;
+/* Navigation link kinds: 0 walk corridor (local geometry, ws_topology),
+   1 lift, 2 portal, 3 nonlocal anomaly gate. A gate's `reserved` field is
+   the index of the Phos reservoir that anchors and feeds it; whether a
+   gate may be used is a pure function of canonical state (ws_link_open),
+   never of coordinates. Gates are adjacency-graph topology between normal
+   local Cartesian regions: their endpoints keep their ordinary geography,
+   and no global coordinate geometry is introduced. */
+enum { WS_LINK_WALK = 0, WS_LINK_LIFT = 1, WS_LINK_PORTAL = 2, WS_LINK_ANOMALY = 3 };
+/* Fixed gate toll, separate from terrain walk costs, lift climbs and
+   portal fees: the price of a gate crossing when the gate is open. */
+enum { WS_ANOMALY_COST = 1500 };
 /* Sparse world-scale features (rivers now; roads, ridges, canyons, coastlines
    and Phos flows later). A feature is reconstructed independently per chunk
    from its compact record: no fluid simulation, no global polyline. */
@@ -168,7 +179,7 @@ typedef enum {
     WS_REACH_INACCESSIBLE,
     WS_REACH_INVALID
 } WsReach;
-enum { WS_CAP_WALK = 1u, WS_CAP_LIFT = 2u, WS_CAP_PORTAL = 4u };
+enum { WS_CAP_WALK = 1u, WS_CAP_LIFT = 2u, WS_CAP_PORTAL = 4u, WS_CAP_ANOMALY = 8u };
 WsReach ws_reachable(const WsRecipe*, uint16_t, uint16_t, uint32_t);
 /* Walk-edge realizability: coordinate frames, legal access ports, unblocked
    direct routes and baseline-walkable slopes. ws_validate calls this. */
@@ -189,9 +200,11 @@ int ws_river_sample(const WsRecipe*, uint16_t feature, uint16_t t, WsRiverSample
 int ws_river_window(const WsRecipe*, uint16_t feature, WsPos lo, WsPos hi, uint16_t* t0, uint16_t* t1);
 /* Deterministic terrain-aware travel cost over declared topology. Walk cost
    is horizontal length plus 8x elevation change plus a fording penalty per
-   river crossing; lifts and portals cost fixed amounts. Links whose
-   capability is outside caps cost UINT64_MAX. This is a navigation query,
-   not a transport system. */
+   river crossing; lifts and portals cost fixed amounts; an anomaly gate
+   costs the fixed gate toll. Links whose capability is outside caps cost
+   UINT64_MAX. The stateless query treats a gate as its capability and toll
+   (an open-or-not answer needs canonical state: ws_route_cost_state). This
+   is a navigation query, not a transport system. */
 uint64_t ws_link_cost(const WsRecipe*, uint16_t link, uint32_t caps);
 int ws_route_cost(const WsRecipe*, uint16_t a, uint16_t b, uint32_t caps, uint64_t* cost, uint16_t* path, size_t cap);
 /* Deterministic regional weather: pure function of (recipe seed, day).

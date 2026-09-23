@@ -388,7 +388,7 @@ WsReach ws_reachable(const WsRecipe* r, uint16_t a, uint16_t b, uint32_t caps) {
                 if (next >= r->count || seen[next]) continue;
                 if (pass == 0 && l->kind) continue;
                 if (pass == 1) {
-                    uint32_t need = l->kind == 1 ? WS_CAP_LIFT : l->kind == 2 ? WS_CAP_PORTAL : WS_CAP_WALK;
+                    uint32_t need = l->kind == WS_LINK_LIFT ? WS_CAP_LIFT : l->kind == WS_LINK_PORTAL ? WS_CAP_PORTAL : l->kind == WS_LINK_ANOMALY ? WS_CAP_ANOMALY : WS_CAP_WALK;
                     if ((caps & need) != need) continue;
                 }
                 seen[next] = 1;

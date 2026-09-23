@@ -1,28 +1,46 @@
 # World SDK checkpoint report
 
-**Third implementation gate PASSED: regional resources and ecology. Four
-geography-derived reservoirs (massif terrain, lake-country water, forest
-biomass, karst Phos) ride the product as a schema-3 extension; extraction
-depletes the regional stock and writes sparse persistent sites (intentional
-excavations never heal, disturbance pits heal out of the recovering stock);
-material converts to Geo-phos shards bounded and lossy both directions; water
-drawdown visibly narrows and finally dries the lake/wetland river records
-without any fluid simulation, and deterministic rainfall recovers the level
-day by day; a conservation ledger identity holds across every operation, tick,
-chunk boundary and save/compaction round trip.** The second gate remains
-PASSED (§49 macro geography, 1,858-byte schema-3 product, derived walkable
-route, terrain cost model with the route-cost case) and the first gate
-remains PASSED (18/18 declared walk edges, 15/15 adversarial spatial cases,
+**Fourth implementation gate PASSED: the nonlocal Phos topology. One
+deterministic Phos-rich plane over the karst lode (derived from the
+generated geography like every other module) joins the ordinary forest ruin
+through a typed anomaly edge — link kind 3 carrying its anchor reservoir
+index — across roughly 473 m of ordinary geography that remains walkable
+and costed exactly as before. The edge is pure adjacency-graph topology,
+not exotic coordinate geometry: crossing is instant with a separate 1,500
+toll under the CAP_ANOMALY capability, and it is open exactly when the
+canonical karst Phos reservoir is at least half full (2×level ≥ capacity) —
+activation depends on world state, never on special-case coordinates. With
+the gate closed, every ordinary cost literal is bit-identical to the
+pre-anomaly product. Disabling the anomaly by depleting the lode through
+the ordinary regional op path removes the shortcut live for both clients
+(the far seat falls back to the ordinary winze lift) without corrupting
+ordinary geography, and deterministic recharge reopens it day by day; a
+terminated-and-restarted server restores the same closed gate from the
+persisted canonical state. The far plane reconstructs from adjacent/local
+chunks only, like every module. Malformed anomaly declarations (unknown
+kinds, non-Phos or out-of-range anchors, seats outside the anchor region,
+adjacent far ends, duplicate gates per lode) are rejected fail-closed by
+both the C validator and the Python compiler with recomputed CRCs.** The
+third gate remains PASSED (regional resources and ecology: four
+geography-derived reservoirs, kind-aware extraction with sparse persistent
+sites, rate-based recovery with deterministic weather and pit healing,
+visible water drawdown, and the conservation ledger identity held across
+every operation, tick, chunk boundary and save/compaction round trip). The
+second gate remains PASSED (§49 macro geography, derived walkable route,
+terrain cost model with the route-cost case) and the first gate remains
+PASSED (18/18 declared walk edges, 15/15 adversarial spatial cases,
 impossible connections failing generation cleanly). Sparse world-scale
 features stay pure functions of (record, t): adjacent chunks agree exactly on
 shared boundary samples, and reservoir stage lookup is a pure function of
 position, so every quadrant window reports identical staged samples.
 Schema-1 and schema-2 products remain byte-compatible with every published
 artifact, and schema-1 states keep the published wire layout (the resource
-wire section is conditional, version 2). Default Cascade gameplay remains on
-its validated legacy terrain routes; the SDK multiplayer fixture has not
-replaced the normal game. The nonlocal Phos edge and physical P4
-qualification remain pending.
+wire section is conditional, version 2; the anomaly gate changes no wire
+format — the link's reserved byte, zero for ordinary links, carries the
+anchor index). Default Cascade gameplay remains on its validated legacy
+terrain routes; the SDK multiplayer fixture has not replaced the normal
+game. The bounded renderer evaluation, the complete multiplayer quest,
+creature placement and all physical P4 claims remain pending.
 
 | Area | Status | Evidence |
 |---|---|---|
@@ -30,12 +48,12 @@ qualification remain pending.
 | Deterministic module generation | IMPLEMENTED | 3,000 seed/recipe cases; 7,011 malformed products rejected; host/C parity vectors |
 | Sparse world-scale features (rivers + typed exceptions) | IMPLEMENTED | Schema-2 dual loader; 56-byte river record; waterfall/rapids/lake/dam/underground fail-closed validation |
 | Chunk-local river reconstruction | IMPLEMENTED | Bit-exact C/Python parity over the full curve; quadrant windows agree on every shared boundary sample |
-| Macro geography (§49 hierarchy) | IMPLEMENTED | `tools/worldsdk/macro.py` generator; 21 modules, 11 walk links, 5 typed exceptions; committed product regenerated byte-identically by the gate |
+| Macro geography (§49 hierarchy) | IMPLEMENTED | `tools/worldsdk/macro.py` generator; 22 modules, 13 links (11 walk, 1 winze lift, 1 anomaly gate), 5 typed exceptions; committed product regenerated byte-identically by the gate |
 | Derived wilderness route | IMPLEMENTED | Every waypoint recomputed from the river record (perpendicular bank offsets, ford at closest approach); 11/11 edges swept-walk |
 | Terrain-aware travel cost | IMPLEMENTED | Walk = horizontal + 8×climb + 20,000/ford; lift/portal fixed; deterministic Dijkstra; route-cost case holds (nearest high_gate 710 m vs cheapest ford_haven 926 m; 3.25M vs 2.67M) |
 | Continuous SDK walkability | IMPLEMENTED | 18/18 direct edges pass; 56 focused C checks incl. ports, capability reachability, direct walks |
 | Adversarial spatial cases | IMPLEMENTED | 15/15 generated cases; slope/port/blockage/vendor impossibilities fail generation cleanly |
-| Macro geography gate | IMPLEMENTED | 4,418 C checks; 9,993 Python checks; 3 additional seeds generalize (compile, load, parity, walkability, cost case) |
+| Macro geography gate | IMPLEMENTED | 4,419 C checks; 9,995 Python checks; 3 additional seeds generalize (compile, load, parity, walkability, cost case) |
 | Regional reservoirs (schema 3) | IMPLEMENTED | Four geography-derived 64-byte records; fail-closed validation (kinds, zones, bounds, same-kind overlap); committed product regenerated byte-identically |
 | Extraction and persistent sites | IMPLEMENTED | EXCAVATE is kind-aware (terrain/biomass to material, Phos to shards, water consumed); intentional excavations never heal; pits heal out of the recovering stock and compact away |
 | Bounded lossy conversion | IMPLEMENTED | 3 material to 1 Geo-phos shard, 2 shards to 1 material; remainders lost; no duplication (6 material round-trips to 1) |
@@ -44,6 +62,12 @@ qualification remain pending.
 | Conservation ledger | IMPLEMENTED | Identity sum(levels)+carried+used+lost == sum(initial)+recovered checked after every op and tick, across chunks, compaction and save/restore; corruption of one unit fails validation |
 | Resource gate | IMPLEMENTED | 322 C checks with exact literals; 1,114 Python parity checks; coupled-source proof; 3 additional seeds generalize |
 | Resource wire persistence | IMPLEMENTED | Conditional version-2 section (reservoirs, sites, clock, ledger); schema-1 states keep the published byte layout; truncation rejected |
+| Nonlocal Phos anomaly topology | IMPLEMENTED | Link kind 3 with the anchor reservoir index in the reserved byte; pure adjacency-graph topology over normal local Cartesian regions; ordinary cost literals bit-identical while the gate is closed |
+| Anomaly activation from canonical state | IMPLEMENTED | Open iff 2×level ≥ capacity (boundary 80,000 open / 79,999 closed at capacity 160,000); NULL/empty state answers declared levels; server-authoritative use against the canonical state |
+| Traversal/toll separation | IMPLEMENTED | Instant crossing at the seat under CAP_ANOMALY with a separate 1,500 toll; locked mid-travel; stateless ws_use_link never uses gates; ws_route_cost_state omits closed gates |
+| Depletion removes the shortcut | IMPLEMENTED | EXCAVATE/CONVERT/EXCAVATE drains the lode 160,000 → 28,930; use denied live at the far seat, both clients converge on the derived closed state, the far seat falls back to the ordinary winze lift, and recharge reopens day by day |
+| Malformed anomaly rejection | IMPLEMENTED | Unknown kinds, out-of-range/non-Phos anchors, seats outside the anchor region, adjacent far ends, duplicate gates per lode rejected fail-closed with recomputed CRCs (C and Python) |
+| Anomaly gate | IMPLEMENTED | 130 C checks with exact literals; 440 Python parity checks (openness sweep, toll/routing parity, depletion/recharge, wire round trip, probe products, 3 generalization seeds); two-client macro scenario in the network fixture (2,103 checks) |
 | River rendering | IMPLEMENTED | Chunk-local window strip, width-tapered (lake reaches widen), underground reaches skipped; optional live-state binding renders drawdown through ws_river_stage |
 | Default game compatibility | IMPLEMENTED | 864 assertions, 100 seed validations; repair/save/process-exit/reload replay |
 | Shared renderer/collision, scoped rooms/lift | IMPLEMENTED | Port-aware geometry shared by renderer and collision; two recipe viewers |
@@ -61,12 +85,14 @@ qualification remain pending.
 The macro world in numbers: the whole geography (mountain massif with
 shoulders and col, 520 m waterfall river with rapids, lake, underground
 karst reach and dam, plains, forest, wetland, cave with public entrance,
-repairable ruin, two settlements, the 11-link derived trail and the four
-regional reservoirs) is a 1,858-byte product; the river itself is 56 bytes
-of record plus 5×12-byte exceptions, each reservoir 64 bytes. The generator
-is deterministic per seed with compile-time realizability retries (the
+repairable ruin, two settlements, the 11-link derived trail plus the winze
+lift and the anomaly gate, and the four regional reservoirs) is a
+1,938-byte product; the river itself is 56 bytes of record plus 5×12-byte
+exceptions, each reservoir 64 bytes, the anomaly gate an ordinary 8-byte
+link record whose reserved byte names its anchor lode. The generator is
+deterministic per seed with compile-time realizability retries (the
 showcase seed and all three generalization seeds realize on the first
-variant). The macro C gate runs 4,418 checks; the Python gate 9,993,
+variant). The macro C gate runs 4,419 checks; the Python gate 9,995,
 including bit-exact river parity at 1,075 curve samples and window parity
 for four quadrant chunks. The resource C gate runs 322 checks with exact
 expected numbers (drawdown widths, recovery timelines, ledger totals); the
@@ -74,8 +100,17 @@ Python gate 1,114, including stage/tick/weather/ledger parity against
 independent Python mirrors at every step, compiler fail-closed rejections,
 a coupled-source proof that biomass recovery tracks the paired Phos stock
 (full lode 100,000 vs drained 80,000 after one day), and three
+generalization seeds. The anomaly C gate runs 130 checks with exact
+literals (gate record indices and positions, both boundary levels, open
+route 1,545,498 ruin→haven through the gate vs 2,668,102 closed —
+bit-identical to the pre-anomaly literal, ruin→high_gate 3,246,425
+untouched, depletion to 28,930 through the op path, recharge timelines,
+wire and save round trips, twelve malformed rejections); the Python gate
+runs 440 parity checks including a 161-point openness sweep, toll and
+routing parity across capability sets and reservoir levels, the
+depletion/recharge proof with a synced ledger mirror, and three
 generalization seeds. Deterministic qualification now covers 3,000
-seed/recipe worlds and 7,280 rejected malformed or invalid products.
+seed/recipe worlds and 7,372 rejected malformed or invalid products.
 
 The default game measured 1.641 ms mean desktop rendering in the final core run.
 The two rendered network clients measured about 0.660 and 0.741 ms per frame in
@@ -91,10 +126,11 @@ with zero retained operation tail after compaction. Irreducible ownership,
 inventories, reward epochs, relationships and recent public feed remain explicit.
 Arbitrary unique data and unbounded populations are not compressed away.
 
-The default P4 ELF is 185,752 bytes; package 204,800 bytes; `.text` 57,014 bytes;
+The default P4 ELF is 186,392 bytes; package 204,800 bytes; `.text` 57,652 bytes;
 `.rodata` 112,640 bytes; `.bss` 135,224 bytes (measured with ESP-IDF 6.1 and
-TactilitySDK 0.8.0-dev; the resource layer adds `world/resource.c` to the P4
-component). The immutable recipe adapter adds
+TactilitySDK 0.8.0-dev; the anomaly gate adds no new P4 component file — it
+extends the already-present `world/recipe.c`, `geometry.c`, `traversal.c` and
+`resource.c`). The immutable recipe adapter adds
 10,280 bytes of static materialization/cache state. SDK functions not referenced
 by normal gameplay are compiled but discarded from the packaged ELF; these sizes
 are not a fully integrated SDK multiplayer client footprint. A future runtime
@@ -110,20 +146,25 @@ its existing LVGL configuration pragma note but no compile error. The P4
 toolchain is ESP-IDF 6.1 (Tactility now requires IDF 6); it is installed under
 the work drive and the P4 build gate uses it.
 
-The recommendation is to continue from this foundation with all three
-implementation gates passed. The natural next gate is creature placement and
-schedules as sparse deterministic records reconstructed per chunk (the same
-discipline as rivers and reservoirs), then the nonlocal Phos edge over the
-now-proven regional Phos stocks. Long linear features beyond rivers (roads,
-ridges, canyons, coastlines, Phos flows) can reuse the schema-2/3 feature
-vocabulary already proven here, and live-state river rendering can bind the
-server's reservoir state through render_bind_state. Do not expand cognition
-research or claim physical P4 results from desktop measurements.
+The recommendation is to continue from this foundation with all four
+implementation gates passed. The next step is the bounded renderer
+evaluation the mission ordered at the end of Gate 4: compare the current
+software-rasterizer path against a Jet-derived architecture (CubeCoders'
+Jet needs porting to ESP-IDF 6 and the P4, including PIE SIMD and PPA
+presentation/compositing opportunities) before any further content gate.
+After that, the natural gate is creature placement and schedules as sparse
+deterministic records reconstructed per chunk (the same discipline as
+rivers, reservoirs and the anomaly edge). Long linear features beyond
+rivers (roads, ridges, canyons, coastlines, Phos flows) can reuse the
+schema-2/3 feature vocabulary already proven here, and live-state river
+rendering can bind the server's reservoir state through render_bind_state.
+Do not expand cognition research or claim physical P4 results from desktop
+measurements.
 
 Machine-readable results and traces: `results/worldsdk/report.json`,
 `generation.json`, `navigation.json`, `adversarial.json`, `macro.json`,
 `macro-summary.json`, `macro-test.json`, `resource.json`,
-`resource-test.json`, `network.json`,
+`resource-test.json`, `anomaly.json`, `anomaly-test.json`, `network.json`,
 `client-1.json`, `client-2.json`, `compaction.json`, `state.json`, and
 `p4-build.json`. Exact source hashes, release artifact hashes, build commands
 and pending work are preserved in the P4 record and `FACTORY_CONTINUATION.md`.

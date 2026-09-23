@@ -30,7 +30,10 @@
   "extraction_and_persistent_sites": "IMPLEMENTED",
   "bounded_lossy_material_phos_conversion": "IMPLEMENTED",
   "water_drawdown_visibility": "IMPLEMENTED",
-  "rate_based_recovery_and_ledger": "IMPLEMENTED"
+  "rate_based_recovery_and_ledger": "IMPLEMENTED",
+  "nonlocal_phos_anomaly_topology": "IMPLEMENTED",
+  "anomaly_activation_from_canonical_state": "IMPLEMENTED",
+  "malformed_anomaly_edge_rejection": "IMPLEMENTED"
  },
  "legacy": {
   "checks": 864,
@@ -49,8 +52,8 @@
  "generation": {
   "status": "PASS",
   "worlds": 3000,
-  "rejected_malformed_products": 7280,
-  "elapsed_ms": 3405.439,
+  "rejected_malformed_products": 7372,
+  "elapsed_ms": 3585.675,
   "workspace_bytes": 11500,
   "module_bytes": 64,
   "limitations": [
@@ -90,17 +93,25 @@
  },
  "network": {
   "status": "PASS",
-  "checks": 48,
+  "checks": 2103,
   "clients": 2,
   "transport": "TCP loopback; separate OS client processes",
   "server_restart": true,
   "public_replica_convergence": true,
   "private_relationships_sent": false,
+  "anomaly_gate": {
+   "depleted_level": 28930,
+   "convergence": true,
+   "crossed_both_directions": true,
+   "restart_level": 28930,
+   "restart_derived_closed": true
+  },
   "limitations": [
    "No P4 network transport qualification",
    "No Internet deployment: plaintext transport and movement rate limits pending",
    "Offline merge verified by C suite; network branch upload is not implemented",
-   "Clients are protocol harnesses, not integrated game clients"
+   "Clients are protocol harnesses, not integrated game clients",
+   "Fixture server has no clock: recharge-driven reopening is proven by the C and Python suites"
   ]
  },
  "memory": {
@@ -115,14 +126,14 @@
  },
  "p4": {
   "status": "P4 BUILD PRODUCED; PENDING PHYSICAL VALIDATION",
-  "binary_bytes": 185752,
+  "binary_bytes": 186392,
   "package_bytes": 204800,
-  "elf_sha256": "df4fce5cdc5337716d695eaee7b747bc2e1180f6b566ee0bdb0e54771b9e8394",
-  "package_sha256": "994f74a0a216818905c280ef4ba83d8258162d6d9fd9dde64426bf353e57e508",
+  "elf_sha256": "b92ca1440c3f276045cf6362e5f4c62259433cc47d7bf53c48e2057a4daae230",
+  "package_sha256": "b1d41621b02cc48b1c2921ecfac2d8278f729c5efe4732cc7d9f35ce14709012",
   "format": "Tactility manifest v0.3 / USTAR / esp32p4 external ELF",
-  "compressed_elf_bytes": 128527,
-  "compressed_elf_sha256": "38f5b4de41e982fedda7998b62cb7610f61fb42026c45d88ab269a77726cf0f8",
-  "starting_commit": "f216216d4b2f407a7684dcfb455833b116a7de1b",
+  "compressed_elf_bytes": 129030,
+  "compressed_elf_sha256": "7c01009f38a644dc201b50b9eff940a5798f048d20f1c2da12123748cdc07637",
+  "starting_commit": "871e49bb016b148fe8659d9dd2d46ec59d6b220e",
   "idf_commit": "f21b4c238152dc9e3a24fbad9afe33a3d15f6cfd",
   "idf_version": "6.1-dev",
   "sdk_version": "Tactility 0.8.0-dev",
@@ -133,7 +144,7 @@
    ".rela.dyn": 5304,
    ".rela.plt": 984,
    ".plt": 1344,
-   ".text": 57014,
+   ".text": 57652,
    ".rodata": 112640,
    ".data.rel.ro": 3176,
    ".got": 16,
@@ -161,22 +172,22 @@
    "core/world.c": "d20515505824a8d86ba3b8088059be288bf7a8cc5b6b571409bb9c5078e63133",
    "main/CMakeLists.txt": "04fa28b3033616091bf3b15840041321b52673743723d0c61b5cd9a32b7db29d",
    "main/main.c": "b8c5ba3ce86665d65523b2bdb2f7a4080c5d7b13739856e9b54dc66a2f4ece9a",
-   "world/geometry.c": "928b57cbdc472177347d793d64bb7348c30389cd720094ab31fa93084649d02a",
+   "world/geometry.c": "d7c0a7d4a6f32a71125369d1566301a304cafa32eddb2737f23f4d63b5559ff6",
    "world/persistence.c": "6f94e20f2f2d5a656d8dbf37322593489c06af38052de63fae34853102dc418f",
-   "world/recipe.c": "f927b731d7418d41f42b9f243f71440549812ea45b6f556d5b6179f9a9859f94",
-   "world/resource.c": "057b52153f5b73f9df243e933c31d70e78cb70df398f7fe373b366da2c7e6047",
+   "world/recipe.c": "9d6596c8546315012657d2304f26315a24c689cf8c76bcd4509cb1c30c953c61",
+   "world/resource.c": "29510981ec767dd0eaec8219b433a37a8eb7c0ebaa0f5d4a1ac71c8a57fc107e",
    "world/schema.c": "cffd7b411aafd1cc27b72659bb2e4f7b8570ae3148d33b6084f94c5aaa75549e",
-   "world/sdk.h": "ddbf648fce235c1bf4354edd21a1395577e5277e797c59c54b67ec40961a29c8",
+   "world/sdk.h": "4ed8edba4fbda9fc5bc6bcdca440a9107a4dc4e88d990d92953ffc04a4f3a105",
    "world/state.c": "8a1d9a6cf4b1055d8c4e27ef570ab182fcab545bf03f681596ffb6c5e8598c25",
-   "world/state.h": "41e262afc38f6627b851931df92018de9e64bbe15eec90d0c37987cb799b854f",
-   "world/traversal.c": "0c68316209940c3d1a511ea6ba336410aff9e25334687512332d3bb1d2a745c6"
+   "world/state.h": "2212e963a2748fd4e640eb577928c0f6c82ddb28afa5f37d2bafdce6f45ad6fc",
+   "world/traversal.c": "f4e962ae2875a684be7a5ea900ece227c3cc80806539e06a78429f21c1ace75b"
   },
   "physical_status": "PHYSICAL_VALIDATION_PENDING",
   "q1": "INCOMPLETE",
   "q2": "PHYSICAL_VALIDATION_PENDING",
-  "warning": "SDK LVGL lv_conf.h pragma note; no compilation error. Physical loader/runtime not measured. ESP-IDF 6.1 + TactilitySDK 0.8.0-dev; Gate 3 adds world/resource.c to the P4 component."
+  "warning": "SDK LVGL lv_conf.h pragma note; no compilation error. Physical loader/runtime not measured. ESP-IDF 6.1 + TactilitySDK 0.8.0-dev; Gate 4 adds the nonlocal Phos anomaly gate to the P4 component."
  },
- "recommendation": "Third implementation gate passed: regional resources and ecology. Four geography-derived reservoirs ride the macro product as schema 3; extraction writes sparse persistent sites (intentional excavations never heal, pits heal from the recovering stock); material converts to Geo-phos bounded and lossy; water drawdown visibly narrows and dries the lake/wetland river records through ws_river_stage with no fluid simulation, and deterministic rainfall recovers the level; the conservation ledger identity holds across every operation, tick, chunk boundary and compaction. Earlier gates remain green (18/18 traversal, 15/15 adversarial, macro geography with route-cost case). Next gate is creature placement and schedules as sparse deterministic records, then the nonlocal Phos edge. Physical P4 qualification and native P4 transport remain pending.",
+ "recommendation": "Fourth implementation gate passed: the nonlocal Phos topology. One deterministic Phos-rich ruin over the karst lode joins the ordinary forest ruin through a typed anomaly edge (link kind 3, anchor reservoir in the reserved byte) whose activation is a pure function of the canonical karst Phos state (open iff 2x level >= capacity), with ordinary macro geography and its cost literals preserved bit-for-bit while the gate is closed; depletion removes the shortcut live for both clients without corrupting ordinary geography and recharge reopens it; malformed edges are rejected fail-closed on both sides with recomputed CRCs. Earlier gates remain green (18/18 traversal, 15/15 adversarial, macro geography with the route-cost case, regional resources with the conservation ledger). Next is the bounded renderer evaluation (the current software rasterizer path versus a Jet-derived architecture requiring an ESP-IDF 6 / P4 port), then creature placement and schedules as sparse deterministic records. Physical P4 qualification and native P4 transport remain pending.",
  "adversarial": {
   "status": "PASS",
   "passed": 15,
@@ -198,11 +209,11 @@
   "status": "PASS",
   "seed": 10227025,
   "generator": "tools/worldsdk/macro.py",
-  "product_bytes": 1858,
-  "product_sha256": "c5278ef7d15fcae8840d614dd01130904e8867a6aa142f7c818aa52d6d750181",
+  "product_bytes": 1938,
+  "product_sha256": "745721f626cc0b11f7e716929e54cfc40eb92ee7932240784ba2402e1bd9ad2c",
   "schema": 3,
-  "modules": 21,
-  "links": 11,
+  "modules": 22,
+  "links": 13,
   "features": [
    "river_cascade"
   ],
@@ -221,8 +232,8 @@
   ],
   "ford_t": 53000,
   "variants_tried": 1,
-  "c_checks": 4418,
-  "python_checks": 9993,
+  "c_checks": 4419,
+  "python_checks": 9995,
   "river_parity_samples": 1075,
   "walked_edges": 11,
   "generalized_seeds": [
@@ -312,7 +323,7 @@
  "resource_ecology": {
   "status": "PASS",
   "seed": 10227025,
-  "product_bytes": 1858,
+  "product_bytes": 1938,
   "reservoir_count": 4,
   "reservoirs": [
    {
@@ -382,6 +393,62 @@
    "build/macro.cws",
    "results/worldsdk/resource.json",
    "results/worldsdk/resource-test.json"
+  ]
+ },
+ "anomaly_topology": {
+  "status": "PASS",
+  "seed": 10227025,
+  "product_bytes": 1938,
+  "gate_link": {
+   "a": "phos_ruin",
+   "b": "ruin",
+   "kind": 3,
+   "anchor": "karst_phos",
+   "anchor_index": 3,
+   "link_index": 12
+  },
+  "ordinary_access": {
+   "lift": [
+    "trail_e3",
+    "phos_ruin"
+   ],
+   "kind": 1,
+   "cost": 3007
+  },
+  "activation": "pure function of canonical state: open iff 2*level >= capacity (boundary 80000 open / 79999 closed at capacity 160000); NULL or empty state answers the declared levels",
+  "toll": 1500,
+  "traversal": "instant crossing at the seat (2500 mm window), locked while mid-travel; stateless ws_use_link never uses gates",
+  "routing": "ws_route_cost_state treats closed gates as absent; open ruin->haven 1545498 via the gate vs 2668102 closed (bit-identical to the pre-anomaly literal); ruin->high_gate 3246425 unchanged",
+  "validation": "anchor must be a Phos reservoir, seat inside the anchor region (2D), far end outside it and >= 3 ordinary hops away, one gate per Phos lode, unknown kinds rejected; byte-level and source-level mutations rejected with recomputed CRCs",
+  "depletion": "regional op path (EXCAVATE/CONVERT/EXCAVATE) drains 160000 -> 28930; the shortcut is removed live for both clients, the far seat falls back to the ordinary lift, and recharge reopens the gate day by day",
+  "locality": "the far plane reconstructs from adjacent/local chunks only, like every module; no global coordinate geometry",
+  "c_checks": 130,
+  "python_checks": 440,
+  "network_checks": 2103,
+  "generalized_seeds": [
+   {
+    "seed": 1,
+    "bytes": 1938,
+    "closed_haven_cost": 2703728
+   },
+   {
+    "seed": 3735928559,
+    "bytes": 1938,
+    "closed_haven_cost": 2668819
+   },
+   {
+    "seed": 20260922,
+    "bytes": 1938,
+    "closed_haven_cost": 2665995
+   }
+  ],
+  "artifacts": [
+   "content/worlds/macro.json",
+   "content/worlds/macro.inc",
+   "build/macro.cws",
+   "results/worldsdk/anomaly.json",
+   "results/worldsdk/anomaly-test.json",
+   "results/worldsdk/network.json"
   ]
  }
 }

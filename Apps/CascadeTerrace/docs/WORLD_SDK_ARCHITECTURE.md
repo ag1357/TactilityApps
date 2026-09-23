@@ -221,3 +221,64 @@ reaches, day-by-day rainfall recovery, Phos depletion/recharge with pit
 healing, biomass regrowth without scarring, fail-closed rejections, the wire
 round trip, and a coupled-source proof that biomass recovery tracks the
 regional Phos stock.
+
+## Nonlocal anomaly topology gate
+
+Nonlocal travel is product vocabulary, not engine special cases: a link may
+be kind 3 (`WS_LINK_ANOMALY`) with its **anchor reservoir index** packed in
+the link's reserved byte (zero for every ordinary link, so no wire format
+changes and schema-1/2/3 compatibility is preserved). The anchor names a
+Phos reservoir, and the reservoir's canonical state decides the gate:
+`ws_link_open` answers open exactly when 2×level ≥ capacity (the karst lode
+at capacity 160,000 closes between 80,000 and 79,999), with a NULL or empty
+state answering the declared levels, mirroring `ws_river_stage`'s rule. The
+committed gate links the ordinary forest ruin to a Phos plane derived from
+the karst ridge center (the same wob-derivation discipline as every module)
+across ~473 m of unchanged ordinary geography, with a separate ordinary
+winze lift (`trail_e3` ↔ `phos_ruin`, cost 3,007) as the conventional
+access.
+
+Validation is fail-closed on both sides of the mirror: the anchor must be a
+Phos reservoir, the gate's seat must lie inside the anchor region (2D) and
+its far end outside it, the two ends must be at least three ordinary hops
+apart (`ordinary_hops` BFS over non-anomaly links, gates excluded), and at
+most one gate may anchor a given Phos lode. Unknown kinds and non-anomaly
+reserved values are rejected outright. Both the C `ws_validate` and the
+Python compiler reject the same mutations byte-for-byte with recomputed
+CRCs; `qualify.py` adds byte-level anomaly mutations and source-level
+impossible-anchor products to the deterministic sweep.
+
+Traversal and travel cost are separate, typed concerns. The stateless
+frozen APIs never use gates: `ws_use_link` skips them, and `ws_link_cost`
+answers the 1,500 `WS_ANOMALY_COST` toll only under the `WS_CAP_ANOMALY`
+capability (dead otherwise, like a lift without lift capability). The
+state-aware APIs in `resource.c` bind the canonical state: `ws_use_link_state`
+crosses an open gate instantly at the seat (2,500 mm window, both
+directions, locked while the actor is mid-travel, falling back to
+`ws_use_link` for ordinary links, so a closed gate leaves the shared-seat
+winze lift serving), and `ws_route_cost_state` is the Dijkstra mirror with
+closed gates absent. With the karst lode full, ruin→haven halves to
+1,545,498 through the gate; closed, every ordinary literal is bit-identical
+to the pre-anomaly product (ruin→haven 2,668,102, ruin→high_gate 3,246,425,
+same paths). No exotic global coordinate geometry is introduced: the edge is
+an adjacency-graph link over normal local Cartesian regions, and the far
+plane materializes chunk-locally like any module.
+
+The gate (`anomaly_test.py` plus the C `anomaly_sdk_test`) proves the
+scenario with exact literals on both sides of the mirror: the gate record's
+indices, anchor and positions; the openness boundary and NULL/empty
+semantics; state-gated crossing both directions with ground, collision,
+fidelity and recipe checks proving locality; routing parity at open and
+closed levels across capability sets; depletion of the lode through the
+ordinary regional op path (EXCAVATE/CONVERT/EXCAVATE to 28,930) with the
+ledger identity held at every step; recharge reopening day by day; wire and
+save/restore round trips carrying the closed state; and the malformed
+rejections. The two-client network fixture runs the macro scenario: both
+clients spawn at the watershed, one walks to the winze foot and rides the
+lift up, the other walks to the ruin; the open gate crosses in both
+directions under server authority; the lode is depleted through regional
+ops; both clients derive the closed state from the public replica (the
+snapshot now publishes reservoir levels as public world facts), the far
+seat's use is denied live, the far client falls back to the ordinary lift,
+reconnect resumes the same canonical state, and a terminated-and-restarted
+server restores the closed gate from the persisted state.

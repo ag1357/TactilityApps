@@ -157,6 +157,8 @@ def library():
     l.ws_apply.restype = Disposition
     l.ws_move.argtypes = [C.POINTER(Recipe), C.POINTER(Address), C.c_int32, C.c_int32]
     l.ws_use_link.argtypes = [C.POINTER(Recipe), C.POINTER(Traveler)]
+    l.ws_use_link_state.argtypes = [C.POINTER(Recipe), C.POINTER(State), C.POINTER(Traveler)]
+    l.ws_use_link_state.restype = C.c_int
     l.ws_travel_tick.argtypes = [C.POINTER(Traveler), C.c_uint32]
     l.ws_save.argtypes = [C.POINTER(State), C.c_char_p]
     l.ws_restore.argtypes = [C.POINTER(State), C.POINTER(Recipe), C.c_char_p]
@@ -266,6 +268,16 @@ class World:
                 }
                 for f in self.state.feed[: self.state.feed_count]
             ],
+            # Regional stocks are public world facts: clients derive gate
+            # state, stage and recovery from them through the same pure
+            # functions the server applies (the recipe hash pins the rest).
+            "reservoirs": {
+                "level": list(self.state.level[: self.state.reservoir_count]),
+                "capacity": [
+                    self.recipe.reservoirs[i].capacity
+                    for i in range(self.state.reservoir_count)
+                ],
+            },
         }
         digest = hashlib.sha256(
             json.dumps(public, sort_keys=True, separators=(",", ":")).encode()
@@ -315,7 +327,11 @@ class World:
         elif cmd == "use":
             traveler = self.positions[player]
             candidate = Traveler.from_buffer_copy(bytes(traveler))
-            if not self.lib.ws_use_link(C.byref(self.recipe), C.byref(candidate)):
+            # Server authority: link use is decided against the canonical
+            # state, so a closed anomaly gate simply is not there.
+            if not self.lib.ws_use_link_state(
+                C.byref(self.recipe), C.byref(self.state), C.byref(candidate)
+            ):
                 status = 7
             else:
                 scope = candidate.destination.scope

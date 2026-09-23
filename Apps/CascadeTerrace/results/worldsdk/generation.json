@@ -1,8 +1,8 @@
 {
   "status": "PASS",
   "worlds": 3000,
-  "rejected_malformed_products": 7280,
-  "elapsed_ms": 3380.465,
+  "rejected_malformed_products": 7372,
+  "elapsed_ms": 3585.675,
   "workspace_bytes": 11500,
   "module_bytes": 64,
   "vectors": [
@@ -57,26 +57,26 @@
     {
       "recipe": "macro",
       "seed": 0,
-      "product_sha256": "b998b90af991b7e5be0cb1dedabd1fd89e877e7fd294d53c6d0b5ef8eb58130e",
-      "materialized_sha256": "cc99001ade8598101fa7158fca97f238cf0bdcabaffbb33ffdc4a1513646b49c"
+      "product_sha256": "8a30673a66996969c1dd90d84adff1e69b3c4b41ec85cef0d0e3b88c5ec43989",
+      "materialized_sha256": "2b87beed7fadf0a94b7e94fda64d124822963bd1ff955764c1edf697fd631c13"
     },
     {
       "recipe": "macro",
       "seed": 1,
-      "product_sha256": "f3922732dedddf6fe4e5dfec143dd5d15dbdcbd52a2cf21853b623ef225c03d5",
-      "materialized_sha256": "cc99001ade8598101fa7158fca97f238cf0bdcabaffbb33ffdc4a1513646b49c"
+      "product_sha256": "08262072f8107eecea118e39a68d52806cee7f59113524019e842db510c60dc7",
+      "materialized_sha256": "2b87beed7fadf0a94b7e94fda64d124822963bd1ff955764c1edf697fd631c13"
     },
     {
       "recipe": "macro",
       "seed": 42,
-      "product_sha256": "365c3dcbd6d07a19cabc205a8bf59ccfbce89aa8cb9f7f74ff54c71b4f4ef725",
-      "materialized_sha256": "cc99001ade8598101fa7158fca97f238cf0bdcabaffbb33ffdc4a1513646b49c"
+      "product_sha256": "9c1238ca7bcdc70774636ab83b5f95174fdb13dd94a18ba9ad2876a2064497c0",
+      "materialized_sha256": "2b87beed7fadf0a94b7e94fda64d124822963bd1ff955764c1edf697fd631c13"
     },
     {
       "recipe": "macro",
       "seed": 999,
-      "product_sha256": "f8f06f79719dd6bb8353fd23934601285f3447766cc39ce0f39f26d3c886eb68",
-      "materialized_sha256": "cc99001ade8598101fa7158fca97f238cf0bdcabaffbb33ffdc4a1513646b49c"
+      "product_sha256": "110a7ecb871639d5aeed9587b1bdc1d613f53326fe9eb6ec8689fe410ec4a745",
+      "materialized_sha256": "2b87beed7fadf0a94b7e94fda64d124822963bd1ff955764c1edf697fd631c13"
     }
   ],
   "limitations": [

@@ -218,11 +218,15 @@ def main():
     check(c_river(lib, r, 0, 60291)["y"] - c_river(lib, r, 0, 60292)["y"] >= 14000, "dam step")
 
     # 7. Cost model parity over every link, and the route-cost case.
+    # Under walk caps the typed lift and the anomaly gate are both dead:
+    # the C side answers with the WS_LINK_DEAD sentinel, the Python mirror
+    # with None; both mean "not traversable without the capability".
     modules, links, features, _ = runtime_view(src)
+    dead = (1 << 64) - 1
     for i in range(len(links)):
         c_cost = lib.ws_link_cost(C.byref(r), i, CAP_WALK)
         p_cost = link_cost(modules, links, features, i, CAP_WALK)
-        check(c_cost == p_cost, f"link cost parity {i}")
+        check(c_cost == (p_cost if p_cost is not None else dead), f"link cost parity {i}")
     for a_name, b_name in (("ruin", "high_gate"), ("ruin", "ford_haven"), ("high_gate", "ford_haven")):
         a, b = ids[a_name], ids[b_name]
         cost = C.c_uint64()

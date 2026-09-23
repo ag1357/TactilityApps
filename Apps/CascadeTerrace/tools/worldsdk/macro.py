@@ -211,6 +211,24 @@ def generate(seed=SHOWCASE, variant=0):
         "size": [16000, 5000, 16000],
         "color": 0x4A4A52,
     }
+    # --- the Phos ruin: a gate seat on the karst ridge top, derived from
+    # the ridge that defines the Phos lode. The ridge flank blocks every
+    # baseline walk approach to its own summit, so the ordinary way in is
+    # the winze lift from the valley trail; the anomaly gate below is the
+    # nonlocal shortcut, fed by the lode it stands on. ---
+    phos_ruin = plane(
+        "phos_ruin",
+        [
+            karst["position"][0] + wob(s, 10000, 0xC7),
+            karst["position"][1],
+            karst["position"][2] + wob(s, 10000, 0xC8),
+        ],
+        (60000, 400, 60000),
+        level="structure",
+        tags=["Surface.Walk"],
+        color=0x8F7AC9,
+        phos="Geo",
+    )
     modules = [
         mountain,
         shoulder_e,
@@ -233,6 +251,7 @@ def generate(seed=SHOWCASE, variant=0):
         plane("trail_ford_w", w_ford, level="structure", color=0x8B7355),
         plane("trail_w1", w1, level="structure", color=0x8B7355),
         plane("ford_haven", haven, (140000, 400, 140000), level="settlement", color=0xC9B27A),
+        phos_ruin,
     ]
     links = [
         ["high_gate", "trail_e0", "walk"],
@@ -246,6 +265,8 @@ def generate(seed=SHOWCASE, variant=0):
         ["trail_ford_w", "trail_w1", "walk"],
         ["trail_w1", "ford_haven", "walk"],
         ["ruin", "trail_e2", "walk"],
+        ["trail_e3", "phos_ruin", "lift"],  # the winze up the karst flank
+        ["phos_ruin", "ruin", "anomaly", "karst_phos"],  # the nonlocal gate
     ]
     # --- regional reservoirs, DERIVED from the same geography (mission
     # resource rules): massif spoil (the mountain union the cave carved
@@ -298,9 +319,10 @@ def generate(seed=SHOWCASE, variant=0):
     # single cliff at the higher plane's boundary.
     pmap = {m["name"]: m["position"] for m in modules}
     minlen = {}
-    for a, b, kind in links:
-        if kind != "walk":
+    for link in links:
+        if link[2] != "walk":
             continue
+        a, b = link[0], link[1]
         pa, pb = pmap[a], pmap[b]
         d = math.isqrt((pb[0] - pa[0]) ** 2 + (pb[2] - pa[2]) ** 2)
         for n in (a, b):
@@ -406,6 +428,15 @@ def main():
             {"name": v["name"], "kind": v["kind"], "zone": v["zone"], "capacity": v["capacity"], "level": v["level"], "rate": v["rate"]}
             for v in src["reservoirs"]
         ],
+        "anomaly_gate": {
+            "seat": "phos_ruin",
+            "far_end": "ruin",
+            "anchor": "karst_phos",
+            "kind": 3,
+            "cost": 1500,
+            "open_level": 80000,
+            "ordinary_access": ["trail_e3", "lift"],
+        },
         "ford_t": built["ford_t"],
         "cost_case": case,
         "hierarchy": [

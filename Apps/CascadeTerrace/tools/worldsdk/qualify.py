@@ -189,6 +189,35 @@ def main():
             struct.pack_into("<I", b, 12, zlib.crc32(b[16:]))
             assert lib.ws_load(C.byref(r), bytes(b), len(b)) != 0
             bad += 1
+        # Anomaly gates are validated fail-closed at the link table: unknown
+        # kinds, out-of-range or non-Phos anchors, seats outside the anchored
+        # region and conventionally adjacent ends all reject even with a
+        # recomputed CRC. The link table follows the module table.
+        anomaly = [i for i, l in enumerate(src.get("links", [])) if len(l) == 4]
+        if schema == 3 and anomaly:
+            ltable = table + 64 * len(src["modules"])
+            gi = anomaly[0]
+            for offset, value in (
+                (ltable + 8 * gi + 4, 4),  # unknown link kind
+                (ltable + 8 * gi + 6, len(src["reservoirs"])),  # anchor out of range
+                (ltable + 8 * gi + 6, 0),  # anchor not a Phos region
+            ):
+                b = bytearray(data)
+                struct.pack_into("<H", b, offset, value)
+                struct.pack_into("<I", b, 12, zlib.crc32(b[16:]))
+                assert lib.ws_load(C.byref(r), bytes(b), len(b)) != 0
+                bad += 1
+            for mutation in ("swap", "adjacent"):
+                b = bytearray(data)
+                base = ltable + 8 * gi
+                if mutation == "swap":  # seat outside the anchored region
+                    a, bb = struct.unpack_from("<HH", b, base)
+                    struct.pack_into("<HH", b, base, bb, a)
+                else:  # conventionally adjacent far end (two ordinary links)
+                    struct.pack_into("<H", b, base + 2, 14)
+                struct.pack_into("<I", b, 12, zlib.crc32(b[16:]))
+                assert lib.ws_load(C.byref(r), bytes(b), len(b)) != 0
+                bad += 1
         for mutation in ("tag", "phos", "cycle", "unconnected"):
             s = copy.deepcopy(src)
             if mutation == "tag":
@@ -225,6 +254,40 @@ def main():
                     # overlap is ambiguous for stage lookup and must reject.
                     first = s["reservoirs"][0]
                     s["reservoirs"].append({**first, "name": "overlap_probe", "key": first["key"] + 999})
+                try:
+                    compile_recipe(s)
+                except ValueError:
+                    bad += 1
+                else:
+                    raise AssertionError(mutation)
+        # Source-level anomaly gate rejections: the compiler mirrors the C
+        # fail-closed gate rules instead of emitting bad products.
+        if src.get("reservoirs") and any(len(l) == 4 for l in src.get("links", [])):
+            gate = next(i for i, l in enumerate(src["links"]) if len(l) == 4)
+            for mutation in (
+                "no_anchor",
+                "anchor_not_phos",
+                "anchor_unknown",
+                "duplicate_anchor",
+                "adjacent_end",
+                "seat_outside",
+                "anchor_names_module",
+            ):
+                s = copy.deepcopy(src)
+                if mutation == "no_anchor":
+                    s["links"][gate] = s["links"][gate][:3]
+                elif mutation == "anchor_not_phos":
+                    s["links"][gate][3] = "massif_spoil"
+                elif mutation == "anchor_unknown":
+                    s["links"][gate][3] = "nonexistent_region"
+                elif mutation == "duplicate_anchor":
+                    s["links"].append(["phos_ruin", "ford_haven", "anomaly", "karst_phos"])
+                elif mutation == "adjacent_end":
+                    s["links"][gate][1] = "trail_e2"
+                elif mutation == "seat_outside":
+                    s["links"][gate][0], s["links"][gate][1] = s["links"][gate][1], s["links"][gate][0]
+                else:  # anchor names a module, not a reservoir
+                    s["links"][gate][3] = "ruin"
                 try:
                     compile_recipe(s)
                 except ValueError:

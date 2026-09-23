@@ -426,6 +426,27 @@
       "level": "settlement",
       "color": 13218426,
       "key": 120
+    },
+    {
+      "name": "phos_ruin",
+      "shape": "plane",
+      "tags": [
+        "Surface.Walk"
+      ],
+      "position": [
+        -27171,
+        164282,
+        474302
+      ],
+      "size": [
+        60000,
+        400,
+        60000
+      ],
+      "level": "structure",
+      "color": 9403081,
+      "phos": "Geo",
+      "key": 121
     }
   ],
   "links": [
@@ -483,6 +504,17 @@
       "ruin",
       "trail_e2",
       "walk"
+    ],
+    [
+      "trail_e3",
+      "phos_ruin",
+      "lift"
+    ],
+    [
+      "phos_ruin",
+      "ruin",
+      "anomaly",
+      "karst_phos"
     ]
   ],
   "features": [

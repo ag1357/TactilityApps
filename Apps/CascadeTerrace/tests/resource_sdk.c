@@ -258,7 +258,7 @@ int main(void) {
     {
         uint8_t wire[12000];
         size_t n = ws_state_encode(&s, wire, sizeof(wire));
-        size_t base = 48 + 21 * 28 + 1 * 538 + 1 * 12 + 4 * 16 + 4 * 20;
+        size_t base = 48 + 22 * 28 + 1 * 538 + 1 * 12 + 4 * 16 + 4 * 20;
         CHECK(n == base + 8 + 16 + 4 + 2 * 24 + 24);
         CHECK(wire[4] == 2 && wire[5] == 0); /* wire version 2 marker */
         WsState t;

@@ -55,6 +55,32 @@ int ws_route(const WsRecipe* r, uint16_t a, uint16_t b, const uint8_t* blocked, 
     for (size_t i = 0; i < n; i++) path[i] = queue[n - 1 - i];
     return (int)n;
 }
+/* Hop count over ordinary (walk/lift/portal) links only, gates excluded.
+   A far end with no ordinary path at all is conventionally nonadjacent
+   too, so the answer saturates instead of failing. */
+static int ordinary_hops(const WsRecipe* r, uint16_t a, uint16_t b) {
+    uint16_t queue[WS_CAP];
+    int depth[WS_CAP];
+    uint8_t seen[WS_CAP] = {0};
+    size_t head = 0, tail = 0;
+    queue[tail] = a;
+    depth[a] = 0;
+    seen[a] = 1;
+    tail++;
+    while (head < tail) {
+        uint16_t at = queue[head++];
+        for (int i = 0; i < r->link_count; i++) {
+            const WsLink* l = &r->links[i];
+            if (l->kind == WS_LINK_ANOMALY) continue;
+            uint16_t next = l->a == at ? l->b : l->b == at ? l->a : UINT16_MAX;
+            if (next >= r->count || seen[next]) continue;
+            seen[next] = 1;
+            depth[next] = depth[at] + 1;
+            queue[tail++] = next;
+        }
+    }
+    return seen[b] ? depth[b] : WS_LINK_CAP;
+}
 WsError ws_validate(const WsRecipe* r) {
     if (!r->count || r->count > WS_CAP || r->link_count > WS_LINK_CAP) return WS_BOUNDS;
     for (int i = 0; i < r->count; i++) {
@@ -69,7 +95,7 @@ WsError ws_validate(const WsRecipe* r) {
     for (int i = 0; i < r->link_count; i++) {
         const WsLink* l = &r->links[i];
         if (l->a >= r->count || l->b >= r->count || l->a == l->b) return WS_REFERENCE;
-        if (l->kind > 2 || l->reserved) return WS_VERSION;
+        if (l->kind > WS_LINK_ANOMALY || (l->kind != WS_LINK_ANOMALY && l->reserved)) return WS_VERSION;
         if (!(r->modules[l->a].flags & WS_WALK) || !(r->modules[l->b].flags & WS_WALK)) return WS_REFERENCE;
     }
     /* Sparse world-scale features: fail closed on unknown kinds, impossible
@@ -122,6 +148,31 @@ WsError ws_validate(const WsRecipe* r) {
             const WsReservoir* o = &r->reservoirs[j];
             if (o->kind != v->kind) continue;
             if (v->lo.x < o->hi.x && o->lo.x < v->hi.x && v->lo.y < o->hi.y && o->lo.y < v->hi.y && v->lo.z < o->hi.z && o->lo.z < v->hi.z) return WS_BOUNDS;
+        }
+    }
+    /* Nonlocal anomaly gates: typed topology edges anchored to a regional
+       Phos lode. The gate seat (a) stands inside the anchored region, the
+       far end (b) outside it, and the two ends must be conventionally
+       nonadjacent (no ordinary path of fewer than three links), so a gate
+       is a genuine shortcut between regions that keep their ordinary
+       geography. One Phos region hosts at most one gate. Local walk
+       realizability (ws_topology) never applies: gates are adjacency-graph
+       topology, not local geometry. */
+    {
+        uint8_t anchored[WS_RESERVOIR_CAP] = {0};
+        for (int i = 0; i < r->link_count; i++) {
+            const WsLink* l = &r->links[i];
+            if (l->kind != WS_LINK_ANOMALY) continue;
+            if (l->reserved >= r->reservoir_count) return WS_REFERENCE;
+            const WsReservoir* v = &r->reservoirs[l->reserved];
+            if (v->kind != WS_RES_PHOS) return WS_VERSION;
+            if (anchored[l->reserved]++) return WS_DUPLICATE;
+            WsModule A, B;
+            ws_materialize(r, l->a, &A);
+            ws_materialize(r, l->b, &B);
+            if (A.pos.x < v->lo.x || A.pos.x > v->hi.x || A.pos.z < v->lo.z || A.pos.z > v->hi.z) return WS_BOUNDS;
+            if (B.pos.x >= v->lo.x && B.pos.x <= v->hi.x && B.pos.z >= v->lo.z && B.pos.z <= v->hi.z) return WS_BOUNDS;
+            if (ordinary_hops(r, l->a, l->b) < 3) return WS_BOUNDS;
         }
     }
     int first = -1;
@@ -279,15 +330,19 @@ static int river_crossings(const WsRecipe* r, uint16_t fi, WsPos a, WsPos b) {
 uint64_t ws_link_cost(const WsRecipe* r, uint16_t i, uint32_t caps) {
     if (i >= r->link_count) return UINT64_MAX;
     const WsLink* l = &r->links[i];
-    if (l->kind == 1 && !(caps & WS_CAP_LIFT)) return UINT64_MAX;
-    if (l->kind == 2 && !(caps & WS_CAP_PORTAL)) return UINT64_MAX;
+    if (l->kind == WS_LINK_LIFT && !(caps & WS_CAP_LIFT)) return UINT64_MAX;
+    if (l->kind == WS_LINK_PORTAL && !(caps & WS_CAP_PORTAL)) return UINT64_MAX;
+    if (l->kind == WS_LINK_ANOMALY) {
+        if (!(caps & WS_CAP_ANOMALY)) return UINT64_MAX;
+        return WS_ANOMALY_COST; /* fixed gate toll; openness is canonical state */
+    }
     WsModule a, b;
     ws_materialize(r, l->a, &a);
     ws_materialize(r, l->b, &b);
     int64_t dx = (int64_t)b.pos.x - a.pos.x, dy = (int64_t)b.pos.y - a.pos.y, dz = (int64_t)b.pos.z - a.pos.z;
     int64_t climb = dy < 0 ? -dy : dy;
-    if (l->kind == 1) return 500 + (uint64_t)climb / 2;
-    if (l->kind == 2) return 2000;
+    if (l->kind == WS_LINK_LIFT) return 500 + (uint64_t)climb / 2;
+    if (l->kind == WS_LINK_PORTAL) return 2000;
     uint64_t cost = (uint64_t)isqrt64(dx * dx + dz * dz) + 8 * (uint64_t)climb;
     for (uint16_t f = 0; f < r->feature_count; f++) cost += 20000 * (uint64_t)river_crossings(r, f, a.pos, b.pos);
     return cost;

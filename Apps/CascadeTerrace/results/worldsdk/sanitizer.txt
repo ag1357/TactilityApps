@@ -1,1 +1,5 @@
-{"stage":"traversal","passed":25,"recipe_workspace_bytes":10276,"product_bytes":1200}
+{"stage":"traversal","passed":56,"recipe_workspace_bytes":11500,"product_bytes":1200}
+{"stage":"macro","passed":4419,"product_bytes":1938,"modules":22,"links":13,"features":1,"exceptions":5}
+{"stage":"resource","passed":322,"product_bytes":1938,"reservoirs":4,"state_bytes":10144}
+{"stage":"anomaly","passed":130,"product_bytes":1938,"modules":22,"links":13,"gate_cost":1500,"open_level":80000}
+{"suite":"authority_merge_persistence","checks":3767,"status":"PASS","cases":["A","B","C","D","E"],"state_bytes":10144,"wire_bytes":1864}

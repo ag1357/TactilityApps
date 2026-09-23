@@ -1,6 +1,6 @@
 {
   "stage": "macro-geography",
-  "checks": 9993,
+  "checks": 9995,
   "river_parity_samples": 1075,
   "cost_case": {
     "nearest": "high_gate",
@@ -32,17 +32,17 @@
   "generalized_seeds": [
     {
       "seed": 1,
-      "bytes": 1858,
+      "bytes": 1938,
       "variants_tried": 1
     },
     {
       "seed": 3735928559,
-      "bytes": 1858,
+      "bytes": 1938,
       "variants_tried": 1
     },
     {
       "seed": 20260922,
-      "bytes": 1858,
+      "bytes": 1938,
       "variants_tried": 1
     }
   ]

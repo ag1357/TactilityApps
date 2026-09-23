@@ -1,2 +1,2 @@
    text	   data	    bss	    dec	    hex	filename
-  47233	   1700	  88760	 137693	  219dd	build-p4-native/cascadeterrace.app.elf
+ 181139	   4172	 135224	 320535	  4e417	build-p4-native/cascadeterrace.app.elf

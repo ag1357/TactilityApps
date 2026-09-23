@@ -32,7 +32,9 @@ FLOWS = {"calm": 0, "rapid": 1}
 EXCEPTIONS = {"waterfall": 1, "rapids": 2, "lake": 3, "dam": 4, "underground": 5}
 RESERVOIR_KINDS = {"terrain": 1, "water": 2, "biomass": 3, "phos": 4}
 WEATHER_MULT = ((1, 1, 1), (1, 2, 3), (1, 2, 1), (1, 1, 2))
-CAP_WALK, CAP_LIFT, CAP_PORTAL = 1, 2, 4
+CAP_WALK, CAP_LIFT, CAP_PORTAL, CAP_ANOMALY = 1, 2, 4, 8
+LINK_KINDS = {"walk": 0, "lift": 1, "portal": 2, "anomaly": 3}
+ANOMALY_COST = 1500
 
 
 def h(x):
@@ -503,14 +505,24 @@ def ledger_check(state, recs):
 
 def runtime_view(src):
     """Resolve a source recipe into the runtime numbers C sees: materialized
-    module positions, index-resolved links, compiled feature and reservoir
+    module positions, index-resolved links (a, b, kind, anchor) with the
+    anomaly anchor as a reservoir index, compiled feature and reservoir
     records."""
     ids = {m["name"]: i for i, m in enumerate(src["modules"])}
     modules = [materialized(src, m) for m in src["modules"]]
-    links = [
-        (ids[a], ids[b], {"walk": 0, "lift": 1, "portal": 2}[k])
-        for a, b, k in src.get("links", [])
-    ]
+    rindex = {v["name"]: i for i, v in enumerate(src.get("reservoirs", []))}
+    links = []
+    for link in src.get("links", []):
+        if len(link) == 4:
+            a, b, kind, anchor = link
+            if kind != "anomaly":
+                raise ValueError("only anomaly links carry an anchor")
+            if anchor not in rindex:
+                raise ValueError("anomaly anchor must be a declared reservoir")
+            links.append((ids[a], ids[b], LINK_KINDS[kind], rindex[anchor]))
+        else:
+            a, b, kind = link
+            links.append((ids[a], ids[b], LINK_KINDS[kind], None))
     features = [feature_record(f) for f in src.get("features", [])]
     reservoirs = []
     for i, v in enumerate(src.get("reservoirs", [])):
@@ -521,12 +533,17 @@ def runtime_view(src):
 
 
 def link_cost(modules, links, features, i, caps=CAP_WALK):
-    """Mirror of ws_link_cost (None = capability gated)."""
-    a, b, kind = links[i]
+    """Mirror of ws_link_cost (None = capability gated). Links are the
+    runtime 4-tuples (a, b, kind, anchor)."""
+    a, b, kind, _ = links[i]
     if kind == 1 and not caps & CAP_LIFT:
         return None
     if kind == 2 and not caps & CAP_PORTAL:
         return None
+    if kind == 3:
+        if not caps & CAP_ANOMALY:
+            return None
+        return ANOMALY_COST
     A, B = modules[a], modules[b]
     dx, dy, dz = B[0] - A[0], B[1] - A[1], B[2] - A[2]
     climb = abs(dy)
@@ -563,6 +580,69 @@ def route_cost(modules, links, features, a, b, caps=CAP_WALK):
             elif link[1] == u and not done[link[0]]:
                 v = link[0]
             else:
+                continue
+            c = link_cost(modules, links, features, i, caps)
+            if c is None:
+                continue
+            if dist[v] is None or dist[u] + c < dist[v]:
+                dist[v] = dist[u] + c
+                prev[v] = u
+    if dist[b] is None:
+        return None
+    path = []
+    at = b
+    while True:
+        path.append(at)
+        if at == a:
+            break
+        at = prev[at]
+    path.reverse()
+    return dist[b], path
+
+
+def link_open(links, reservoirs, state, i):
+    """Mirror of ws_link_open: 1 iff link i is an open anomaly gate. The
+    gate holds while the anchored Phos stock keeps at least half the region
+    capacity; a bound state dict decides, otherwise the declared levels."""
+    if i >= len(links) or links[i][2] != 3:
+        return 0
+    anchor = links[i][3]
+    if anchor >= len(reservoirs):
+        return 0
+    v = reservoirs[anchor]
+    if v["kind"] != RESERVOIR_KINDS["phos"]:
+        return 0
+    level = v["level"]
+    if state is not None and len(state["level"]) == len(reservoirs):
+        level = min(state["level"][anchor], v["capacity"])
+    return int(2 * level >= v["capacity"])
+
+
+def route_cost_state(modules, links, features, reservoirs, state, a, b, caps=CAP_WALK):
+    """Mirror of ws_route_cost_state: the same Dijkstra as route_cost with
+    closed gates absent (openness from the bound state, or declared levels
+    with state None)."""
+    n = len(modules)
+    dist = [None] * n
+    prev = [None] * n
+    done = [False] * n
+    dist[a] = 0
+    while True:
+        u = -1
+        for i in range(n):
+            if not done[i] and dist[i] is not None and (u < 0 or dist[i] < dist[u]):
+                u = i
+        if u < 0:
+            break
+        done[u] = True
+        for i, link in enumerate(links):
+            if link[0] == u and not done[link[1]]:
+                v = link[1]
+            elif link[1] == u and not done[link[0]]:
+                v = link[0]
+            else:
+                continue
+            if link[2] == 3 and not link_open(links, reservoirs, state, i):
                 continue
             c = link_cost(modules, links, features, i, caps)
             if c is None:
@@ -672,9 +752,23 @@ def compile_recipe(src):
     }
     parents = []
     walk_links = []
-    for a, b, kind in links:
+    anomaly_links = []
+    rindex = {v["name"]: i for i, v in enumerate(src.get("reservoirs", []))}
+    for link in links:
+        if len(link) == 4:
+            a, b, kind, anchor = link
+            if kind != "anomaly":
+                raise ValueError("only anomaly links carry an anchor")
+            if anchor not in rindex:
+                raise ValueError("anomaly anchor must be a declared reservoir")
+            reserved = rindex[anchor]
+        else:
+            a, b, kind = link
+            anchor, reserved = None, 0
+        if kind not in LINK_KINDS:
+            raise ValueError(f"unknown link kind: {kind}")
         a, b = ids[a], ids[b]
-        k = {"walk": 0, "lift": 1, "portal": 2}[kind]
+        k = LINK_KINDS[kind]
         if a == b or a not in graph or b not in graph:
             raise ValueError("illegal navigation endpoint")
         graph[a].add(b)
@@ -682,7 +776,9 @@ def compile_recipe(src):
         if k == 0:
             validate_walk_edge(src, modules, a, b)
             walk_links.append((a, b))
-        body += struct.pack("<4H", a, b, k, 0)
+        if k == 3:
+            anomaly_links.append((a, b, reserved))
+        body += struct.pack("<4H", a, b, k, reserved)
     # Sparse world-scale features (rivers and typed exceptions): stable
     # identity from the ancestry like modules, validated fail-closed, packed
     # after the links. A product carries features only when declared; the
@@ -761,6 +857,39 @@ def compile_recipe(src):
                 and b["lo"][2] < a["hi"][2]
             ):
                 raise ValueError("same-kind reservoir regions overlap")
+    # Nonlocal anomaly gates, mirroring ws_validate fail-closed: the anchor
+    # must be a Phos region, the gate seat stands inside it, the far end
+    # outside it, the two ends are conventionally nonadjacent (no ordinary
+    # path of fewer than three links), and one Phos region hosts one gate.
+    def ordinary_hops(a, b):
+        seen = {a: 0}
+        todo = [a]
+        while todo:
+            at = todo.pop(0)
+            for x, y, kind, _ in resolved_links:
+                if kind == 3:
+                    continue
+                nxt = y if x == at else x if y == at else None
+                if nxt is None or nxt in seen:
+                    continue
+                seen[nxt] = seen[at] + 1
+                todo.append(nxt)
+        return seen.get(b, 256)
+
+    resolved_links = runtime_view(src)[1]
+    for a, b, reserved in anomaly_links:
+        v = rrecords[reserved]
+        if v["kind"] != RESERVOIR_KINDS["phos"]:
+            raise ValueError("anomaly anchor must be a Phos reservoir")
+        if sum(1 for _, _, r in anomaly_links if r == reserved) > 1:
+            raise ValueError("one anomaly gate per Phos region")
+        A, B = materialized(src, modules[a]), materialized(src, modules[b])
+        if not (v["lo"][0] <= A[0] <= v["hi"][0] and v["lo"][2] <= A[2] <= v["hi"][2]):
+            raise ValueError("anomaly gate seat must stand inside the anchored region")
+        if v["lo"][0] <= B[0] <= v["hi"][0] and v["lo"][2] <= B[2] <= v["hi"][2]:
+            raise ValueError("anomaly far end must stand outside the anchored region")
+        if ordinary_hops(a, b) < 3:
+            raise ValueError("anomaly gate must link conventionally nonadjacent ends")
     rbody = bytearray()
     for rec in rrecords:
         rbody += struct.pack(

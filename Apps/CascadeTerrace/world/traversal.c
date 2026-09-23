@@ -138,7 +138,10 @@ int ws_use_link(const WsRecipe* r, WsTraveler* t) {
     if (t->remaining) return 0;
     for (uint16_t i = 0; i < r->link_count; i++) {
         WsLink l = r->links[i];
-        if (!l.kind) continue;
+        /* Anomaly gates are state-gated: only the state-aware entry point
+           (ws_use_link_state) may cross them. The stateless scan keeps
+           serving ordinary lifts and portals unchanged. */
+        if (!l.kind || l.kind == WS_LINK_ANOMALY) continue;
         for (int side = 0; side < 2; side++) {
             uint16_t from = side ? l.b : l.a, to = side ? l.a : l.b;
             WsModule a, b;

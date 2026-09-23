@@ -19,6 +19,10 @@ build/resource_sdk_test: $(WORLD_SDK) tests/resource_sdk.c world/sdk.h content/w
 	$(CC) $(CFLAGS) $(filter %.c,$^) -o $@
 resource-test: build/resource_sdk_test
 	./build/resource_sdk_test
+build/anomaly_sdk_test: $(WORLD_SDK) tests/anomaly_sdk.c world/sdk.h content/worlds/macro.inc | build
+	$(CC) $(CFLAGS) $(filter %.c,$^) -o $@
+anomaly-test: build/anomaly_sdk_test
+	./build/anomaly_sdk_test
 build:
 	mkdir -p build
 build/cascade: $(CORE) desktop/main.c | build

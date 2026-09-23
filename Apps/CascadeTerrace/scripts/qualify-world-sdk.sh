@@ -9,10 +9,13 @@ python3 tools/worldsdk/sdk.py compile content/worlds/elek_grid.json --output bui
 python3 tools/worldsdk/macro.py > /dev/null
 # Gate 3: the same committed macro product now carries schema 3 reservoirs;
 # its C proof gate and the Python parity gate run below.
-make build/world_sdk_test build/macro_sdk_test build/resource_sdk_test build/world_state_test build/libsdk.so build/libworldview.so build/test
+# Gate 4: the product carries the nonlocal Phos anomaly gate (link kind 3);
+# its C proof gate and Python parity gate run below as well.
+make build/world_sdk_test build/macro_sdk_test build/resource_sdk_test build/anomaly_sdk_test build/world_state_test build/libsdk.so build/libworldview.so build/test
 ./build/world_sdk_test > results/worldsdk/traversal.json
 ./build/macro_sdk_test > results/worldsdk/macro.json
 ./build/resource_sdk_test > results/worldsdk/resource.json
+./build/anomaly_sdk_test > results/worldsdk/anomaly.json
 ./build/world_state_test > results/worldsdk/state.json
 ./build/test > results/worldsdk/legacy-final.txt
 python3 tools/worldsdk/qualify.py
@@ -23,3 +26,4 @@ python3 tools/worldsdk/navigation_probe.py
 python3 tools/worldsdk/adversarial_test.py
 python3 tools/worldsdk/macro_test.py
 python3 tools/worldsdk/resource_test.py
+python3 tools/worldsdk/anomaly_test.py

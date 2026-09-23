@@ -96,6 +96,19 @@ WsDisposition ws_apply(WsState*, const WsRecipe*, WsContext, WsOperation);
 void ws_resources_tick(WsState*, const WsRecipe*, uint32_t delta_s);
 int ws_ledger_check(const WsState*, const WsRecipe*);
 int ws_river_stage(const WsRecipe*, const WsState*, uint16_t feature, uint16_t t, WsRiverSample*);
+/* Nonlocal anomaly gates (link kind WS_LINK_ANOMALY, resource.c): the edge
+   is declared in the recipe and anchored by link.reserved to a regional
+   Phos reservoir. Whether it may be used is a pure function of canonical
+   state, never of special-case coordinates: a gate is open while its
+   anchored stock holds at least half the region capacity, so depleting the
+   lode removes the shortcut and recharging restores it. With no state
+   bound, the declared recipe levels decide (view semantics, like stage).
+   ws_route_cost_state mirrors ws_route_cost with closed gates absent;
+   ws_use_link_state tries open gates first (lowest link index at a shared
+   seat), then the ordinary links unchanged. */
+int ws_link_open(const WsRecipe*, const WsState*, uint16_t link);
+int ws_route_cost_state(const WsRecipe*, const WsState*, uint16_t a, uint16_t b, uint32_t caps, uint64_t* cost, uint16_t* path, size_t cap);
+int ws_use_link_state(const WsRecipe*, const WsState*, WsTraveler*);
 /* Routed from ws_apply for action >= WS_EXCAVATE; pi is the actor index. */
 WsDisposition ws_resource_apply(WsState*, const WsRecipe*, WsContext, WsOperation, int pi);
 /* Tail and feed recording shared by the entity and resource op paths. */

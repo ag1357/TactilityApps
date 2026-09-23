@@ -307,7 +307,7 @@ def main():
     check(apply_op(SPEND, R_SPOIL, 4, 4000, 0, at).status == 0, "wire spend")
     buf = (C.c_ubyte * 12000)()
     n = lib.ws_state_encode(C.byref(s), buf, 12000)
-    base = 48 + 21 * 28 + 538 + 12 + 4 * 16 + 4 * 20
+    base = 48 + 22 * 28 + 538 + 12 + 4 * 16 + 4 * 20
     check(n == base + 8 + 16 + 4 + 2 * 24 + 24 and buf[4] == 2, "wire v2 layout")
     t = State()
     check(lib.ws_state_decode(C.byref(t), C.byref(r), buf, n) == 0, "decode")

@@ -30,9 +30,10 @@ derivation from the public replica, reconnect and restarted-server
 restoration of the closed gate, and fail-closed malformed rejection on
 both the C and Python sides. The normal Cascade game
 remains playable and passes its original suite. The bounded renderer
-evaluation (the mission's ordered stop after Gate 4) is complete with a
-HYBRIDIZE recommendation pending approval of its proving integration;
-creature placement,
+evaluation is complete and the hybrid renderer it recommended is
+integrated and promoted (incremental-span rasterizer + portable exact-2x
+presentation; PIE and PPA gated experimental pending physical P4
+qualification). Creature placement and schedules is the next gate;
 the complete multiplayer quest and all physical P4
 claims remain pending. The two-client SDK fixture is not the full
 Kyra/intake multiplayer game.
@@ -53,6 +54,11 @@ Kyra/intake multiplayer game.
 | II: macro geography, sparse rivers, derived route, terrain costs | `5d35f82` |
 | III: regional reservoirs, extraction sites, ecology recovery, ledger | `9862e06` |
 | IV: nonlocal Phos anomaly topology, state-gated traversal, winze lift | `7b85d38` |
+| R0: renderer evaluation (bounded, pre-rewrite) | `ca942d3` |
+| RA: save-header regression fix | `e835061` |
+| RB: incremental-span rasterizer, exact tested depth/coverage (promoted) | `8bbe12e` |
+| RC: exact portable 2x presentation + gated PIE/PPA backends | `b1229f0` |
+| RD: presentation lifecycle reconciliation (open-once at init) | containing commit |
 
 ## Build and reproduce
 
@@ -277,9 +283,32 @@ triangles — motes are first-class content — and carries a real
 `colorBaked` shared-material bug), and move presentation to the proven
 P4 PIE kernels (assembled with the production `xespv` march, 96 bytes of
 .text) and/or async PPA SRM (Espressif CI floor implies ~2-2.5 ms
-off-CPU for the 2x upscale). No production renderer change was made; the
-~60-line proving integration in `core/render.c` plus the `main/main.c`
-presentation swap is proposed and awaits approval before any rewrite.
+off-CPU for the 2x upscale).
+
+**The proving integration is done and promoted** — implemented and
+qualified on `work/cascade-renderer-hybrid` (Stage A `8bbe12e`:
+conservative incremental spans in `core/render.c` with exact tested depth
+and coverage, pixel-identical against the `ca942d3` reference across the
+hybrid qualification corpus; Stage B `b1229f0`: `core/presentation.c`
+exact portable 2x expansion plus gated PIE (`main/presentation_pie.S`)
+and PPA (`main/presentation_p4.c`) backends; the save-header regression
+fix `e835061` precedes them), merged linearly into this branch, then
+reconciled in the containing commit:
+
+* the presentation backend opens exactly once during normal app
+  initialization — after the scanout allocation, before the initial
+  memory/qualification telemetry (so `ct_present_extra_bytes` reports the
+  actually opened backend) — and Save only saves; repeat calls to
+  `ct_present_open` are no-ops so no path can re-register or leak PPA
+  resources, and `ct_present_close` remains on every shutdown/error path.
+
+Production policy: **incremental-span rasterizer promoted; portable
+exact-2x presentation default/promoted; PIE experimental pending physical
+execution/parity; PPA experimental pending firmware-export verification
+and physical timing/visual/cache/display qualification.** No further
+renderer or PPA research before physical P4 testing (see
+`docs/RENDERER_HYBRID.md` and `results/worldsdk/renderer-hybrid/`).
+
 After that, the next
 content gate is creature placement and schedules as sparse deterministic
 records reconstructed per chunk — the same discipline as rivers, reservoirs
@@ -341,5 +370,8 @@ re-bind the CRC, re-encode); never hand-edit it.
 Measure loader compatibility; internal RAM versus PSRAM allocation; stack high
 water and heap fragmentation; render p50/p95/max; input/touch/CardKB2; storage
 stalls; repeated save/reload and actual power loss; prolonged thermal behavior;
-then native network disconnect/reconnect and simultaneous players. PPA acceleration
-and audio are unimplemented. Desktop timings are not physical P4 measurements.
+then native network disconnect/reconnect and simultaneous players. The PPA
+presentation backend is implemented but experimental: it still needs
+firmware-export verification and physical timing/visual/cache/display
+qualification before promotion (PIE likewise needs physical execution/parity).
+Audio is unimplemented. Desktop timings are not physical P4 measurements.

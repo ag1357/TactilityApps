@@ -138,9 +138,7 @@ static void action(int code, const char* text) {
             o.target = 3;
             break;
         case 7: {
-            ct_present_open(canvas_pixels,presentation_requested);
-    emit("{\"type\":\"presentation_config\",\"requested\":%d,\"backend\":\"%s\",\"physical\":\"PENDING\"}\n",presentation_requested,ct_present_name());
-    uint64_t t = micros();
+            uint64_t t = micros();
             int ok = save_game(g, save_base);
             emit("{\"type\":\"save\",\"ok\":%d,\"us\":%llu}\n", ok, (unsigned long long)(micros() - t));
             return;
@@ -218,6 +216,13 @@ int main(int argc, char** argv) {
         memory_free(canvas_pixels);
         return 2;
     }
+    /* Presentation backend opens exactly once, here: after the scanout
+     * allocation (the PPA front buffer must exist and be DMA/aligned) and
+     * before any memory or qualification telemetry so extra_bytes/name
+     * report the actually opened backend. Save never re-opens it; the
+     * guard inside ct_present_open also makes a stray re-open a no-op. */
+    ct_present_open(canvas_pixels, presentation_requested);
+    emit("{\"type\":\"presentation_config\",\"requested\":%d,\"backend\":\"%s\",\"physical\":\"PENDING\"}\n", presentation_requested, ct_present_name());
     uint64_t t = micros();
     game_new(g, 42, -1);
     uint64_t gen_us = micros() - t;

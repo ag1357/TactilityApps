@@ -1,18 +1,1 @@
-{
-  "status": "PASS",
-  "checks": 9395,
-  "color_parity": 1,
-  "async_ownership_cycles": 1000,
-  "source_bytes": 76800,
-  "scanout_bytes": 307200,
-  "ppa_extra_bytes": 384000,
-  "reference_mean_ms": 0.056995,
-  "portable_mean_ms": 0.028658,
-  "reference_p95_ms": 0.068913,
-  "portable_p95_ms": 0.02952,
-  "checksum": 999600,
-  "pie_physical": "PENDING",
-  "ppa_physical": "PENDING",
-  "host": "Linux-6.18.44-x86_64-with-glibc2.39",
-  "sanitized": false
-}
+{"status":"PASS","checks":9395,"color_parity":1,"async_ownership_cycles":1000,"source_bytes":76800,"scanout_bytes":307200,"ppa_extra_bytes":384000,"reference_mean_ms":0.155252,"portable_mean_ms":0.069596,"reference_p95_ms":0.157760,"portable_p95_ms":0.072371,"checksum":999600,"pie_physical":"PENDING","ppa_physical":"PENDING"}

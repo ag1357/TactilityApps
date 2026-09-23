@@ -160,3 +160,51 @@ Sources: [Espressif PPA API](https://docs.espressif.com/projects/esp-idf/en/late
 and the pinned ESP-IDF driver/instruction sources. Q1 remains INCOMPLETE; Q2 and
 all physical promotion requirements remain pending. PPA cannot block the already
 published raster improvement or the portable crisp presentation path.
+
+
+Stage RD: presentation lifecycle reconciliation
+
+The proving integration was merged into `work/cascade-world-sdk` and one
+lifecycle defect was corrected before the next gate: the backend was
+previously opened from the Save action, so presentation state depended on a
+save having happened and repeated saves could reach the open path again.
+
+`ct_present_open` now runs exactly once during normal app initialization,
+after the scanout allocation and before the initial memory/qualification
+telemetry, so `ct_present_extra_bytes` reports the backend actually opened.
+The Save action only saves (and times the save). `ct_present_open` is
+idempotent: a second call returns the already-opened backend without
+re-registering or leaking PPA resources, and `ct_present_close` resets that
+guard after draining, unregistering and freeing. Close remains on the
+app-event-subscribe failure path and normal shutdown; the pre-open
+allocation-failure path still exits without an opened backend to close.
+
+Re-qualification after the reconciliation, same seeds and harnesses: the full
+World SDK script passes (3,000 worlds, 7,372 malformed rejections, 18/18
+navigation, 15/15 adversarial, macro/resource/anomaly/state suites green, and
+the presentation suite now part of the script); the hybrid corpus passes
+desktop and under ASan/UBSan with identical checks; all six C suites including
+`presentation_test` (9,395 checks, color parity, 1,000 async ownership cycles)
+run clean under ASan/UBSan with no sanitizer stderr. Desktop raster speedups
+this run: cascade 1.41×, vista 1.95×, cave 1.87×, closeup 1.82× (frame 1.34×,
+1.87×, 1.86×, 1.78×).
+
+P4 external-app builds re-run after the change (same pinned toolchain; the
+default portable build is byte-reproducible, ELF sha256 faa22322…):
+
+| Build | ELF bytes | Prior ELF bytes |
+| --- | ---: | ---: |
+| Portable default | 188132 | 188100 |
+| PIE compiled, PPA off | 188352 | 188328 |
+| PPA compiled, PIE off | 189468 | (not previously separated) |
+| PIE and PPA compiled | 189656 | 189616 |
+
+The combined build still imports exactly `ppa_register_client`,
+`ppa_client_register_event_callbacks`, `ppa_unregister_client` and
+`ppa_do_scale_rotate_mirror`; firmware-export verification remains pending, so
+the PPA ELF stays experimental and non-default. The lifecycle guard accounts
+for the +32/+24/+40/+40 byte deltas over the Stage B builds. Records:
+`results/worldsdk/renderer-hybrid/p4-{portable,pie,ppa}.json`,
+`p4-presentation-{portable,pie,ppa}.log`, `sanitizer.txt`; releases:
+`portable.app`, `portable.app.elf.gz`, `experimental-pie.app.elf.gz`,
+`experimental-ppa.app.elf.gz`. The default build state ends portable.

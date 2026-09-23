@@ -3,3 +3,4 @@
 {"stage":"resource","passed":322,"product_bytes":1938,"reservoirs":4,"state_bytes":10144}
 {"stage":"anomaly","passed":130,"product_bytes":1938,"modules":22,"links":13,"gate_cost":1500,"open_level":80000}
 {"suite":"authority_merge_persistence","checks":3767,"status":"PASS","cases":["A","B","C","D","E"],"state_bytes":10144,"wire_bytes":1864}
+{"status":"PASS","checks":9395,"color_parity":1,"async_ownership_cycles":1000,"source_bytes":76800,"scanout_bytes":307200,"ppa_extra_bytes":384000,"reference_mean_ms":0.709644,"portable_mean_ms":0.266027,"reference_p95_ms":0.717856,"portable_p95_ms":0.270020,"checksum":999600,"pie_physical":"PENDING","ppa_physical":"PENDING"}

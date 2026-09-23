@@ -8,7 +8,7 @@
 #ifndef CT_PRESENT_PPA
 #define CT_PRESENT_PPA 0
 #endif
-static int backend;
+static int backend, opened;
 #if CT_PRESENT_PIE
 _Static_assert(W%8==0,"PIE row width must contain complete eight-pixel groups");
 void ct_pie_expand2x_rows(uint16_t*,uint16_t*,const uint16_t*,uint32_t);
@@ -33,7 +33,11 @@ unsigned ct_present_busy(void) {
 #endif
 }
 int ct_present_open(uint16_t* front,int requested) {
+    if (opened) return backend; /* exactly-once per close cycle: a repeat call
+                                   cannot re-register a PPA client or leak its
+                                   back/snapshot allocations */
     backend=0;(void)front;(void)requested;
+    opened=1;
 #if CT_PRESENT_PIE
     if(requested==1 && ((uintptr_t)front&15)==0)backend=1;
 #endif
@@ -96,4 +100,5 @@ void ct_present_close(void) {
     }
 #endif
     backend=0;
+    opened=0; /* a later ct_present_open may attempt a fresh registration */
 }

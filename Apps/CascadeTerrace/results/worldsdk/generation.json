@@ -2,7 +2,7 @@
   "status": "PASS",
   "worlds": 3000,
   "rejected_malformed_products": 7372,
-  "elapsed_ms": 3585.675,
+  "elapsed_ms": 3691.769,
   "workspace_bytes": 11500,
   "module_bytes": 64,
   "vectors": [

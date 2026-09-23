@@ -4,7 +4,7 @@
   "peers_seen": [
     101
   ],
-  "mean_render_ms": 1.029829674962457,
+  "mean_render_ms": 0.7340411584361087,
   "wire_sent": 3695,
   "wire_received": 46773,
   "public_hash": "d4d36b90954c19d714dc820b26c8c458e69d53c2d1eb6a70e3d335b143c15470",

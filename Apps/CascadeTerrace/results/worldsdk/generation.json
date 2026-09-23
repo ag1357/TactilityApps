@@ -1,9 +1,9 @@
 {
   "status": "PASS",
   "worlds": 3000,
-  "rejected_malformed_products": 7011,
-  "elapsed_ms": 3250.899,
-  "workspace_bytes": 11016,
+  "rejected_malformed_products": 7280,
+  "elapsed_ms": 3380.465,
+  "workspace_bytes": 11500,
   "module_bytes": 64,
   "vectors": [
     {
@@ -57,25 +57,25 @@
     {
       "recipe": "macro",
       "seed": 0,
-      "product_sha256": "aee9dc110d564614c09b94ea5b5b64535afa542ff9d54756f1b9e74873a34237",
+      "product_sha256": "b998b90af991b7e5be0cb1dedabd1fd89e877e7fd294d53c6d0b5ef8eb58130e",
       "materialized_sha256": "cc99001ade8598101fa7158fca97f238cf0bdcabaffbb33ffdc4a1513646b49c"
     },
     {
       "recipe": "macro",
       "seed": 1,
-      "product_sha256": "b45381fa563d4a2fcd2e6e0e391bf58c2f525d4a8e6c6e4d1c358bc71f41df9c",
+      "product_sha256": "f3922732dedddf6fe4e5dfec143dd5d15dbdcbd52a2cf21853b623ef225c03d5",
       "materialized_sha256": "cc99001ade8598101fa7158fca97f238cf0bdcabaffbb33ffdc4a1513646b49c"
     },
     {
       "recipe": "macro",
       "seed": 42,
-      "product_sha256": "6086dac9b3e98bead3331a86aedcf10bf34a89b45301930b204afc9ca454601f",
+      "product_sha256": "365c3dcbd6d07a19cabc205a8bf59ccfbce89aa8cb9f7f74ff54c71b4f4ef725",
       "materialized_sha256": "cc99001ade8598101fa7158fca97f238cf0bdcabaffbb33ffdc4a1513646b49c"
     },
     {
       "recipe": "macro",
       "seed": 999,
-      "product_sha256": "2df3177e3c26f20211d03b9d0ef4f32de3326686efbc1eeab0a33e7cd291b02f",
+      "product_sha256": "f8f06f79719dd6bb8353fd23934601285f3447766cc39ce0f39f26d3c886eb68",
       "materialized_sha256": "cc99001ade8598101fa7158fca97f238cf0bdcabaffbb33ffdc4a1513646b49c"
     }
   ],

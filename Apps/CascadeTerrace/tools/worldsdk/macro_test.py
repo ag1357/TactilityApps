@@ -218,7 +218,7 @@ def main():
     check(c_river(lib, r, 0, 60291)["y"] - c_river(lib, r, 0, 60292)["y"] >= 14000, "dam step")
 
     # 7. Cost model parity over every link, and the route-cost case.
-    modules, links, features = runtime_view(src)
+    modules, links, features, _ = runtime_view(src)
     for i in range(len(links)):
         c_cost = lib.ws_link_cost(C.byref(r), i, CAP_WALK)
         p_cost = link_cost(modules, links, features, i, CAP_WALK)

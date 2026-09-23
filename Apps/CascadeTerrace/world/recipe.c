@@ -75,8 +75,7 @@ WsError ws_validate(const WsRecipe* r) {
     /* Sparse world-scale features: fail closed on unknown kinds, impossible
        geometry or misplaced exceptions. Rivers must fall monotonically
        within a bounded slope after subtracting typed drops. */
-    if (r->feature_count > WS_FEATURE_CAP || r->exception_count > WS_EXCEPTION_CAP) return WS_BOUNDS;
-    for (int i = 0; i < r->feature_count; i++) {
+    if (r->feature_count > WS_FEATURE_CAP || r->exception_count > WS_EXCEPTION_CAP) return WS_BOUNDS;    for (int i = 0; i < r->feature_count; i++) {
         const WsFeature* f = &r->features[i];
         if (f->kind > WS_FEATURE_RIVER || f->flow > WS_FLOW_RAPID) return WS_VERSION;
         if (f->up.x < -1000000 || f->up.x > 1000000 || f->up.y < -1000000 || f->up.y > 1000000 || f->up.z < -1000000 || f->up.z > 1000000) return WS_BOUNDS;
@@ -106,6 +105,25 @@ WsError ws_validate(const WsRecipe* r) {
         } else if (e->length < 1 || e->aux)
             return WS_BOUNDS;
     }
+    /* Regional reservoirs: fail closed on unknown kinds, degenerate or
+       out-of-bounds regions, impossible stocks or rates, duplicate identity
+       and same-kind overlap (which would make region lookup ambiguous). */
+    if (r->reservoir_count > WS_RESERVOIR_CAP) return WS_BOUNDS;
+    for (int i = 0; i < r->reservoir_count; i++) {
+        const WsReservoir* v = &r->reservoirs[i];
+        if (v->kind < WS_RES_TERRAIN || v->kind > WS_RES_PHOS || v->zone > 3 || v->reserved) return WS_VERSION;
+        if (v->lo.x < -1000000 || v->lo.x > 1000000 || v->lo.y < -1000000 || v->lo.y > 1000000 || v->lo.z < -1000000 || v->lo.z > 1000000) return WS_BOUNDS;
+        if (v->hi.x < -1000000 || v->hi.x > 1000000 || v->hi.y < -1000000 || v->hi.y > 1000000 || v->hi.z < -1000000 || v->hi.z > 1000000) return WS_BOUNDS;
+        if (v->lo.x >= v->hi.x || v->lo.y >= v->hi.y || v->lo.z >= v->hi.z) return WS_BOUNDS;
+        if (!v->capacity || v->capacity > 400000 || v->level > v->capacity || !v->rate || v->rate > 65535) return WS_BOUNDS;
+        for (int j = 0; j < i; j++)
+            if (ws_id_equal(v->id, r->reservoirs[j].id)) return WS_DUPLICATE;
+        for (int j = 0; j < i; j++) {
+            const WsReservoir* o = &r->reservoirs[j];
+            if (o->kind != v->kind) continue;
+            if (v->lo.x < o->hi.x && o->lo.x < v->hi.x && v->lo.y < o->hi.y && o->lo.y < v->hi.y && v->lo.z < o->hi.z && o->lo.z < v->hi.z) return WS_BOUNDS;
+        }
+    }
     int first = -1;
     uint16_t path[WS_CAP];
     for (int i = 0; i < r->count; i++)
@@ -121,7 +139,7 @@ WsError ws_load(WsRecipe* r, const uint8_t* p, size_t n) {
     /* Transactional: validate bytes before touching output; caller stages final validation. */
     if (n < 48 || memcmp(p, "CWS1", 4)) return WS_FORMAT;
     if (u16(p + 6) != WS_GENERATOR) return WS_VERSION;
-    unsigned schema = u16(p + 4), count, links, features = 0, exceptions = 0;
+    unsigned schema = u16(p + 4), count, links, features = 0, exceptions = 0, reservoirs = 0;
     size_t body = 48;
     if (schema == WS_SCHEMA) {
         count = u16(p + 44);
@@ -135,9 +153,18 @@ WsError ws_load(WsRecipe* r, const uint8_t* p, size_t n) {
         exceptions = u16(p + 50);
         body = 52;
         if (n != 52 + 64 * count + 8 * links + 56 * features + 12 * exceptions || u32(p + 8) != n) return WS_BOUNDS;
+    } else if (schema == WS_SCHEMA_RESOURCES) {
+        if (n < 54) return WS_FORMAT;
+        count = u16(p + 44);
+        links = u16(p + 46);
+        features = u16(p + 48);
+        exceptions = u16(p + 50);
+        reservoirs = u16(p + 52);
+        body = 54;
+        if (n != 54 + 64 * count + 8 * links + 56 * features + 12 * exceptions + 64 * reservoirs || u32(p + 8) != n) return WS_BOUNDS;
     } else
         return WS_VERSION;
-    if (!count || count > WS_CAP || links > WS_LINK_CAP || features > WS_FEATURE_CAP || exceptions > WS_EXCEPTION_CAP) return WS_BOUNDS;
+    if (!count || count > WS_CAP || links > WS_LINK_CAP || features > WS_FEATURE_CAP || exceptions > WS_EXCEPTION_CAP || reservoirs > WS_RESERVOIR_CAP) return WS_BOUNDS;
     if (ws_crc(p + 16, n - 16) != u32(p + 12)) return WS_FORMAT;
     memset(r, 0, sizeof(*r));
     for (int i = 0; i < 4; i++) r->ancestry.word[i] = u32(p + 16 + 4 * i);
@@ -149,6 +176,7 @@ WsError ws_load(WsRecipe* r, const uint8_t* p, size_t n) {
     r->link_count = (uint16_t)links;
     r->feature_count = (uint16_t)features;
     r->exception_count = (uint16_t)exceptions;
+    r->reservoir_count = (uint16_t)reservoirs;
     p += body;
     for (unsigned i = 0; i < count; i++, p += 64) {
         WsModule* m = &r->modules[i];
@@ -167,7 +195,7 @@ WsError ws_load(WsRecipe* r, const uint8_t* p, size_t n) {
         m->quantity = u16(p + 62);
     }
     for (unsigned i = 0; i < links; i++, p += 8) r->links[i] = (WsLink) {u16(p), u16(p + 2), u16(p + 4), u16(p + 6)};
-    if (schema == WS_SCHEMA_FEATURES) {
+    if (schema == WS_SCHEMA_FEATURES || schema == WS_SCHEMA_RESOURCES) {
         for (unsigned i = 0; i < features; i++, p += 56) {
             WsFeature* f = &r->features[i];
             for (int j = 0; j < 4; j++) f->id.word[j] = u32(p + j * 4);
@@ -181,6 +209,20 @@ WsError ws_load(WsRecipe* r, const uint8_t* p, size_t n) {
             f->reserved = u32(p + 52);
         }
         for (unsigned i = 0; i < exceptions; i++, p += 12) r->exceptions[i] = (WsException) {u16(p), u16(p + 2), u16(p + 4), u16(p + 6), u32(p + 8)};
+    }
+    if (schema == WS_SCHEMA_RESOURCES) {
+        for (unsigned i = 0; i < reservoirs; i++, p += 64) {
+            WsReservoir* v = &r->reservoirs[i];
+            for (int j = 0; j < 4; j++) v->id.word[j] = u32(p + j * 4);
+            v->kind = u16(p + 16);
+            v->zone = u16(p + 18);
+            v->lo = (WsPos) {i32(p + 20), i32(p + 24), i32(p + 28)};
+            v->hi = (WsPos) {i32(p + 32), i32(p + 36), i32(p + 40)};
+            v->capacity = u32(p + 44);
+            v->level = u32(p + 48);
+            v->rate = u32(p + 52);
+            v->reserved = u32(p + 56);
+        }
     }
     WsError e = ws_validate(r);
     if (e != WS_OK) memset(r, 0, sizeof(*r));

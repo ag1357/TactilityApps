@@ -13,6 +13,7 @@ void ws_state_init(WsState* s, const WsRecipe* r) {
     s->recipe_crc = r->recipe_crc;
     s->revision = r->revision;
     s->count = r->count;
+    s->reservoir_count = r->reservoir_count;
     for (int i = 0; i < r->count; i++) {
         s->entities[i].epoch = 1;
         s->entities[i].health = (r->modules[i].flags & WS_REPAIRABLE) ? 0 : 100;
@@ -20,6 +21,7 @@ void ws_state_init(WsState* s, const WsRecipe* r) {
         s->entities[i].public_access = 1;
         s->entities[i].quantity = r->modules[i].quantity;
     }
+    for (int i = 0; i < r->reservoir_count; i++) s->level[i] = r->reservoirs[i].level;
 }
 WsError ws_join(WsState* s, uint32_t id) {
     if (s->player_count > WS_PLAYER_CAP) return WS_BOUNDS;
@@ -55,12 +57,25 @@ WsError ws_state_validate(const WsState* s, const WsRecipe* r) {
             if (v->trust < -1000 || v->trust > 1000 || v->reliability < -1000 || v->reliability > 1000 || v->cooperation < -1000 || v->cooperation > 1000 || v->aggression < -1000 || v->aggression > 1000 || v->confidence > 1000 || v->promise > 1) return WS_BOUNDS;
         }
     for (int i = 0; i < s->feed_count; i++)
-        if (s->feed[i].target >= s->count || s->feed[i].kind > WS_NEWS_RESERVED || s->feed[i].revision > s->revision) return WS_BOUNDS;
-    for (int i = 0; i < s->tail_count; i++)
-        if (s->tail[i].target >= s->count || s->tail[i].action < WS_EXTRACT || s->tail[i].action > WS_KEEP_PROMISE) return WS_BOUNDS;
+        if (s->feed[i].target >= (s->count > s->reservoir_count ? s->count : s->reservoir_count) || s->feed[i].kind > WS_NEWS_RESERVED || s->feed[i].revision > s->revision) return WS_BOUNDS;
+    for (int i = 0; i < s->tail_count; i++) {
+        const WsOperation* o = &s->tail[i];
+        if (o->action < WS_EXTRACT || o->action > WS_SPEND) return WS_BOUNDS;
+        if (o->action >= WS_EXCAVATE ? o->target >= s->reservoir_count : o->target >= s->count) return WS_BOUNDS;
+    }
+    /* Regional resource state: levels bounded and the ledger identity exact
+       (site records are voids, not stocks, so they stay out of the sum). */
+    if (s->reservoir_count > WS_RESERVOIR_CAP || s->site_count > WS_SITE_CAP) return WS_BOUNDS;
+    if (s->reservoir_count != r->reservoir_count || (s->reservoir_count && !ws_ledger_check(s, r))) return WS_BOUNDS;
+    for (int i = 0; i < s->site_count; i++) {
+        const WsSite* site = &s->sites[i];
+        if (site->reservoir >= s->reservoir_count || site->kind > WS_SITE_EXCAVATION || site->reserved || !site->amount || site->amount > site->extent) return WS_BOUNDS;
+        const WsReservoir* v = &r->reservoirs[site->reservoir];
+        if (site->pos.x < v->lo.x || site->pos.x > v->hi.x || site->pos.z < v->lo.z || site->pos.z > v->hi.z) return WS_BOUNDS;
+    }
     return WS_OK;
 }
-static void record(WsState* s, WsContext c, WsOperation op, uint16_t kind) {
+void ws_record(WsState* s, WsContext c, WsOperation op, uint16_t kind) {
     if (s->tail_count == WS_TAIL_CAP) {
         memmove(s->tail, s->tail + 1, sizeof(*s->tail) * (WS_TAIL_CAP - 1));
         s->tail_count--;
@@ -85,7 +100,11 @@ WsDisposition ws_apply(WsState* s, const WsRecipe* r, WsContext c, WsOperation o
         return d;
     }
     int pi = player(s, c.player);
-    if (pi < 0 || op.target >= s->count) return d;
+    if (pi < 0) return d;
+    /* Resource ops address reservoirs, not entities, and carry their own
+       authority, locality and replay rules (resource.c). */
+    if (op.action >= WS_EXCAVATE) return ws_resource_apply(s, r, c, op, pi);
+    if (op.target >= s->count) return d;
     WsPlayer* p = &s->players[pi];
     WsEntity* e = &s->entities[op.target];
     const WsModule* m = &r->modules[op.target];
@@ -174,7 +193,7 @@ WsDisposition ws_apply(WsState* s, const WsRecipe* r, WsContext c, WsOperation o
     d.status = WS_OK;
     d.world_changed = 1;
     d.revision = s->revision;
-    record(s, c, op, op.action == WS_TRANSFER ? WS_TRADE : WS_WORLD_EVENT);
+    ws_record(s, c, op, op.action == WS_TRANSFER ? WS_TRADE : WS_WORLD_EVENT);
     return d;
 }
 WsDisposition ws_merge(WsState* s, const WsState* base, const WsRecipe* r, WsContext c, WsOperation op) {
@@ -216,6 +235,6 @@ WsDisposition ws_merge(WsState* s, const WsState* base, const WsRecipe* r, WsCon
     if (d.world_changed) e->revision = s->revision;
     d.status = WS_OK;
     d.revision = s->revision;
-    record(s, c, op, WS_DISCOVERY);
+    ws_record(s, c, op, WS_DISCOVERY);
     return d;
 }

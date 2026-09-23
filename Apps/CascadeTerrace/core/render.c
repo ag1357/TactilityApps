@@ -10,6 +10,9 @@ typedef struct {
     int16_t bone;
 } MeshPart;
 #include "kyra.inc"
+/* Optional live world state for staged river rendering (see render.h). */
+static const WsState *world_state_binding;
+void render_bind_state(const WsState *s) { world_state_binding = s; }
 int render_load_assets(const char* path) {
     FILE* f = fopen(path, "rb");
     if (!f) return 0;
@@ -335,8 +338,10 @@ void render_world(Renderer *r,const WsRecipe *world,WsAddress player,int yaw,WsM
     /* Sparse river features: a cheap local water strip, reconstructed only
        for the t window that can reach the view (exactly what a chunk
        renderer samples), tapered by each sample's width class so lake
-       reaches widen visibly; underground reaches render nothing. No fluid
-       simulation. */
+       reaches widen visibly; underground reaches render nothing. When a
+       live state is bound the strip runs through ws_river_stage, so
+       regional drawdown narrows and finally dries reaches visibly. No
+       fluid simulation. */
     if(player.scope==UINT16_MAX) for(uint16_t f=0;f<world->feature_count;f++) {
         if(world->features[f].kind!=WS_FEATURE_RIVER)continue;
         WsPos lo={player.pos.x-300000,0,player.pos.z-300000},hi={player.pos.x+300000,0,player.pos.z+300000};
@@ -345,7 +350,7 @@ void render_world(Renderer *r,const WsRecipe *world,WsAddress player,int yaw,WsM
         WsRiverSample prev;int have=0;
         for(uint32_t t=t0;t<=t1;t+=2048) {
             WsRiverSample s;
-            if(!ws_river_sample(world,f,(uint16_t)t,&s)||!s.surfaced){have=0;continue;}
+            if(!ws_river_stage(world,world_state_binding,f,(uint16_t)t,&s)||!s.surfaced){have=0;continue;}
             if(have) {
                 float px=-(float)(s.pos.z-prev.pos.z),pz=(float)(s.pos.x-prev.pos.x),d=sqrtf(px*px+pz*pz);
                 if(d>.5f) {

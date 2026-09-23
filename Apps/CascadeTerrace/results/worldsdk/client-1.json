@@ -1,13 +1,13 @@
 {
   "frames": 120,
-  "player": 102,
+  "player": 101,
   "peers_seen": [
-    101
+    102
   ],
-  "mean_render_ms": 0.9390465166916329,
-  "wire_sent": 4001,
-  "wire_received": 47046,
-  "public_hash": "d50c4190f2ec52c044821459fd1e5de667ab87060cec42e1c61b325df0b1b5d8",
+  "mean_render_ms": 0.9355953000673859,
+  "wire_sent": 4020,
+  "wire_received": 47198,
+  "public_hash": "5d73ccbd5115e87a308c7a7b6e10c6471db486bd70df3dad71c518c956af5b8d",
   "actions": [
     {
       "action": "EXTRACT",

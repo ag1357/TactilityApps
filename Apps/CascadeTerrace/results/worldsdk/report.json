@@ -25,7 +25,12 @@
   "sparse_world_scale_features": "IMPLEMENTED",
   "macro_geography_hierarchy": "IMPLEMENTED",
   "derived_wilderness_route": "IMPLEMENTED",
-  "terrain_aware_travel_cost": "IMPLEMENTED"
+  "terrain_aware_travel_cost": "IMPLEMENTED",
+  "regional_reservoirs_schema_3": "IMPLEMENTED",
+  "extraction_and_persistent_sites": "IMPLEMENTED",
+  "bounded_lossy_material_phos_conversion": "IMPLEMENTED",
+  "water_drawdown_visibility": "IMPLEMENTED",
+  "rate_based_recovery_and_ledger": "IMPLEMENTED"
  },
  "legacy": {
   "checks": 864,
@@ -44,9 +49,9 @@
  "generation": {
   "status": "PASS",
   "worlds": 3000,
-  "rejected_malformed_products": 7011,
-  "elapsed_ms": 3276.345,
-  "workspace_bytes": 11016,
+  "rejected_malformed_products": 7280,
+  "elapsed_ms": 3405.439,
+  "workspace_bytes": 11500,
   "module_bytes": 64,
   "limitations": [
    "Route costs are topology- and terrain-aware, but movement remains link-based: no continuous off-trail terrain traversal.",
@@ -72,7 +77,7 @@
    "D",
    "E"
   ],
-  "state_bytes": 9280,
+  "state_bytes": 10144,
   "wire_bytes": 1864
  },
  "rendered_clients": {
@@ -99,24 +104,24 @@
   ]
  },
  "memory": {
-  "recipe_workspace_bytes": 11016,
-  "semantic_state_bytes": 9280,
+  "recipe_workspace_bytes": 11500,
+  "semantic_state_bytes": 10144,
   "renderer_bytes": 153636,
   "legacy_game_bytes": 35320,
   "save_buffer_bytes": 12000,
-  "save_restore_staging_bytes": 9280,
+  "save_restore_staging_bytes": 10144,
   "P4_internal_vs_PSRAM_split": "UNMEASURED",
   "P4_stack_high_water": "UNMEASURED"
  },
  "p4": {
   "status": "P4 BUILD PRODUCED; PENDING PHYSICAL VALIDATION",
-  "binary_bytes": 185248,
+  "binary_bytes": 185752,
   "package_bytes": 204800,
-  "elf_sha256": "3b2ca4676189b7d8ef0ebcb8645f586c4137ae5c02347ec5b34c402a944180af",
-  "package_sha256": "16084bd14045322a3e3506a0958bb71376c3f1ea96d4dcfbd44d6b3b69265099",
+  "elf_sha256": "df4fce5cdc5337716d695eaee7b747bc2e1180f6b566ee0bdb0e54771b9e8394",
+  "package_sha256": "994f74a0a216818905c280ef4ba83d8258162d6d9fd9dde64426bf353e57e508",
   "format": "Tactility manifest v0.3 / USTAR / esp32p4 external ELF",
-  "compressed_elf_bytes": 127763,
-  "compressed_elf_sha256": "0fa0e342bce4f07c5ccb18f0c14d13cdff98f22730a0f7ce3e0b36e9d6d6826d",
+  "compressed_elf_bytes": 128527,
+  "compressed_elf_sha256": "38f5b4de41e982fedda7998b62cb7610f61fb42026c45d88ab269a77726cf0f8",
   "starting_commit": "f216216d4b2f407a7684dcfb455833b116a7de1b",
   "idf_commit": "f21b4c238152dc9e3a24fbad9afe33a3d15f6cfd",
   "idf_version": "6.1-dev",
@@ -128,20 +133,50 @@
    ".rela.dyn": 5304,
    ".rela.plt": 984,
    ".plt": 1344,
-   ".text": 55670,
+   ".text": 57014,
    ".rodata": 112640,
    ".data.rel.ro": 3176,
    ".got": 16,
    ".got.plt": 336,
    ".data": 644,
-   ".bss": 134744
+   ".bss": 135224
+  },
+  "source_files_sha256": {
+   "content/cascade_adapter.c": "55bab7252323d76b6ae77c76855a1d8a1627353e8b0f3316104a44d2cae95a10",
+   "content/cascade_adapter.h": "51913c8f282eba488f563c093889fbaf7814100d2323e09e8bafd4c533113695",
+   "content/worlds/cascade.inc": "e8189d33727c932b790f1530aa581da40c99e43e775503a54dc35a5ca515a20b",
+   "core/decision.c": "100c23aeddaf149f5c3d6696b480987c0654fa76f93f171c2a43b44529be40eb",
+   "core/dialogue.c": "be64bfa735d91fbe1d4ff98461dbce9d83cc26041b0b5daf9feb3a020243b6c6",
+   "core/font.inc": "fdc7d51b50adf1ba7fdc8494fd426b383340e82e8904ae351d0ffabf6f6ec03b",
+   "core/game.h": "c887e3dcda341dfafaa23d6e2a0e4ad843c5ac0c5d2c7e7716d3d92efbc498cc",
+   "core/general_dialogue.c": "527e8cb4131bcf128410279fdbdcfda3911a4627669c830e60cd129defa6be68",
+   "core/kyra.inc": "1a2f92c137b283073a393a2885d07550992b1d0f0bffcde075ce442328e92f81",
+   "core/persistence.c": "f5460bb356eb8290edf5004676c5f8a49d600cad7cb2d331af585cc5de36ae5f",
+   "core/render.c": "e86fdeac9fbb04ed31ad94feacbdcc5da5404cf725774ed1300ae5fb269e73dc",
+   "core/render.h": "cf8bfedcf273e6dbf0d3206b82071e904ce96317b29db7b08ddea492c78545c3",
+   "core/semantic.c": "b0f8e0d07efafc6f14293ed7d33cbc03ab14df57e98df3b84ceacc3528423ba0",
+   "core/semantic.h": "93450b8a09b58988f327036e284d877e524520acd76f0aa9a383f9cbce6cad16",
+   "core/state.c": "c7c1ee5f6cba3d7bbe87231b445507377805c1f870591aa6dfa5e81c363355fb",
+   "core/trig.inc": "c144b91f7ae52ab28e9a682f83ee1bfe39d0f88c5e75495d8646a4cfe4caa3d3",
+   "core/world.c": "d20515505824a8d86ba3b8088059be288bf7a8cc5b6b571409bb9c5078e63133",
+   "main/CMakeLists.txt": "04fa28b3033616091bf3b15840041321b52673743723d0c61b5cd9a32b7db29d",
+   "main/main.c": "b8c5ba3ce86665d65523b2bdb2f7a4080c5d7b13739856e9b54dc66a2f4ece9a",
+   "world/geometry.c": "928b57cbdc472177347d793d64bb7348c30389cd720094ab31fa93084649d02a",
+   "world/persistence.c": "6f94e20f2f2d5a656d8dbf37322593489c06af38052de63fae34853102dc418f",
+   "world/recipe.c": "f927b731d7418d41f42b9f243f71440549812ea45b6f556d5b6179f9a9859f94",
+   "world/resource.c": "057b52153f5b73f9df243e933c31d70e78cb70df398f7fe373b366da2c7e6047",
+   "world/schema.c": "cffd7b411aafd1cc27b72659bb2e4f7b8570ae3148d33b6084f94c5aaa75549e",
+   "world/sdk.h": "ddbf648fce235c1bf4354edd21a1395577e5277e797c59c54b67ec40961a29c8",
+   "world/state.c": "8a1d9a6cf4b1055d8c4e27ef570ab182fcab545bf03f681596ffb6c5e8598c25",
+   "world/state.h": "41e262afc38f6627b851931df92018de9e64bbe15eec90d0c37987cb799b854f",
+   "world/traversal.c": "0c68316209940c3d1a511ea6ba336410aff9e25334687512332d3bb1d2a745c6"
   },
   "physical_status": "PHYSICAL_VALIDATION_PENDING",
   "q1": "INCOMPLETE",
   "q2": "PHYSICAL_VALIDATION_PENDING",
-  "warning": "SDK LVGL lv_conf.h pragma note; no compilation error. Physical loader/runtime not measured. Rebuilt with ESP-IDF 6.1 + TactilitySDK 0.8.0-dev (Tactility now requires IDF 6); app-side rename memory_print_stats->memory_log_stats for the new SDK API."
+  "warning": "SDK LVGL lv_conf.h pragma note; no compilation error. Physical loader/runtime not measured. ESP-IDF 6.1 + TactilitySDK 0.8.0-dev; Gate 3 adds world/resource.c to the P4 component."
  },
- "recommendation": "Second implementation gate passed: the \u00a749 macro-geography hierarchy is generated from one seed as a 1,600-byte schema-2 product; the derived wilderness route walks end to end; river reconstruction is bit-exact between C and Python with exact chunk-boundary continuity; and the route-cost case holds (nearest settlement is not the cheapest destination). First gate remains green (18/18 traversal, 15/15 adversarial). Next gate is resource/ecology on top of this terrain, reusing the schema-2 feature vocabulary. Physical P4 qualification and native P4 transport remain pending.",
+ "recommendation": "Third implementation gate passed: regional resources and ecology. Four geography-derived reservoirs ride the macro product as schema 3; extraction writes sparse persistent sites (intentional excavations never heal, pits heal from the recovering stock); material converts to Geo-phos bounded and lossy; water drawdown visibly narrows and dries the lake/wetland river records through ws_river_stage with no fluid simulation, and deterministic rainfall recovers the level; the conservation ledger identity holds across every operation, tick, chunk boundary and compaction. Earlier gates remain green (18/18 traversal, 15/15 adversarial, macro geography with route-cost case). Next gate is creature placement and schedules as sparse deterministic records, then the nonlocal Phos edge. Physical P4 qualification and native P4 transport remain pending.",
  "adversarial": {
   "status": "PASS",
   "passed": 15,
@@ -163,9 +198,9 @@
   "status": "PASS",
   "seed": 10227025,
   "generator": "tools/worldsdk/macro.py",
-  "product_bytes": 1600,
-  "product_sha256": "8dec8e61670fddcd0e930739c48c4be0a408e7afe3620542029b1676e66f53b6",
-  "schema": 2,
+  "product_bytes": 1858,
+  "product_sha256": "c5278ef7d15fcae8840d614dd01130904e8867a6aa142f7c818aa52d6d750181",
+  "schema": 3,
   "modules": 21,
   "links": 11,
   "features": [
@@ -193,17 +228,17 @@
   "generalized_seeds": [
    {
     "seed": 1,
-    "bytes": 1600,
+    "bytes": 1858,
     "variants_tried": 1
    },
    {
     "seed": 3735928559,
-    "bytes": 1600,
+    "bytes": 1858,
     "variants_tried": 1
    },
    {
     "seed": 20260922,
-    "bytes": 1600,
+    "bytes": 1858,
     "variants_tried": 1
    }
   ],
@@ -238,6 +273,115 @@
    "content/worlds/macro.json",
    "content/worlds/macro.inc",
    "build/macro.cws"
+  ],
+  "reservoirs": [
+   {
+    "name": "massif_spoil",
+    "kind": "terrain",
+    "zone": 2,
+    "capacity": 400000,
+    "level": 400000,
+    "rate": 2500
+   },
+   {
+    "name": "lake_country",
+    "kind": "water",
+    "zone": 1,
+    "capacity": 300000,
+    "level": 300000,
+    "rate": 12000
+   },
+   {
+    "name": "forest_biomass",
+    "kind": "biomass",
+    "zone": 1,
+    "capacity": 200000,
+    "level": 200000,
+    "rate": 15000
+   },
+   {
+    "name": "karst_phos",
+    "kind": "phos",
+    "zone": 3,
+    "capacity": 160000,
+    "level": 160000,
+    "rate": 8000
+   }
+  ]
+ },
+ "resource_ecology": {
+  "status": "PASS",
+  "seed": 10227025,
+  "product_bytes": 1858,
+  "reservoir_count": 4,
+  "reservoirs": [
+   {
+    "name": "massif_spoil",
+    "kind": "terrain",
+    "zone": 2,
+    "capacity": 400000,
+    "level": 400000,
+    "rate": 2500,
+    "derived_from": "mountain box union the cave carved into its foot"
+   },
+   {
+    "name": "lake_country",
+    "kind": "water",
+    "zone": 1,
+    "capacity": 300000,
+    "level": 300000,
+    "rate": 12000,
+    "derived_from": "lake-reach river strip union the wetland habitat"
+   },
+   {
+    "name": "forest_biomass",
+    "kind": "biomass",
+    "zone": 1,
+    "capacity": 200000,
+    "level": 200000,
+    "rate": 15000,
+    "derived_from": "forest vista region"
+   },
+   {
+    "name": "karst_phos",
+    "kind": "phos",
+    "zone": 3,
+    "capacity": 160000,
+    "level": 160000,
+    "rate": 8000,
+    "derived_from": "karst ridge over the underground reach"
+   }
+  ],
+  "actions": {
+   "EXCAVATE": "kind-aware regional draw; terrain/biomass to material, phos to shards, water consumed; aux selects persistent excavation vs healing pit",
+   "CONVERT": "3 material -> 1 shard, 2 shards -> 1 material; remainders lost; no duplication",
+   "SPEND": "consume carried shards"
+  },
+  "sites": {
+   "WS_SITE_EXCAVATION": "intentional topology; never heals",
+   "WS_SITE_PIT": "recoverable disturbance; heals from the recovering stock and compacts away"
+  },
+  "recovery": "rate x weather(clear/rain/storm from seed+day) x zone class; biomass coupled to the paired overlapping Phos stock; capacity-capped inflow; pit healing in creation order",
+  "ledger": "sum(levels) + carried material + shards + used + lost == sum(initial levels) + recovered; enforced by ws_state_validate after every operation and tick",
+  "wire": "conditional version-2 resource section; schema-1 states keep the published byte layout; truncation rejected",
+  "stage": "width/depth scale with level; lake/wetland reaches dry below a quarter (marsh) and at zero (dry bed); plain reaches keep their strip; NULL state reports declared geometry",
+  "c_checks": 322,
+  "python_checks": 1114,
+  "coupled_biomass_level": {
+   "phos_full": 100000,
+   "phos_drained": 80000
+  },
+  "generalized_seeds": [
+   1,
+   3735928559,
+   20260922
+  ],
+  "artifacts": [
+   "content/worlds/macro.json",
+   "content/worlds/macro.inc",
+   "build/macro.cws",
+   "results/worldsdk/resource.json",
+   "results/worldsdk/resource-test.json"
   ]
  }
 }

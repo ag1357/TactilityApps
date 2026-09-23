@@ -63,7 +63,7 @@ static int cross_room(const WsModule* room, WsPos other, WsCross* out) {
         int32_t base = x_plane ? cx : cz;
         int32_t plane = w == WS_WALL_EAST ? cx + hx - 150 : w == WS_WALL_WEST ? cx - hx + 150
                                                                                : w == WS_WALL_SOUTH ? cz + hz - 150 : cz - hz + 150;
-        int64_t t = idiv((int64_t)(plane - base) << 16, den);
+        int64_t t = idiv((int64_t)(plane - base) * 65536, den);
         if (t <= 0 || t >= 65536) continue;
         int64_t delta = x_plane ? (int64_t)other.z - cz : (int64_t)other.x - cx;
         int64_t rel = idiv(delta * t, 65536);
@@ -304,8 +304,8 @@ static int route_blocked(WsPos a, WsPos b, const WsModule* t) {
         if (!d[i]) {
             if (p[i] <= lo_b[i] || p[i] >= hi_b[i]) return 0;
         } else {
-            int64_t tl = idiv((lo_b[i] - p[i]) << 16, d[i]);
-            int64_t th = idiv((hi_b[i] - p[i]) << 16, d[i]);
+            int64_t tl = idiv((lo_b[i] - p[i]) * 65536, d[i]);
+            int64_t th = idiv((hi_b[i] - p[i]) * 65536, d[i]);
             if (tl > th) {
                 int64_t s = tl;
                 tl = th;

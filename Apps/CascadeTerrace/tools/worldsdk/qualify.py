@@ -66,6 +66,20 @@ class Exc(C.Structure):
     ]
 
 
+class Reservoir(C.Structure):
+    _fields_ = [
+        ("id", Id),
+        ("kind", C.c_uint16),
+        ("zone", C.c_uint16),
+        ("lo", Pos),
+        ("hi", Pos),
+        ("capacity", C.c_uint32),
+        ("level", C.c_uint32),
+        ("rate", C.c_uint32),
+        ("reserved", C.c_uint32),
+    ]
+
+
 class Recipe(C.Structure):
     _fields_ = [
         ("ancestry", Id),
@@ -77,10 +91,12 @@ class Recipe(C.Structure):
         ("links_n", C.c_uint16),
         ("features_n", C.c_uint16),
         ("exceptions_n", C.c_uint16),
+        ("reservoirs_n", C.c_uint16),
         ("modules", Module * 128),
         ("links", Link * 256),
         ("features", Feature * 8),
         ("exceptions", Exc * 24),
+        ("reservoirs", Reservoir * 8),
     ]
 
 
@@ -134,8 +150,10 @@ def main():
             bad += 1
         # Attacker recomputes CRC: semantic validation must still reject
         # invalid fields. Offsets are relative to the module table, which
-        # starts at 48 (schema 1) or 52 (schema 2, sparse features).
-        table = 52 if struct.unpack_from("<H", data, 4)[0] == 2 else 48
+        # starts at 48 (schema 1), 52 (schema 2, sparse features) or 54
+        # (schema 3, reservoirs).
+        schema = struct.unpack_from("<H", data, 4)[0]
+        table = {1: 48, 2: 52, 3: 54}[schema]
         for offset, value in (
             (table + 16, 0),
             (table + 18, 255),
@@ -145,6 +163,29 @@ def main():
         ):
             b = bytearray(data)
             struct.pack_into("<H", b, offset, value)
+            struct.pack_into("<I", b, 12, zlib.crc32(b[16:]))
+            assert lib.ws_load(C.byref(r), bytes(b), len(b)) != 0
+            bad += 1
+        # Reservoir records are validated fail-closed too: bad kind, zone,
+        # degenerate region, empty capacity and overfull level all reject
+        # even with a recomputed CRC. The reservoir table follows the
+        # feature and exception tables in schema 3.
+        if schema == 3 and src.get("reservoirs"):
+            rtable = table + 64 * len(src["modules"]) + 8 * len(src["links"]) + 56 * len(src.get("features", [])) + 12 * sum(len(f.get("exceptions", [])) for f in src.get("features", []))
+            for offset, value, pack in (
+                (rtable + 16, 5, "<H"),  # unknown kind
+                (rtable + 18, 4, "<H"),  # zone class out of range
+                (rtable + 44, 0, "<I"),  # zero capacity
+                (rtable + 48, 400001, "<I"),  # level beyond capacity (max 400000)
+            ):
+                b = bytearray(data)
+                struct.pack_into(pack, b, offset, value)
+                struct.pack_into("<I", b, 12, zlib.crc32(b[16:]))
+                assert lib.ws_load(C.byref(r), bytes(b), len(b)) != 0
+                bad += 1
+            b = bytearray(data)
+            hi_x = struct.unpack_from("<i", b, rtable + 32)[0]
+            struct.pack_into("<i", b, rtable + 20, hi_x)  # lo.x == hi.x
             struct.pack_into("<I", b, 12, zlib.crc32(b[16:]))
             assert lib.ws_load(C.byref(r), bytes(b), len(b)) != 0
             bad += 1
@@ -164,6 +205,32 @@ def main():
                 bad += 1
             else:
                 raise AssertionError(mutation)
+        # Source-level reservoir rejections: the compiler mirrors the C
+        # fail-closed rules instead of emitting bad products.
+        if src.get("reservoirs"):
+            for mutation in ("kind", "zone", "region", "capacity", "rate", "overlap"):
+                s = copy.deepcopy(src)
+                if mutation == "kind":
+                    s["reservoirs"][0]["kind"] = "aether"
+                elif mutation == "zone":
+                    s["reservoirs"][0]["zone"] = 4
+                elif mutation == "region":
+                    s["reservoirs"][0]["lo"][0] = s["reservoirs"][0]["hi"][0] + 1
+                elif mutation == "capacity":
+                    s["reservoirs"][0]["level"] = s["reservoirs"][0]["capacity"] + 1
+                elif mutation == "rate":
+                    s["reservoirs"][0]["rate"] = 0
+                else:
+                    # Clone the first reservoir onto its own region: same-kind
+                    # overlap is ambiguous for stage lookup and must reject.
+                    first = s["reservoirs"][0]
+                    s["reservoirs"].append({**first, "name": "overlap_probe", "key": first["key"] + 999})
+                try:
+                    compile_recipe(s)
+                except ValueError:
+                    bad += 1
+                else:
+                    raise AssertionError(mutation)
     result = {
         "status": "PASS",
         "worlds": worlds,

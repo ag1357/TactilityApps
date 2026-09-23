@@ -1,0 +1,37 @@
+{
+  "stage": "resource-ecology",
+  "checks": 1114,
+  "coupled_biomass_level": {
+    "phos_full": 100000,
+    "phos_drained": 80000
+  },
+  "generalized_seeds": [
+    {
+      "seed": 1,
+      "level": [
+        400000,
+        300000,
+        200000,
+        160000
+      ]
+    },
+    {
+      "seed": 3735928559,
+      "level": [
+        400000,
+        300000,
+        200000,
+        160000
+      ]
+    },
+    {
+      "seed": 20260922,
+      "level": [
+        400000,
+        300000,
+        200000,
+        160000
+      ]
+    }
+  ]
+}

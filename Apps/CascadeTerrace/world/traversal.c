@@ -35,7 +35,7 @@ static int64_t exit_scale(const WsModule* m, int64_t dx, int64_t dz) {
     int64_t d[2] = {dx, dz}, h[2] = {m->size.x / 2, m->size.z / 2};
     for (int i = 0; i < 2; i++) {
         if (!d[i]) continue;
-        int64_t ti = idiv((d[i] > 0 ? h[i] : -h[i]) << 16, d[i]);
+        int64_t ti = idiv((d[i] > 0 ? h[i] : -h[i]) * 65536, d[i]);
         if (ti < t) t = ti;
     }
     return t < 0 ? 0 : t;
@@ -48,7 +48,7 @@ static int64_t entry_scale(const WsModule* m, int64_t dx, int64_t dz) {
     int64_t d[2] = {dx, dz}, h[2] = {m->size.x / 2, m->size.z / 2};
     for (int i = 0; i < 2; i++) {
         if (!d[i]) continue;
-        int64_t ti = idiv((d[i] > 0 ? (d[i] - h[i]) : (d[i] + h[i])) << 16, d[i]);
+        int64_t ti = idiv((d[i] > 0 ? (d[i] - h[i]) : (d[i] + h[i])) * 65536, d[i]);
         if (ti > t) t = ti;
     }
     return t > 65536 ? 65536 : t;
@@ -93,7 +93,7 @@ int ws_ground(const WsRecipe* r, WsAddress at, int32_t ceiling, int32_t* height)
             int32_t xb = a.pos.x + (int32_t)(dx * tb_raw / 65536), zb = a.pos.z + (int32_t)(dz * tb_raw / 65536);
             int32_t ya = surface_at(&a, xa, za), yb = surface_at(&b, xb, zb);
             int64_t ta = ta_raw + skirt, tb = tb_raw - skirt;
-            int64_t ts = idiv(t << 16, den);
+            int64_t ts = idiv(t * 65536, den);
             int64_t f;
             if (tb > ta) {
                 f = idiv((ts - ta) * 65536, tb - ta);

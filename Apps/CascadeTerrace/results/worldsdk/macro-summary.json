@@ -2,15 +2,49 @@
   "ok": true,
   "seed": 10227025,
   "variants_tried": 1,
-  "product_sha256": "8dec8e61670fddcd0e930739c48c4be0a408e7afe3620542029b1676e66f53b6",
-  "bytes": 1600,
-  "schema": 2,
+  "product_sha256": "c5278ef7d15fcae8840d614dd01130904e8867a6aa142f7c818aa52d6d750181",
+  "bytes": 1858,
+  "schema": 3,
   "modules": 21,
   "links": 11,
   "features": [
     "river_cascade"
   ],
   "exceptions": 5,
+  "reservoirs": [
+    {
+      "name": "massif_spoil",
+      "kind": "terrain",
+      "zone": 2,
+      "capacity": 400000,
+      "level": 400000,
+      "rate": 2500
+    },
+    {
+      "name": "lake_country",
+      "kind": "water",
+      "zone": 1,
+      "capacity": 300000,
+      "level": 300000,
+      "rate": 12000
+    },
+    {
+      "name": "forest_biomass",
+      "kind": "biomass",
+      "zone": 1,
+      "capacity": 200000,
+      "level": 200000,
+      "rate": 15000
+    },
+    {
+      "name": "karst_phos",
+      "kind": "phos",
+      "zone": 3,
+      "capacity": 160000,
+      "level": 160000,
+      "rate": 8000
+    }
+  ],
   "ford_t": 53000,
   "cost_case": {
     "nearest": "high_gate",

@@ -5,6 +5,7 @@ import argparse, hashlib, json, math, pathlib, struct, sys, zlib
 
 SCHEMA = GENERATOR = 1
 SCHEMA_FEATURES = 2
+SCHEMA_RESOURCES = 3
 TAGS = {
     "Surface.Walk": 1,
     "Collision.Solid": 2,
@@ -29,6 +30,8 @@ LEVELS = [
 FEATURE_KINDS = {"river": 1}
 FLOWS = {"calm": 0, "rapid": 1}
 EXCEPTIONS = {"waterfall": 1, "rapids": 2, "lake": 3, "dam": 4, "underground": 5}
+RESERVOIR_KINDS = {"terrain": 1, "water": 2, "biomass": 3, "phos": 4}
+WEATHER_MULT = ((1, 1, 1), (1, 2, 3), (1, 2, 1), (1, 1, 2))
 CAP_WALK, CAP_LIFT, CAP_PORTAL = 1, 2, 4
 
 
@@ -245,6 +248,28 @@ def feature_record(f):
     return rec
 
 
+def reservoir_record(v):
+    """Validate and convert one source reservoir into the runtime record:
+    a bounded regional stock with rate-based recovery parameters. The same
+    conversion backs the packing path and the ws_resources_tick mirror."""
+    if set(v) - {"name", "key", "kind", "zone", "lo", "hi", "capacity", "level", "rate"}:
+        raise ValueError("unknown reservoir field")
+    kind = RESERVOIR_KINDS.get(v.get("kind"))
+    if kind is None:
+        raise ValueError(f"unknown reservoir kind: {v.get('kind')}")
+    zone = bounded(v.get("zone", 0), 0, 3, "zone")
+    lo = [bounded(c, -1000000, 1000000, "lo") for c in v["lo"]]
+    hi = [bounded(c, -1000000, 1000000, "hi") for c in v["hi"]]
+    if len(lo) != 3 or len(hi) != 3:
+        raise ValueError("reservoir coordinate dimensions")
+    if any(a >= b for a, b in zip(lo, hi)):
+        raise ValueError("reservoir region must be non-degenerate on every axis")
+    capacity = bounded(v["capacity"], 1, 400000, "capacity")
+    level = bounded(v.get("level", capacity), 0, capacity, "level")
+    rate = bounded(v["rate"], 1, 65535, "rate")
+    return {"kind": kind, "zone": zone, "lo": lo, "hi": hi, "capacity": capacity, "level": level, "rate": rate}
+
+
 def river_lateral(rec, amplitude, k):
     """Mirror of ws_river_sample meander lateral offset."""
     if k <= 0 or k >= 8:
@@ -385,9 +410,101 @@ def river_crossings(rec, a, b):
     return crossings
 
 
+def weather(seed, day):
+    """Mirror of ws_weather: 0 clear, 1 rain, 2 storm. The state clock wraps
+    at 32 bits, so the day hash masks exactly like the C uint32 multiply."""
+    return h(seed ^ ((day * 0x9E3779B9 + 0x85EBCA6B) & 0xFFFFFFFF)) % 3
+
+
+def river_stage(rec, rrecs, state, t):
+    """Mirror of ws_river_stage: declared geometry, then the regional water
+    field. state is None or a dict with level[i]; returns the sample dict."""
+    sample = river_sample(rec, t)
+    if not rrecs or state is None:
+        return sample
+    for i, v in enumerate(rrecs):
+        if v["kind"] != RESERVOIR_KINDS["water"]:
+            continue
+        if not (v["lo"][0] <= sample["x"] <= v["hi"][0] and v["lo"][2] <= sample["z"] <= v["hi"][2]):
+            continue
+        lvl = min(state["level"][i], v["capacity"])
+        if not lvl:
+            sample["surfaced"] = 0
+            return sample
+        rho = lvl * 65536 // v["capacity"]
+        w = sample["width"] * rho // 65536
+        d = sample["depth"] * rho // 65536
+        sample["width"] = w or 1
+        sample["depth"] = d or 1
+        if rho < 16384:
+            for e in rec["exceptions"]:
+                if e["type"] == EXCEPTIONS["lake"] and e["at"] <= t <= e["at"] + e["length"]:
+                    sample["surfaced"] = 0
+                    break
+        return sample
+    return sample
+
+
+def resources_tick(state, recs, seed, delta_s):
+    """Mirror of ws_resources_tick over compiled reservoir records: rate-based
+    recovery scaled by weather and zone (biome/geology), biomass coupled to
+    the overlapping Phos stock, capacity-capped inflow, then pit healing in
+    creation order. Mutates state in place; sites are dicts."""
+    if not delta_s or not recs:
+        return
+    state["clock_s"] = (state["clock_s"] + delta_s) & 0xFFFFFFFF
+    day = state["clock_s"] // 86400
+    w = weather(seed, day)
+    for i, v in enumerate(recs):
+        if state["level"][i] >= v["capacity"]:
+            continue
+        mult = WEATHER_MULT[v["kind"] - 1][w] * (1 + v["zone"])
+        if v["kind"] == RESERVOIR_KINDS["biomass"]:
+            for j, o in enumerate(recs):
+                if o["kind"] != RESERVOIR_KINDS["phos"]:
+                    continue
+                if v["lo"][0] >= o["hi"][0] or o["lo"][0] >= v["hi"][0] or v["lo"][2] >= o["hi"][2] or o["lo"][2] >= v["hi"][2]:
+                    continue
+                mult *= 1 + state["level"][j] // o["capacity"]
+                break
+        inflow = v["rate"] * mult * delta_s // 86400
+        add = min(inflow, v["capacity"] - state["level"][i])
+        state["level"][i] += add
+        state["recovered"] += add
+    for i in range(len(recs)):
+        j = 0
+        while j < len(state["sites"]):
+            site = state["sites"][j]
+            if site["reservoir"] != i or site["kind"] != 0 or not site["amount"]:
+                j += 1
+                continue
+            heal = min(site["amount"], state["level"][i])
+            if not heal:
+                j += 1
+                continue
+            site["amount"] -= heal
+            state["level"][i] -= heal
+            state["lost"] += heal
+            if not site["amount"]:
+                del state["sites"][j]
+            else:
+                j += 1
+
+
+def ledger_check(state, recs):
+    """Mirror of ws_ledger_check: the conservation identity over regional
+    stocks, carried material and shards, used and lost units."""
+    n = len(recs)
+    lhs = sum(state["level"][:n]) + sum(state["material"][: state["player_count"]]) + sum(state["shards"][: state["player_count"]])
+    lhs += state["used"] + state["lost"]
+    rhs = sum(v["level"] for v in recs) + state["recovered"]
+    return lhs == rhs
+
+
 def runtime_view(src):
     """Resolve a source recipe into the runtime numbers C sees: materialized
-    module positions, index-resolved links, compiled feature records."""
+    module positions, index-resolved links, compiled feature and reservoir
+    records."""
     ids = {m["name"]: i for i, m in enumerate(src["modules"])}
     modules = [materialized(src, m) for m in src["modules"]]
     links = [
@@ -395,7 +512,12 @@ def runtime_view(src):
         for a, b, k in src.get("links", [])
     ]
     features = [feature_record(f) for f in src.get("features", [])]
-    return modules, links, features
+    reservoirs = []
+    for i, v in enumerate(src.get("reservoirs", [])):
+        rec = reservoir_record(v)
+        rec["id"] = child([bounded(a, 0, 0xFFFFFFFF, "ancestry") for a in src["ancestry"]], bounded(v.get("key", 200 + i), 1, 0xFFFFFFFF, "reservoir key"))
+        reservoirs.append(rec)
+    return modules, links, features, reservoirs
 
 
 def link_cost(modules, links, features, i, caps=CAP_WALK):
@@ -473,6 +595,7 @@ def compile_recipe(src):
         "modules",
         "links",
         "features",
+        "reservoirs",
     }:
         raise ValueError("unknown source field: SCHEMA_EXTENSION required")
     if src["schema"] != SCHEMA or src["generator"] != GENERATOR:
@@ -603,6 +726,56 @@ def compile_recipe(src):
     for rec in frecords:
         for e in rec["exceptions"]:
             ebody += struct.pack("<4HI", rec["index"], e["type"], e["at"], e["length"], e["aux"])
+    # Regional reservoirs (schema 3): stable identity from the ancestry,
+    # validated fail-closed, packed after the exception table. Same-kind
+    # overlap is rejected here exactly as ws_validate rejects it, because
+    # overlapping water regions would make stage lookup ambiguous.
+    rnames = set()
+    rrecords = []
+    for i, v in enumerate(src.get("reservoirs", [])):
+        name = v.get("name")
+        if not name or name in ids or name in fnames or name in rnames:
+            raise ValueError("duplicate or missing reservoir name")
+        rnames.add(name)
+        key = bounded(v.get("key", 200 + i), 1, 0xFFFFFFFF, "reservoir key")
+        ident = child(ancestry, key)
+        if tuple(ident) in handles:
+            raise ValueError("identity collision")
+        handles.add(tuple(ident))
+        rec = reservoir_record(v)
+        rec["id"] = ident
+        rec["index"] = len(rrecords)
+        rrecords.append(rec)
+    if len(rrecords) > 8:
+        raise ValueError("reservoir capacity exceeded")
+    for i, a in enumerate(rrecords):
+        for b in rrecords[:i]:
+            if a["kind"] != b["kind"]:
+                continue
+            if (
+                a["lo"][0] < b["hi"][0]
+                and b["lo"][0] < a["hi"][0]
+                and a["lo"][1] < b["hi"][1]
+                and b["lo"][1] < a["hi"][1]
+                and a["lo"][2] < b["hi"][2]
+                and b["lo"][2] < a["hi"][2]
+            ):
+                raise ValueError("same-kind reservoir regions overlap")
+    rbody = bytearray()
+    for rec in rrecords:
+        rbody += struct.pack(
+            "<4I2H6i5I",
+            *rec["id"],
+            rec["kind"],
+            rec["zone"],
+            *rec["lo"],
+            *rec["hi"],
+            rec["capacity"],
+            rec["level"],
+            rec["rate"],
+            0,
+            0,
+        )
     if graph:
         seen = set()
         todo = [next(iter(graph))]
@@ -641,8 +814,10 @@ def compile_recipe(src):
                 break
         if not doorway:
             raise ValueError("Entity.NPC sealed inside a room with no public access port")
-    schema = SCHEMA_FEATURES if frecords else SCHEMA
-    if frecords:
+    schema = SCHEMA_RESOURCES if rrecords else SCHEMA_FEATURES if frecords else SCHEMA
+    if rrecords:
+        counts = (len(modules), len(links), len(frecords), ecount, len(rrecords))
+    elif frecords:
         counts = (len(modules), len(links), len(frecords), ecount)
     else:
         counts = (len(modules), len(links))
@@ -659,6 +834,7 @@ def compile_recipe(src):
         + body
         + bytes(fbody)
         + bytes(ebody)
+        + bytes(rbody)
     )
     data = (
         struct.pack(
@@ -680,6 +856,7 @@ def compile_recipe(src):
         "links": len(links),
         "features": [f.get("name") for f in src.get("features", [])],
         "exceptions": ecount,
+        "reservoirs": [v.get("name") for v in src.get("reservoirs", [])],
         "source_sha256": hashlib.sha256(
             json.dumps(src, sort_keys=True, separators=(",", ":")).encode()
         ).hexdigest(),

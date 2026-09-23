@@ -74,6 +74,17 @@ class Operation(C.Structure):
     ]
 
 
+class Site(C.Structure):
+    _fields_ = [
+        ("pos", Pos),
+        ("reservoir", C.c_uint16),
+        ("kind", C.c_uint16),
+        ("extent", C.c_uint16),
+        ("reserved", C.c_uint16),
+        ("amount", C.c_uint32),
+    ]
+
+
 class State(C.Structure):
     _fields_ = [
         ("ancestry", Id),
@@ -83,11 +94,21 @@ class State(C.Structure):
         ("player_count", C.c_uint16),
         ("feed_count", C.c_uint16),
         ("tail_count", C.c_uint16),
+        ("reservoir_count", C.c_uint16),
+        ("site_count", C.c_uint16),
+        ("clock_s", C.c_uint32),
         ("entities", Entity * 128),
         ("players", Player * 8),
         ("relations", (Relationship * 8) * 8),
         ("feed", Feed * 16),
         ("tail", Operation * 16),
+        ("level", C.c_uint32 * 8),
+        ("material", C.c_uint16 * 8),
+        ("shards", C.c_uint16 * 8),
+        ("sites", Site * 32),
+        ("recovered_total", C.c_uint64),
+        ("used_total", C.c_uint64),
+        ("lost_total", C.c_uint64),
     ]
 
 
@@ -121,6 +142,9 @@ ACTIONS = {
     "KILL": 8,
     "PROMISE": 9,
     "KEEP_PROMISE": 10,
+    "EXCAVATE": 11,
+    "CONVERT": 12,
+    "SPEND": 13,
 }
 
 

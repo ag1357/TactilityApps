@@ -32,17 +32,17 @@
   "generalized_seeds": [
     {
       "seed": 1,
-      "bytes": 1600,
+      "bytes": 1858,
       "variants_tried": 1
     },
     {
       "seed": 3735928559,
-      "bytes": 1600,
+      "bytes": 1858,
       "variants_tried": 1
     },
     {
       "seed": 20260922,
-      "bytes": 1600,
+      "bytes": 1858,
       "variants_tried": 1
     }
   ]

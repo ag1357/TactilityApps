@@ -162,3 +162,62 @@ Schema-1 products remain byte-compatible with every published artifact; a
 product carries the feature section only when declared (schema 2).
 `qualify-world-sdk.sh` exits nonzero if any gate fails, including the macro
 gate.
+
+## Resource and ecology gate
+
+Regional stocks are product vocabulary (schema 3): each reservoir is a
+64-byte record (stable ID, kind, recovery zone class, bounded regional box,
+capacity, initial level, base per-day rate) validated fail-closed — kinds,
+zones, bounds, non-degenerate boxes, capacity/level/rate ranges, and
+same-kind overlap rejection, because two overlapping water regions would
+make stage lookup ambiguous. The four committed reservoirs are **derived
+from the generated geography**: the massif spoil region is the mountain box
+union the cave carved into its foot, the lake-country water field is the
+lake-reach strip union the wetland habitat, the forest biomass region holds
+the forest, and the Phos lode sits in the karst ridge over the underground
+reach.
+
+Reservoirs are bookkeeping, not simulation. `ws_river_stage` turns a river
+sample inside a water region into a drawdown-aware sample: width and depth
+scale with the level fraction (16.16), lake/wetland reaches dry to a marsh
+band below a quarter stock and to a dry bed at zero, plain reaches keep a
+narrower strip, and a NULL or empty state reports exactly the declared
+geometry. The renderer's river strip runs through the stage function when a
+live state is bound (`render_bind_state`); no fluid simulation, no grid, no
+per-voxel state.
+
+Extraction is kind-aware and regional: `WS_EXCAVATE` depletes the stock by
+the requested amount bounded by what is there (overdraw depletes to zero),
+terrain and biomass yield carried material, Phos yields shards, drawn water
+is consumed, and terrain/Phos excavations write sparse persistent sites —
+`WS_SITE_EXCAVATION` (intentional topology: foundations, cave entrances)
+never heals, `WS_SITE_PIT` (recoverable disturbance) heals out of the
+regional stock with the settled matter accounted as buried. `WS_CONVERT`
+refines 3 material to 1 Geo-phos shard and deposits 2 shards back to 1
+material, remainders lost — bounded, lossy, no duplication. `WS_SPEND`
+consumes shards. Resource ops bind to the global state revision (regional
+stocks are shared, so their history is strictly sequential), require the
+actor to stand inside the region unless server-authoritative, never merge
+offline, and carry epoch 1.
+
+Recovery is rate-based and deterministic: `ws_weather` is a pure function of
+(seed, day) over clear/rain/storm; inflow is base rate × weather × zone
+class, biomass additionally scaled by the paired overlapping Phos stock,
+capped by capacity (runoff never arrives), then pits heal in creation order
+and compact away. A conservation ledger identity —
+sum(levels) + carried material + shards + used + lost == sum(initial
+levels) + recovered — is checked by `ws_state_validate` after every
+operation and tick, and holds across chunk boundaries (stage lookup is a
+pure function of position), compaction and save/restore. The state wire
+format appends the resource section (reservoir levels, sites, clock, ledger
+totals) only for reservoir states, marked wire version 2; schema-1 states
+keep the published byte layout exactly.
+
+The gate (`resource_test.py` plus the C `resource_sdk_test`) proves the
+scenario with exact expected numbers on both sides of the C/Python mirror:
+excavation persistence against pit healing, the lossy conversion round trip,
+lake overdraw to a dry bed with marsh discrimination between lake and plain
+reaches, day-by-day rainfall recovery, Phos depletion/recharge with pit
+healing, biomass regrowth without scarring, fail-closed rejections, the wire
+round trip, and a coupled-source proof that biomass recovery tracks the
+regional Phos stock.

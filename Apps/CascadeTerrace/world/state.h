@@ -13,7 +13,13 @@ typedef enum { WS_EXTRACT = 1,
                WS_AID,
                WS_KILL,
                WS_PROMISE,
-               WS_KEEP_PROMISE } WsAction;
+               WS_KEEP_PROMISE,
+               /* Resource ops target reservoir indices, not entities. They
+                  bind to the global state revision, so regional stocks are
+                  strictly sequential, and never merge offline. */
+               WS_EXCAVATE,
+               WS_CONVERT,
+               WS_SPEND } WsAction;
 typedef enum { WS_BOUNTY,
                WS_TRADE,
                WS_PLAYER_NOTE,
@@ -44,15 +50,32 @@ typedef struct {
     uint32_t sequence, epoch, base_revision;
     uint16_t action, target, amount, aux;
 } WsOperation;
+/* Sparse persistent extraction sites. A PIT is recoverable disturbance: it
+   refills from the regional stock while the reservoir recovers. An
+   EXCAVATION is intentional topology (foundation, cave entrance) and never
+   heals. Sites are accounting records of voids, not matter stocks. */
+#define WS_SITE_CAP 32
+enum { WS_SITE_PIT = 0, WS_SITE_EXCAVATION = 1 };
+typedef struct {
+    WsPos pos;
+    uint16_t reservoir, kind, extent, reserved;
+    uint32_t amount;
+} WsSite;
 typedef struct {
     WsId ancestry;
     uint32_t recipe_crc, revision;
     uint16_t count, player_count, feed_count, tail_count;
+    uint16_t reservoir_count, site_count;
+    uint32_t clock_s;
     WsEntity entities[WS_CAP];
     WsPlayer players[WS_PLAYER_CAP];
     WsRelationship relations[WS_PLAYER_CAP][WS_PLAYER_CAP];
     WsFeed feed[WS_FEED_CAP];
     WsOperation tail[WS_TAIL_CAP];
+    uint32_t level[WS_RESERVOIR_CAP];
+    uint16_t material[WS_PLAYER_CAP], shards[WS_PLAYER_CAP];
+    WsSite sites[WS_SITE_CAP];
+    uint64_t recovered_total, used_total, lost_total;
 } WsState;
 typedef struct {
     uint32_t player;
@@ -67,6 +90,16 @@ typedef struct {
 void ws_state_init(WsState*, const WsRecipe*);
 WsError ws_join(WsState*, uint32_t);
 WsDisposition ws_apply(WsState*, const WsRecipe*, WsContext, WsOperation);
+/* Regional resource layer (resource.c): deterministic weather, rate-based
+   recovery with pit healing, kind-aware drawdown, bounded lossy material to
+   Phos conversion, and the ledger identity used by ws_state_validate. */
+void ws_resources_tick(WsState*, const WsRecipe*, uint32_t delta_s);
+int ws_ledger_check(const WsState*, const WsRecipe*);
+int ws_river_stage(const WsRecipe*, const WsState*, uint16_t feature, uint16_t t, WsRiverSample*);
+/* Routed from ws_apply for action >= WS_EXCAVATE; pi is the actor index. */
+WsDisposition ws_resource_apply(WsState*, const WsRecipe*, WsContext, WsOperation, int pi);
+/* Tail and feed recording shared by the entity and resource op paths. */
+void ws_record(WsState*, WsContext, WsOperation, uint16_t kind);
 /* base must be a server-retained authenticated branch checkpoint, never a
    client-supplied assertion. Routine merge is deterministic, not AI-mediated. */
 WsDisposition ws_merge(WsState*, const WsState*, const WsRecipe*, WsContext, WsOperation);

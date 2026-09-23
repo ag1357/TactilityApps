@@ -247,6 +247,34 @@ def generate(seed=SHOWCASE, variant=0):
         ["trail_w1", "ford_haven", "walk"],
         ["ruin", "trail_e2", "walk"],
     ]
+    # --- regional reservoirs, DERIVED from the same geography (mission
+    # resource rules): massif spoil (the mountain union the cave carved
+    # into its foot), the lake country water field (the lake reach strip
+    # union the wetland habitat), forest biomass, and the karst Phos lode.
+    # Rates are base recovery per in-game day; every stock starts full so
+    # the committed condition is the declared geography. ---
+    def solid_box(m):
+        p, s = m["position"], m["size"]
+        return [p[0] - s[0] // 2, p[1] - s[1], p[2] - s[2] // 2], [p[0] + s[0] // 2, p[1], p[2] + s[2] // 2]
+
+    def union(a, b):
+        return [min(x, y) for x, y in zip(a[0], b[0])], [max(x, y) for x, y in zip(a[1], b[1])]
+
+    mlo, mhi = union(solid_box(mountain), solid_box(cave))
+    klo, khi = solid_box(karst)
+    f = forest["position"]
+    flo, fhi = [f[0] - 150000, f[1] - 200, f[2] - 130000], [f[0] + 150000, f[1] + 200, f[2] + 130000]
+    lake_t0, lake_t1 = int(0.50 * 65535), int(0.50 * 65535) + int(0.11 * 65535)
+    lats = [river_sample(rec, t) for t in range(lake_t0, lake_t1 + 1, 512)]
+    llo = [min(s["x"] for s in lats) - 30000, min(s["y"] for s in lats) - 2000, min(s["z"] for s in lats) - 30000]
+    lhi = [max(s["x"] for s in lats) + 30000, max(s["y"] for s in lats) + 40000, max(s["z"] for s in lats) + 30000]
+    llo, lhi = union((llo, lhi), solid_box(wetland))
+    reservoirs = [
+        {"name": "massif_spoil", "key": 201, "kind": "terrain", "zone": 2, "lo": mlo, "hi": mhi, "capacity": 400000, "level": 400000, "rate": 2500},
+        {"name": "lake_country", "key": 202, "kind": "water", "zone": 1, "lo": llo, "hi": lhi, "capacity": 300000, "level": 300000, "rate": 12000},
+        {"name": "forest_biomass", "key": 203, "kind": "biomass", "zone": 1, "lo": flo, "hi": fhi, "capacity": 200000, "level": 200000, "rate": 15000},
+        {"name": "karst_phos", "key": 204, "kind": "phos", "zone": 3, "lo": list(klo), "hi": list(khi), "capacity": 160000, "level": 160000, "rate": 8000},
+    ]
     src = {
         "schema": 1,
         "generator": 1,
@@ -258,6 +286,7 @@ def generate(seed=SHOWCASE, variant=0):
         "modules": modules,
         "links": links,
         "features": [river_src],
+        "reservoirs": reservoirs,
     }
     for i, m in enumerate(modules):
         m.setdefault("key", 100 + i)
@@ -286,7 +315,7 @@ def generate(seed=SHOWCASE, variant=0):
 def check_cost_case(src, rec):
     """The mission's route-cost case: from the ruin, the geometrically
     nearest settlement is NOT the cheapest reachable destination."""
-    modules, links, features = runtime_view(src)
+    modules, links, features, _ = runtime_view(src)
     ids = {m["name"]: i for i, m in enumerate(src["modules"])}
     ruin = ids["ruin"]
     gate = ids["high_gate"]
@@ -373,6 +402,10 @@ def main():
         "links": len(src["links"]),
         "features": manifest["features"],
         "exceptions": manifest["exceptions"],
+        "reservoirs": [
+            {"name": v["name"], "kind": v["kind"], "zone": v["zone"], "capacity": v["capacity"], "level": v["level"], "rate": v["rate"]}
+            for v in src["reservoirs"]
+        ],
         "ford_t": built["ford_t"],
         "cost_case": case,
         "hierarchy": [

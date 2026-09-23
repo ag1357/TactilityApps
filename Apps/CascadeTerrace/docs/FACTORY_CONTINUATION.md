@@ -32,7 +32,8 @@ Kyra/intake multiplayer game.
 | G: checkpoint recovery and compaction | ef5cbc0cb22f3c691646dbae7518871e8a9ca5ed |
 | H: rendered multiplayer foundation, qualification and this handoff | containing commit; full game integration remains incomplete |
 | I: spatial/access repair, 18/18 traversal, adversarial suite | `2886c89` |
-| II: macro geography, sparse rivers, derived route, terrain costs | containing commit of this update; resolve with `git rev-parse HEAD` |
+| II: macro geography, sparse rivers, derived route, terrain costs | `5d35f82` |
+| III: regional reservoirs, extraction sites, ecology recovery, ledger | containing commit of this update; resolve with `git rev-parse HEAD` |
 
 ## Build and reproduce
 
@@ -44,12 +45,12 @@ python3 tools/worldsdk/sdk.py schema
 ./scripts/qualify-world-sdk.sh
 ```
 
-The qualification script now exits **0** with the traversal, adversarial and
-macro-geography gates green. Do not change it to ignore a failure if one
-reappears; it must exit nonzero when any gate fails. Results are in
-`results/worldsdk/`. It needs a C11 compiler, Python standard library, and
-an SDL2 runtime for the rendered clients. No model training, cloud
-cognition or GPU is required.
+The qualification script now exits **0** with the traversal, adversarial,
+macro-geography and resource/ecology gates green. Do not change it to ignore
+a failure if one reappears; it must exit nonzero when any gate fails.
+Results are in `results/worldsdk/`. It needs a C11 compiler, Python standard
+library, and an SDL2 runtime for the rendered clients. No model training,
+cloud cognition or GPU is required.
 
 For the normal desktop game and standalone SDK viewer, install SDL2 development
 headers and run:
@@ -162,7 +163,11 @@ A native P4 SDK-mode client remains to be integrated and measured.
   sampled witness confidence, scope transition and timed lift movement.
 - `state.h`, `state.c`: verified actions, inventory/ownership, directed promise
   reliability, public feed, personal objective watermarks, deterministic merge.
-- `persistence.c`: explicit wire codec, semantic hash, two-slot save/recovery.
+- `resource.c`: regional reservoirs — deterministic weather, drawdown-aware
+  river stage, rate-based recovery with pit healing, kind-aware extraction
+  (EXCAVATE/CONVERT/SPEND), and the conservation ledger identity.
+- `persistence.c`: explicit wire codec, semantic hash, two-slot save/recovery;
+  conditional version-2 resource section (schema-1 states unchanged).
 - `content/worlds/`: human source plus compiled default Cascade include.
 - `content/cascade_adapter.c`: intentional game-specific role mapping. The SDK
   has no character or mystery names. Legacy terrain/mystery code remains intact.
@@ -170,21 +175,34 @@ A native P4 SDK-mode client remains to be integrated and measured.
 - `tools/worldsdk/`: finite source compiler, inspection, generators, probes,
   authority transport and rendered clients. No hidden assets or trained models.
 
-**Next gate: resource/ecology.** Express resource deposits, regeneration and
-creature distribution as sparse deterministic records reconstructed per
-chunk (the schema-2 feature vocabulary proven by the macro gate extends to
-roads, ridges, canyons, coastlines and Phos flows), with the same
-fail-closed validation, bit-exact Python parity, and adversarial/probe
-gates kept green. The macro geography now provides the terrain those
-systems sit on: sparse rivers with stable feature IDs, upstream/downstream
-endpoints, monotonic bounded-slope elevation, width/depth class and typed
-exceptions (waterfall/rapids/lake/dam/underground); chunk-boundary
-continuity is exact because reconstruction is a pure function of (record,
-t); the wilderness route and both settlements are derived from the
-generated river; travel cost is terrain-aware (walk = horizontal + 8×climb
-+ 20,000 per river ford on declared topology, deterministic Dijkstra) and
-the route-cost case (nearest settlement is not the cheapest destination)
-is gated in both C and Python. The spatial foundation enforces
+**Resource/ecology gate: PASSED.** Four geography-derived regional
+reservoirs (massif terrain, lake-country water, forest biomass, karst Phos)
+ride the macro product as schema 3 (64-byte records, fail-closed validation,
+same-kind overlap rejected). Extraction depletes the regional stock and
+writes sparse persistent sites: intentional excavations (foundations, cave
+entrances) never heal, disturbance pits heal out of the recovering stock
+with the settled matter accounted as buried. Material converts to Geo-phos
+shards bounded and lossy both directions (3:1 refine, 2:1 deposit). Water
+drawdown is visible on the existing river records through `ws_river_stage`
+(width/depth scale with the level, lake/wetland reaches dry to a marsh band
+below a quarter and a dry bed at zero) with no fluid simulation; the
+renderer binds live state via `render_bind_state`. Recovery is rate-based
+from deterministic weather (clear/rain/storm from seed+day), zone class and,
+for biomass, the paired overlapping Phos stock; inflow is capacity-capped.
+A conservation ledger identity (sum of levels + carried + used + lost ==
+initial + recovered) is enforced by `ws_state_validate` after every
+operation and tick, across chunks, compaction and save/restore. Resource
+ops bind to the global revision, are region-local for clients, never merge
+offline, and reject dust/duplicate/overflow attempts transactionally. The
+macro product is now 1,858 bytes; the C proof gate runs 322 checks with
+exact literals, the Python parity gate 1,114; schema 1/2 products and
+schema-1 state wires remain byte-compatible with every published artifact.
+
+**Next gate: creature placement and schedules as sparse deterministic
+records** reconstructed per chunk — the same discipline as rivers and
+reservoirs (stable IDs, bounded records, fail-closed validation, bit-exact
+Python parity, probe gates kept green) — followed by the nonlocal Phos edge
+over the now-proven regional Phos stocks. The spatial foundation enforces
 topology-before-geometry (declared walk edges cut 4000 mm ports into room
 walls; every room keeps a default public south entrance), the surface
 convention (`pos.y` is the walkable top), corridor locality (overlapping
@@ -197,7 +215,7 @@ on the direct route, NPCs need baseline public access). Keep
 `navigation_probe.py`, `adversarial_test.py` and `macro_test.py` green
 while adding content; do not add exceptions for named modules.
 
-After that: the resource/ecology conservation proof, the nonlocal Phos edge,
+After that: the nonlocal Phos edge,
 then bridging the existing game's Phos/evidence/economy/quest actions into
 this single semantic authority, replacing the separate fixture with an
 experimental normal-game multiplayer mode, implementing P4 network transport,

@@ -1,0 +1,19 @@
+{
+  "status": "PASS",
+  "checks": 9395,
+  "color_parity": 1,
+  "async_ownership_cycles": 1000,
+  "source_bytes": 76800,
+  "scanout_bytes": 307200,
+  "ppa_extra_bytes": 384000,
+  "reference_mean_ms": 0.386179,
+  "portable_mean_ms": 0.178263,
+  "reference_p95_ms": 0.441131,
+  "portable_p95_ms": 0.217245,
+  "checksum": 999600,
+  "pie_physical": "PENDING",
+  "ppa_physical": "PENDING",
+  "host": "Linux-6.18.44-x86_64-with-glibc2.39",
+  "sanitized": true,
+  "asan_options": "detect_leaks=0"
+}

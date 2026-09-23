@@ -76,3 +76,9 @@ build/world_sdk_test build/world_state_test build/libsdk.so build/libworldview.s
 .PHONY: sdk-test sdk-qualify
 sdk-qualify:
 	./scripts/qualify-world-sdk.sh
+
+build/presentation_test: core/presentation.c tests/presentation.c core/presentation.h | build
+	$(CC) $(CPPFLAGS) $(CFLAGS) $(filter %.c,$^) -o $@
+.PHONY: presentation-test
+presentation-test: build/presentation_test
+	./build/presentation_test

@@ -1,4 +1,6 @@
-/* P4 PIE kernels for the renderer evaluation (path 3). Assembled with the
+/* Experimental, BUILD-QUALIFIED ONLY: hardware correctness remains pending.
+ * Corrected after the ca942d3 audit; old 96-byte disassembly is historical.
+ * P4 PIE kernels for the renderer evaluation (path 3). Assembled with the
  * exact ESP-IDF 6.1 toolchain and march used by the production P4 build
  * (rv32imafc_zicsr_zifencei_zaamo_zalrsc_zcb_zcmp_zcmt_xesploop_xespv).
  *
@@ -32,7 +34,15 @@
 pie_fill_span_u16:
     /* a0 = dst, a1 = count (u16 units), a2 = color ptr */
     beqz    a1, 5f
-    esp.vldbc.16.ip q0, a2, 0          /* q0 = colour broadcast to 8 u16 lanes */
+    lhu     t3, 0(a2)                 /* pointer promises exactly one u16 */
+0:  andi    t0, a0, 15
+    beqz    t0, 4f
+    sh      t3, 0(a0)                 /* peel to a 16-byte-aligned vector store */
+    addi    a0, a0, 2
+    addi    a1, a1, -1
+    beqz    a1, 5f
+    j       0b
+4:  esp.vldbc.16.ip q0, a2, 0          /* broadcast one naturally aligned u16 */
     li      t0, 8
     bltu    a1, t0, 2f                 /* fewer than 8: scalar path */
     srli    t1, a1, 3                  /* t1 = full 8-pixel chunks */
@@ -41,9 +51,7 @@ pie_fill_span_u16:
     esp.vst.128.ip q0, a0, 16          /* 8 u16 pixels, dst advances 16 bytes */
 1:  /* loop end */
     beqz    a1, 5f
-2:  lw      t2, 0(a2)
-    slli    t2, t2, 16
-    srli    t3, t2, 16                 /* t3 = colour (zero-extended) */
+2:
 3:  sh      t3, 0(a0)
     addi    a0, a0, 2
     addi    a1, a1, -1
@@ -59,8 +67,9 @@ pie_expand2x_row_u16:
     /* a0 = dst, a1 = src, a2 = chunks */
     beqz    a2, 2f
     esp.lp.setup 0, a2, 1f
-    esp.vld.128.ip q0, a1, 16          /* q0 = 8 source u16 pixels */
-    esp.vzip.16 q0, q0                 /* q0/q1 = each pixel duplicated:
+    esp.vld.128.ip q0, a1, 0           /* initialize both explicit zip operands */
+    esp.vld.128.ip q1, a1, 16
+    esp.vzip.16 q0, q1                 /* q0/q1 = each pixel duplicated:
                                           q0 = [p0 p0 p1 p1 p2 p2 p3 p3]
                                           q1 = [p4 p4 p5 p5 p6 p6 p7 p7] */
     esp.vst.128.ip q0, a0, 16

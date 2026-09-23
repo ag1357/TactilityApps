@@ -1,0 +1,17 @@
+{
+  "imports": [
+    "ppa_register_client",
+    "ppa_client_register_event_callbacks",
+    "ppa_unregister_client",
+    "ppa_do_scale_rotate_mirror"
+  ],
+  "firmware_exports_verified": false,
+  "load_qualification": "PENDING",
+  "physical_timing": null,
+  "cpu_availability_during_async": null,
+  "effective_march": "-march=rv32imafc_zicsr_zifencei_zaamo_zalrsc_xesploop_xespv2p1",
+  "all_march_flags": [
+    "-march=rv32imafc_zicsr_zifencei_zaamo_zalrsc_zcb_zcmp_zcmt_xesploop_xespv",
+    "-march=rv32imafc_zicsr_zifencei_zaamo_zalrsc_xesploop_xespv2p1"
+  ]
+}

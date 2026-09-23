@@ -1,5 +1,5 @@
-// Renderer-evaluation config: z-buffered, full width — the apples-to-apples
-// match for the current core/render.c pipeline (per-pixel depth, 240x160).
+// Renderer-evaluation config: z-buffered, full width — an approximate
+// comparison to core/render.c (constant per-triangle depth, 240x160).
 #define JET32_WORLD_SCALE 8
 #define RENDER_TILE_BUFFER 0
 #define TILE_WIDTH  32

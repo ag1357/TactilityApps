@@ -2,6 +2,7 @@
 #include "game.h"
 #include "semantic.h"
 #include "render.h"
+#include "presentation_p4.h"
 #include <app/event.h>
 #include <app/paths.h>
 #include <app/scheduler.h>
@@ -27,7 +28,7 @@ static Reply reply;
 static lv_obj_t *canvas, *textarea;
 static uint16_t* canvas_pixels;
 static Input input;
-static int pending, talking, experimental, reply_offset;
+static int pending, talking, experimental, reply_offset, presentation_requested;
 static char submitted[128];
 static char save_base[256] = "/sdcard/cascade.save";
 static FILE* telemetry;
@@ -137,7 +138,9 @@ static void action(int code, const char* text) {
             o.target = 3;
             break;
         case 7: {
-            uint64_t t = micros();
+            ct_present_open(canvas_pixels,presentation_requested);
+    emit("{\"type\":\"presentation_config\",\"requested\":%d,\"backend\":\"%s\",\"physical\":\"PENDING\"}\n",presentation_requested,ct_present_name());
+    uint64_t t = micros();
             int ok = save_game(g, save_base);
             emit("{\"type\":\"save\",\"ok\":%d,\"us\":%llu}\n", ok, (unsigned long long)(micros() - t));
             return;
@@ -185,6 +188,8 @@ int main(int argc, char** argv) {
         else if (!strcmp(argv[i], "--patched-cognition")) experimental = 2;
         else if (!strcmp(argv[i], "--general-cognition")) experimental = 3;
         else if (!strcmp(argv[i], "--learned-cognition")) experimental = 4;
+        else if (!strcmp(argv[i], "--presentation=pie")) presentation_requested=1;
+        else if (!strcmp(argv[i], "--presentation=ppa")) presentation_requested=2;
     char dir[256], asset[256];
     if (app_paths_get_user_data_directory("ag1357.cascadeterrace", dir, sizeof(dir)) == ERROR_NONE) mkdir(dir, 0755);
     app_paths_get_user_data_path("ag1357.cascadeterrace", "cascade.save", save_base, sizeof(save_base));
@@ -204,7 +209,9 @@ int main(int argc, char** argv) {
     struct MemoryPolicy external = {MEMORY_CAPABILITY_EXTERNAL, 0, 16};
     g = memory_calloc_with_policy(1, sizeof(Game), &external);
     r = memory_calloc_with_policy(1, sizeof(Renderer), &external);
-    canvas_pixels = memory_alloc_with_policy(W * H * 8, &external);
+    struct MemoryPolicy scanout = {MEMORY_CAPABILITY_EXTERNAL,0,64};
+    if(CT_PRESENT_PPA && presentation_requested==2)scanout.required |= MEMORY_CAPABILITY_DMA;
+    canvas_pixels = memory_calloc_with_policy(W * H * 8,1,&scanout);
     if (!g || !r || !canvas_pixels) {
         memory_free(g);
         memory_free(r);
@@ -215,7 +222,7 @@ int main(int argc, char** argv) {
     game_new(g, 42, -1);
     uint64_t gen_us = micros() - t;
     int reloaded = load_game(g, save_base);
-    emit("{\"type\":\"boot\",\"platform\":\"esp32p4\",\"generator\":%u,\"generation_us\":%llu,\"reload\":%d,\"explicit_psram_bytes\":%zu,\"clock_resolution_us\":%u}\n", GEN_VERSION, (unsigned long long)gen_us, reloaded, sizeof(Game) + sizeof(Renderer) + W * H * 8, 1U);
+    emit("{\"type\":\"boot\",\"platform\":\"esp32p4\",\"generator\":%u,\"generation_us\":%llu,\"reload\":%d,\"explicit_psram_bytes\":%zu,\"clock_resolution_us\":%u}\n", GEN_VERSION, (unsigned long long)gen_us, reloaded, sizeof(Game) + sizeof(Renderer) + W * H * 8 + ct_present_extra_bytes(), 1U);
     memory_log_stats();
     emit("{\"type\":\"heap\",\"internal_free\":%u,\"psram_free\":%u}\n", (unsigned)heap_caps_get_free_size(MALLOC_CAP_INTERNAL), (unsigned)heap_caps_get_free_size(MALLOC_CAP_SPIRAM));
     if (qualify) {
@@ -238,7 +245,10 @@ int main(int argc, char** argv) {
     struct TaskEventGroup events = {0};
     task_event_group_construct(&events);
     struct AppEventSubscription sub = {0};
-    if (app_event_subscribe(&sub, &events) != ERROR_NONE) return 2;
+    if (app_event_subscribe(&sub, &events) != ERROR_NONE) {
+        ct_present_close();task_event_group_destruct(&events);
+        memory_free(canvas_pixels);memory_free(r);memory_free(g);return 2;
+    }
     WindowId window = window_manager_create_ext(app_scheduler_current_app_id(), create, destroy, NULL);
     int closing = 0;
     uint64_t previous = micros();
@@ -275,20 +285,24 @@ int main(int argc, char** argv) {
             draw_panel(r, 0, 130, W, 25, 0x1108);
             draw_text(r, 2, 131, g->notice, 0xffff, 238);
         }
+        uint64_t presentation_start=micros();
         lvgl_lock();
         if (canvas) {
-            for (int y = 0; y < H * 2; y++)
-                for (int x = 0; x < W * 2; x++) canvas_pixels[y * W * 2 + x] = r->pixels[(y / 2) * W + x / 2];
-            lv_obj_invalidate(canvas);
+            if(ct_present_frame(&canvas_pixels,r->pixels)) {
+                lv_canvas_set_buffer(canvas,canvas_pixels,W*2,H*2,LV_COLOR_FORMAT_RGB565);
+                lv_obj_invalidate(canvas);
+            }
             if (talking) lv_obj_remove_flag(textarea, LV_OBJ_FLAG_HIDDEN);
             else
                 lv_obj_add_flag(textarea, LV_OBJ_FLAG_HIDDEN);
         }
         lvgl_unlock();
+        if(qualify && r->frame%30==0) emit("{\"type\":\"presentation_sample\",\"backend\":\"%s\",\"submit_and_poll_us\":%llu,\"in_flight\":%u}\n",ct_present_name(),(unsigned long long)(micros()-presentation_start),ct_present_busy());
         if (qualify && r->frame % 30 == 0) emit("{\"type\":\"frame\",\"period_us\":%llu,\"work_us\":%llu,\"render_us\":%llu}\n", (unsigned long long)period_us, (unsigned long long)(micros() - current), (unsigned long long)frame_us);
         task_event_group_wait_any(&events, NULL, pdMS_TO_TICKS(20));
     }
     save_game(g, save_base);
+    ct_present_close();
     window_manager_remove(window);
     app_event_unsubscribe(&sub);
     task_event_group_destruct(&events);

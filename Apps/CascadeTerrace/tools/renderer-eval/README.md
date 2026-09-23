@@ -1,3 +1,10 @@
+The original ca942d3 measurements contain documented limitations and defects.
+Use `hybrid/run.py` and `docs/RENDERER_HYBRID.md` for the proving integration.
+The patched current harness now uses a relative macro path, valid memcpy input,
+observable output stores, and alias-safe paired writes. Its old results are not
+silently regenerated. PIE source is corrected but physically unqualified.
+Pin Jet to `2bd0f60507ca073bf09e122b717ab2d91d2a1fb1` for that historical replay.
+
 # Renderer evaluation harness
 
 Bounded, measured comparison of three rendering paths for the 240x160 -> 480x320
@@ -16,7 +23,7 @@ PS1-era pipeline on ESP32-P4, produced for the fourth-gate renderer evaluation
   (`prepareFrame` / `rasterizeBand`), with the camera mapping derived
   exactly (rot.x = -pitch, rot.y = +yaw, fovFactor 145, near 200 mm) and
   per-triangle colors baked to match the current pipeline's fog/shade.
-  Three configs: `cfg_z` (z-buffer, full width — apples-to-apples),
+  Three configs: `cfg_z` (z-buffer, full width — FAST_Z approximation),
   `cfg_zh` (z-buffer, half width), `cfg_p` (painter + half width).
   `bench_groups.cpp` / `bench_paint.cpp` are isolation probes used while
   debugging replay fidelity (per-group draw counts, group-coloured paint).

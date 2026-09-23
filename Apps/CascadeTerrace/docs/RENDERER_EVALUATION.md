@@ -1,3 +1,10 @@
+> Historical ca942d3 evaluation. Superseded proving results and corrections are
+> in [RENDERER_HYBRID.md](RENDERER_HYBRID.md). The original presentation memcpy
+> was out of bounds; cfg_z uses per-triangle FAST_Z and is not equivalent to
+> per-pixel depth; the 14 KB ELF-headroom claim is unsupported; the original PIE
+> zip kernel did not initialize q1; PPA is bilinear and its timing is unmeasured
+> for this application. Original JSON/disassembly remains historical evidence.
+
 # Renderer evaluation: current core/render.c vs Jet-derived paths on ESP32-P4
 
 Bounded evaluation ordered at fourth-gate acceptance. Three paths were

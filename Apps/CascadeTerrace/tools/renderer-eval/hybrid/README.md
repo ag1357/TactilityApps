@@ -36,3 +36,9 @@ nonfinite or unbounded inputs. Retain the selectable reference for investigation
 `-DCT_RASTER_REFERENCE=1` on desktop, or `idf.py -DCT_RASTER_REFERENCE=ON reconfigure`
 for P4. Set the option back to OFF before building the normal candidate package.
 Physical P4 performance and display qualification remain pending.
+
+The Stage B harness additionally times the complete renderer plus presentation
+for both paths and records total p95 over 700 individual frames. `make
+presentation-test` checks pixel preservation, canaries and async ownership.
+The full SDK script includes that gate. Optional P4 backends and firmware
+constraints are documented in docs/RENDERER_HYBRID.md.

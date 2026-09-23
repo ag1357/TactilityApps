@@ -6,6 +6,7 @@
 #include <string.h>
 #include <math.h>
 #include "render.h"
+#include "presentation.h"
 typedef struct { float v[9]; uint32_t col; float shade,light; } Captured;
 static Captured captured[65536];
 static unsigned captured_count;
@@ -24,6 +25,7 @@ void reference_render(Renderer*,const Game*);
 void reference_render_world(Renderer*,const WsRecipe*,WsAddress,int,WsMetrics*);
 void reference_raw(Renderer*,const float*,uint32_t,float,float,int);
 static Renderer candidate, reference;
+static uint16_t scanout[W*H*4];
 static Game game;
 static WsRecipe recipe;
 static uint8_t product[65536];
@@ -91,7 +93,7 @@ static int compare_double(const void* a,const void* b) { double x=*(const double
 static void benchmark(const char* name,int kind,WsAddress at,int yaw,int comma) {
     reset(); captured_count=0; capture_enabled=1;draw_scene(kind,0,at,yaw);capture_enabled=0;
     draw_scene(kind,1,at,yaw);compare(name,0);
-    double full[2][7],rast[2][7],frame_times[2][700]; const int iterations=100;
+    double full[2][7],rast[2][7],total[2][7],frame_times[2][700],total_times[2][700]; const int iterations=100;
     for(int sample=0;sample<7;sample++) for(int order=0;order<2;order++) {
         int ref=(sample+order)%2;
         double start=now(); for(int i=0;i<iterations;i++) { double t=now();draw_scene(kind,ref,at,yaw);frame_times[ref][sample*iterations+i]=(now()-t)*1000; } full[ref][sample]=(now()-start)*1000/iterations;
@@ -106,11 +108,20 @@ static void benchmark(const char* name,int kind,WsAddress at,int yaw,int comma) 
             }
         }
         rast[ref][sample]=(now()-start)*1000/iterations;
+        start=now();
+        for(int i=0;i<iterations;i++) {
+            double t=now();draw_scene(kind,ref,at,yaw);
+            if(ref) for(int y=0;y<H*2;y++)for(int x=0;x<W*2;x++)scanout[y*W*2+x]=reference.pixels[(y/2)*W+x/2];
+            else ct_expand2x(scanout,candidate.pixels,W,H);
+            __asm__ volatile("" : : "m"(scanout) : "memory");
+            total_times[ref][sample*iterations+i]=(now()-t)*1000;
+        }
+        total[ref][sample]=(now()-start)*1000/iterations;
     }
     printf("%s{\"scene\":\"%s\",\"captured_triangles\":%u,\"samples\":[",comma?",\n":"",name,captured_count);
-    for(int i=0;i<7;i++) printf("%s{\"reference_frame_ms\":%.6f,\"candidate_frame_ms\":%.6f,\"reference_raster_replay_ms\":%.6f,\"candidate_raster_replay_ms\":%.6f}",i?",":"",full[1][i],full[0][i],rast[1][i],rast[0][i]);
-    for(int ref=0;ref<2;ref++) qsort(frame_times[ref],700,sizeof(double),compare_double);
-    printf("],\"reference_frame_p95_ms\":%.6f,\"candidate_frame_p95_ms\":%.6f}",frame_times[1][664],frame_times[0][664]);
+    for(int i=0;i<7;i++) printf("%s{\"reference_frame_ms\":%.6f,\"candidate_frame_ms\":%.6f,\"reference_raster_replay_ms\":%.6f,\"candidate_raster_replay_ms\":%.6f,\"reference_total_ms\":%.6f,\"candidate_total_ms\":%.6f}",i?",":"",full[1][i],full[0][i],rast[1][i],rast[0][i],total[1][i],total[0][i]);
+    for(int ref=0;ref<2;ref++) {qsort(frame_times[ref],700,sizeof(double),compare_double);qsort(total_times[ref],700,sizeof(double),compare_double);}
+    printf("],\"reference_frame_p95_ms\":%.6f,\"candidate_frame_p95_ms\":%.6f,\"reference_total_p95_ms\":%.6f,\"candidate_total_p95_ms\":%.6f}",frame_times[1][664],frame_times[0][664],total_times[1][664],total_times[0][664]);
 }
 int main(void) {
     primitive_tests();

@@ -1,0 +1,8 @@
+cascade-district     total   4.879 ms | xform  1.034 clip  0.552 setup  0.112 raster   1.703 clear  0.190 | tris   825 px 110431 depth 110431 tested   358470
+macro-vista          total   0.506 ms | xform  0.014 clip  0.008 setup  0.015 raster   0.344 clear  0.090 | tris   117 px  23323 depth  23339 tested   115074
+macro-cave-interior  total   0.673 ms | xform  0.016 clip  0.009 setup  0.018 raster   0.514 clear  0.092 | tris   133 px  28169 depth  28193 tested   149913
+macro-ruin-closeup   total   1.141 ms | xform  0.022 clip  0.011 setup  0.017 raster   0.945 clear  0.095 | tris   123 px  81841 depth  81897 tested   277131
+presentation pixel_loop_240x160_to_480x320           0.5162 ms
+presentation u32pair_rowdup_480x320                  0.3917 ms
+presentation halfwidth_expand_120x160_to_240x160     0.0779 ms
+presentation memcpy_307200B                          0.0102 ms

@@ -9,6 +9,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <sys/utsname.h>
 
 extern int bench_group;
 extern FILE *bench_dump;
@@ -109,7 +110,7 @@ int main(void) {
     screenshot(&R, "/tmp/renderer-eval/out/current_cascade.ppm");
 
     /* Scenes 2-4: the committed macro product through render_world. */
-    FILE *f = fopen("/media/cloud/2982-E16B/tactility_p4_work/repos/TactilityApps/Apps/CascadeTerrace/build/macro.cws", "rb");
+    FILE *f = fopen("build/macro.cws", "rb");
     if (!f) { fprintf(stderr, "macro.cws missing\n"); return 1; }
     static unsigned char buf[65536];
     size_t n = fread(buf, 1, sizeof(buf), f);
@@ -142,9 +143,11 @@ int main(void) {
      * a u32-pair variant, a Jet-style half-width expand loop, and a plain
      * 300 KB memcpy as the DMA/PPA floor). */
     static uint16_t canvas[480 * 320];
+    static uint16_t copy_source[480 * 320];
+    for(unsigned i=0;i<480*320;i++)copy_source[i]=R.pixels[i%(240*160)];
     double pres[4];
     const char *pres_names[4] = {"pixel_loop_240x160_to_480x320", "u32pair_rowdup_480x320",
-                                  "halfwidth_expand_120x160_to_240x160", "memcpy_300KB"};
+                                  "halfwidth_expand_120x160_to_240x160", "memcpy_307200B"};
     for (int k = 0; k < 4; k++) {
         int iters = 2000;
         /* warm */
@@ -154,11 +157,11 @@ int main(void) {
                     for (int x = 0; x < 480; x++) canvas[y * 480 + x] = R.pixels[(y / 2) * 240 + x / 2];
             } else if (k == 1) {
                 for (int y = 0; y < 160; y++) {
-                    uint32_t *d0 = (uint32_t *)&canvas[y * 2 * 480], *d1 = (uint32_t *)&canvas[(y * 2 + 1) * 480];
+                    uint16_t *d0 = &canvas[y * 2 * 480], *d1 = &canvas[(y * 2 + 1) * 480];
                     for (int x = 0; x < 240; x++) {
                         uint16_t p = R.pixels[y * 240 + x];
                         uint32_t v = (uint32_t)p | ((uint32_t)p << 16);
-                        d0[x] = d1[x] = v;
+                        memcpy(d0+2*x,&v,sizeof(v));memcpy(d1+2*x,&v,sizeof(v));
                     }
                 }
             } else if (k == 2) {
@@ -171,8 +174,9 @@ int main(void) {
                     }
                 }
             } else {
-                memcpy(canvas, R.pixels, 300000);
+                memcpy(canvas, copy_source, sizeof(canvas));
             }
+            __asm__ volatile("" : : "m"(canvas) : "memory");
         }
         uint64_t t0 = bench_now();
         for (int i = 0; i < iters; i++) {
@@ -181,11 +185,11 @@ int main(void) {
                     for (int x = 0; x < 480; x++) canvas[y * 480 + x] = R.pixels[(y / 2) * 240 + x / 2];
             } else if (k == 1) {
                 for (int y = 0; y < 160; y++) {
-                    uint32_t *d0 = (uint32_t *)&canvas[y * 2 * 480], *d1 = (uint32_t *)&canvas[(y * 2 + 1) * 480];
+                    uint16_t *d0 = &canvas[y * 2 * 480], *d1 = &canvas[(y * 2 + 1) * 480];
                     for (int x = 0; x < 240; x++) {
                         uint16_t p = R.pixels[y * 240 + x];
                         uint32_t v = (uint32_t)p | ((uint32_t)p << 16);
-                        d0[x] = d1[x] = v;
+                        memcpy(d0+2*x,&v,sizeof(v));memcpy(d1+2*x,&v,sizeof(v));
                     }
                 }
             } else if (k == 2) {
@@ -198,15 +202,17 @@ int main(void) {
                     }
                 }
             } else {
-                memcpy(canvas, R.pixels, 300000);
+                memcpy(canvas, copy_source, sizeof(canvas));
             }
+            __asm__ volatile("" : : "m"(canvas) : "memory");
         }
         pres[k] = (double)(bench_now() - t0) / (double)bench_freq() / iters * 1000.0;
     }
 
     /* JSON report */
     FILE *out = fopen("/tmp/renderer-eval/out/current.json", "w");
-    fprintf(out, "{\n \"host\": \"aarch64 (bench host; not P4)\",\n \"scenes\": [\n");
+    struct utsname host; uname(&host);
+    fprintf(out, "{\n \"host\": \"%s (bench host; not P4)\",\n \"scenes\": [\n",host.machine);
     const char *stage_names[TR_N] = {"transform", "clip", "setup", "rasterize", "clear"};
     for (int i = 0; i < nres; i++) {
         SceneResult *r = &results[i];

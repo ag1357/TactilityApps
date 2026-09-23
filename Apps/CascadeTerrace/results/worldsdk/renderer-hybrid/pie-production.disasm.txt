@@ -1,0 +1,23 @@
+
+build-p4-native/esp-idf/main/CMakeFiles/__idf_main.dir/presentation_pie.S.obj:     file format elf32-littleriscv
+
+
+Disassembly of section .text:
+
+00000000 <esp>:
+   0:	0001                	nop
+
+00000002 <ct_pie_expand2x_rows>:
+   2:	c28d                	beqz	a3,24 <.L1^B1>
+   4:	0106c02b          	esp.lp.setup	0,a3,32 # 24 <.L1^B1>
+   8:	0202203b          	esp.vld.128.ip	q0,a2,0
+   c:	0202263b          	esp.vld.128.ip	q1,a2,16
+  10:	0682005f          	esp.vzip.16	q0,q1
+  14:	8201223b          	esp.vst.128.ip	q0,a0,16
+  18:	8201263b          	esp.vst.128.ip	q1,a0,16
+  1c:	8201a23b          	esp.vst.128.ip	q0,a1,16
+  20:	8201a63b          	esp.vst.128.ip	q1,a1,16
+
+00000024 <.L1^B1>:
+  24:	8082                	ret
+  26:	0001                	nop

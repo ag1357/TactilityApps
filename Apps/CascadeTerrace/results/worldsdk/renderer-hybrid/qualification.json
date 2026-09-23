@@ -17,6 +17,16 @@
   "production_default": "conservative_incremental_spans",
   "persistent_bytes_added": 0,
   "framebuffer_bytes_added": 0,
-  "presentation_stage": "UNCHANGED_STAGE_A",
-  "p4_elf_delta_bytes": 984
+  "presentation_stage": "PORTABLE_PROMOTED_HARDWARE_BACKENDS_EXPERIMENTAL",
+  "p4_elf_delta_bytes": 984,
+  "stage_a_commit": "8bbe12ed2b1f793f93aa1e78c35c2015fc674935",
+  "presentation_checks": 9395,
+  "presentation_color_parity": 1,
+  "pie_measured_color_parity": null,
+  "ppa_measured_color_parity": null,
+  "ppa_cpu_availability": null,
+  "ppa_firmware_exports_verified": false,
+  "portable_p4_binary_bytes": 188100,
+  "portable_total_elf_delta_bytes": 1708,
+  "ppa_extra_psram_buffer_bytes": 384000
 }

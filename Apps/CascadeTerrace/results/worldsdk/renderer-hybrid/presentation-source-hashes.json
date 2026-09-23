@@ -1,0 +1,7 @@
+{
+  "main/main.c": "191dc7a3816c68c4adb9185432e8197ec442eebfcc6e1033f9f611cbb324b548",
+  "main/presentation_p4.c": "a39b681e50c5145bb909210fd2e2274b883adf6ed0b5757b90a9c407fb677acf",
+  "main/presentation_pie.S": "f8393eb2edbd751070c401bcbfb2f289b767634093c7015ce84caa2eb7367ce3",
+  "core/presentation.c": "6e714d795f64b889ce4995fb6c813ef38d03dd4de24d1c310b64c351ae30141c",
+  "core/render.c": "80fc746895fa41672c51b56499461b17ab3d9d904bf33de3c3b3a6fbd7aefbf4"
+}

@@ -19,13 +19,13 @@ production=''.join('#define '+x+' production_'+x+'\n' for x in names)+(app/'core
 (build/'production.c').write_text(production)
 flags=['-O2','-std=c11','-Wall','-Wextra','-Werror','-Wno-misleading-indentation','-Icore']
 if '--sanitize' in sys.argv: flags+=['-g','-fsanitize=address,undefined','-fno-sanitize-recover=all']
-cmd=['cc']+flags+['tools/renderer-eval/hybrid/qualification.c',str(build/'reference.c'),str(build/'production.c'),'core/state.c','core/world.c','content/cascade_adapter.c']+[str(p.relative_to(app)) for p in sorted((app/'world').glob('*.c'))]+['-lm','-o',str(build/'qualification')]
+cmd=['cc']+flags+['tools/renderer-eval/hybrid/qualification.c',str(build/'reference.c'),str(build/'production.c'),'core/state.c','core/presentation.c','core/world.c','content/cascade_adapter.c']+[str(p.relative_to(app)) for p in sorted((app/'world').glob('*.c'))]+['-lm','-o',str(build/'qualification')]
 subprocess.run(cmd,cwd=app,check=True)
 p=subprocess.run([str(build/'qualification')],cwd=app,stdout=subprocess.PIPE,text=True,check=True)
-data=json.loads(p.stdout);data['host']=platform.platform();data['reference_commit']=ref_sha;data['reference_sha256']=hashlib.sha256(original.encode()).hexdigest();data['candidate_sha256']=hashlib.sha256((app/'core/render.c').read_bytes()).hexdigest();data['compiler']=subprocess.check_output(['cc','--version'],text=True).splitlines()[0];data['sanitized']='--sanitize' in sys.argv;data['asan_options']=os.environ.get('ASAN_OPTIONS','');data['timing_note']='Uninstrumented production/reference translation units; raster replay includes shared dispatch and depth clear; seven interleaved 100-frame batches; p95 over 700 individual frame samples.'
+data=json.loads(p.stdout);data['host']=platform.platform();data['reference_commit']=ref_sha;data['reference_sha256']=hashlib.sha256(original.encode()).hexdigest();data['candidate_sha256']=hashlib.sha256((app/'core/render.c').read_bytes()).hexdigest();data['compiler']=subprocess.check_output(['cc','--version'],text=True).splitlines()[0];data['sanitized']='--sanitize' in sys.argv;data['asan_options']=os.environ.get('ASAN_OPTIONS','');data['presentation_sha256']=hashlib.sha256((app/'core/presentation.c').read_bytes()).hexdigest();data['timing_note']='Uninstrumented production/reference translation units; raster replay includes shared dispatch and depth clear; seven interleaved 100-frame batches; p95 over 700 individual frame samples.'
 for scene in data['scenes']:
  import statistics
  scene['median']={k:statistics.median(x[k] for x in scene['samples']) for k in scene['samples'][0]}
- m=scene['median'];scene['raster_replay_speedup']=m['reference_raster_replay_ms']/m['candidate_raster_replay_ms'];scene['frame_speedup']=m['reference_frame_ms']/m['candidate_frame_ms']
+ m=scene['median'];scene['raster_replay_speedup']=m['reference_raster_replay_ms']/m['candidate_raster_replay_ms'];scene['frame_speedup']=m['reference_frame_ms']/m['candidate_frame_ms'];scene['total_speedup']=m['reference_total_ms']/m['candidate_total_ms']
  print(scene['scene'],scene['raster_replay_speedup'],scene['frame_speedup'])
 path=app/'results/worldsdk/renderer-hybrid'/('sanitized.json' if data['sanitized'] else 'desktop.json');path.parent.mkdir(parents=True,exist_ok=True);path.write_text(json.dumps(data,indent=2)+'\n')

@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 set -euo pipefail
 cd "$(dirname "$0")/.."
-mkdir -p results/worldsdk
+mkdir -p build results/worldsdk/renderer-hybrid
 python3 tools/worldsdk/sdk.py compile content/worlds/cascade.json --output build/cascade.cws --c-include content/worlds/cascade.inc > results/worldsdk/cascade-manifest.json
 python3 tools/worldsdk/sdk.py compile content/worlds/elek_grid.json --output build/elek_grid.cws > results/worldsdk/elek-manifest.json
 # Gate 2: regenerate the committed macro geography from the seed (idempotent
@@ -11,13 +11,14 @@ python3 tools/worldsdk/macro.py > /dev/null
 # its C proof gate and the Python parity gate run below.
 # Gate 4: the product carries the nonlocal Phos anomaly gate (link kind 3);
 # its C proof gate and Python parity gate run below as well.
-make build/world_sdk_test build/macro_sdk_test build/resource_sdk_test build/anomaly_sdk_test build/world_state_test build/libsdk.so build/libworldview.so build/test
+make build/world_sdk_test build/macro_sdk_test build/resource_sdk_test build/anomaly_sdk_test build/world_state_test build/libsdk.so build/libworldview.so build/test build/presentation_test
 ./build/world_sdk_test > results/worldsdk/traversal.json
 ./build/macro_sdk_test > results/worldsdk/macro.json
 ./build/resource_sdk_test > results/worldsdk/resource.json
 ./build/anomaly_sdk_test > results/worldsdk/anomaly.json
 ./build/world_state_test > results/worldsdk/state.json
 ./build/test > results/worldsdk/legacy-final.txt
+./build/presentation_test > results/worldsdk/renderer-hybrid/presentation-desktop.json
 python3 tools/worldsdk/qualify.py
 python3 tools/worldsdk/network_test.py
 python3 tools/worldsdk/rendered_test.py > results/worldsdk/rendered-network.json

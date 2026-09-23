@@ -1,0 +1,137 @@
+--- /tmp/jet-research/src/Renderer.cpp	2026-09-23 00:22:57.841982145 -0500
++++ jet-src/Renderer.cpp	2026-09-23 01:05:24.327122567 -0500
+@@ -1,5 +1,7 @@
+ #include "Renderer.hpp"
+ #include <algorithm>
++#include <cstdio> // [BENCH] debug print
++#include <cstdlib> // [BENCH] getenv
+ #include <cmath>
+ #include "TrigLUT.hpp"
+ #include "FastMath.hpp"
+@@ -41,6 +43,8 @@
+ // per-object fade, just by lerping channels into the framebuffer instead of
+ // stippling. Uses (256-a) and >>8 (vs (255-a)/255) for a single shift per
+ // channel; the off-by-one bias is invisible at 5/6-bit channel widths.
++// [BENCH] pixel/triangle counters for the renderer evaluation (clone-only patch)
++unsigned long long jet_px_written = 0, jet_tris_drawn = 0;
+ static inline uint16_t blendRGB565(uint16_t dst, uint16_t src, uint8_t alpha)
+ {
+     const uint32_t a   = alpha;
+@@ -80,6 +84,7 @@
+ static inline void fillRGB565Span(uint16_t* framebuffer, int32_t bufferIndex, int32_t count, uint16_t color)
+ {
+     if (count <= 0) return;
++    jet_px_written += count; // [BENCH]
+ 
+     int32_t idx = bufferIndex;
+     int32_t remaining = count;
+@@ -394,6 +399,16 @@
+         bool brightnessPrecomputed,
+         int32_t avgZHint)
+     {
++        // [BENCH] projection debug: first N drawTriangle calls
++        if (getenv("JET_DEBUG_TRIS")) {
++            static int dbgN = 0;
++            if (dbgN < atoi(getenv("JET_DEBUG_TRIS")))
++                printf("TRI %d (%d,%d,%d) (%d,%d,%d) (%d,%d,%d) avgZ=%d col=%04x\n",
++                       dbgN++, v1.position.x, v1.position.y, v1.position.z,
++                       v2.position.x, v2.position.y, v2.position.z,
++                       v3.position.x, v3.position.y, v3.position.z,
++                       avgZHint, material ? material->color : 0);
++        }
+         // Fold per-object fade alpha into the material alpha up front so
+         // every downstream alpha decision (early-out, depth fog, stipple
+         // under SCREEN_DOOR_ALPHA, traditional blend without it) sees the
+@@ -1286,7 +1301,8 @@
+                     int x = xStart;
+                     if (!drawFirst) { x += 2; bufferIndex++; }
+                     for (; x <= xEnd; x += 4, bufferIndex += 2) {
+-                        framebuffer[bufferIndex] = color;
++                        jet_px_written++; // [BENCH]
++                    framebuffer[bufferIndex] = color;
+                     }
+                 }
+     #else  // !SCREEN_DOOR_ALPHA
+@@ -1311,13 +1327,14 @@
+                     if (waterSkyFallback) {
+                         fillRGB565Span(framebuffer, bufferIndex, spanCount,
+                             blendRGB565(material->color, skyCol, waterReflectAlpha));
+-                    } else if (spanCount < 32) {
+-                        for (int i = 0; i < spanCount; ++i)
++                    } else if (spanCount < 32) {                        for (int i = 0; i < spanCount; ++i)
+                             framebuffer[bufferIndex + i] = blendRGB565(material->color,
+                                 srcBuf[mirrorIdx + i], waterReflectAlpha);
++                        jet_px_written += spanCount; // [BENCH]
+                     } else {
+                         blendConstant(framebuffer + bufferIndex, srcBuf + mirrorIdx,
+                             spanCount, material->color, waterReflectAlpha, true);
++                        jet_px_written += spanCount; // [BENCH]
+                     }
+                 } else if (isAdditive) {
+                     // Saturating-add: source scaled by alpha then added to destination.
+@@ -1326,16 +1343,19 @@
+                         blendRGB565Span(framebuffer + bufferIndex, nullptr,
+                             ((xEnd - xStart) >> 1) + 1, color, alpha,
+                             alpha == 255 ? RGB565BlendMode::Add : RGB565BlendMode::AddAlpha256);
++                        jet_px_written += (unsigned long long)(((xEnd - xStart) >> 1) + 1); // [BENCH]
+                     } else if (alpha == 255) {
+                         for (int x = xStart; x <= xEnd; x += 2, bufferIndex++) {
+                             const uint16_t d = framebuffer[bufferIndex];
+                             uint32_t r = ((d >> 11) & 0x1Fu) + ((color >> 11) & 0x1Fu); if (r > 0x1Fu) r = 0x1Fu;
+                             uint32_t g = ((d >>  5) & 0x3Fu) + ((color >>  5) & 0x3Fu); if (g > 0x3Fu) g = 0x3Fu;
+                             uint32_t b = ( d        & 0x1Fu) + ( color        & 0x1Fu); if (b > 0x1Fu) b = 0x1Fu;
++                    jet_px_written++; // [BENCH]
+                             framebuffer[bufferIndex] = (uint16_t)((r << 11) | (g << 5) | b);
+                         }
+                     } else {
+                         for (int x = xStart; x <= xEnd; x += 2, bufferIndex++) {
++                    jet_px_written++; // [BENCH]
+                             framebuffer[bufferIndex] = addBlendRGB565(framebuffer[bufferIndex], color, alpha);
+                         }
+                     }
+@@ -1344,9 +1364,11 @@
+                     if (count >= 32) {
+                         blendConstant(framebuffer + bufferIndex, nullptr,
+                             count, color, alpha, false);
++                        jet_px_written += count; // [BENCH]
+                     } else {
+                         for (int i = 0; i < count; ++i)
+                             framebuffer[bufferIndex + i] = blendRGB565(framebuffer[bufferIndex + i], color, alpha);
++                        jet_px_written += count; // [BENCH]
+                     }
+                 }
+     #endif // SCREEN_DOOR_ALPHA
+@@ -1670,6 +1692,7 @@
+                     color = (r << 11) | (g << 5) | b;
+ 
+                     #if HALF_WIDTH_BUFFERS
++                    jet_px_written++; // [BENCH]
+                     framebuffer[bufferIndex] = color;
+                     #else
+                     uint32_t combinedColor = (static_cast<uint32_t>(color) << 16) | color;
+@@ -1873,6 +1896,7 @@
+                 // per-pixel depth-fog fade. Skip the blend math when the
+                 // material is fully opaque — common case.
+                 if (pixAlpha == 255) {
++                    jet_px_written++; // [BENCH]
+                     framebuffer[bufferIndex] = color;
+                 } else {
+                     framebuffer[bufferIndex] = blendRGB565(framebuffer[bufferIndex], color, pixAlpha);
+--- /tmp/jet-research/src/Scene.cpp	2026-09-23 00:22:57.841982145 -0500
++++ jet-src/Scene.cpp	2026-09-23 00:45:28.511864700 -0500
+@@ -7,6 +7,7 @@
+ #include <algorithm> // For std::min, std::max
+ #include <cmath> // For sqrtf (per-object distance fade / LOD pick)
+ 
++extern unsigned long long jet_tris_drawn; // [BENCH] global-scope counter (defined in Renderer.cpp)
+ namespace Renderer {
+ 
+ // Static emissive material used to render triangles whose lighting has been
+@@ -825,6 +826,7 @@
+         }
+     }
+     if (!triangleFlags) lastFrameRasterizedTriangles = rasterized;
++    jet_tris_drawn = (unsigned long long)rasterized; // [BENCH]
+ }
+ 
+ void Scene::render(RasterExecutor executor) {

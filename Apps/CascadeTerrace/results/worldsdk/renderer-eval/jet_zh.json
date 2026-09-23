@@ -1,0 +1,14 @@
+{
+ "config": "zh",
+ "camera_verify_parity_pct": 58.62,
+ "scenes": [
+  {"name": "cascade-district", "interlaced": false, "total_ms": 0.8990, "clear_ms": 0.0078, "prepare_ms": 0.3991, "rasterize_ms": 0.4921, "triangles": 575, "pixels_written": 16801500, "parity_pct": 58.62},
+  {"name": "cascade-district", "interlaced": true, "total_ms": 0.7110, "clear_ms": 0.0078, "prepare_ms": 0.3911, "rasterize_ms": 0.3120, "triangles": 575, "pixels_written": 6022500, "parity_pct": -1.00},
+  {"name": "macro-vista", "interlaced": false, "total_ms": 0.0980, "clear_ms": 0.0056, "prepare_ms": 0.0087, "rasterize_ms": 0.0837, "triangles": 78, "pixels_written": 6901000, "parity_pct": 44.97},
+  {"name": "macro-vista", "interlaced": true, "total_ms": 0.0533, "clear_ms": 0.0056, "prepare_ms": 0.0079, "rasterize_ms": 0.0398, "triangles": 78, "pixels_written": 504250, "parity_pct": -1.00},
+  {"name": "macro-cave-interior", "interlaced": false, "total_ms": 0.1400, "clear_ms": 0.0056, "prepare_ms": 0.0098, "rasterize_ms": 0.1246, "triangles": 102, "pixels_written": 6865500, "parity_pct": 84.33},
+  {"name": "macro-cave-interior", "interlaced": true, "total_ms": 0.0830, "clear_ms": 0.0056, "prepare_ms": 0.0090, "rasterize_ms": 0.0683, "triangles": 102, "pixels_written": 1955250, "parity_pct": -1.00},
+  {"name": "macro-ruin-closeup", "interlaced": false, "total_ms": 0.2321, "clear_ms": 0.0056, "prepare_ms": 0.0115, "rasterize_ms": 0.2149, "triangles": 99, "pixels_written": 20845000, "parity_pct": 82.01},
+  {"name": "macro-ruin-closeup", "interlaced": true, "total_ms": 0.1180, "clear_ms": 0.0056, "prepare_ms": 0.0107, "rasterize_ms": 0.1016, "triangles": 99, "pixels_written": 5495000, "parity_pct": -1.00}
+ ]
+}

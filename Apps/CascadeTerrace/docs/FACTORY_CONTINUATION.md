@@ -30,7 +30,9 @@ derivation from the public replica, reconnect and restarted-server
 restoration of the closed gate, and fail-closed malformed rejection on
 both the C and Python sides. The normal Cascade game
 remains playable and passes its original suite. The bounded renderer
-evaluation (the mission's ordered stop after Gate 4), creature placement,
+evaluation (the mission's ordered stop after Gate 4) is complete with a
+HYBRIDIZE recommendation pending approval of its proving integration;
+creature placement,
 the complete multiplayer quest and all physical P4
 claims remain pending. The two-client SDK fixture is not the full
 Kyra/intake multiplayer game.
@@ -262,11 +264,23 @@ scenario 2,103 checks. The macro product is 1,938 bytes (22 modules, 13
 links: 11 walk, 1 lift, 1 gate); deterministic qualification now rejects
 7,372 malformed products.
 
-**Next: the bounded renderer evaluation the mission ordered at the end of
-Gate 4** — compare the current software-rasterizer path against a
-Jet-derived architecture (CubeCoders' Jet, which needs porting to ESP-IDF 6
-and the P4), including P4 PIE SIMD and PPA presentation/compositing
-opportunities — before any further content gate. After that, the next
+**The bounded renderer evaluation the mission ordered at the end of Gate 4
+is complete** — measured, not speculated, with all evidence in
+`results/worldsdk/renderer-eval/` and the full write-up in
+`docs/RENDERER_EVALUATION.md` (harness in `tools/renderer-eval/`). Verdict:
+**HYBRIDIZE** — keep the current renderer's architecture and per-pixel
+z/fog/fidelity semantics, take Jet's incremental span-rasterization
+technique for the inner loop (its raster core measured 2.9-7.2x faster on
+identical data; adopting the library itself would cost +90-94 KB .text and
++18 KB internal SRAM against ~14 KB of ELF headroom, loses sub-pixel
+triangles — motes are first-class content — and carries a real
+`colorBaked` shared-material bug), and move presentation to the proven
+P4 PIE kernels (assembled with the production `xespv` march, 96 bytes of
+.text) and/or async PPA SRM (Espressif CI floor implies ~2-2.5 ms
+off-CPU for the 2x upscale). No production renderer change was made; the
+~60-line proving integration in `core/render.c` plus the `main/main.c`
+presentation swap is proposed and awaits approval before any rewrite.
+After that, the next
 content gate is creature placement and schedules as sparse deterministic
 records reconstructed per chunk — the same discipline as rivers, reservoirs
 and the anomaly edge (stable IDs, bounded records, fail-closed validation,

@@ -1,0 +1,14 @@
+# P4 cross-compile size measurements (ESP-IDF 6.1 toolchain esp-15.2.0_20250929, -Os, --gc-sections)
+# march=rv32imafc_zicsr_zifencei_zaamo_zalrsc_zcb_zcmp_zcmt_xesploop_xespv -mabi=ilp32f
+# Reachable surface: Scene(+render/prepareFrame/rasterizeBand) Camera Object Material Rasterizer, full libstdc++ fragments included
+# Baseline (empty C++ surface, same flags): 42 text / 0 data / 0 bss
+jet cfg_z:   94102	    792	  17996	 112890	  1b8fa	p4_z/gc.elf
+jet cfg_zh:   89742	    792	  17996	 108530	  1a7f2	p4_zh/gc.elf
+jet cfg_p:   92276	    792	  17996	 111064	  1b1d8	p4_p/gc.elf
+# Raw .o text before gc-sections (all pipeline sources):
+jet cfg_z objects: 41600 16 17353
+jet cfg_zh objects: 38410 16 17353
+jet cfg_p objects: 40634 16 17353
+# PIE kernels (pie_kernels.S):
+   text	   data	    bss	    dec	    hex	filename
+     96	      0	      0	     96	     60	pie_kernels.o

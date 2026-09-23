@@ -1,0 +1,15 @@
+{
+ "host": "aarch64 (bench host; not P4)",
+ "scenes": [
+  {"name": "cascade-district", "total_ms": 2.7782, "stages_ms": {"transform": 0.1396, "clip": 0.1398, "setup": 0.0124, "rasterize": 2.1237, "clear": 0.0052}, "triangles": 825, "pixels_written": 110431, "px_tested": 358470, "px_covered": 129213, "depth_writes": 110431, "groups": 7},
+  {"name": "macro-vista", "total_ms": 0.5575, "stages_ms": {"transform": 0.0020, "clip": 0.0019, "setup": 0.0018, "rasterize": 0.5298, "clear": 0.0063}, "triangles": 117, "pixels_written": 23323, "px_tested": 115074, "px_covered": 29621, "depth_writes": 23339, "groups": 4},
+  {"name": "macro-cave-interior", "total_ms": 0.7812, "stages_ms": {"transform": 0.0022, "clip": 0.0022, "setup": 0.0020, "rasterize": 0.7615, "clear": 0.0047}, "triangles": 133, "pixels_written": 28169, "px_tested": 149913, "px_covered": 38684, "depth_writes": 28193, "groups": 2},
+  {"name": "macro-ruin-closeup", "total_ms": 1.3897, "stages_ms": {"transform": 0.0028, "clip": 0.0027, "setup": 0.0019, "rasterize": 1.3542, "clear": 0.0042}, "triangles": 123, "pixels_written": 81841, "px_tested": 277131, "px_covered": 84819, "depth_writes": 81897, "groups": 4}
+ ],
+ "presentation_ms": {
+  "pixel_loop_240x160_to_480x320": 0.1718,
+  "u32pair_rowdup_480x320": 0.0117,
+  "halfwidth_expand_120x160_to_240x160": 0.0059,
+  "memcpy_300KB": 0.0084
+ }
+}

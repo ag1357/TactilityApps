@@ -332,6 +332,33 @@ void render_world(Renderer *r,const WsRecipe *world,WsAddress player,int yaw,WsM
         quad((V){aa.x+ox,aa.y,aa.z+oz},(V){bb.x+ox,bb.y,bb.z+oz},(V){bb.x-ox,bb.y,bb.z-oz},(V){aa.x-ox,aa.y,aa.z-oz},0xaaa394,1);
         metrics->triangles+=2;metrics->vertices+=4;
     }
+    /* Sparse river features: a cheap local water strip, reconstructed only
+       for the t window that can reach the view (exactly what a chunk
+       renderer samples), tapered by each sample's width class so lake
+       reaches widen visibly; underground reaches render nothing. No fluid
+       simulation. */
+    if(player.scope==UINT16_MAX) for(uint16_t f=0;f<world->feature_count;f++) {
+        if(world->features[f].kind!=WS_FEATURE_RIVER)continue;
+        WsPos lo={player.pos.x-300000,0,player.pos.z-300000},hi={player.pos.x+300000,0,player.pos.z+300000};
+        uint16_t t0,t1;
+        if(!ws_river_window(world,f,lo,hi,&t0,&t1))continue;
+        WsRiverSample prev;int have=0;
+        for(uint32_t t=t0;t<=t1;t+=2048) {
+            WsRiverSample s;
+            if(!ws_river_sample(world,f,(uint16_t)t,&s)||!s.surfaced){have=0;continue;}
+            if(have) {
+                float px=-(float)(s.pos.z-prev.pos.z),pz=(float)(s.pos.x-prev.pos.x),d=sqrtf(px*px+pz*pz);
+                if(d>.5f) {
+                    px/=d;pz/=d;
+                    float w0=prev.width/2000.f,w1=s.width/2000.f;
+                    V aa={prev.pos.x/1000.f,prev.pos.y/1000.f,prev.pos.z/1000.f},bb={s.pos.x/1000.f,s.pos.y/1000.f,s.pos.z/1000.f};
+                    quad((V){aa.x-px*w0,aa.y,aa.z-pz*w0},(V){bb.x-px*w1,bb.y,bb.z-pz*w1},(V){bb.x+px*w1,bb.y,bb.z+pz*w1},(V){aa.x+px*w0,aa.y,aa.z+pz*w0},0x2e6d9e,1);
+                    metrics->triangles+=2;metrics->vertices+=4;
+                }
+            }
+            prev=s;have=1;
+        }
+    }
     person(player.pos.x/1000.f,player.pos.y/1000.f,player.pos.z/1000.f,0,r->frame/20.f);
 }
 void render_world_peer(WsPos p) { person(p.x/1000.f,p.y/1000.f,p.z/1000.f,1,0); }

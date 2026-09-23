@@ -42,6 +42,30 @@ class Link(C.Structure):
     ]
 
 
+class Feature(C.Structure):
+    _fields_ = [
+        ("id", Id),
+        ("kind", C.c_uint16),
+        ("flow", C.c_uint16),
+        ("up", Pos),
+        ("down", Pos),
+        ("width", C.c_uint16),
+        ("depth", C.c_uint16),
+        ("seed", C.c_uint32),
+        ("reserved", C.c_uint32),
+    ]
+
+
+class Exc(C.Structure):
+    _fields_ = [
+        ("feature", C.c_uint16),
+        ("type", C.c_uint16),
+        ("at", C.c_uint16),
+        ("length", C.c_uint16),
+        ("aux", C.c_uint32),
+    ]
+
+
 class Recipe(C.Structure):
     _fields_ = [
         ("ancestry", Id),
@@ -51,8 +75,12 @@ class Recipe(C.Structure):
         ("crc", C.c_uint32),
         ("count", C.c_uint16),
         ("links_n", C.c_uint16),
+        ("features_n", C.c_uint16),
+        ("exceptions_n", C.c_uint16),
         ("modules", Module * 128),
         ("links", Link * 256),
+        ("features", Feature * 8),
+        ("exceptions", Exc * 24),
     ]
 
 
@@ -66,7 +94,7 @@ def main():
     start = time.perf_counter()
     worlds = 0
     bad = 0
-    for name in ("cascade", "elek_grid"):
+    for name in ("cascade", "elek_grid", "macro"):
         src = json.loads((ROOT / f"content/worlds/{name}.json").read_text())
         data, manifest = compile_recipe(src)
         for seed in range(1000):
@@ -104,13 +132,16 @@ def main():
             b[i] ^= 1 << rng.randrange(8)
             assert lib.ws_load(C.byref(r), bytes(b), len(b)) != 0
             bad += 1
-        # Attacker recomputes CRC: semantic validation must still reject invalid fields.
+        # Attacker recomputes CRC: semantic validation must still reject
+        # invalid fields. Offsets are relative to the module table, which
+        # starts at 48 (schema 1) or 52 (schema 2, sparse features).
+        table = 52 if struct.unpack_from("<H", data, 4)[0] == 2 else 48
         for offset, value in (
-            (48 + 16, 0),
-            (48 + 18, 255),
-            (48 + 20, 65535),
-            (48 + 22, 7),
-            (48 + 60, 1001),
+            (table + 16, 0),
+            (table + 18, 255),
+            (table + 20, 65535),
+            (table + 22, 7),
+            (table + 60, 1001),
         ):
             b = bytearray(data)
             struct.pack_into("<H", b, offset, value)
@@ -142,9 +173,9 @@ def main():
         "module_bytes": C.sizeof(Module),
         "vectors": vectors,
         "limitations": [
-            "Module connectivity is a portal graph, not continuous terrain reachability.",
+            "Route costs are topology- and terrain-aware, but movement remains link-based: no continuous off-trail terrain traversal.",
             "No P4 runtime parity measurement.",
-            "Two recipe families; not arbitrary world correctness.",
+            "Three recipe families; not arbitrary world correctness.",
         ],
     }
     (ROOT / "results/worldsdk/generation.json").write_text(

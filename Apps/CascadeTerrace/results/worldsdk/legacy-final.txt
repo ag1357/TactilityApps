@@ -1,1 +1,1 @@
-{"checks":864,"failures":0,"seeds":100,"seed_validation_ms":690.385,"render_mean_ms":2.978,"game_bytes":35320,"renderer_bytes":153636,"npc_bytes":5384,"state_bytes":21840,"save_bytes":734,"wire_crc32":3349299003,"physical_status":"PENDING"}
+{"checks":864,"failures":0,"seeds":100,"seed_validation_ms":690.122,"render_mean_ms":2.851,"game_bytes":35320,"renderer_bytes":153636,"npc_bytes":5384,"state_bytes":21840,"save_bytes":734,"wire_crc32":3349299003,"physical_status":"PENDING"}

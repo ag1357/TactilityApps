@@ -21,7 +21,11 @@
   "P4_external_app_build": "IMPLEMENTED",
   "P4_SDK_network_client": "NOT_STARTED",
   "physical_P4": "PHYSICAL_VALIDATION_PENDING",
-  "adversarial_spatial_cases": "IMPLEMENTED"
+  "adversarial_spatial_cases": "IMPLEMENTED",
+  "sparse_world_scale_features": "IMPLEMENTED",
+  "macro_geography_hierarchy": "IMPLEMENTED",
+  "derived_wilderness_route": "IMPLEMENTED",
+  "terrain_aware_travel_cost": "IMPLEMENTED"
  },
  "legacy": {
   "checks": 864,
@@ -39,15 +43,15 @@
  },
  "generation": {
   "status": "PASS",
-  "worlds": 2000,
-  "rejected_malformed_products": 4402,
-  "elapsed_ms": 724.425,
-  "workspace_bytes": 10276,
+  "worlds": 3000,
+  "rejected_malformed_products": 7011,
+  "elapsed_ms": 3276.345,
+  "workspace_bytes": 11016,
   "module_bytes": 64,
   "limitations": [
-   "Module connectivity is a portal graph, not continuous terrain reachability.",
+   "Route costs are topology- and terrain-aware, but movement remains link-based: no continuous off-trail terrain traversal.",
    "No P4 runtime parity measurement.",
-   "Two recipe families; not arbitrary world correctness."
+   "Three recipe families; not arbitrary world correctness."
   ]
  },
  "navigation": {
@@ -95,7 +99,7 @@
   ]
  },
  "memory": {
-  "recipe_workspace_bytes": 10276,
+  "recipe_workspace_bytes": 11016,
   "semantic_state_bytes": 9280,
   "renderer_bytes": 153636,
   "legacy_game_bytes": 35320,
@@ -106,13 +110,13 @@
  },
  "p4": {
   "status": "P4 BUILD PRODUCED; PENDING PHYSICAL VALIDATION",
-  "binary_bytes": 181152,
-  "package_bytes": 194560,
-  "elf_sha256": "dae652f7fe13dd1f56c0f0b99a6052d1957c33778946856fda61944b81fa08a2",
-  "package_sha256": "15aab304c25ab433144555a34ca2ca973950807d15e51227c5344985a81de13b",
+  "binary_bytes": 185248,
+  "package_bytes": 204800,
+  "elf_sha256": "3b2ca4676189b7d8ef0ebcb8645f586c4137ae5c02347ec5b34c402a944180af",
+  "package_sha256": "16084bd14045322a3e3506a0958bb71376c3f1ea96d4dcfbd44d6b3b69265099",
   "format": "Tactility manifest v0.3 / USTAR / esp32p4 external ELF",
-  "compressed_elf_bytes": 124286,
-  "compressed_elf_sha256": "4990164e6c6d843902f6cf585a8265d2dc12f1e32d3ac915dcd185c109f9aa21",
+  "compressed_elf_bytes": 127763,
+  "compressed_elf_sha256": "0fa0e342bce4f07c5ccb18f0c14d13cdff98f22730a0f7ce3e0b36e9d6d6826d",
   "starting_commit": "f216216d4b2f407a7684dcfb455833b116a7de1b",
   "idf_commit": "f21b4c238152dc9e3a24fbad9afe33a3d15f6cfd",
   "idf_version": "6.1-dev",
@@ -120,24 +124,24 @@
   "sections": {
    ".hash": 616,
    ".dynsym": 1360,
-   ".dynstr": 1241,
+   ".dynstr": 1239,
    ".rela.dyn": 5304,
    ".rela.plt": 984,
    ".plt": 1344,
-   ".text": 50900,
+   ".text": 55670,
    ".rodata": 112640,
    ".data.rel.ro": 3176,
    ".got": 16,
    ".got.plt": 336,
    ".data": 644,
-   ".bss": 134000
+   ".bss": 134744
   },
   "physical_status": "PHYSICAL_VALIDATION_PENDING",
   "q1": "INCOMPLETE",
   "q2": "PHYSICAL_VALIDATION_PENDING",
-  "warning": "SDK LVGL lv_conf.h pragma note; no compilation error. Physical loader/runtime not measured."
+  "warning": "SDK LVGL lv_conf.h pragma note; no compilation error. Physical loader/runtime not measured. Rebuilt with ESP-IDF 6.1 + TactilitySDK 0.8.0-dev (Tactility now requires IDF 6); app-side rename memory_print_stats->memory_log_stats for the new SDK API."
  },
- "recommendation": "First implementation gate passed: 18/18 declared walk edges traverse with runtime ground and collision, and the 15 adversarial spatial cases pass with impossible connections failing generation cleanly. Next gate is macro geography (mission #49): mountain/valley, plains, river/watershed, lake, forest, cave, ruin, two settlements and a wilderness route, proving the hierarchy without settlement-specific engine logic. Physical P4 qualification and native P4 transport remain pending.",
+ "recommendation": "Second implementation gate passed: the \u00a749 macro-geography hierarchy is generated from one seed as a 1,600-byte schema-2 product; the derived wilderness route walks end to end; river reconstruction is bit-exact between C and Python with exact chunk-boundary continuity; and the route-cost case holds (nearest settlement is not the cheapest destination). First gate remains green (18/18 traversal, 15/15 adversarial). Next gate is resource/ecology on top of this terrain, reusing the schema-2 feature vocabulary. Physical P4 qualification and native P4 transport remain pending.",
  "adversarial": {
   "status": "PASS",
   "passed": 15,
@@ -151,6 +155,89 @@
   "corridor_locality": "overlapping corridor bands resolve to the nearest centerline, exact ties to the higher deck, ceiling-filtered; walkers cannot be captured by foreign bands",
   "capability_reachability": "ws_reachable 3-pass BFS: WALK / ABILITY / CONDITIONAL / INACCESSIBLE / INVALID",
   "hard_constraints": "ws_topology + compiler parity: one local frame per walk edge, legal port fit, ramp steps <= 800 mm, slope <= 45 degrees, no unrelated solid on the direct route, NPCs need baseline public access",
-  "c_traversal_checks": 56
+  "c_traversal_checks": 56,
+  "sparse_features": "rivers are 56-byte records plus 12-byte typed exceptions; reconstruction is a pure function of (record, t) so chunk boundaries agree exactly; schema-1 products remain byte-compatible",
+  "travel_cost": "walk = horizontal + 8x climb + 20000 per river ford; lift = 500 + climb/2; portal = 2000; deterministic Dijkstra with lowest-index tie-break"
+ },
+ "macro_geography": {
+  "status": "PASS",
+  "seed": 10227025,
+  "generator": "tools/worldsdk/macro.py",
+  "product_bytes": 1600,
+  "product_sha256": "8dec8e61670fddcd0e930739c48c4be0a408e7afe3620542029b1676e66f53b6",
+  "schema": 2,
+  "modules": 21,
+  "links": 11,
+  "features": [
+   "river_cascade"
+  ],
+  "exceptions": 5,
+  "hierarchy": [
+   "mountain",
+   "valley",
+   "plains",
+   "watershed/river",
+   "lake/wetland",
+   "forest",
+   "cave",
+   "ruin",
+   "two settlements",
+   "derived wilderness route"
+  ],
+  "ford_t": 53000,
+  "variants_tried": 1,
+  "c_checks": 4418,
+  "python_checks": 9993,
+  "river_parity_samples": 1075,
+  "walked_edges": 11,
+  "generalized_seeds": [
+   {
+    "seed": 1,
+    "bytes": 1600,
+    "variants_tried": 1
+   },
+   {
+    "seed": 3735928559,
+    "bytes": 1600,
+    "variants_tried": 1
+   },
+   {
+    "seed": 20260922,
+    "bytes": 1600,
+    "variants_tried": 1
+   }
+  ],
+  "cost_case": {
+   "nearest": "high_gate",
+   "cheapest": "ford_haven",
+   "distance_to_high_gate": 709999,
+   "distance_to_ford_haven": 926257,
+   "cost_to_high_gate": 3246425,
+   "cost_to_ford_haven": 2668102,
+   "path_to_high_gate": [
+    10,
+    14,
+    13,
+    12,
+    11
+   ],
+   "path_to_ford_haven": [
+    10,
+    14,
+    15,
+    16,
+    17,
+    18,
+    19,
+    20
+   ],
+   "holds": true
+  },
+  "cost_case_gate": "the geometrically nearest settlement is not the cheapest reachable destination; terrain and fording decide over declared topology",
+  "artifacts": [
+   "content/worlds/macro.json",
+   "content/worlds/macro.inc",
+   "build/macro.cws"
+  ]
  }
 }

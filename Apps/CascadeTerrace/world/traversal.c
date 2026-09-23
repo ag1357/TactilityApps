@@ -170,3 +170,101 @@ void ws_travel_tick(WsTraveler* t, uint32_t ms) {
     t->at.pos.z += (int32_t)(((int64_t)t->destination.pos.z - t->at.pos.z) * ms / t->remaining);
     t->remaining -= ms;
 }
+/* ---- sparse river reconstruction ----
+   The whole river is 8 pinned meander segments plus a monotonic elevation
+   profile with typed drops. Every value is a pure function of the sparse
+   record and t, so a chunk reconstructs its window without any neighbour
+   state and adjacent chunks agree exactly on shared boundary values. */
+static int32_t river_lateral(const WsFeature* f, int64_t amplitude, int k) {
+    if (k <= 0 || k >= 8) return 0;
+    uint32_t m = (uint32_t)(2 * amplitude + 1);
+    return (int32_t)(ws_hash(f->seed ^ (uint32_t)(k * 0x9E3779B1u)) % m) - (int32_t)amplitude;
+}
+static WsPos river_plan(const WsRecipe* r, uint16_t fi, uint16_t t) {
+    const WsFeature* f = &r->features[fi];
+    int64_t dx = (int64_t)f->down.x - f->up.x, dz = (int64_t)f->down.z - f->up.z;
+    int64_t L = isqrt64(dx * dx + dz * dz);
+    int64_t a = (int64_t)f->width * 3;
+    if (a > L / 4) a = L / 4;
+    int seg = t / 8192;
+    if (seg > 7) seg = 7;
+    int64_t u = t - seg * 8192;
+    /* Segment 7 spans 57344..65535 (8191 units), so its lateral blend must
+       complete by t=65535: the downstream endpoint is pinned exactly. */
+    int64_t span = seg == 7 ? 8191 : 8192;
+    int32_t l0 = river_lateral(f, a, seg), l1 = river_lateral(f, a, seg + 1);
+    int64_t lat = l0 + (l1 - l0) * u / span;
+    WsPos p;
+    p.x = (int32_t)((int64_t)f->up.x + dx * t / 65535 - dz * lat / L);
+    p.z = (int32_t)((int64_t)f->up.z + dz * t / 65535 + dx * lat / L);
+    p.y = 0;
+    return p;
+}
+static int32_t river_elevation(const WsRecipe* r, uint16_t fi, uint16_t t) {
+    const WsFeature* f = &r->features[fi];
+    int64_t base = (int64_t)f->up.y - f->down.y, stepped = 0;
+    for (int i = 0; i < r->exception_count; i++) {
+        const WsException* e = &r->exceptions[i];
+        if (e->feature != fi || (e->type != WS_EXC_WATERFALL && e->type != WS_EXC_DAM)) continue;
+        base -= e->aux;
+        uint16_t at = e->type == WS_EXC_DAM ? (uint16_t)(e->at + e->length) : e->at;
+        if (t > at) stepped += e->aux;
+    }
+    return (int32_t)((int64_t)f->up.y - base * t / 65535 - stepped);
+}
+int ws_river_sample(const WsRecipe* r, uint16_t fi, uint16_t t, WsRiverSample* out) {
+    if (fi >= r->feature_count || !out || r->features[fi].kind != WS_FEATURE_RIVER) return 0;
+    const WsFeature* f = &r->features[fi];
+    out->pos = river_plan(r, fi, t);
+    out->pos.y = river_elevation(r, fi, t);
+    int seg = t / 8192;
+    if (seg > 7) seg = 7;
+    WsPos a = river_plan(r, fi, (uint16_t)(seg * 8192));
+    WsPos b = river_plan(r, fi, (uint16_t)(seg == 7 ? 65535 : (seg + 1) * 8192));
+    int64_t cx = b.x - a.x, cz = b.z - a.z;
+    int64_t cl = isqrt64(cx * cx + cz * cz);
+    out->tangent_x = cl ? (int32_t)(cx * 65536 / cl) : 65536;
+    out->tangent_z = cl ? (int32_t)(cz * 65536 / cl) : 0;
+    out->width = f->width;
+    out->depth = f->depth;
+    out->flow = f->flow;
+    out->surfaced = 1;
+    for (int i = 0; i < r->exception_count; i++) {
+        const WsException* e = &r->exceptions[i];
+        if (e->feature != fi) continue;
+        if (t < e->at || (uint32_t)t > (uint32_t)e->at + e->length) continue;
+        if (e->type == WS_EXC_RAPIDS)
+            out->flow = WS_FLOW_RAPID;
+        else if (e->type == WS_EXC_LAKE) {
+            out->width = (uint16_t)(f->width * 4 > 65535 ? 65535 : f->width * 4);
+            out->depth = (uint16_t)(f->depth * 3 > 65535 ? 65535 : f->depth * 3);
+            out->flow = WS_FLOW_CALM;
+        } else if (e->type == WS_EXC_UNDERGROUND)
+            out->surfaced = 0;
+        else if (e->type == WS_EXC_DAM)
+            out->flow = WS_FLOW_CALM;
+    }
+    return 1;
+}
+int ws_river_window(const WsRecipe* r, uint16_t fi, WsPos lo, WsPos hi, uint16_t* t0, uint16_t* t1) {
+    /* Horizontal chunk window (y ignored): the spanning t range whose
+       segments can reach it, widened to cover lake reaches. Gaps inside the
+       span are the caller's concern; sampling stays chunk-local. */
+    if (fi >= r->feature_count || r->features[fi].kind != WS_FEATURE_RIVER) return 0;
+    const WsFeature* f = &r->features[fi];
+    int64_t margin = (int64_t)f->width * 4 + 500;
+    int first = -1, last = -1;
+    for (int k = 0; k < 8; k++) {
+        WsPos a = river_plan(r, fi, (uint16_t)(k * 8192));
+        WsPos b = river_plan(r, fi, (uint16_t)(k == 7 ? 65535 : (k + 1) * 8192));
+        int64_t x0 = a.x < b.x ? a.x : b.x, x1 = a.x < b.x ? b.x : a.x;
+        int64_t z0 = a.z < b.z ? a.z : b.z, z1 = a.z < b.z ? b.z : a.z;
+        if (x1 + margin < lo.x || x0 - margin > hi.x || z1 + margin < lo.z || z0 - margin > hi.z) continue;
+        if (first < 0) first = k * 8192;
+        last = k == 7 ? 65535 : (k + 1) * 8192;
+    }
+    if (first < 0) return 0;
+    if (t0) *t0 = (uint16_t)first;
+    if (t1) *t1 = (uint16_t)last;
+    return 1;
+}

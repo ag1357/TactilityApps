@@ -1,9 +1,10 @@
 #!/usr/bin/env python3
 """Bounded World SDK source compiler. Standard library only. No runtime JSON."""
 
-import argparse, hashlib, json, pathlib, struct, sys, zlib
+import argparse, hashlib, json, math, pathlib, struct, sys, zlib
 
 SCHEMA = GENERATOR = 1
+SCHEMA_FEATURES = 2
 TAGS = {
     "Surface.Walk": 1,
     "Collision.Solid": 2,
@@ -25,6 +26,10 @@ LEVELS = [
     "room",
     "object",
 ]
+FEATURE_KINDS = {"river": 1}
+FLOWS = {"calm": 0, "rapid": 1}
+EXCEPTIONS = {"waterfall": 1, "rapids": 2, "lake": 3, "dam": 4, "underground": 5}
+CAP_WALK, CAP_LIFT, CAP_PORTAL = 1, 2, 4
 
 
 def h(x):
@@ -157,6 +162,305 @@ def bounded(v, lo, hi, label):
     return v
 
 
+def fraction(v, label):
+    if type(v) not in (int, float) or not 0 <= v < 1:
+        raise ValueError(f"{label}: fraction 0..1 required")
+    return v
+
+
+def feature_record(f):
+    """Validate and convert one source feature into the runtime record. The
+    same conversion backs both the packing path and the ws_river_sample
+    mirror, so there is exactly one definition of at/length/drop semantics."""
+    if set(f) - {
+        "name",
+        "key",
+        "kind",
+        "flow",
+        "upstream",
+        "downstream",
+        "width",
+        "depth",
+        "seed",
+        "exceptions",
+    }:
+        raise ValueError("unknown feature field")
+    kind = FEATURE_KINDS.get(f.get("kind", "river"))
+    if kind is None:
+        raise ValueError(f"unknown feature kind: {f.get('kind')}")
+    flow = FLOWS.get(f.get("flow", "calm"))
+    if flow is None:
+        raise ValueError(f"unknown flow class: {f.get('flow')}")
+    up = [bounded(v, -1000000, 1000000, "upstream") for v in f["upstream"]]
+    down = [bounded(v, -1000000, 1000000, "downstream") for v in f["downstream"]]
+    if len(up) != 3 or len(down) != 3:
+        raise ValueError("feature coordinate dimensions")
+    width = bounded(f["width"], 200, 32000, "width")
+    depth = bounded(f["depth"], 50, 8000, "depth")
+    dx, dz = down[0] - up[0], down[2] - up[2]
+    if dx == 0 and dz == 0:
+        raise ValueError("river has no horizontal run")
+    rec = {
+        "kind": kind,
+        "flow": flow,
+        "up": up,
+        "down": down,
+        "width": width,
+        "depth": depth,
+        "seed": bounded(f.get("seed", 0), 0, 0xFFFFFFFF, "feature seed"),
+        "exceptions": [],
+    }
+    drop = up[1] - down[1]
+    steps = 0
+    for e in f.get("exceptions", []):
+        if set(e) - {"type", "at", "length", "drop"}:
+            raise ValueError("unknown exception field")
+        t = EXCEPTIONS.get(e["type"])
+        if t is None:
+            raise ValueError(f"unknown exception type: {e['type']}")
+        at = int(fraction(e["at"], "exception at") * 65535)
+        length = int(fraction(e.get("length", 0), "exception length") * 65535)
+        if at + length > 65535:
+            raise ValueError("exception overruns the feature")
+        aux = 0
+        if t in (EXCEPTIONS["waterfall"], EXCEPTIONS["dam"]):
+            aux = bounded(e["drop"], 1, 200000, "exception drop")
+            if t == EXCEPTIONS["waterfall"] and length:
+                raise ValueError("waterfall is a point exception")
+            if at + length > 65534:
+                raise ValueError("drop must complete before the downstream end")
+            steps += aux
+        else:
+            if "drop" in e:
+                raise ValueError(f"{e['type']} has no drop")
+            if length < 1:
+                raise ValueError(f"{e['type']} needs a reach length")
+        rec["exceptions"].append({"type": t, "at": at, "length": length, "aux": aux})
+    if drop < 1:
+        raise ValueError("river must fall monotonically (upstream above downstream)")
+    if steps > drop:
+        raise ValueError("typed drops exceed the total fall")
+    if (drop - steps) * 4 > math.isqrt(dx * dx + dz * dz):
+        raise ValueError("river slope exceeds the bounded grade after typed drops")
+    return rec
+
+
+def river_lateral(rec, amplitude, k):
+    """Mirror of ws_river_sample meander lateral offset."""
+    if k <= 0 or k >= 8:
+        return 0
+    m = 2 * amplitude + 1
+    return (h(rec["seed"] ^ (k * 0x9E3779B1 & 0xFFFFFFFF)) % m) - amplitude
+
+
+def river_plan(rec, t):
+    """Mirror of river_plan: position (x, z) at t. Bit-exact with C via
+    c_div (C truncation) everywhere C divides signed values."""
+    dx, dz = rec["down"][0] - rec["up"][0], rec["down"][2] - rec["up"][2]
+    L = math.isqrt(dx * dx + dz * dz)
+    a = rec["width"] * 3
+    if a > L // 4:
+        a = L // 4
+    seg = t // 8192
+    if seg > 7:
+        seg = 7
+    u = t - seg * 8192
+    # Segment 7 spans 8191 units: blend completes by t=65535, pinning the
+    # downstream endpoint exactly (matches river_plan in C).
+    span = 8191 if seg == 7 else 8192
+    l0, l1 = river_lateral(rec, a, seg), river_lateral(rec, a, seg + 1)
+    lat = l0 + c_div((l1 - l0) * u, span)
+    return (
+        rec["up"][0] + c_div(dx * t, 65535) - c_div(dz * lat, L),
+        rec["up"][2] + c_div(dz * t, 65535) + c_div(dx * lat, L),
+    )
+
+
+def river_elevation(rec, t):
+    """Mirror of river_elevation: monotonic base slope + typed drops."""
+    base, stepped = rec["up"][1] - rec["down"][1], 0
+    for e in rec["exceptions"]:
+        if e["type"] not in (EXCEPTIONS["waterfall"], EXCEPTIONS["dam"]):
+            continue
+        base -= e["aux"]
+        at = e["at"] + e["length"] if e["type"] == EXCEPTIONS["dam"] else e["at"]
+        if t > at:
+            stepped += e["aux"]
+    return rec["up"][1] - c_div(base * t, 65535) - stepped
+
+
+def river_sample(rec, t):
+    """Bit-exact mirror of ws_river_sample over a compiled feature record."""
+    x, z = river_plan(rec, t)
+    seg = t // 8192
+    if seg > 7:
+        seg = 7
+    ta = seg * 8192
+    tb = 65535 if seg == 7 else (seg + 1) * 8192
+    a, b = river_plan(rec, ta), river_plan(rec, tb)
+    cx, cz = b[0] - a[0], b[1] - a[1]
+    cl = math.isqrt(cx * cx + cz * cz)
+    sample = {
+        "x": x,
+        "y": river_elevation(rec, t),
+        "z": z,
+        "tangent_x": c_div(cx * 65536, cl) if cl else 65536,
+        "tangent_z": c_div(cz * 65536, cl) if cl else 0,
+        "width": rec["width"],
+        "depth": rec["depth"],
+        "flow": rec["flow"],
+        "surfaced": 1,
+    }
+    for e in rec["exceptions"]:
+        if t < e["at"] or t > e["at"] + e["length"]:
+            continue
+        if e["type"] == EXCEPTIONS["rapids"]:
+            sample["flow"] = FLOWS["rapid"]
+        elif e["type"] == EXCEPTIONS["lake"]:
+            sample["width"] = min(rec["width"] * 4, 65535)
+            sample["depth"] = min(rec["depth"] * 3, 65535)
+            sample["flow"] = FLOWS["calm"]
+        elif e["type"] == EXCEPTIONS["underground"]:
+            sample["surfaced"] = 0
+        elif e["type"] == EXCEPTIONS["dam"]:
+            sample["flow"] = FLOWS["calm"]
+    return sample
+
+
+def river_window(rec, lo, hi):
+    """Mirror of ws_river_window: the spanning t range able to reach the
+    horizontal window, widened for lake reaches (y ignored)."""
+    margin = rec["width"] * 4 + 500
+    first, last = -1, -1
+    for k in range(8):
+        a = river_plan(rec, k * 8192)
+        b = river_plan(rec, 65535 if k == 7 else (k + 1) * 8192)
+        x0, x1 = min(a[0], b[0]), max(a[0], b[0])
+        z0, z1 = min(a[1], b[1]), max(a[1], b[1])
+        if x1 + margin < lo[0] or x0 - margin > hi[0]:
+            continue
+        if z1 + margin < lo[2] or z0 - margin > hi[2]:
+            continue
+        if first < 0:
+            first = k * 8192
+        last = 65535 if k == 7 else (k + 1) * 8192
+    return None if first < 0 else (first, last)
+
+
+def chord_cross(a, b, c, d):
+    """Mirror of the C segment crossing test: where route a-b crosses river
+    chord c-d, the route parameter q (16.16), else None. Both segments are
+    extended to their endpoints (q and u within 0..65536)."""
+    d1x, d1z = b[0] - a[0], b[2] - a[2]
+    d2x, d2z = d[0] - c[0], d[2] - c[2]
+    den = d1x * d2z - d1z * d2x
+    if not den:
+        return None
+    ax, az = c[0] - a[0], c[2] - a[2]
+    q = c_div((ax * d2z - az * d2x) * 65536, den)
+    u = c_div((ax * d1z - az * d1x) * 65536, den)
+    if not (0 <= q <= 65536 and 0 <= u <= 65536):
+        return None
+    return q
+
+
+def river_crossings(rec, a, b):
+    """Mirror of river_crossings: how many of the river's eight meander
+    segments the straight route fords; touching a meander node counts once
+    (sorted q, dedup window 4096)."""
+    qs = []
+    for k in range(8):
+        ta = k * 8192
+        tb = 65535 if k == 7 else (k + 1) * 8192
+        s0, s1 = river_sample(rec, ta), river_sample(rec, tb)
+        q = chord_cross(a, b, (s0["x"], 0, s0["z"]), (s1["x"], 0, s1["z"]))
+        if q is not None:
+            qs.append(q)
+    qs.sort()
+    crossings, last = 0, None
+    for q in qs:
+        if last is None or q - last > 4096:
+            crossings += 1
+            last = q
+    return crossings
+
+
+def runtime_view(src):
+    """Resolve a source recipe into the runtime numbers C sees: materialized
+    module positions, index-resolved links, compiled feature records."""
+    ids = {m["name"]: i for i, m in enumerate(src["modules"])}
+    modules = [materialized(src, m) for m in src["modules"]]
+    links = [
+        (ids[a], ids[b], {"walk": 0, "lift": 1, "portal": 2}[k])
+        for a, b, k in src.get("links", [])
+    ]
+    features = [feature_record(f) for f in src.get("features", [])]
+    return modules, links, features
+
+
+def link_cost(modules, links, features, i, caps=CAP_WALK):
+    """Mirror of ws_link_cost (None = capability gated)."""
+    a, b, kind = links[i]
+    if kind == 1 and not caps & CAP_LIFT:
+        return None
+    if kind == 2 and not caps & CAP_PORTAL:
+        return None
+    A, B = modules[a], modules[b]
+    dx, dy, dz = B[0] - A[0], B[1] - A[1], B[2] - A[2]
+    climb = abs(dy)
+    if kind == 1:
+        return 500 + climb // 2
+    if kind == 2:
+        return 2000
+    cost = math.isqrt(dx * dx + dz * dz) + 8 * climb
+    for rec in features:
+        cost += 20000 * river_crossings(rec, A, B)
+    return cost
+
+
+def route_cost(modules, links, features, a, b, caps=CAP_WALK):
+    """Mirror of ws_route_cost: deterministic Dijkstra with lowest-index
+    tie-break over declared topology; returns (cost, path) or None when
+    unreachable."""
+    n = len(modules)
+    dist = [None] * n
+    prev = [None] * n
+    done = [False] * n
+    dist[a] = 0
+    while True:
+        u = -1
+        for i in range(n):
+            if not done[i] and dist[i] is not None and (u < 0 or dist[i] < dist[u]):
+                u = i
+        if u < 0:
+            break
+        done[u] = True
+        for i, link in enumerate(links):
+            if link[0] == u and not done[link[1]]:
+                v = link[1]
+            elif link[1] == u and not done[link[0]]:
+                v = link[0]
+            else:
+                continue
+            c = link_cost(modules, links, features, i, caps)
+            if c is None:
+                continue
+            if dist[v] is None or dist[u] + c < dist[v]:
+                dist[v] = dist[u] + c
+                prev[v] = u
+    if dist[b] is None:
+        return None
+    path = []
+    at = b
+    while True:
+        path.append(at)
+        if at == a:
+            break
+        at = prev[at]
+    path.reverse()
+    return dist[b], path
+
+
 def compile_recipe(src):
     if set(src) - {
         "schema",
@@ -168,6 +472,7 @@ def compile_recipe(src):
         "name",
         "modules",
         "links",
+        "features",
     }:
         raise ValueError("unknown source field: SCHEMA_EXTENSION required")
     if src["schema"] != SCHEMA or src["generator"] != GENERATOR:
@@ -255,6 +560,49 @@ def compile_recipe(src):
             validate_walk_edge(src, modules, a, b)
             walk_links.append((a, b))
         body += struct.pack("<4H", a, b, k, 0)
+    # Sparse world-scale features (rivers and typed exceptions): stable
+    # identity from the ancestry like modules, validated fail-closed, packed
+    # after the links. A product carries features only when declared; the
+    # legacy schema 1 layout stays byte-identical for all older artifacts.
+    fnames = set()
+    frecords = []
+    for i, f in enumerate(src.get("features", [])):
+        name = f.get("name")
+        if not name or name in ids or name in fnames:
+            raise ValueError("duplicate or missing feature name")
+        fnames.add(name)
+        key = bounded(f.get("key", 100 + i), 1, 0xFFFFFFFF, "feature key")
+        ident = child(ancestry, key)
+        if tuple(ident) in handles:
+            raise ValueError("identity collision")
+        handles.add(tuple(ident))
+        rec = feature_record(f)
+        rec["id"] = ident
+        rec["index"] = len(frecords)
+        frecords.append(rec)
+    if len(frecords) > 8:
+        raise ValueError("feature capacity exceeded")
+    ecount = sum(len(rec["exceptions"]) for rec in frecords)
+    if ecount > 24:
+        raise ValueError("exception capacity exceeded")
+    fbody = bytearray()
+    for rec in frecords:
+        fbody += struct.pack(
+            "<4I2H6i2H2I",
+            *rec["id"],
+            rec["kind"],
+            rec["flow"],
+            *rec["up"],
+            *rec["down"],
+            rec["width"],
+            rec["depth"],
+            rec["seed"],
+            0,
+        )
+    ebody = bytearray()
+    for rec in frecords:
+        for e in rec["exceptions"]:
+            ebody += struct.pack("<4HI", rec["index"], e["type"], e["at"], e["length"], e["aux"])
     if graph:
         seen = set()
         todo = [next(iter(graph))]
@@ -293,32 +641,45 @@ def compile_recipe(src):
                 break
         if not doorway:
             raise ValueError("Entity.NPC sealed inside a room with no public access port")
+    schema = SCHEMA_FEATURES if frecords else SCHEMA
+    if frecords:
+        counts = (len(modules), len(links), len(frecords), ecount)
+    else:
+        counts = (len(modules), len(links))
     suffix = (
         struct.pack(
-            "<4I3I2H",
+            "<4I3I" + "H" * len(counts),
             *ancestry,
             *[
                 bounded(src.get(k, 0), 0, 0xFFFFFFFF, k)
                 for k in ("seed", "epoch", "revision")
             ],
-            len(modules),
-            len(links),
+            *counts,
         )
         + body
+        + bytes(fbody)
+        + bytes(ebody)
     )
     data = (
         struct.pack(
-            "<4sHHII", b"CWS1", SCHEMA, GENERATOR, len(suffix) + 16, zlib.crc32(suffix)
+            "<4sHHII",
+            b"CWS1",
+            schema,
+            GENERATOR,
+            len(suffix) + 16,
+            zlib.crc32(suffix),
         )
         + suffix
     )
     return data, {
-        "schema": SCHEMA,
+        "schema": schema,
         "generator": GENERATOR,
         "sha256": hashlib.sha256(data).hexdigest(),
         "bytes": len(data),
         "modules": manifest,
         "links": len(links),
+        "features": [f.get("name") for f in src.get("features", [])],
+        "exceptions": ecount,
         "source_sha256": hashlib.sha256(
             json.dumps(src, sort_keys=True, separators=(",", ":")).encode()
         ).hexdigest(),
@@ -331,6 +692,7 @@ def main():
     ap.add_argument("source", nargs="?")
     ap.add_argument("--output")
     ap.add_argument("--c-include")
+    ap.add_argument("--c-symbol", default="ws_product")
     args = ap.parse_args()
     try:
         if args.command == "schema":
@@ -358,7 +720,8 @@ def main():
                 )
                 if args.c_include:
                     pathlib.Path(args.c_include).write_text(
-                        "/* Generated by tools/worldsdk/sdk.py. Do not edit. */\nstatic const unsigned char ws_product[]={\n"
+                        "/* Generated by tools/worldsdk/sdk.py. Do not edit. */\n"
+                        f"static const unsigned char {args.c_symbol}[]={{\n"
                         + "".join(
                             ",".join(map(str, data[i : i + 24])) + ",\n"
                             for i in range(0, len(data), 24)

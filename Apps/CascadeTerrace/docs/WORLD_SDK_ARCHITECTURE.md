@@ -122,8 +122,43 @@ provides the ground, with exact ties resolving to the higher deck and the
 ceiling filter keeping walkers below unreachable decks. The compiler mirrors
 the runtime walk-edge validation bit-exactly, and `ws_validate` rejects
 unrealizable content fail-closed, including NPCs sealed in rooms without
-public access. Both SDK settlement products remain **experimental candidates**
-until the macro geography and later gates pass. `qualify-world-sdk.sh` exits
-nonzero if any gate fails. The default Cascade adapter only imports the
+public access. The default Cascade adapter only imports the
 original five site dimensions, and keeps generation-v1 terrain routes, which
 still pass their existing physical reachability tests.
+
+## Macro geography gate
+
+`tools/worldsdk/macro.py` generates the mission §49 hierarchy from one seed:
+mountain massif with shoulders and a watershed col, a falling river with typed
+waterfall/rapids/lake/underground/dam exceptions, plains, forest, wetland, a
+cave with a public entrance, a repairable ruin, two settlements and the
+wilderness route between them. The route is **derived from the generated
+geography**: every trail waypoint is the river sample at its station offset
+along the local perpendicular and lifted above the water; the ford is where
+the river comes closest to the ruin; the wetland, karst ridge and dam wall
+anchor to their typed reaches. The gate (`macro_test.py` plus the C
+`macro_sdk_test`) re-derives every waypoint from the committed river record,
+so hand-positioned content cannot pass as derived.
+
+Sparse features are product-format vocabulary, not world-specific logic: a
+river is a 56-byte record (stable ID, kind, flow class, upstream/downstream
+endpoints, width/depth class, seed) plus 12-byte typed exceptions, validated
+fail-closed (monotonic fall, bounded residual grade after typed drops,
+exception placement). Reconstruction is a pure function of (record, t): each
+chunk asks `ws_river_window` for the t range that can reach it and samples
+only that range, so adjacent chunks agree exactly on shared boundary values
+with no neighbour state and no fluid simulation. Runtime water is a cheap
+local strip in the renderer, tapered by width class, skipped underground.
+
+Travel cost is terrain-aware over declared topology: walk cost is horizontal
+length plus eight times the climb plus a 20,000 fording penalty per river
+crossing of the route's segments (deduplicated at meander nodes); lifts and
+portals cost fixed amounts; the router is a deterministic Dijkstra with
+lowest-index tie-break. The gate proves the mission's route-cost case: from
+the ruin, the geometrically nearest settlement is not the cheapest reachable
+destination — climbing and fording decide, not straight lines.
+
+Schema-1 products remain byte-compatible with every published artifact; a
+product carries the feature section only when declared (schema 2).
+`qualify-world-sdk.sh` exits nonzero if any gate fails, including the macro
+gate.

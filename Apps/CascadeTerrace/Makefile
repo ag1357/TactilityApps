@@ -11,6 +11,10 @@ build/world_sdk_test: $(WORLD_SDK) tests/world_sdk.c world/sdk.h | build
 	$(CC) $(CFLAGS) $(filter %.c,$^) -o $@
 sdk-test: build/world_sdk_test
 	./build/world_sdk_test
+build/macro_sdk_test: $(WORLD_SDK) tests/macro_sdk.c world/sdk.h content/worlds/macro.inc | build
+	$(CC) $(CFLAGS) $(filter %.c,$^) -o $@
+macro-test: build/macro_sdk_test
+	./build/macro_sdk_test
 build:
 	mkdir -p build
 build/cascade: $(CORE) desktop/main.c | build
@@ -60,7 +64,7 @@ build/world_state_test: $(WORLD_SDK) tests/world_state.c world/state.h | build
 build/libworldview.so: $(CORE) core/render.h world/state.h | build
 	$(CC) $(CPPFLAGS) $(CFLAGS) -shared -fPIC $(filter %.c,$^) -lm -o $@
 
-build/world_sdk_test build/world_state_test build/libsdk.so build/libworldview.so build/world_viewer build/cascade build/test build/evaluate build/benchmark: $(wildcard world/*.h) content/worlds/cascade.inc
+build/world_sdk_test build/world_state_test build/libsdk.so build/libworldview.so build/world_viewer build/cascade build/test build/evaluate build/benchmark: $(wildcard world/*.h) content/worlds/cascade.inc content/worlds/macro.inc
 .PHONY: sdk-test sdk-qualify
 sdk-qualify:
 	./scripts/qualify-world-sdk.sh

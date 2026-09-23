@@ -1,9 +1,9 @@
 {
   "status": "PASS",
-  "worlds": 2000,
-  "rejected_malformed_products": 4402,
-  "elapsed_ms": 2018.553,
-  "workspace_bytes": 10276,
+  "worlds": 3000,
+  "rejected_malformed_products": 7011,
+  "elapsed_ms": 3250.899,
+  "workspace_bytes": 11016,
   "module_bytes": 64,
   "vectors": [
     {
@@ -53,11 +53,35 @@
       "seed": 999,
       "product_sha256": "20e5a11f0fac73385bf201eabee02660fddeffd3035f4e31f7003f3f76d399ec",
       "materialized_sha256": "57157ba1633b9d7e0dade4573b7775902a7f3f568e56689bad3ab345d093b13e"
+    },
+    {
+      "recipe": "macro",
+      "seed": 0,
+      "product_sha256": "aee9dc110d564614c09b94ea5b5b64535afa542ff9d54756f1b9e74873a34237",
+      "materialized_sha256": "cc99001ade8598101fa7158fca97f238cf0bdcabaffbb33ffdc4a1513646b49c"
+    },
+    {
+      "recipe": "macro",
+      "seed": 1,
+      "product_sha256": "b45381fa563d4a2fcd2e6e0e391bf58c2f525d4a8e6c6e4d1c358bc71f41df9c",
+      "materialized_sha256": "cc99001ade8598101fa7158fca97f238cf0bdcabaffbb33ffdc4a1513646b49c"
+    },
+    {
+      "recipe": "macro",
+      "seed": 42,
+      "product_sha256": "6086dac9b3e98bead3331a86aedcf10bf34a89b45301930b204afc9ca454601f",
+      "materialized_sha256": "cc99001ade8598101fa7158fca97f238cf0bdcabaffbb33ffdc4a1513646b49c"
+    },
+    {
+      "recipe": "macro",
+      "seed": 999,
+      "product_sha256": "2df3177e3c26f20211d03b9d0ef4f32de3326686efbc1eeab0a33e7cd291b02f",
+      "materialized_sha256": "cc99001ade8598101fa7158fca97f238cf0bdcabaffbb33ffdc4a1513646b49c"
     }
   ],
   "limitations": [
-    "Module connectivity is a portal graph, not continuous terrain reachability.",
+    "Route costs are topology- and terrain-aware, but movement remains link-based: no continuous off-trail terrain traversal.",
     "No P4 runtime parity measurement.",
-    "Two recipe families; not arbitrary world correctness."
+    "Three recipe families; not arbitrary world correctness."
   ]
 }

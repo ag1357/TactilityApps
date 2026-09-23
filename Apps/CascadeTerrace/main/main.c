@@ -216,7 +216,7 @@ int main(int argc, char** argv) {
     uint64_t gen_us = micros() - t;
     int reloaded = load_game(g, save_base);
     emit("{\"type\":\"boot\",\"platform\":\"esp32p4\",\"generator\":%u,\"generation_us\":%llu,\"reload\":%d,\"explicit_psram_bytes\":%zu,\"clock_resolution_us\":%u}\n", GEN_VERSION, (unsigned long long)gen_us, reloaded, sizeof(Game) + sizeof(Renderer) + W * H * 8, 1U);
-    memory_print_stats();
+    memory_log_stats();
     emit("{\"type\":\"heap\",\"internal_free\":%u,\"psram_free\":%u}\n", (unsigned)heap_caps_get_free_size(MALLOC_CAP_INTERNAL), (unsigned)heap_caps_get_free_size(MALLOC_CAP_SPIRAM));
     if (qualify) {
         emit("{\"type\":\"cognition_config\",\"mode\":%d,\"model_bytes\":101432,\"view_bytes\":%zu,\"result_bytes\":%zu,\"context_bytes\":%zu}\n",experimental,sizeof(CgView),sizeof(CgResult),sizeof(CgContext));

@@ -1,0 +1,537 @@
+{
+  "schema": 1,
+  "generator": 1,
+  "ancestry": [
+    334528,
+    39949,
+    8230,
+    3776
+  ],
+  "seed": 10227025,
+  "epoch": 1,
+  "revision": 0,
+  "name": "cascade_macro",
+  "modules": [
+    {
+      "name": "mountain",
+      "level": "region",
+      "shape": "box",
+      "tags": [
+        "Collision.Solid"
+      ],
+      "position": [
+        -73315,
+        600000,
+        -760000
+      ],
+      "size": [
+        400000,
+        400000,
+        360000
+      ],
+      "color": 9080726,
+      "key": 100
+    },
+    {
+      "name": "shoulder_east",
+      "level": "structure",
+      "shape": "box",
+      "tags": [
+        "Collision.Solid"
+      ],
+      "position": [
+        276685,
+        520000,
+        -700000
+      ],
+      "size": [
+        220000,
+        400000,
+        300000
+      ],
+      "color": 8225676,
+      "key": 101
+    },
+    {
+      "name": "shoulder_west",
+      "level": "structure",
+      "shape": "box",
+      "tags": [
+        "Collision.Solid"
+      ],
+      "position": [
+        -423315,
+        520000,
+        -700000
+      ],
+      "size": [
+        220000,
+        400000,
+        300000
+      ],
+      "color": 8225676,
+      "key": 102
+    },
+    {
+      "name": "watershed",
+      "shape": "plane",
+      "tags": [
+        "Surface.Walk"
+      ],
+      "position": [
+        -18054,
+        522000,
+        -548000
+      ],
+      "size": [
+        80000,
+        400,
+        80000
+      ],
+      "level": "structure",
+      "color": 12174543,
+      "key": 103
+    },
+    {
+      "name": "cave",
+      "level": "room",
+      "shape": "room",
+      "tags": [
+        "Collision.Solid"
+      ],
+      "position": [
+        -223315,
+        90000,
+        -565000
+      ],
+      "size": [
+        16000,
+        5000,
+        16000
+      ],
+      "color": 4868690,
+      "key": 104
+    },
+    {
+      "name": "karst_ridge",
+      "level": "structure",
+      "shape": "box",
+      "tags": [
+        "Collision.Solid"
+      ],
+      "position": [
+        -26726,
+        164282,
+        475555
+      ],
+      "size": [
+        111920,
+        110000,
+        204273
+      ],
+      "color": 6187875,
+      "key": 105
+    },
+    {
+      "name": "dam_hold",
+      "level": "structure",
+      "shape": "box",
+      "tags": [
+        "Collision.Solid"
+      ],
+      "position": [
+        -29733,
+        86644,
+        795898
+      ],
+      "size": [
+        60000,
+        60000,
+        79779
+      ],
+      "color": 9211028,
+      "key": 106
+    },
+    {
+      "name": "plains",
+      "level": "region",
+      "shape": "plane",
+      "tags": [],
+      "position": [
+        -15974,
+        50000,
+        700000
+      ],
+      "size": [
+        400000,
+        300,
+        380000
+      ],
+      "color": 9412702,
+      "key": 107
+    },
+    {
+      "name": "forest",
+      "level": "region",
+      "shape": "plane",
+      "tags": [],
+      "position": [
+        -178672,
+        244567,
+        18666
+      ],
+      "size": [
+        300000,
+        400,
+        260000
+      ],
+      "color": 4156223,
+      "key": 108
+    },
+    {
+      "name": "wetland",
+      "level": "region",
+      "shape": "plane",
+      "tags": [],
+      "position": [
+        36905,
+        186594,
+        276896
+      ],
+      "size": [
+        160000,
+        300,
+        220000
+      ],
+      "color": 6258316,
+      "key": 109
+    },
+    {
+      "name": "ruin",
+      "shape": "plane",
+      "tags": [
+        "Surface.Walk",
+        "Action.Repair"
+      ],
+      "position": [
+        -208672,
+        244567,
+        38666
+      ],
+      "size": [
+        70154,
+        400,
+        70154
+      ],
+      "level": "structure",
+      "color": 10260346,
+      "key": 110
+    },
+    {
+      "name": "high_gate",
+      "shape": "plane",
+      "tags": [
+        "Surface.Walk"
+      ],
+      "position": [
+        276183,
+        470000,
+        -480000
+      ],
+      "size": [
+        80000,
+        400,
+        80000
+      ],
+      "level": "settlement",
+      "color": 13218426,
+      "key": 111
+    },
+    {
+      "name": "trail_e0",
+      "shape": "plane",
+      "tags": [
+        "Surface.Walk"
+      ],
+      "position": [
+        -152086,
+        321867,
+        -387566
+      ],
+      "size": [
+        80000,
+        400,
+        80000
+      ],
+      "level": "structure",
+      "color": 9139029,
+      "key": 112
+    },
+    {
+      "name": "trail_e1",
+      "shape": "plane",
+      "tags": [
+        "Surface.Walk"
+      ],
+      "position": [
+        -146064,
+        267667,
+        -93861
+      ],
+      "size": [
+        80000,
+        400,
+        80000
+      ],
+      "level": "structure",
+      "color": 9139029,
+      "key": 113
+    },
+    {
+      "name": "trail_e2",
+      "shape": "plane",
+      "tags": [
+        "Surface.Walk"
+      ],
+      "position": [
+        -131771,
+        222500,
+        126745
+      ],
+      "size": [
+        70154,
+        400,
+        70154
+      ],
+      "level": "structure",
+      "color": 9139029,
+      "key": 114
+    },
+    {
+      "name": "trail_e3",
+      "shape": "plane",
+      "tags": [
+        "Surface.Walk"
+      ],
+      "position": [
+        -149969,
+        159267,
+        454026
+      ],
+      "size": [
+        54912,
+        400,
+        54912
+      ],
+      "level": "structure",
+      "color": 9139029,
+      "key": 115
+    },
+    {
+      "name": "trail_e4",
+      "shape": "plane",
+      "tags": [
+        "Surface.Walk"
+      ],
+      "position": [
+        -139574,
+        141200,
+        544956
+      ],
+      "size": [
+        53322,
+        400,
+        53322
+      ],
+      "level": "structure",
+      "color": 9139029,
+      "key": 116
+    },
+    {
+      "name": "trail_ford_e",
+      "shape": "plane",
+      "tags": [
+        "Surface.Walk"
+      ],
+      "position": [
+        -145140,
+        118617,
+        633652
+      ],
+      "size": [
+        53322,
+        400,
+        53322
+      ],
+      "level": "structure",
+      "color": 9139029,
+      "key": 117
+    },
+    {
+      "name": "trail_ford_w",
+      "shape": "plane",
+      "tags": [
+        "Surface.Walk"
+      ],
+      "position": [
+        93779,
+        118617,
+        656379
+      ],
+      "size": [
+        80000,
+        400,
+        80000
+      ],
+      "level": "structure",
+      "color": 9139029,
+      "key": 118
+    },
+    {
+      "name": "trail_w1",
+      "shape": "plane",
+      "tags": [
+        "Surface.Walk"
+      ],
+      "position": [
+        95152,
+        63967,
+        837392
+      ],
+      "size": [
+        49708,
+        400,
+        49708
+      ],
+      "level": "structure",
+      "color": 9139029,
+      "key": 119
+    },
+    {
+      "name": "ford_haven",
+      "shape": "plane",
+      "tags": [
+        "Surface.Walk"
+      ],
+      "position": [
+        160669,
+        54675,
+        888101
+      ],
+      "size": [
+        49708,
+        400,
+        49708
+      ],
+      "level": "settlement",
+      "color": 13218426,
+      "key": 120
+    }
+  ],
+  "links": [
+    [
+      "high_gate",
+      "trail_e0",
+      "walk"
+    ],
+    [
+      "watershed",
+      "trail_e0",
+      "walk"
+    ],
+    [
+      "trail_e0",
+      "trail_e1",
+      "walk"
+    ],
+    [
+      "trail_e1",
+      "trail_e2",
+      "walk"
+    ],
+    [
+      "trail_e2",
+      "trail_e3",
+      "walk"
+    ],
+    [
+      "trail_e3",
+      "trail_e4",
+      "walk"
+    ],
+    [
+      "trail_e4",
+      "trail_ford_e",
+      "walk"
+    ],
+    [
+      "trail_ford_e",
+      "trail_ford_w",
+      "walk"
+    ],
+    [
+      "trail_ford_w",
+      "trail_w1",
+      "walk"
+    ],
+    [
+      "trail_w1",
+      "ford_haven",
+      "walk"
+    ],
+    [
+      "ruin",
+      "trail_e2",
+      "walk"
+    ]
+  ],
+  "features": [
+    {
+      "name": "river_cascade",
+      "key": 21,
+      "kind": "river",
+      "flow": "calm",
+      "upstream": [
+        -18054,
+        520000,
+        -560000
+      ],
+      "downstream": [
+        -15974,
+        40000,
+        930000
+      ],
+      "width": 12000,
+      "depth": 900,
+      "seed": 10226982,
+      "exceptions": [
+        {
+          "type": "waterfall",
+          "at": 0.05,
+          "drop": 170000
+        },
+        {
+          "type": "rapids",
+          "at": 0.22,
+          "length": 0.05
+        },
+        {
+          "type": "lake",
+          "at": 0.5,
+          "length": 0.11
+        },
+        {
+          "type": "underground",
+          "at": 0.66,
+          "length": 0.07
+        },
+        {
+          "type": "dam",
+          "at": 0.9,
+          "length": 0.02,
+          "drop": 14000
+        }
+      ]
+    }
+  ]
+}

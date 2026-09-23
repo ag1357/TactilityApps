@@ -6,13 +6,18 @@ This handoff describes its containing checkpoint. Resolve the exact current
 checkpoint with `git rev-parse HEAD` after fetching this branch; do not start
 again from the cognition branch. No unpublished context is required.
 
-**Status: FIRST IMPLEMENTATION GATE PASSED.** The SDK continuous-traversal
-promotion gate passes 18/18 declared walk edges, and the adversarial spatial
-suite passes 15/15 with impossible connections failing generation cleanly.
-The normal Cascade game remains playable and passes its original suite. Macro
-geography, resource/ecology proof, the nonlocal Phos edge, the complete
-multiplayer quest and all physical P4 claims remain pending. The two-client
-SDK fixture is not the full Kyra/intake multiplayer game.
+**Status: SECOND IMPLEMENTATION GATE PASSED.** The SDK continuous-traversal
+promotion gate passes 18/18 declared walk edges, the adversarial spatial
+suite passes 15/15 with impossible connections failing generation cleanly,
+and the macro-geography gate passes: the full §49 hierarchy is generated
+from one seed as a 1,600-byte schema-2 product whose wilderness route is
+derived from the generated river (not hand-positioned) and walkable end to
+end, with the terrain cost model proving the route-cost case (nearest
+settlement is not the cheapest destination). The normal Cascade game
+remains playable and passes its original suite. Resource/ecology proof,
+the nonlocal Phos edge, the complete multiplayer quest and all physical P4
+claims remain pending. The two-client SDK fixture is not the full
+Kyra/intake multiplayer game.
 
 ## Published checkpoints
 
@@ -26,7 +31,8 @@ SDK fixture is not the full Kyra/intake multiplayer game.
 | F: semantic authority/TCP protocol fixture | 987195d8763e99cd29906593a0a2a13b2a7168ee |
 | G: checkpoint recovery and compaction | ef5cbc0cb22f3c691646dbae7518871e8a9ca5ed |
 | H: rendered multiplayer foundation, qualification and this handoff | containing commit; full game integration remains incomplete |
-| I: spatial/access repair, 18/18 traversal, adversarial suite | containing commit of this update; resolve with `git rev-parse HEAD` |
+| I: spatial/access repair, 18/18 traversal, adversarial suite | `2886c89` |
+| II: macro geography, sparse rivers, derived route, terrain costs | containing commit of this update; resolve with `git rev-parse HEAD` |
 
 ## Build and reproduce
 
@@ -38,11 +44,12 @@ python3 tools/worldsdk/sdk.py schema
 ./scripts/qualify-world-sdk.sh
 ```
 
-The qualification script now exits **0** with the traversal and adversarial
-gates green. Do not change it to ignore a failure if one reappears; it must
-exit nonzero when any gate fails. Results are in `results/worldsdk/`. It needs
-a C11 compiler, Python standard library, and an SDL2 runtime for the rendered
-clients. No model training, cloud cognition or GPU is required.
+The qualification script now exits **0** with the traversal, adversarial and
+macro-geography gates green. Do not change it to ignore a failure if one
+reappears; it must exit nonzero when any gate fails. Results are in
+`results/worldsdk/`. It needs a C11 compiler, Python standard library, and
+an SDL2 runtime for the rendered clients. No model training, cloud
+cognition or GPU is required.
 
 For the normal desktop game and standalone SDK viewer, install SDL2 development
 headers and run:
@@ -85,13 +92,21 @@ python3 tools/worldsdk/network_test.py
 python3 tools/worldsdk/rendered_test.py
 python3 tools/worldsdk/navigation_probe.py
 python3 tools/worldsdk/adversarial_test.py
+python3 tools/worldsdk/macro_test.py
 ```
 
 The first test uses two protocol client processes, real TCP, reconnect and a
 terminated/restarted server. The second uses two actual SDL-rendered processes.
 The third is the release gate over all declared walk edges; it must pass. The
 fourth generates the fifteen adversarial spatial cases and must pass with the
-impossible connections failing generation cleanly.
+impossible connections failing generation cleanly. The fifth is the macro
+gate: it regenerates `content/worlds/macro.json`/`macro.inc` from the seed via
+`tools/worldsdk/macro.py`, verifies the committed artifacts byte-identically,
+re-derives every route waypoint from the river record, proves C/Python parity
+over the whole river curve and all chunk windows, checks the typed exceptions,
+walks all 11 declared edges by swept steps, verifies the route-cost case, and
+generalizes across three more seeds. `./build/macro_sdk_test` is the C side of
+the same gate (4,418 checks).
 Resume tokens are local `.keys` files excluded from Git. The server only binds
 loopback. Internet deployment, rate limiting and offline branch upload are absent.
 
@@ -100,6 +115,12 @@ loopback. Internet deployment, rate limiting and offline branch upload are absen
 Qualified **build only**: ESP-IDF v6.1-dev, commit
 `f21b4c238152dc9e3a24fbad9afe33a3d15f6cfd`, riscv32 toolchain
 `esp-15.2.0_20250929`, TactilitySDK `0.8.0-dev` for esp32p4.
+Tactility now requires ESP-IDF 6; the qualified toolchain is installed under
+the work drive (esp-idf-v6.1 + espressif-idf6 tools + TactilitySDK), with
+`IDF_TOOLS_PATH` pointing at the IDF 6 tool root so the older v5.5.2 install
+remains untouched. The SDK zip unpacks `CMakeLists.txt`, `Libraries/`,
+`Modules/`, `TactilitySDK.cmake`, `version.txt` and needs an
+`idf-version.txt` containing `6.1` beside them.
 SDK: https://cdn.tactilityproject.org/sdk/0.8.0-dev/TactilitySDK-esp32p4.zip
 Unpack into a directory named `TactilitySDK`.
 
@@ -149,22 +170,32 @@ A native P4 SDK-mode client remains to be integrated and measured.
 - `tools/worldsdk/`: finite source compiler, inspection, generators, probes,
   authority transport and rendered clients. No hidden assets or trained models.
 
-**Next gate: macro geography.** Express, through compact recipes and seeded
-modifiers only, at least a mountain/valley region, plains region,
-river/watershed, lake or wetland, forest distribution, cave, ruin, two
-settlements and a wilderness route between them. Prove the hierarchy
-(world/region/settlement/district) with the same engine: no settlement-specific
-logic. The spatial foundation now enforces topology-before-geometry (declared
-walk edges cut 4000 mm ports into room walls; every room keeps a default public
-south entrance), the surface convention (`pos.y` is the walkable top),
-corridor locality (overlapping bands resolve to the nearest centerline, exact
-ties to the higher deck), capability-aware reachability
-(`ws_reachable`: WALK/ABILITY/CONDITIONAL/INACCESSIBLE/INVALID) and hard
-constraints with compiler parity (`ws_topology` + `validate_walk_edge`: one
-local frame per edge, legal port fit, ramp steps ≤ 800 mm, slope ≤ 45°, no
-unrelated solid on the direct route, NPCs need baseline public access). Keep
-`navigation_probe.py` and `adversarial_test.py` green while adding content;
-do not add exceptions for named modules.
+**Next gate: resource/ecology.** Express resource deposits, regeneration and
+creature distribution as sparse deterministic records reconstructed per
+chunk (the schema-2 feature vocabulary proven by the macro gate extends to
+roads, ridges, canyons, coastlines and Phos flows), with the same
+fail-closed validation, bit-exact Python parity, and adversarial/probe
+gates kept green. The macro geography now provides the terrain those
+systems sit on: sparse rivers with stable feature IDs, upstream/downstream
+endpoints, monotonic bounded-slope elevation, width/depth class and typed
+exceptions (waterfall/rapids/lake/dam/underground); chunk-boundary
+continuity is exact because reconstruction is a pure function of (record,
+t); the wilderness route and both settlements are derived from the
+generated river; travel cost is terrain-aware (walk = horizontal + 8×climb
++ 20,000 per river ford on declared topology, deterministic Dijkstra) and
+the route-cost case (nearest settlement is not the cheapest destination)
+is gated in both C and Python. The spatial foundation enforces
+topology-before-geometry (declared walk edges cut 4000 mm ports into room
+walls; every room keeps a default public south entrance), the surface
+convention (`pos.y` is the walkable top), corridor locality (overlapping
+bands resolve to the nearest centerline, exact ties to the higher deck),
+capability-aware reachability (`ws_reachable`:
+WALK/ABILITY/CONDITIONAL/INACCESSIBLE/INVALID) and hard constraints with
+compiler parity (`ws_topology` + `validate_walk_edge`: one local frame per
+edge, legal port fit, ramp steps ≤ 800 mm, slope ≤ 45°, no unrelated solid
+on the direct route, NPCs need baseline public access). Keep
+`navigation_probe.py`, `adversarial_test.py` and `macro_test.py` green
+while adding content; do not add exceptions for named modules.
 
 After that: the resource/ecology conservation proof, the nonlocal Phos edge,
 then bridging the existing game's Phos/evidence/economy/quest actions into

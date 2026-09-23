@@ -6,16 +6,21 @@ This handoff describes its containing checkpoint. Resolve the exact current
 checkpoint with `git rev-parse HEAD` after fetching this branch; do not start
 again from the cognition branch. No unpublished context is required.
 
-**Status: SECOND IMPLEMENTATION GATE PASSED.** The SDK continuous-traversal
+**Status: THIRD IMPLEMENTATION GATE PASSED.** The SDK continuous-traversal
 promotion gate passes 18/18 declared walk edges, the adversarial spatial
 suite passes 15/15 with impossible connections failing generation cleanly,
 and the macro-geography gate passes: the full §49 hierarchy is generated
-from one seed as a 1,600-byte schema-2 product whose wilderness route is
+from one seed as a 1,858-byte schema-3 product whose wilderness route is
 derived from the generated river (not hand-positioned) and walkable end to
 end, with the terrain cost model proving the route-cost case (nearest
-settlement is not the cheapest destination). The normal Cascade game
-remains playable and passes its original suite. Resource/ecology proof,
-the nonlocal Phos edge, the complete multiplayer quest and all physical P4
+settlement is not the cheapest destination). The resource/ecology gate
+passes: four geography-derived reservoirs, kind-aware extraction with
+sparse persistent sites, rate-based recovery with deterministic weather
+and pit healing, visible water drawdown on the existing river records,
+and the conservation ledger identity held across chunks, compaction and
+the wire. The normal Cascade game
+remains playable and passes its original suite. The nonlocal Phos edge,
+the complete multiplayer quest and all physical P4
 claims remain pending. The two-client SDK fixture is not the full
 Kyra/intake multiplayer game.
 
@@ -33,7 +38,7 @@ Kyra/intake multiplayer game.
 | H: rendered multiplayer foundation, qualification and this handoff | containing commit; full game integration remains incomplete |
 | I: spatial/access repair, 18/18 traversal, adversarial suite | `2886c89` |
 | II: macro geography, sparse rivers, derived route, terrain costs | `5d35f82` |
-| III: regional reservoirs, extraction sites, ecology recovery, ledger | containing commit of this update; resolve with `git rev-parse HEAD` |
+| III: regional reservoirs, extraction sites, ecology recovery, ledger | `9862e06` |
 
 ## Build and reproduce
 

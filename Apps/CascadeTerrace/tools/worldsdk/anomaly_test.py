@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """Gate 4 test (nonlocal Phos topology). Proves, against the C engine
 through libsdk.so, with an independent Python mirror of every rule:
-  - the committed macro artifacts are exactly the generator output, schema 3
+  - the committed macro artifacts are exactly the generator output, schema 4 (carrying the schema 3 reservoir section)
     with the phos_ruin gate seat on the karst ridge top, the winze lift and
     the anchored anomaly gate matching the C-loaded link records;
   - the gate seat derives from the karst ridge record (river-derived, like
@@ -121,9 +121,9 @@ def main():
     # 1. Committed artifacts are exactly the generator output.
     built = macro.build(SEED)
     src, data, manifest = built["src"], built["data"], built["manifest"]
-    check(manifest["schema"] == 3, "committed product is not schema 3")
+    check(manifest["schema"] == 4, "committed product is not schema 4")
     check(len(src["modules"]) == 22 and len(src["links"]) == 13, "product shape")
-    check(manifest["bytes"] == 1938, "product bytes")
+    check(manifest["bytes"] == 2196, "product bytes")
     check(src == json.loads((ROOT / "content/worlds/macro.json").read_text()), "committed macro.json drift")
     check(data == (ROOT / "build/macro.cws").read_bytes(), "committed product bytes drift")
     inc = (ROOT / "content/worlds/macro.inc").read_text()

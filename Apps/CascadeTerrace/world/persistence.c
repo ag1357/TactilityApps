@@ -87,7 +87,7 @@ static void payload(const WsState* s, Writer* w, int tail) {
     /* Resource section, only for reservoir states. Schema 1 states keep the
        published byte layout exactly; reservoir states carry wire version 2
        in the header and this appended section. */
-    if (s->reservoir_count) {
+    if (s->reservoir_count || s->creature_count) {
         put(w, s->reservoir_count, 2);
         put(w, s->site_count, 2);
         put(w, s->clock_s, 4);
@@ -112,8 +112,23 @@ static void payload(const WsState* s, Writer* w, int tail) {
         put(w, (uint32_t)(s->lost_total & 0xFFFFFFFFu), 4);
         put(w, (uint32_t)(s->lost_total >> 32), 4);
     }
+    /* Creature exception section, only for states that override generated
+       placement: wire version 3 carries the resource section above plus
+       this table. Generated-only states stay wire 2 or 1 byte for byte. */
+    if (s->creature_count) {
+        put(w, s->creature_count, 2);
+        put(w, 0, 2);
+        for (int i = 0; i < s->creature_count; i++) {
+            const WsCreatureEx* e = &s->crex[i];
+            for (int j = 0; j < 4; j++) put(w, e->id.word[j], 4);
+            put(w, e->kind, 2);
+            put(w, e->aux, 2);
+            put(w, e->reserved, 2);
+            put(w, e->pad, 2);
+        }
+    }
 }
-static int bounded(const WsState* s) { return s->count <= WS_CAP && s->player_count <= WS_PLAYER_CAP && s->feed_count <= WS_FEED_CAP && s->tail_count <= WS_TAIL_CAP && s->reservoir_count <= WS_RESERVOIR_CAP && s->site_count <= WS_SITE_CAP; }
+static int bounded(const WsState* s) { return s->count <= WS_CAP && s->player_count <= WS_PLAYER_CAP && s->feed_count <= WS_FEED_CAP && s->tail_count <= WS_TAIL_CAP && s->reservoir_count <= WS_RESERVOIR_CAP && s->site_count <= WS_SITE_CAP && s->creature_count <= WS_CREX_CAP; }
 uint32_t ws_state_hash(const WsState* s) {
     if (!bounded(s)) return 0;
     Writer w = {0, 0, 0, ~0U, 0};
@@ -128,7 +143,7 @@ size_t ws_state_encode(const WsState* s, uint8_t* p, size_t cap) {
     uint32_t crc = ~w.crc;
     Writer header = {p, 0, 16, 0, 0};
     put(&header, 0x31535743U, 4);
-    put(&header, s->reservoir_count ? 2 : 1, 2);
+    put(&header, s->creature_count ? 3 : s->reservoir_count ? 2 : 1, 2);
     put(&header, WS_GENERATOR, 2);
     put(&header, (uint32_t)w.n, 4);
     put(&header, crc, 4);
@@ -157,19 +172,26 @@ WsError ws_state_decode(WsState* s, const WsRecipe* recipe, const uint8_t* p, si
     Reader r = {p, 0, n, 0};
     if (get(&r, 4) != 0x31535743U) return WS_FORMAT;
     unsigned wire = get(&r, 2);
-    if ((wire != 1 && wire != 2) || get(&r, 2) != WS_GENERATOR) return WS_VERSION;
+    if ((wire != 1 && wire != 2 && wire != 3) || get(&r, 2) != WS_GENERATOR) return WS_VERSION;
     if (get(&r, 4) != n || get(&r, 4) != ws_crc(p + 16, n - 16)) return WS_FORMAT;
     /* Validate counts and exact length before writes. Decode into a staging
        state when preserving an existing canonical state across failures. */
     unsigned count = p[40] | p[41] << 8, players = p[42] | p[43] << 8, feeds = p[44] | p[45] << 8, tails = p[46] | p[47] << 8;
     if (count > WS_CAP || players > WS_PLAYER_CAP || feeds > WS_FEED_CAP || tails > WS_TAIL_CAP) return WS_BOUNDS;
     size_t base = 48 + count * 28 + players * 538 + players * players * 12 + feeds * 16 + tails * 20;
-    unsigned rcount = 0, scount = 0;
-    if (wire == 2) {
+    unsigned rcount = 0, scount = 0, ccount = 0;
+    if (wire >= 2) {
         if (n < base + 8) return WS_BOUNDS;
         rcount = p[base] | p[base + 1] << 8;
         scount = p[base + 2] | p[base + 3] << 8;
-        if (rcount > WS_RESERVOIR_CAP || scount > WS_SITE_CAP || n != base + 8 + 4 * rcount + 4 * players + 24 * scount + 24) return WS_BOUNDS;
+        if (rcount > WS_RESERVOIR_CAP || scount > WS_SITE_CAP) return WS_BOUNDS;
+        size_t rsec = base + 8 + 4 * rcount + 4 * players + 24 * scount + 24;
+        if (wire == 3) {
+            if (n < rsec + 4) return WS_BOUNDS;
+            ccount = p[rsec] | p[rsec + 1] << 8;
+            if (!ccount || ccount > WS_CREX_CAP || n != rsec + 4 + 24 * ccount) return WS_BOUNDS;
+        } else if (n != rsec)
+            return WS_BOUNDS;
     } else if (n != base)
         return WS_BOUNDS;
     memset(s, 0, sizeof(*s));
@@ -229,7 +251,7 @@ WsError ws_state_decode(WsState* s, const WsRecipe* recipe, const uint8_t* p, si
         o->amount = (uint16_t)get(&r, 2);
         o->aux = (uint16_t)get(&r, 2);
     }
-    if (wire == 2) {
+    if (wire >= 2) {
         s->reservoir_count = (uint16_t)get(&r, 2);
         s->site_count = (uint16_t)get(&r, 2);
         s->clock_s = get(&r, 4);
@@ -250,6 +272,18 @@ WsError ws_state_decode(WsState* s, const WsRecipe* recipe, const uint8_t* p, si
         s->recovered_total = (uint64_t)get(&r, 4) | (uint64_t)get(&r, 4) << 32;
         s->used_total = (uint64_t)get(&r, 4) | (uint64_t)get(&r, 4) << 32;
         s->lost_total = (uint64_t)get(&r, 4) | (uint64_t)get(&r, 4) << 32;
+    }
+    if (wire == 3) {
+        s->creature_count = (uint16_t)get(&r, 2);
+        (void)get(&r, 2); /* structural zero pad */
+        for (int i = 0; i < s->creature_count; i++) {
+            WsCreatureEx* e = &s->crex[i];
+            for (int j = 0; j < 4; j++) e->id.word[j] = get(&r, 4);
+            e->kind = (uint16_t)get(&r, 2);
+            e->aux = (uint16_t)get(&r, 2);
+            e->reserved = (uint16_t)get(&r, 2);
+            e->pad = (uint16_t)get(&r, 2);
+        }
     }
     WsError e = r.bad ? WS_FORMAT : ws_state_validate(s, recipe);
     if (e != WS_OK) memset(s, 0, sizeof(*s));
@@ -278,7 +312,7 @@ int ws_save(const WsState* s, const char* base) {
         Reader rd = {data, 0, length, 0};
         unsigned magic = get(&rd, 4);
         unsigned wsv = get(&rd, 2);
-        if (magic != 0x31535743U || (wsv != 1 && wsv != 2) || get(&rd, 2) != WS_GENERATOR || get(&rd, 4) != length || get(&rd, 4) != ws_crc(data + 16, length - 16)) continue;
+        if (magic != 0x31535743U || (wsv != 1 && wsv != 2 && wsv != 3) || get(&rd, 2) != WS_GENERATOR || get(&rd, 4) != length || get(&rd, 4) != ws_crc(data + 16, length - 16)) continue;
         rd.n = 36;
         uint32_t revision = get(&rd, 4);
         if (newest < 0 || revision >= newest_revision) {

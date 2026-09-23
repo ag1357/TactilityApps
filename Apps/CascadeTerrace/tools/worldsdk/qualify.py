@@ -80,6 +80,19 @@ class Reservoir(C.Structure):
     ]
 
 
+class Creature(C.Structure):
+    _fields_ = [
+        ("id", Id),
+        ("kind", C.c_uint16),
+        ("habitat", C.c_uint16),
+        ("slots", C.c_uint16),
+        ("period", C.c_uint16),
+        ("stations", C.c_uint16),
+        ("radius", C.c_uint16),
+        ("seed", C.c_uint32),
+    ]
+
+
 class Recipe(C.Structure):
     _fields_ = [
         ("ancestry", Id),
@@ -92,11 +105,13 @@ class Recipe(C.Structure):
         ("features_n", C.c_uint16),
         ("exceptions_n", C.c_uint16),
         ("reservoirs_n", C.c_uint16),
+        ("creatures_n", C.c_uint16),
         ("modules", Module * 128),
         ("links", Link * 256),
         ("features", Feature * 8),
         ("exceptions", Exc * 24),
         ("reservoirs", Reservoir * 8),
+        ("creatures", Creature * 16),
     ]
 
 
@@ -150,10 +165,10 @@ def main():
             bad += 1
         # Attacker recomputes CRC: semantic validation must still reject
         # invalid fields. Offsets are relative to the module table, which
-        # starts at 48 (schema 1), 52 (schema 2, sparse features) or 54
-        # (schema 3, reservoirs).
+        # starts at 48 (schema 1), 52 (schema 2, sparse features), 54
+        # (schema 3, reservoirs) or 56 (schema 4, creatures).
         schema = struct.unpack_from("<H", data, 4)[0]
-        table = {1: 48, 2: 52, 3: 54}[schema]
+        table = {1: 48, 2: 52, 3: 54, 4: 56}[schema]
         for offset, value in (
             (table + 16, 0),
             (table + 18, 255),
@@ -169,8 +184,8 @@ def main():
         # Reservoir records are validated fail-closed too: bad kind, zone,
         # degenerate region, empty capacity and overfull level all reject
         # even with a recomputed CRC. The reservoir table follows the
-        # feature and exception tables in schema 3.
-        if schema == 3 and src.get("reservoirs"):
+        # feature and exception tables in schema 3+.
+        if schema >= 3 and src.get("reservoirs"):
             rtable = table + 64 * len(src["modules"]) + 8 * len(src["links"]) + 56 * len(src.get("features", [])) + 12 * sum(len(f.get("exceptions", [])) for f in src.get("features", []))
             for offset, value, pack in (
                 (rtable + 16, 5, "<H"),  # unknown kind
@@ -194,7 +209,7 @@ def main():
         # region and conventionally adjacent ends all reject even with a
         # recomputed CRC. The link table follows the module table.
         anomaly = [i for i, l in enumerate(src.get("links", [])) if len(l) == 4]
-        if schema == 3 and anomaly:
+        if schema >= 3 and anomaly:
             ltable = table + 64 * len(src["modules"])
             gi = anomaly[0]
             for offset, value in (
@@ -288,6 +303,103 @@ def main():
                     s["links"][gate][0], s["links"][gate][1] = s["links"][gate][1], s["links"][gate][0]
                 else:  # anchor names a module, not a reservoir
                     s["links"][gate][3] = "ruin"
+                try:
+                    compile_recipe(s)
+                except ValueError:
+                    bad += 1
+                else:
+                    raise AssertionError(mutation)
+        # Creature species records are validated fail-closed at the creature
+        # table (schema 4): unknown kinds, out-of-range or non-walk habitats,
+        # unreachable required anchors, degenerate populations, schedules and
+        # spreads, and duplicate identity all reject even with a recomputed
+        # CRC. The creature table follows the reservoir table.
+        if schema == 4 and src.get("creatures"):
+            ctable = (
+                table
+                + 64 * len(src["modules"])
+                + 8 * len(src["links"])
+                + 56 * len(src.get("features", []))
+                + 12 * sum(len(f.get("exceptions", [])) for f in src.get("features", []))
+                + 64 * len(src.get("reservoirs", []))
+            )
+            walk = [i for i, m in enumerate(src["modules"]) if "Surface.Walk" in m.get("tags", [])]
+            nonwalk = [i for i, m in enumerate(src["modules"]) if "Surface.Walk" not in m.get("tags", [])]
+            required = next(i for i, c in enumerate(src["creatures"]) if c["kind"] == "required")
+            for offset, value in (
+                (ctable + 16, 4),  # unknown kind
+                (ctable + 18, len(src["modules"]) + 5),  # habitat out of range
+                (ctable + 20, 0),  # empty population
+                (ctable + 24, 5),  # more than four stations
+                (ctable + 22, 599),  # period below the floor
+                (ctable + 26, 1999),  # spread below the floor
+            ):
+                b = bytearray(data)
+                struct.pack_into("<H", b, offset, value)
+                struct.pack_into("<I", b, 12, zlib.crc32(b[16:]))
+                assert lib.ws_load(C.byref(r), bytes(b), len(b)) != 0
+                bad += 1
+            # an anchored species on a non-walk surface
+            if nonwalk:
+                b = bytearray(data)
+                struct.pack_into("<H", b, ctable + 32 * 4 + 18, nonwalk[0])
+                struct.pack_into("<I", b, 12, zlib.crc32(b[16:]))
+                assert lib.ws_load(C.byref(r), bytes(b), len(b)) != 0
+                bad += 1
+            # a required species anchored where baseline walking cannot reach
+            b = bytearray(data)
+            struct.pack_into("<H", b, ctable + 32 * required + 18, walk[-1])
+            struct.pack_into("<I", b, 12, zlib.crc32(b[16:]))
+            assert lib.ws_load(C.byref(r), bytes(b), len(b)) != 0
+            bad += 1
+            # duplicate species identity
+            b = bytearray(data)
+            ident = bytes(b[ctable + 32 : ctable + 48])
+            b[ctable + 32 + 32 : ctable + 32 + 48] = ident
+            struct.pack_into("<I", b, 12, zlib.crc32(b[16:]))
+            assert lib.ws_load(C.byref(r), bytes(b), len(b)) != 0
+            bad += 1
+        # Source-level creature rejections: the compiler mirrors the C
+        # fail-closed species rules instead of emitting bad products.
+        if src.get("creatures"):
+            for mutation in (
+                "kind",
+                "fauna_habitat_module",
+                "anchor_habitat_reservoir",
+                "anchor_nonwalk",
+                "required_unreachable",
+                "slots",
+                "stations",
+                "period",
+                "radius",
+                "field",
+                "duplicate_name",
+            ):
+                s = copy.deepcopy(src)
+                c0 = s["creatures"][0]
+                if mutation == "kind":
+                    c0["kind"] = "monster"
+                elif mutation == "fauna_habitat_module":
+                    c0["habitat"] = "high_gate"
+                elif mutation == "anchor_habitat_reservoir":
+                    s["creatures"][4]["habitat"] = "massif_spoil"
+                elif mutation == "anchor_nonwalk":
+                    s["creatures"][4]["habitat"] = "mountain"
+                elif mutation == "required_unreachable":
+                    s["creatures"][4]["habitat"] = "phos_ruin"
+                elif mutation == "slots":
+                    c0["slots"] = 65
+                elif mutation == "stations":
+                    c0["stations"] = 5
+                elif mutation == "period":
+                    c0["period"] = 599
+                elif mutation == "radius":
+                    c0["radius"] = 1999
+                elif mutation == "field":
+                    c0["mood"] = "calm"
+                else:
+                    # same ancestry key under a new name: identity collision
+                    s["creatures"].append(dict(c0, name="duplicate_probe"))
                 try:
                     compile_recipe(s)
                 except ValueError:

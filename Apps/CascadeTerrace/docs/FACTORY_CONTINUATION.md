@@ -6,7 +6,7 @@ This handoff describes its containing checkpoint. Resolve the exact current
 checkpoint with `git rev-parse HEAD` after fetching this branch; do not start
 again from the cognition branch. No unpublished context is required.
 
-**Status: FOURTH IMPLEMENTATION GATE PASSED.** The SDK continuous-traversal
+**Status: FIFTH IMPLEMENTATION GATE PASSED.** The SDK continuous-traversal
 promotion gate passes 18/18 declared walk edges, the adversarial spatial
 suite passes 15/15 with impossible connections failing generation cleanly,
 and the macro-geography gate passes: the full §49 hierarchy is generated
@@ -28,13 +28,24 @@ literals preserved bit-for-bit while closed, live removal on depletion
 with recharge-driven reopening, server authority over use, client-side
 derivation from the public replica, reconnect and restarted-server
 restoration of the closed gate, and fail-closed malformed rejection on
-both the C and Python sides. The normal Cascade game
+both the C and Python sides. The creature/NPC gate passes: eight
+geography-derived species (fauna across the four biomes plus the required
+gate/haven wardens and their NPC residents) ride the macro product as
+schema 4 with stable ancestry-derived identities, placement is solved from
+the product alone (anchored slots on the anchor walk surface, fauna inside
+their biome reservoir on the terrain top, never blocked), schedules are
+pure functions of (identity, now) resolved through the access graph with
+route-cost-weighted dwell/travel cycles, window queries materialize sparse
+offscreen entities without tick replay, and persistent death/relocation/
+pinning exceptions override the generated defaults through the authority
+with fail-closed codes — all with bit-exact C/Python parity over every
+creature and time, including 32-bit clock wrap, and Gate I–IV literals
+preserved bit-for-bit. The normal Cascade game
 remains playable and passes its original suite. The bounded renderer
 evaluation is complete and the hybrid renderer it recommended is
 integrated and promoted (incremental-span rasterizer + portable exact-2x
 presentation; PIE and PPA gated experimental pending physical P4
-qualification). Creature placement and schedules is the next gate;
-the complete multiplayer quest and all physical P4
+qualification). The complete multiplayer quest and all physical P4
 claims remain pending. The two-client SDK fixture is not the full
 Kyra/intake multiplayer game.
 
@@ -59,6 +70,7 @@ Kyra/intake multiplayer game.
 | RB: incremental-span rasterizer, exact tested depth/coverage (promoted) | `8bbe12e` |
 | RC: exact portable 2x presentation + gated PIE/PPA backends | `b1229f0` |
 | RD: presentation lifecycle reconciliation (open-once at init) | containing commit |
+| V: sparse deterministic creatures and schedules | containing commit |
 
 ## Build and reproduce
 
@@ -71,7 +83,8 @@ python3 tools/worldsdk/sdk.py schema
 ```
 
 The qualification script now exits **0** with the traversal, adversarial,
-macro-geography, resource/ecology and nonlocal anomaly gates green. Do not
+macro-geography, resource/ecology, nonlocal anomaly and creature gates
+green. Do not
 change it to ignore a failure if one reappears; it must exit nonzero when
 any gate fails.
 Results are in `results/worldsdk/`. It needs a C11 compiler, Python standard
@@ -122,6 +135,7 @@ python3 tools/worldsdk/adversarial_test.py
 python3 tools/worldsdk/macro_test.py
 python3 tools/worldsdk/resource_test.py
 python3 tools/worldsdk/anomaly_test.py
+python3 tools/worldsdk/creature_test.py
 ```
 
 The first test uses two protocol client processes, real TCP, reconnect and a
@@ -144,7 +158,14 @@ and generalizes across three more seeds. `./build/macro_sdk_test` is the C side
 of the same gate (4,419 checks). The sixth is the resource/ecology parity
 gate; `./build/resource_sdk_test` its C side (322 checks). The seventh is the
 nonlocal anomaly parity gate (440 checks); `./build/anomaly_sdk_test` its C
-side (130 checks with exact literals).
+side (130 checks with exact literals). The eighth is the creature/NPC
+parity gate (7,495 checks): committed artifacts byte-identical, species
+table and identity parity, placement constraints, full time-sweep parity
+per creature (dwell/travel/wrap/skip), periodicity, query parity and
+determinism, exception parity with exact literals, fail-closed mutation
+codes matching C, wire-v3 round trip and malformed products, plus three
+generalization seeds; `./build/creature_sdk_test` is its C side (920
+checks with exact literals).
 Resume tokens are local `.keys` files excluded from Git. The server only binds
 loopback. Internet deployment, rate limiting and offline branch upload are absent.
 
@@ -206,6 +227,16 @@ A native P4 SDK-mode client remains to be integrated and measured.
   nonlocal anomaly gate (ws_link_open, ws_use_link_state, ws_route_cost_state:
   open iff 2×level ≥ capacity, instant state-gated crossing, closed gates
   absent from routing).
+- `creature.c`: sparse deterministic creatures and NPCs — stable
+  ancestry/species/slot identities (`ws_creature_id` from `ws_child_id`),
+  pure placement from the recipe alone (anchored slots on the anchor walk
+  surface, fauna inside their biome reservoir on the terrain top, never
+  blocked), access-graph station sets (BFS ≤ 2 hops over walk links),
+  route-cost-weighted dwell/travel schedule cycles as pure functions of
+  (identity, now) with route-polyline interpolation, window queries
+  materializing sparse offscreen entities in deterministic (species, slot)
+  order with a cap contract, and authority-side persistent exceptions
+  (DEAD/RELOCATED/PINNED) overriding generated defaults, fail-closed.
 - `persistence.c`: explicit wire codec, semantic hash, two-slot save/recovery;
   conditional version-2 resource section (schema-1 states unchanged).
 - `content/worlds/`: human source plus compiled default Cascade include.
@@ -270,6 +301,52 @@ scenario 2,103 checks. The macro product is 1,938 bytes (22 modules, 13
 links: 11 walk, 1 lift, 1 gate); deterministic qualification now rejects
 7,372 malformed products.
 
+**Creature/NPC gate: PASSED.** Creatures are product vocabulary: schema 4
+appends 32-byte species records (id, kind FAUNA/NPC/REQUIRED, habitat =
+reservoir index for fauna or anchor module index for anchored, slots,
+period, stations, radius, seed) after the reservoir table; `ws_validate`
+enforces kind-specific rules (fauna habitats must be reservoirs, anchored
+habitats must be exterior walk surfaces, REQUIRED habitats must be
+baseline-walk-reachable from the first walk module — probed at compile
+time with `route_bfs_probe`), bounded slots/stations/period/radius and
+unique identities, all fail-closed. Identity is stable and
+ancestry-derived: `ws_creature_id = ws_child_id(species_id, slot+1,
+0x4352)`, so the same source regenerates the same creatures forever.
+Placement is solved at query time from the recipe alone — no tick replay,
+no stored positions: anchored slots land on the anchor walk surface within
+the extent margin and never blocked; fauna slots land inside their biome
+reservoir extent on `ws_ground`/terrain top. Stations come from the
+access graph (BFS over walk links, ≤ 2 hops, lowest (hop, index) wins);
+fauna take further biome points within their radius. Schedules are pure
+functions of (identity, now): a per-slot phase offset cycles WS_CRE_DWELL
+(64 s) plus route-cost-weighted travel (`route_cost/WS_CRE_SPEED` for
+anchored, chord/SPEED for fauna), interpolated along the actual route
+polyline with 16.16 fixed-point truncation — cross-chunk travel rides the
+existing topology, chunk unload/reload changes nothing, and time skips
+resolve instantly. `ws_creature_query` materializes a window in
+deterministic (species, slot) order with a bounded cap (negated on
+overflow), never touching the state; `ws_creature_except` is the only
+mutation path (authority-only, fail-closed: unknown ids, wrong kind for
+the aux payload, uniqueness enforced), overriding placement for DEAD
+(removed), RELOCATED (fixed new position, aux-checked) and PINNED (home
+station). Exceptions persist through wire v3 (state version bumped,
+schema-1/v1/v2 wires unchanged and still accepted). The committed macro
+product now carries eight species / 36 slots (massif, lake, forest, karst
+fauna; the required gate warden and two gate residents at high_gate; the
+required haven wardens and three haven residents at ford_haven) in 2,196
+bytes with every Gate I–IV literal bit-identical (ruin→haven still
+2,668,102). The C proof gate runs 920 checks with exact literals
+(pinned-home placements for all 36 slots with constraint verification
+against the engine's own collision/ground, schedule segments,
+route-collinearity with truncation slack, periodicity and clock wrap,
+query order/cap/determinism, exception behaviors and fail-closed codes,
+wire-v3 round trip, mutated-load rejection including duplicate identity
+with the control case proving non-required karst anchors remain legal);
+the Python parity gate runs 7,495 checks (full C/Python parity over every
+creature and a dense time sweep including 32-bit wrap, plus three
+generalization seeds); deterministic qualification now rejects 7,650
+malformed products.
+
 **The bounded renderer evaluation the mission ordered at the end of Gate 4
 is complete** — measured, not speculated, with all evidence in
 `results/worldsdk/renderer-eval/` and the full write-up in
@@ -309,11 +386,11 @@ and physical timing/visual/cache/display qualification.** No further
 renderer or PPA research before physical P4 testing (see
 `docs/RENDERER_HYBRID.md` and `results/worldsdk/renderer-hybrid/`).
 
-After that, the next
-content gate is creature placement and schedules as sparse deterministic
-records reconstructed per chunk — the same discipline as rivers, reservoirs
-and the anomaly edge (stable IDs, bounded records, fail-closed validation,
-bit-exact Python parity, probe gates kept green). The spatial foundation
+After that, the next work is bridging the existing game's
+Phos/evidence/economy/quest actions into this single semantic authority,
+replacing the separate fixture with an experimental normal-game
+multiplayer mode, and implementing P4 network transport — in that order,
+each under its own gate. The spatial foundation
 enforces
 topology-before-geometry (declared walk edges cut 4000 mm ports into room
 walls; every room keeps a default public south entrance), the surface
@@ -327,10 +404,7 @@ on the direct route, NPCs need baseline public access). Keep
 `navigation_probe.py`, `adversarial_test.py` and `macro_test.py` green
 while adding content; do not add exceptions for named modules.
 
-After that: bridging the existing game's Phos/evidence/economy/quest
-actions into this single semantic authority, replacing the separate fixture
-with an experimental normal-game multiplayer mode, implementing P4 network
-transport, and qualifying it physically. Expand NPC profiles/schedules and observation
+Expand NPC profiles/schedules and observation
 provenance only after the authority and traversal boundaries are sound.
 Geometry fidelity labels do not yet implement cold storage streaming, NPC
 simulation LOD, or full room chunk eviction.

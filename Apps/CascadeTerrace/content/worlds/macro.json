@@ -643,5 +643,95 @@
       "level": 160000,
       "rate": 8000
     }
+  ],
+  "creatures": [
+    {
+      "name": "massif_fauna",
+      "key": 301,
+      "kind": "fauna",
+      "habitat": "massif_spoil",
+      "slots": 8,
+      "period": 43200,
+      "stations": 3,
+      "radius": 30000,
+      "seed": 10226944
+    },
+    {
+      "name": "lake_fauna",
+      "key": 302,
+      "kind": "fauna",
+      "habitat": "lake_country",
+      "slots": 6,
+      "period": 43200,
+      "stations": 3,
+      "radius": 30000,
+      "seed": 10226947
+    },
+    {
+      "name": "forest_fauna",
+      "key": 303,
+      "kind": "fauna",
+      "habitat": "forest_biomass",
+      "slots": 10,
+      "period": 43200,
+      "stations": 3,
+      "radius": 30000,
+      "seed": 10226946
+    },
+    {
+      "name": "karst_fauna",
+      "key": 304,
+      "kind": "fauna",
+      "habitat": "karst_phos",
+      "slots": 4,
+      "period": 43200,
+      "stations": 3,
+      "radius": 30000,
+      "seed": 10226949
+    },
+    {
+      "name": "gate_warden",
+      "key": 311,
+      "kind": "required",
+      "habitat": "high_gate",
+      "slots": 1,
+      "period": 28800,
+      "stations": 2,
+      "radius": 20000,
+      "seed": 10226992
+    },
+    {
+      "name": "gate_residents",
+      "key": 312,
+      "kind": "npc",
+      "habitat": "high_gate",
+      "slots": 2,
+      "period": 21600,
+      "stations": 3,
+      "radius": 20000,
+      "seed": 10226995
+    },
+    {
+      "name": "haven_wardens",
+      "key": 313,
+      "kind": "required",
+      "habitat": "ford_haven",
+      "slots": 2,
+      "period": 36000,
+      "stations": 2,
+      "radius": 20000,
+      "seed": 10226994
+    },
+    {
+      "name": "haven_residents",
+      "key": 314,
+      "kind": "npc",
+      "habitat": "ford_haven",
+      "slots": 3,
+      "period": 28800,
+      "stations": 3,
+      "radius": 20000,
+      "seed": 10226997
+    }
   ]
 }

@@ -1,5 +1,6 @@
 /* Gate 4 (nonlocal Phos topology). The product under test is the committed
-   generator output (content/worlds/macro.inc, schema 3): one deterministic
+   generator output (content/worlds/macro.inc, schema 4 with reservoirs,
+   features and creature species): one deterministic
    Phos-rich ruin (phos_ruin) on the karst ridge top, linked to the
    upper-valley ruin by a typed anomaly gate anchored to the karst Phos
    reservoir. Everything here is proven against the C engine with exact
@@ -93,7 +94,7 @@ static int mutated_load(uint16_t link, uint16_t na, uint16_t nb, uint16_t nkind,
     uint8_t buf[4096];
     size_t n = sizeof(ws_macro_product);
     memcpy(buf, ws_macro_product, n);
-    size_t table = 54 + 64 * (size_t)a.count; /* schema 3: after the modules */
+    size_t table = 56 + 64 * (size_t)a.count; /* schema 4: after the modules */
     size_t at = table + 8 * (size_t)link;
     buf[at] = (uint8_t)na;
     buf[at + 1] = (uint8_t)(na >> 8);
@@ -378,7 +379,7 @@ int main(void) {
         uint8_t buf[4096];
         size_t n = sizeof(ws_macro_product);
         memcpy(buf, ws_macro_product, n);
-        size_t table = 54 + 64 * (size_t)a.count;
+        size_t table = 56 + 64 * (size_t)a.count;
         size_t g = table + 8 * (size_t)gate, l = table + 8 * (size_t)lift;
         buf[g + 2] = (uint8_t)M_HAVEN; /* gate 1: phos_ruin -> haven (legal) */
         buf[g + 3] = (uint8_t)(M_HAVEN >> 8);

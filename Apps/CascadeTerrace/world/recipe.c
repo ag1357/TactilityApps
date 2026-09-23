@@ -183,6 +183,28 @@ WsError ws_validate(const WsRecipe* r) {
             else if (ws_route(r, (uint16_t)first, (uint16_t)i, 0, path, WS_CAP) <= 0)
                 return WS_DISCONNECTED;
         }
+    /* Sparse creature species (schema 4): fail closed on unknown kinds,
+       out-of-range habitats, degenerate populations or schedules, duplicate
+       identity and anchors that are not walk surfaces. A REQUIRED species
+       must anchor on a settlement reachable by baseline public walking
+       from the first declared walk surface: required NPCs are publicly
+       reachable, never sealed behind a capability. FAUNA habitats must be
+       declared biome reservoirs. */
+    if (r->creature_count > WS_CREATURE_CAP) return WS_BOUNDS;
+    for (int i = 0; i < r->creature_count; i++) {
+        const WsCreature* c = &r->creatures[i];
+        if (c->kind < WS_CRE_FAUNA || c->kind > WS_CRE_REQUIRED) return WS_VERSION;
+        if (!c->slots || c->slots > WS_CRE_SLOTS_MAX || !c->stations || c->stations > 4) return WS_BOUNDS;
+        if (c->period < 600 || c->period > 64800 || c->radius < 2000 || c->radius > 60000) return WS_BOUNDS;
+        for (int j = 0; j < i; j++)
+            if (ws_id_equal(c->id, r->creatures[j].id)) return WS_DUPLICATE;
+        if (c->kind == WS_CRE_FAUNA) {
+            if (c->habitat >= r->reservoir_count) return WS_REFERENCE;
+        } else {
+            if (c->habitat >= r->count || !(r->modules[c->habitat].flags & WS_WALK) || (r->modules[c->habitat].flags & WS_INTERIOR)) return WS_REFERENCE;
+            if (c->kind == WS_CRE_REQUIRED && (first < 0 || ws_reachable(r, (uint16_t)first, c->habitat, WS_CAP_WALK) != WS_REACH_WALK)) return WS_REFERENCE;
+        }
+    }
     /* Declared walk edges must be realizable as continuous space. */
     return ws_topology(r);
 }
@@ -190,7 +212,7 @@ WsError ws_load(WsRecipe* r, const uint8_t* p, size_t n) {
     /* Transactional: validate bytes before touching output; caller stages final validation. */
     if (n < 48 || memcmp(p, "CWS1", 4)) return WS_FORMAT;
     if (u16(p + 6) != WS_GENERATOR) return WS_VERSION;
-    unsigned schema = u16(p + 4), count, links, features = 0, exceptions = 0, reservoirs = 0;
+    unsigned schema = u16(p + 4), count, links, features = 0, exceptions = 0, reservoirs = 0, creatures = 0;
     size_t body = 48;
     if (schema == WS_SCHEMA) {
         count = u16(p + 44);
@@ -213,9 +235,19 @@ WsError ws_load(WsRecipe* r, const uint8_t* p, size_t n) {
         reservoirs = u16(p + 52);
         body = 54;
         if (n != 54 + 64 * count + 8 * links + 56 * features + 12 * exceptions + 64 * reservoirs || u32(p + 8) != n) return WS_BOUNDS;
+    } else if (schema == WS_SCHEMA_CREATURES) {
+        if (n < 56) return WS_FORMAT;
+        count = u16(p + 44);
+        links = u16(p + 46);
+        features = u16(p + 48);
+        exceptions = u16(p + 50);
+        reservoirs = u16(p + 52);
+        creatures = u16(p + 54);
+        body = 56;
+        if (n != 56 + 64 * count + 8 * links + 56 * features + 12 * exceptions + 64 * reservoirs + 32 * creatures || u32(p + 8) != n) return WS_BOUNDS;
     } else
         return WS_VERSION;
-    if (!count || count > WS_CAP || links > WS_LINK_CAP || features > WS_FEATURE_CAP || exceptions > WS_EXCEPTION_CAP || reservoirs > WS_RESERVOIR_CAP) return WS_BOUNDS;
+    if (!count || count > WS_CAP || links > WS_LINK_CAP || features > WS_FEATURE_CAP || exceptions > WS_EXCEPTION_CAP || reservoirs > WS_RESERVOIR_CAP || creatures > WS_CREATURE_CAP) return WS_BOUNDS;
     if (ws_crc(p + 16, n - 16) != u32(p + 12)) return WS_FORMAT;
     memset(r, 0, sizeof(*r));
     for (int i = 0; i < 4; i++) r->ancestry.word[i] = u32(p + 16 + 4 * i);
@@ -228,6 +260,7 @@ WsError ws_load(WsRecipe* r, const uint8_t* p, size_t n) {
     r->feature_count = (uint16_t)features;
     r->exception_count = (uint16_t)exceptions;
     r->reservoir_count = (uint16_t)reservoirs;
+    r->creature_count = (uint16_t)creatures;
     p += body;
     for (unsigned i = 0; i < count; i++, p += 64) {
         WsModule* m = &r->modules[i];
@@ -246,7 +279,7 @@ WsError ws_load(WsRecipe* r, const uint8_t* p, size_t n) {
         m->quantity = u16(p + 62);
     }
     for (unsigned i = 0; i < links; i++, p += 8) r->links[i] = (WsLink) {u16(p), u16(p + 2), u16(p + 4), u16(p + 6)};
-    if (schema == WS_SCHEMA_FEATURES || schema == WS_SCHEMA_RESOURCES) {
+    if (schema >= WS_SCHEMA_FEATURES) {
         for (unsigned i = 0; i < features; i++, p += 56) {
             WsFeature* f = &r->features[i];
             for (int j = 0; j < 4; j++) f->id.word[j] = u32(p + j * 4);
@@ -261,7 +294,7 @@ WsError ws_load(WsRecipe* r, const uint8_t* p, size_t n) {
         }
         for (unsigned i = 0; i < exceptions; i++, p += 12) r->exceptions[i] = (WsException) {u16(p), u16(p + 2), u16(p + 4), u16(p + 6), u32(p + 8)};
     }
-    if (schema == WS_SCHEMA_RESOURCES) {
+    if (schema >= WS_SCHEMA_RESOURCES) {
         for (unsigned i = 0; i < reservoirs; i++, p += 64) {
             WsReservoir* v = &r->reservoirs[i];
             for (int j = 0; j < 4; j++) v->id.word[j] = u32(p + j * 4);
@@ -273,6 +306,19 @@ WsError ws_load(WsRecipe* r, const uint8_t* p, size_t n) {
             v->level = u32(p + 48);
             v->rate = u32(p + 52);
             v->reserved = u32(p + 56);
+        }
+    }
+    if (schema == WS_SCHEMA_CREATURES) {
+        for (unsigned i = 0; i < creatures; i++, p += 32) {
+            WsCreature* c = &r->creatures[i];
+            for (int j = 0; j < 4; j++) c->id.word[j] = u32(p + j * 4);
+            c->kind = u16(p + 16);
+            c->habitat = u16(p + 18);
+            c->slots = u16(p + 20);
+            c->period = u16(p + 22);
+            c->stations = u16(p + 24);
+            c->radius = u16(p + 26);
+            c->seed = u32(p + 28);
         }
     }
     WsError e = ws_validate(r);

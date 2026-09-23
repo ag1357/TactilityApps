@@ -6,6 +6,7 @@ import argparse, hashlib, json, math, pathlib, struct, sys, zlib
 SCHEMA = GENERATOR = 1
 SCHEMA_FEATURES = 2
 SCHEMA_RESOURCES = 3
+SCHEMA_CREATURES = 4
 TAGS = {
     "Surface.Walk": 1,
     "Collision.Solid": 2,
@@ -31,6 +32,9 @@ FEATURE_KINDS = {"river": 1}
 FLOWS = {"calm": 0, "rapid": 1}
 EXCEPTIONS = {"waterfall": 1, "rapids": 2, "lake": 3, "dam": 4, "underground": 5}
 RESERVOIR_KINDS = {"terrain": 1, "water": 2, "biomass": 3, "phos": 4}
+CREATURE_KINDS = {"fauna": 1, "npc": 2, "required": 3}
+CREX_DEAD, CREX_RELOCATED, CREX_PINNED = 1, 2, 3
+CRE_DWELL, CRE_SPEED, CRE_TRIES, CRE_HOPS = 64, 4096, 16, 2
 WEATHER_MULT = ((1, 1, 1), (1, 2, 3), (1, 2, 1), (1, 1, 2))
 CAP_WALK, CAP_LIFT, CAP_PORTAL, CAP_ANOMALY = 1, 2, 4, 8
 LINK_KINDS = {"walk": 0, "lift": 1, "portal": 2, "anomaly": 3}
@@ -270,6 +274,364 @@ def reservoir_record(v):
     level = bounded(v.get("level", capacity), 0, capacity, "level")
     rate = bounded(v["rate"], 1, 65535, "rate")
     return {"kind": kind, "zone": zone, "lo": lo, "hi": hi, "capacity": capacity, "level": level, "rate": rate}
+
+
+def creature_record(v, module_ids, reservoir_names):
+    """Validate and convert one source creature species into the runtime
+    record: a bounded generator description, never an entity list. The
+    habitat names a biome reservoir (fauna) or an anchor module (npc and
+    required); both resolve to product indices here, fail-closed."""
+    if set(v) - {"name", "key", "kind", "habitat", "slots", "period", "stations", "radius", "seed"}:
+        raise ValueError("unknown creature field")
+    kind = CREATURE_KINDS.get(v.get("kind"))
+    if kind is None:
+        raise ValueError(f"unknown creature kind: {v.get('kind')}")
+    habitat = v["habitat"]
+    if kind == CREATURE_KINDS["fauna"]:
+        if habitat not in reservoir_names:
+            raise ValueError("fauna habitat must be a declared reservoir")
+        hindex = reservoir_names[habitat]
+    else:
+        if habitat not in module_ids:
+            raise ValueError("anchored species need a declared anchor module")
+        hindex = module_ids[habitat]
+    slots = bounded(v["slots"], 1, 64, "slots")
+    period = bounded(v["period"], 600, 64800, "period")
+    stations = bounded(v["stations"], 1, 4, "stations")
+    radius = bounded(v["radius"], 2000, 60000, "radius")
+    seed = bounded(v.get("seed", 0), 0, 0xFFFFFFFF, "creature seed")
+    return {
+        "kind": kind,
+        "habitat": hindex,
+        "slots": slots,
+        "period": period,
+        "stations": stations,
+        "radius": radius,
+        "seed": seed,
+    }
+
+
+def creature_view(src):
+    """Resolve a source recipe into the creature runtime numbers C sees:
+    materialized modules with tags, resolved walk links, compiled feature
+    and reservoir records, and compiled creature species records with
+    stable identities. One structure backs every creature mirror below."""
+    ids = {m["name"]: i for i, m in enumerate(src["modules"])}
+    modules = [dict(m, at=materialized(src, m)) for m in src["modules"]]
+    positions = [m["at"] for m in modules]
+    links = []
+    for link in src.get("links", []):
+        a, b, kind = link[0], link[1], link[2]
+        links.append((ids[a], ids[b], LINK_KINDS[kind], None))
+    features = [feature_record(f) for f in src.get("features", [])]
+    reservoirs = [reservoir_record(v) for v in src.get("reservoirs", [])]
+    ancestry = [bounded(a, 0, 0xFFFFFFFF, "ancestry") for a in src["ancestry"]]
+    rnames = {v["name"]: i for i, v in enumerate(src.get("reservoirs", []))}
+    creatures = []
+    for i, c in enumerate(src.get("creatures", [])):
+        rec = creature_record(c, ids, rnames)
+        rec["id"] = child(ancestry, bounded(c.get("key", 300 + i), 1, 0xFFFFFFFF, "creature key"))
+        rec["index"] = len(creatures)
+        creatures.append(rec)
+    return {
+        "ids": ids,
+        "modules": modules,
+        "positions": positions,
+        "links": links,
+        "features": features,
+        "reservoirs": reservoirs,
+        "creatures": creatures,
+    }
+
+
+def creature_id(view, species, slot):
+    """Mirror of ws_creature_id: stable identity from the species identity
+    and the slot number (never coordinates or transient handles)."""
+    return child_id(view["creatures"][species]["id"], slot + 1, 0x4352)
+
+
+def child_id(parent, key, version):
+    """Mirror of ws_child_id with an explicit version word."""
+    return [
+        h(parent[i] ^ h((key + 0x9E3779B9 * (i + 1)) & 0xFFFFFFFF) ^ version)
+        for i in range(4)
+    ]
+
+
+def _cre_blocked(view, p):
+    """Mirror of the placement blocker test: strictly inside a solid box,
+    or inside a room's wall span (rooms are interiors; exterior placement
+    stays out). Standing exactly on a box top is free."""
+    for m in view["modules"]:
+        shape = SHAPES[m["shape"]]
+        at, size = m["at"], m["size"]
+        if shape == 0 and "Collision.Solid" in m.get("tags", []):
+            if (
+                at[0] - size[0] // 2 < p[0] < at[0] + size[0] // 2
+                and at[2] - size[2] // 2 < p[2] < at[2] + size[2] // 2
+                and at[1] - size[1] < p[1] < at[1]
+            ):
+                return True
+        if shape == 3:
+            if (
+                at[0] - size[0] // 2 < p[0] < at[0] + size[0] // 2
+                and at[2] - size[2] // 2 < p[2] < at[2] + size[2] // 2
+                and at[1] - 300 < p[1] < at[1] + size[1]
+            ):
+                return True
+    return False
+
+
+def _cre_terrain_top(view, x, z, floor_y):
+    """Mirror of terrain_top: the highest solid box top under (x, z), or
+    the region floor where no solid box contains the point."""
+    top = None
+    for m in view["modules"]:
+        if SHAPES[m["shape"]] != 0 or "Collision.Solid" not in m.get("tags", []):
+            continue
+        at, size = m["at"], m["size"]
+        if not (at[0] - size[0] // 2 <= x <= at[0] + size[0] // 2):
+            continue
+        if not (at[2] - size[2] // 2 <= z <= at[2] + size[2] // 2):
+            continue
+        if top is None or at[1] > top:
+            top = at[1]
+    return floor_y if top is None else top
+
+
+def _cre_spread(salt, key, radius):
+    return (h(salt ^ key) % (2 * radius + 1)) - radius
+
+
+def _cre_chord(a, b):
+    n = (b[0] - a[0]) ** 2 + (b[1] - a[1]) ** 2 + (b[2] - a[2]) ** 2
+    return math.isqrt(n) if n > 0 else 0
+
+
+def _cre_point_at(pts, d):
+    """Mirror of point_at: position at distance d along the polyline with
+    16.16 per-component interpolation, truncating toward zero (c_div)."""
+    for i in range(len(pts) - 1):
+        lc = _cre_chord(pts[i], pts[i + 1])
+        if lc <= 0:
+            continue
+        if d < lc:
+            t = d * 65536 // lc
+            return [
+                pts[i][k] + c_div((pts[i + 1][k] - pts[i][k]) * t, 65536)
+                for k in range(3)
+            ]
+        d -= lc
+    return list(pts[-1])
+
+
+def _cre_home(view, c, slot, anchored, anchor):
+    s1 = h(c["seed"] ^ (((slot + 1) * 0x9E3779B9) & 0xFFFFFFFF))
+    if anchored:
+        a = view["modules"][anchor]
+        ax, ay, az = a["at"]
+        hx, hz = a["size"][0] // 2 - 600, a["size"][2] // 2 - 600
+        for i in range(CRE_TRIES):
+            p = [
+                ax + _cre_spread(s1, (0xA1 + i * 0x85EBCA6B) & 0xFFFFFFFF, c["radius"]),
+                ay,
+                az + _cre_spread(s1, (0xC3 + i * 0x2545F491) & 0xFFFFFFFF, c["radius"]),
+            ]
+            if abs(p[0] - ax) > hx or abs(p[2] - az) > hz:
+                continue
+            if _cre_blocked(view, p):
+                continue
+            return p
+        return [ax, ay, az]
+    v = view["reservoirs"][c["habitat"]]
+    sx, sz = v["hi"][0] - v["lo"][0], v["hi"][2] - v["lo"][2]
+    for i in range(CRE_TRIES):
+        fx = h(s1 ^ ((0x57 + i * 0x85EBCA6B) & 0xFFFFFFFF))
+        fz = h(s1 ^ ((0x2B + i * 0x2545F491) & 0xFFFFFFFF))
+        x, z = v["lo"][0] + (sx * fx >> 32), v["lo"][2] + (sz * fz >> 32)
+        p = [x, _cre_terrain_top(view, x, z, v["lo"][1]), z]
+        if p[1] > v["hi"][1] or _cre_blocked(view, p):
+            continue
+        return p
+    x, z = v["lo"][0] + sx // 2, v["lo"][2] + sz // 2
+    return [x, _cre_terrain_top(view, x, z, v["lo"][1]), z]
+
+
+def _bfs_path(pairs, a, b):
+    """Breadth-first path over (a, b) pairs, lowest-index tie-break, in
+    declaration order: the mirror of ws_route's traversal discipline."""
+    prev = {a: a}
+    queue = [a]
+    head = 0
+    while head < len(queue):
+        at = queue[head]
+        head += 1
+        if at == b:
+            break
+        for x, y in pairs:
+            nxt = y if x == at else x if y == at else None
+            if nxt is None or nxt in prev:
+                continue
+            prev[nxt] = at
+            queue.append(nxt)
+    if b not in prev:
+        return None
+    path = []
+    at = b
+    while True:
+        path.append(at)
+        if at == a:
+            break
+        at = prev[at]
+    path.reverse()
+    return path
+
+
+def route_bfs_probe(modules, walk_links, a, b):
+    """Walk-only route existence, the compiler mirror of the required-species
+    anchor rule (ws_reachable's WALK class for two walk surfaces)."""
+    return _bfs_path(walk_links, a, b)
+
+
+def _cre_route_bfs(view, a, b):
+    """Mirror of ws_route: breadth-first path over walk links only, lowest
+    index tie-break, returned as the module index path (or None)."""
+    return _bfs_path([(l[0], l[1]) for l in view["links"] if l[2] == 0], a, b)
+
+
+def _cre_derive_slot(view, c, slot, anchored, anchor):
+    """Mirror of derive_slot: the placed home plus stations. Anchored
+    stations come from the access graph (BFS over walk links, at most two
+    hops, lowest (hop, index) first); fauna stations are further biome
+    points kept within the species radius of home."""
+    home = _cre_home(view, c, slot, anchored, anchor)
+    st, mod = [home], [anchor if anchored else None]
+    want = c["stations"]
+    if anchored:
+        depth = {anchor: 0}
+        queue = [anchor]
+        head = 0
+        while head < len(queue) and depth[queue[head]] < CRE_HOPS:
+            at = queue[head]
+            head += 1
+            for l in view["links"]:
+                if l[2] != 0:
+                    continue
+                x, y = l[0], l[1]
+                nxt = y if x == at else x if y == at else None
+                if nxt is None or nxt in depth:
+                    continue
+                depth[nxt] = depth[at] + 1
+                queue.append(nxt)
+        for d in range(1, CRE_HOPS + 1):
+            if len(st) >= want:
+                break
+            for i, m in enumerate(view["modules"]):
+                if len(st) >= want:
+                    break
+                if depth.get(i) != d or "Surface.Walk" not in m.get("tags", []):
+                    continue
+                st.append(list(m["at"]))
+                mod.append(i)
+    else:
+        v = view["reservoirs"][c["habitat"]]
+        sx, sz = v["hi"][0] - v["lo"][0], v["hi"][2] - v["lo"][2]
+        s2 = h(c["seed"] ^ (((slot + 1) * 0x68E31DA4) & 0xFFFFFFFF))
+        for j in range(1, want):
+            fx = h(s2 ^ ((0xE7 + j * 0x85EBCA6B) & 0xFFFFFFFF))
+            fz = h(s2 ^ ((0x2D + j * 0x2545F491) & 0xFFFFFFFF))
+            x, z = v["lo"][0] + (sx * fx >> 32), v["lo"][2] + (sz * fz >> 32)
+            p = [x, _cre_terrain_top(view, x, z, v["lo"][1]), z]
+            if (
+                p[1] > v["hi"][1]
+                or (p[0] - home[0]) ** 2 + (p[2] - home[2]) ** 2 > c["radius"] ** 2
+                or _cre_blocked(view, p)
+            ):
+                p = list(home)
+            st.append(p)
+            mod.append(None)
+    return st, mod, anchored
+
+
+def creature_at(view, state, species, slot, now_s):
+    """Mirror of ws_creature_at: resolve one creature at now_s as a pure
+    function of (recipe, exceptions, time). Returns None when the creature
+    does not exist. state is None or {"crex": [[id, kind, aux], ...]}."""
+    if species >= len(view["creatures"]) or slot >= view["creatures"][species]["slots"]:
+        return None
+    c = view["creatures"][species]
+    cid = creature_id(view, species, slot)
+    anchored = c["kind"] != CREATURE_KINDS["fauna"]
+    anchor = c["habitat"]
+    if state:
+        for eid, kind, aux in state["crex"]:
+            if eid != cid:
+                continue
+            if kind == CREX_DEAD:
+                return None
+            if kind == CREX_RELOCATED:
+                if aux >= len(view["modules"]):
+                    return None
+                anchor, anchored = aux, True
+            elif kind == CREX_PINNED:
+                st, _, _ = _cre_derive_slot(view, c, slot, anchored, anchor)
+                return {"id": cid, "pos": st[0], "species": species, "slot": slot, "station": 0, "traveling": 0}
+            break
+    st, mod, anchored = _cre_derive_slot(view, c, slot, anchored, anchor)
+    period = c["period"]
+    s1 = h(c["seed"] ^ (((slot + 1) * 0x9E3779B9) & 0xFFFFFFFF))
+    # The C addition wraps at 32 bits exactly like the state clock.
+    u = ((now_s + h(s1 ^ 0x5B) % period) & 0xFFFFFFFF) % period
+    n = len(st)
+    if n <= 1:
+        return {"id": cid, "pos": st[0], "species": species, "slot": slot, "station": 0, "traveling": 0}
+    w = []
+    for j in range(n):
+        nxt = 0 if j + 1 == n else j + 1
+        if anchored:
+            r = route_cost(view["positions"], view["links"], view["features"], mod[j], mod[nxt], CAP_WALK)
+            if r is not None:
+                w.append(r[0] // CRE_SPEED + 1)
+            else:
+                w.append(_cre_chord(st[j], st[nxt]) // CRE_SPEED + 1)
+        else:
+            w.append(_cre_chord(st[j], st[nxt]) // CRE_SPEED + 1)
+    total = sum(CRE_DWELL + x for x in w)
+    p = u * total // period
+    cum = 0
+    for j in range(n):
+        nxt = 0 if j + 1 == n else j + 1
+        if p < cum + CRE_DWELL:
+            return {"id": cid, "pos": st[j], "species": species, "slot": slot, "station": j, "traveling": 0}
+        cum += CRE_DWELL
+        if p < cum + w[j]:
+            line = [st[j], st[nxt]]
+            if anchored:
+                path = _cre_route_bfs(view, mod[j], mod[nxt])
+                if path is not None:
+                    line = [list(view["modules"][k]["at"]) for k in path]
+            length = sum(_cre_chord(line[i], line[i + 1]) for i in range(len(line) - 1))
+            d = (p - cum) * length // w[j] if length > 0 else 0
+            return {"id": cid, "pos": _cre_point_at(line, d), "species": species, "slot": slot, "station": j, "traveling": 1}
+        cum += w[j]
+    return {"id": cid, "pos": st[0], "species": species, "slot": slot, "station": 0, "traveling": 0}
+
+
+def creature_query(view, state, lo, hi, now_s):
+    """Mirror of ws_creature_query: creatures inside the window in (species,
+    slot) order. Returns the list; the C cap/negative-return contract is
+    exercised by the parity gate through ctypes."""
+    out = []
+    for sp in range(len(view["creatures"])):
+        for k in range(view["creatures"][sp]["slots"]):
+            one = creature_at(view, state, sp, k, now_s)
+            if one is None:
+                continue
+            p = one["pos"]
+            if not (lo[0] <= p[0] <= hi[0] and lo[1] <= p[1] <= hi[1] and lo[2] <= p[2] <= hi[2]):
+                continue
+            out.append(one)
+    return out
 
 
 def river_lateral(rec, amplitude, k):
@@ -676,6 +1038,7 @@ def compile_recipe(src):
         "links",
         "features",
         "reservoirs",
+        "creatures",
     }:
         raise ValueError("unknown source field: SCHEMA_EXTENSION required")
     if src["schema"] != SCHEMA or src["generator"] != GENERATOR:
@@ -905,6 +1268,62 @@ def compile_recipe(src):
             0,
             0,
         )
+    # Sparse creature species (schema 4): stable identity from the ancestry,
+    # validated fail-closed, packed after the reservoir table. Anchored
+    # species need a walk-surface anchor that is not an interior; required
+    # species must be baseline-walk-reachable from the first declared walk
+    # surface, mirroring ws_validate exactly.
+    cnames = set()
+    crecs = []
+    for i, c in enumerate(src.get("creatures", [])):
+        name = c.get("name")
+        if not name or name in ids or name in fnames or name in rnames or name in cnames:
+            raise ValueError("duplicate or missing creature name")
+        cnames.add(name)
+        key = bounded(c.get("key", 300 + i), 1, 0xFFFFFFFF, "creature key")
+        ident = child(ancestry, key)
+        if tuple(ident) in handles:
+            raise ValueError("identity collision")
+        handles.add(tuple(ident))
+        rec = creature_record(c, ids, rindex)
+        if len(crecs) >= 16:
+            raise ValueError("creature capacity exceeded")
+        rec["id"] = ident
+        rec["index"] = len(crecs)
+        crecs.append(rec)
+    if crecs:
+        first_walk = next(
+            (i for i, m in enumerate(modules) if "Surface.Walk" in m.get("tags", [])),
+            None,
+        )
+        walk_links_only = [(a, b) for a, b, kind, _ in resolved_links if kind == 0]
+        for rec in crecs:
+            if rec["kind"] == CREATURE_KINDS["fauna"]:
+                continue
+            m = modules[rec["habitat"]]
+            if "Surface.Walk" not in m.get("tags", []):
+                raise ValueError("creature anchor must be a walk surface")
+            if "Scope.Interior" in m.get("tags", []):
+                raise ValueError("creature anchor must be exterior")
+            if rec["kind"] == CREATURE_KINDS["required"]:
+                if first_walk is None:
+                    raise ValueError("required creature anchor needs a walk network")
+                probe = route_bfs_probe(modules, walk_links_only, first_walk, rec["habitat"])
+                if probe is None:
+                    raise ValueError("required creature anchor must be baseline-walk-reachable")
+    cbody = bytearray()
+    for rec in crecs:
+        cbody += struct.pack(
+            "<4I6HI",
+            *rec["id"],
+            rec["kind"],
+            rec["habitat"],
+            rec["slots"],
+            rec["period"],
+            rec["stations"],
+            rec["radius"],
+            rec["seed"],
+        )
     if graph:
         seen = set()
         todo = [next(iter(graph))]
@@ -943,8 +1362,18 @@ def compile_recipe(src):
                 break
         if not doorway:
             raise ValueError("Entity.NPC sealed inside a room with no public access port")
-    schema = SCHEMA_RESOURCES if rrecords else SCHEMA_FEATURES if frecords else SCHEMA
-    if rrecords:
+    schema = (
+        SCHEMA_CREATURES
+        if crecs
+        else SCHEMA_RESOURCES
+        if rrecords
+        else SCHEMA_FEATURES
+        if frecords
+        else SCHEMA
+    )
+    if crecs:
+        counts = (len(modules), len(links), len(frecords), ecount, len(rrecords), len(crecs))
+    elif rrecords:
         counts = (len(modules), len(links), len(frecords), ecount, len(rrecords))
     elif frecords:
         counts = (len(modules), len(links), len(frecords), ecount)
@@ -964,6 +1393,7 @@ def compile_recipe(src):
         + bytes(fbody)
         + bytes(ebody)
         + bytes(rbody)
+        + bytes(cbody)
     )
     data = (
         struct.pack(
@@ -986,6 +1416,7 @@ def compile_recipe(src):
         "features": [f.get("name") for f in src.get("features", [])],
         "exceptions": ecount,
         "reservoirs": [v.get("name") for v in src.get("reservoirs", [])],
+        "creatures": [c.get("name") for c in src.get("creatures", [])],
         "source_sha256": hashlib.sha256(
             json.dumps(src, sort_keys=True, separators=(",", ":")).encode()
         ).hexdigest(),

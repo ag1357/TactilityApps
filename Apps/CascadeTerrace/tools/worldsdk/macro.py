@@ -296,6 +296,24 @@ def generate(seed=SHOWCASE, variant=0):
         {"name": "forest_biomass", "key": 203, "kind": "biomass", "zone": 1, "lo": flo, "hi": fhi, "capacity": 200000, "level": 200000, "rate": 15000},
         {"name": "karst_phos", "key": 204, "kind": "phos", "zone": 3, "lo": list(klo), "hi": list(khi), "capacity": 160000, "level": 160000, "rate": 8000},
     ]
+    # --- sparse creature species, DERIVED from the same geography (Gate 5
+    # rules): wildlife populates the biome regions (one species per
+    # reservoir), and the two settlements host publicly anchored NPCs. The
+    # required species anchor at settlements reachable by baseline walking
+    # from the first declared walk surface, so required NPCs are never
+    # sealed behind the winze lift or the anomaly gate. Placement radius,
+    # station counts and schedule periods are generation parameters; every
+    # slot identity and position is still derived, never authored. ---
+    creatures = [
+        {"name": "massif_fauna", "key": 301, "kind": "fauna", "habitat": "massif_spoil", "slots": 8, "period": 43200, "stations": 3, "radius": 30000, "seed": (s ^ 0x51) & 0xFFFFFFFF},
+        {"name": "lake_fauna", "key": 302, "kind": "fauna", "habitat": "lake_country", "slots": 6, "period": 43200, "stations": 3, "radius": 30000, "seed": (s ^ 0x52) & 0xFFFFFFFF},
+        {"name": "forest_fauna", "key": 303, "kind": "fauna", "habitat": "forest_biomass", "slots": 10, "period": 43200, "stations": 3, "radius": 30000, "seed": (s ^ 0x53) & 0xFFFFFFFF},
+        {"name": "karst_fauna", "key": 304, "kind": "fauna", "habitat": "karst_phos", "slots": 4, "period": 43200, "stations": 3, "radius": 30000, "seed": (s ^ 0x54) & 0xFFFFFFFF},
+        {"name": "gate_warden", "key": 311, "kind": "required", "habitat": "high_gate", "slots": 1, "period": 28800, "stations": 2, "radius": 20000, "seed": (s ^ 0x61) & 0xFFFFFFFF},
+        {"name": "gate_residents", "key": 312, "kind": "npc", "habitat": "high_gate", "slots": 2, "period": 21600, "stations": 3, "radius": 20000, "seed": (s ^ 0x62) & 0xFFFFFFFF},
+        {"name": "haven_wardens", "key": 313, "kind": "required", "habitat": "ford_haven", "slots": 2, "period": 36000, "stations": 2, "radius": 20000, "seed": (s ^ 0x63) & 0xFFFFFFFF},
+        {"name": "haven_residents", "key": 314, "kind": "npc", "habitat": "ford_haven", "slots": 3, "period": 28800, "stations": 3, "radius": 20000, "seed": (s ^ 0x64) & 0xFFFFFFFF},
+    ]
     src = {
         "schema": 1,
         "generator": 1,
@@ -308,6 +326,7 @@ def generate(seed=SHOWCASE, variant=0):
         "links": links,
         "features": [river_src],
         "reservoirs": reservoirs,
+        "creatures": creatures,
     }
     for i, m in enumerate(modules):
         m.setdefault("key", 100 + i)
@@ -427,6 +446,10 @@ def main():
         "reservoirs": [
             {"name": v["name"], "kind": v["kind"], "zone": v["zone"], "capacity": v["capacity"], "level": v["level"], "rate": v["rate"]}
             for v in src["reservoirs"]
+        ],
+        "creatures": [
+            {"name": c["name"], "kind": c["kind"], "habitat": c["habitat"], "slots": c["slots"], "period": c["period"], "stations": c["stations"], "radius": c["radius"]}
+            for c in src["creatures"]
         ],
         "anomaly_gate": {
             "seat": "phos_ruin",

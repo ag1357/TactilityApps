@@ -73,6 +73,21 @@ WsError ws_state_validate(const WsState* s, const WsRecipe* r) {
         const WsReservoir* v = &r->reservoirs[site->reservoir];
         if (site->pos.x < v->lo.x || site->pos.x > v->hi.x || site->pos.z < v->lo.z || site->pos.z > v->hi.z) return WS_BOUNDS;
     }
+    /* Sparse creature exceptions: bounded, unique, keyed by identities the
+       recipe can actually generate, with kind-specific aux bounds. Dead
+       creatures carry no aux; relocations name a walk surface; pinned
+       creatures name a joined player. */
+    if (s->creature_count > WS_CREX_CAP) return WS_BOUNDS;
+    for (int i = 0; i < s->creature_count; i++) {
+        const WsCreatureEx* e = &s->crex[i];
+        if (e->kind < WS_CREX_DEAD || e->kind > WS_CREX_PINNED || e->reserved || e->pad) return WS_BOUNDS;
+        if (!ws_creature_known(r, e->id)) return WS_REFERENCE;
+        if (e->kind == WS_CREX_DEAD && e->aux) return WS_BOUNDS;
+        if (e->kind == WS_CREX_RELOCATED && (e->aux >= r->count || !(r->modules[e->aux].flags & WS_WALK) || (r->modules[e->aux].flags & WS_INTERIOR))) return WS_REFERENCE;
+        if (e->kind == WS_CREX_PINNED && e->aux >= s->player_count) return WS_BOUNDS;
+        for (int j = 0; j < i; j++)
+            if (ws_id_equal(e->id, s->crex[j].id)) return WS_DUPLICATE;
+    }
     return WS_OK;
 }
 void ws_record(WsState* s, WsContext c, WsOperation op, uint16_t kind) {

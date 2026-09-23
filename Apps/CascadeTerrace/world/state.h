@@ -61,11 +61,24 @@ typedef struct {
     uint16_t reservoir, kind, extent, reserved;
     uint32_t amount;
 } WsSite;
+/* Sparse persistent creature exceptions (Gate 5). Generated placement and
+   schedules are defaults reconstructed from the product; consequential
+   history overrides them per creature, keyed by the stable identity:
+   DEAD removes the creature, RELOCATED re-anchors it at a declared walk
+   surface, PINNED keeps it at its placed home. Everything else about a
+   creature stays generated, so an exception never grows the product. */
+#define WS_CREX_CAP 32
+enum { WS_CREX_DEAD = 1, WS_CREX_RELOCATED = 2, WS_CREX_PINNED = 3 };
+typedef struct {
+    WsId id;
+    uint16_t kind, aux, reserved, pad;
+} WsCreatureEx;
 typedef struct {
     WsId ancestry;
     uint32_t recipe_crc, revision;
     uint16_t count, player_count, feed_count, tail_count;
     uint16_t reservoir_count, site_count;
+    uint16_t creature_count, creature_pad;
     uint32_t clock_s;
     WsEntity entities[WS_CAP];
     WsPlayer players[WS_PLAYER_CAP];
@@ -75,6 +88,7 @@ typedef struct {
     uint32_t level[WS_RESERVOIR_CAP];
     uint16_t material[WS_PLAYER_CAP], shards[WS_PLAYER_CAP];
     WsSite sites[WS_SITE_CAP];
+    WsCreatureEx crex[WS_CREX_CAP];
     uint64_t recovered_total, used_total, lost_total;
 } WsState;
 typedef struct {
@@ -111,6 +125,21 @@ int ws_route_cost_state(const WsRecipe*, const WsState*, uint16_t a, uint16_t b,
 int ws_use_link_state(const WsRecipe*, const WsState*, WsTraveler*);
 /* Routed from ws_apply for action >= WS_EXCAVATE; pi is the actor index. */
 WsDisposition ws_resource_apply(WsState*, const WsRecipe*, WsContext, WsOperation, int pi);
+/* Sparse creature placement and schedules (creature.c): pure functions of
+   (recipe, state exceptions, query time). ws_creature_at resolves one
+   creature (0 when it does not exist); ws_creature_query materializes the
+   creatures inside a window in (species, slot) order and returns the match
+   count, or the negated count when the buffer is too small. State-bound
+   only through the exception list; the schedule clock is the caller's. */
+int ws_creature_at(const WsRecipe*, const WsState*, uint16_t species, uint16_t slot, uint32_t now_s, WsCreatureSample*);
+int ws_creature_query(const WsRecipe*, const WsState*, WsPos lo, WsPos hi, uint32_t now_s, WsCreatureSample* out, int cap);
+/* Authority mutation for persistent creature exceptions: kind 0 removes
+   the record for id. Fails closed (WS_REFERENCE/WS_FULL/WS_BOUNDS) on
+   unknown creatures, bad kinds or a full table; the resulting state must
+   still pass ws_state_validate. */
+WsError ws_creature_except(WsState*, const WsRecipe*, WsId id, uint16_t kind, uint16_t aux);
+/* Is id a creature this recipe can generate (validation helper)? */
+int ws_creature_known(const WsRecipe*, WsId);
 /* Tail and feed recording shared by the entity and resource op paths. */
 void ws_record(WsState*, WsContext, WsOperation, uint16_t kind);
 /* base must be a server-retained authenticated branch checkpoint, never a

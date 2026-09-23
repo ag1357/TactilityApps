@@ -2,9 +2,9 @@
   "ok": true,
   "seed": 10227025,
   "variants_tried": 1,
-  "product_sha256": "745721f626cc0b11f7e716929e54cfc40eb92ee7932240784ba2402e1bd9ad2c",
-  "bytes": 1938,
-  "schema": 3,
+  "product_sha256": "d64403d61e8f51fbed454646fc46e993d6e6326f006cf5108ba68ec1e59d6d0f",
+  "bytes": 2196,
+  "schema": 4,
   "modules": 22,
   "links": 13,
   "features": [
@@ -43,6 +43,80 @@
       "capacity": 160000,
       "level": 160000,
       "rate": 8000
+    }
+  ],
+  "creatures": [
+    {
+      "name": "massif_fauna",
+      "kind": "fauna",
+      "habitat": "massif_spoil",
+      "slots": 8,
+      "period": 43200,
+      "stations": 3,
+      "radius": 30000
+    },
+    {
+      "name": "lake_fauna",
+      "kind": "fauna",
+      "habitat": "lake_country",
+      "slots": 6,
+      "period": 43200,
+      "stations": 3,
+      "radius": 30000
+    },
+    {
+      "name": "forest_fauna",
+      "kind": "fauna",
+      "habitat": "forest_biomass",
+      "slots": 10,
+      "period": 43200,
+      "stations": 3,
+      "radius": 30000
+    },
+    {
+      "name": "karst_fauna",
+      "kind": "fauna",
+      "habitat": "karst_phos",
+      "slots": 4,
+      "period": 43200,
+      "stations": 3,
+      "radius": 30000
+    },
+    {
+      "name": "gate_warden",
+      "kind": "required",
+      "habitat": "high_gate",
+      "slots": 1,
+      "period": 28800,
+      "stations": 2,
+      "radius": 20000
+    },
+    {
+      "name": "gate_residents",
+      "kind": "npc",
+      "habitat": "high_gate",
+      "slots": 2,
+      "period": 21600,
+      "stations": 3,
+      "radius": 20000
+    },
+    {
+      "name": "haven_wardens",
+      "kind": "required",
+      "habitat": "ford_haven",
+      "slots": 2,
+      "period": 36000,
+      "stations": 2,
+      "radius": 20000
+    },
+    {
+      "name": "haven_residents",
+      "kind": "npc",
+      "habitat": "ford_haven",
+      "slots": 3,
+      "period": 28800,
+      "stations": 3,
+      "radius": 20000
     }
   ],
   "anomaly_gate": {

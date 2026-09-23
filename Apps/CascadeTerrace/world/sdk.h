@@ -4,10 +4,12 @@
 #include <stdint.h>
 #define WS_SCHEMA 1
 /* Products carrying the sparse feature section use schema 2; products with
-   regional reservoirs use schema 3. Schema 1 and 2 products remain
-   byte-compatible with every published artifact. */
+   regional reservoirs use schema 3; products with sparse creature species
+   records use schema 4. Schema 1, 2 and 3 products remain byte-compatible
+   with every published artifact. */
 #define WS_SCHEMA_FEATURES 2
 #define WS_SCHEMA_RESOURCES 3
+#define WS_SCHEMA_CREATURES 4
 #define WS_GENERATOR 1
 #define WS_CAP 128
 #define WS_LINK_CAP 256
@@ -109,15 +111,41 @@ typedef struct {
     WsPos lo, hi;        /* bounded regional extent, millimetres */
     uint32_t capacity, level, rate, reserved;
 } WsReservoir;
+/* Sparse creature species (schema 4): placement and schedules are
+   reconstructed per query from (recipe, time); the product stores bounded
+   generator records, never entity lists, so offscreen entities cost
+   nothing and no tick replay exists. A FAUNA species places slots inside a
+   biome reservoir extent (habitat = reservoir index); NPC and REQUIRED
+   species anchor to a walk-surface module, usually a settlement (habitat =
+   module index). Every slot has a stable identity derived from the species
+   identity and the slot number, so persistent state can override the
+   generated default for one creature without touching the product. */
+#define WS_CREATURE_CAP 16
+#define WS_CRE_SLOTS_MAX 64
+enum { WS_CRE_FAUNA = 1, WS_CRE_NPC = 2, WS_CRE_REQUIRED = 3 };
+typedef struct {
+    WsId id;                   /* species identity: child(ancestry, key) */
+    uint16_t kind, habitat;    /* WS_CRE_*; biome reservoir or anchor module */
+    uint16_t slots, period;    /* population slots; schedule period, seconds */
+    uint16_t stations, radius; /* 1..4 stations; anchor spread, millimetres */
+    uint32_t seed;             /* species salt */
+} WsCreature;
+typedef struct {
+    WsId id;        /* stable: species identity and slot number */
+    WsPos pos;      /* resolved position at the query time */
+    uint16_t species, slot, station;
+    uint16_t traveling; /* 0 dwelling at a station, 1 en route */
+} WsCreatureSample;
 typedef struct {
     WsId ancestry;
     uint32_t seed, epoch, revision, recipe_crc;
-    uint16_t count, link_count, feature_count, exception_count, reservoir_count;
+    uint16_t count, link_count, feature_count, exception_count, reservoir_count, creature_count;
     WsModule modules[WS_CAP];
     WsLink links[WS_LINK_CAP];
     WsFeature features[WS_FEATURE_CAP];
     WsException exceptions[WS_EXCEPTION_CAP];
     WsReservoir reservoirs[WS_RESERVOIR_CAP];
+    WsCreature creatures[WS_CREATURE_CAP];
 } WsRecipe;
 typedef struct {
     WsPos pos;
@@ -210,5 +238,9 @@ int ws_route_cost(const WsRecipe*, uint16_t a, uint16_t b, uint32_t caps, uint64
 /* Deterministic regional weather: pure function of (recipe seed, day).
    0 clear, 1 rain, 2 storm. Recovery rates scale with it; nothing else. */
 uint32_t ws_weather(const WsRecipe*, uint32_t day);
+/* Stable creature identity: pure function of the species identity (itself
+   derived from the recipe ancestry) and the slot number. State exceptions
+   key on this, never on coordinates or transient handles. */
+WsId ws_creature_id(const WsRecipe*, uint16_t species, uint16_t slot);
 /* All coordinates are bounded local millimetres, not global float positions. */
 #endif

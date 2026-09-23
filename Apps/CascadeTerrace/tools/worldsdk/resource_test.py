@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """Gate 3 test (regional resources and ecology). Proves, against the C
 engine through libsdk.so, with an independent Python mirror of every rule:
-  - the committed macro artifacts are exactly the generator output, schema 3
+  - the committed macro artifacts are exactly the generator output, schema 4 (carrying the schema 3 reservoir section)
     with four geography-derived reservoirs matching the C-loaded records;
   - weather, river stage, resource ticks (rate-based recovery, weather and
     zone scaling, biomass coupled to the paired Phos stock, capacity-capped
@@ -132,12 +132,12 @@ def main():
         results["checks"] += 1
         assert cond, label
 
-    check(C.sizeof(State) == 10144, "State ctypes layout drift")
+    check(C.sizeof(State) == 10920, "State ctypes layout drift")
 
-    # 1. Committed artifacts are exactly the generator output (schema 3).
+    # 1. Committed artifacts are exactly the generator output (schema 4).
     built = macro.build(SEED)
     src, data, manifest = built["src"], built["data"], built["manifest"]
-    check(manifest["schema"] == 3, "committed product is not schema 3")
+    check(manifest["schema"] == 4, "committed product is not schema 4")
     check(src == json.loads((ROOT / "content/worlds/macro.json").read_text()), "committed macro.json drift")
     check(data == (ROOT / "build/macro.cws").read_bytes(), "committed product bytes drift")
     inc = (ROOT / "content/worlds/macro.inc").read_text()

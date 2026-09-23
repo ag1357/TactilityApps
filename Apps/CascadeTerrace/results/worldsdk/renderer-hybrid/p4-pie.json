@@ -1,8 +1,8 @@
 {
   "status": "P4 BUILD PRODUCED; PENDING PHYSICAL VALIDATION",
-  "binary_bytes": 188352,
+  "binary_bytes": 189616,
   "package_bytes": 204800,
-  "elf_sha256": "98fcde79072636d8eda0a809beacabef90e4b7a3be6f3272ab5f4127548bda47",
-  "package_sha256": "20ed967c252b7323dd7fb10db881d988e971396dbf22881280fb0a66097f08f8",
+  "elf_sha256": "72dd9c76d128a3b28a37bfd0e7d3d3047ceaf7a4b962322e17e21f5e53ba770b",
+  "package_sha256": "292ded22f5a276542d53fb503e95c1364f4bf1254c4852861e49bb9f8795c57f",
   "format": "Tactility manifest v0.3 / USTAR / esp32p4 external ELF"
 }

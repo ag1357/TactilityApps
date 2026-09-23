@@ -85,6 +85,16 @@ class Site(C.Structure):
     ]
 
 
+class CreatureEx(C.Structure):
+    _fields_ = [
+        ("id", Id),
+        ("kind", C.c_uint16),
+        ("aux", C.c_uint16),
+        ("reserved", C.c_uint16),
+        ("pad", C.c_uint16),
+    ]
+
+
 class State(C.Structure):
     _fields_ = [
         ("ancestry", Id),
@@ -96,6 +106,8 @@ class State(C.Structure):
         ("tail_count", C.c_uint16),
         ("reservoir_count", C.c_uint16),
         ("site_count", C.c_uint16),
+        ("creature_count", C.c_uint16),
+        ("creature_pad", C.c_uint16),
         ("clock_s", C.c_uint32),
         ("entities", Entity * 128),
         ("players", Player * 8),
@@ -106,6 +118,7 @@ class State(C.Structure):
         ("material", C.c_uint16 * 8),
         ("shards", C.c_uint16 * 8),
         ("sites", Site * 32),
+        ("crex", CreatureEx * 32),
         ("recovered_total", C.c_uint64),
         ("used_total", C.c_uint64),
         ("lost_total", C.c_uint64),

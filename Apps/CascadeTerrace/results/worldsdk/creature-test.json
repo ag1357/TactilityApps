@@ -1,21 +1,24 @@
 {
-  "stage": "anomaly-topology",
-  "checks": 440,
+  "stage": "creature-schedules",
+  "checks": 7495,
   "generalized_seeds": [
     {
       "seed": 1,
       "bytes": 2196,
-      "closed_haven_cost": 2703728
+      "creatures": 36
     },
     {
       "seed": 3735928559,
       "bytes": 2196,
-      "closed_haven_cost": 2668819
+      "creatures": 36
     },
     {
       "seed": 20260922,
       "bytes": 2196,
-      "closed_haven_cost": 2665995
+      "creatures": 36
     }
-  ]
+  ],
+  "species": 8,
+  "population": 36,
+  "product_bytes": 2196
 }

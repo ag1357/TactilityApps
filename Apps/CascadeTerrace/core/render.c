@@ -271,15 +271,20 @@ void render(Renderer* r, const Game* g) {
     r->frame++;
     float yaw = g->state.yaw * .01745329252f;
     r->yaw = yaw;
-    r->pitch = r->conversation ? 0 : -.19f;
+    /* View modes: conversation keeps its close-up framing; first_person is
+     * an eye-level forward camera (no chase offset, level pitch, body not
+     * drawn); the default remains the established chase view (6 m back,
+     * 4.3 m up). first_person is presentation state only: never saved. */
+    int fp = r->first_person && !r->conversation;
+    r->pitch = r->conversation ? 0 : (fp ? 0.f : -.19f);
     cy = cosf(yaw);
     sy = sinf(yaw);
     cp = cosf(r->pitch);
     sp = sinf(r->pitch);
     float px = g->state.player_pos.x / 1000.f, py = g->state.player_pos.y / 1000.f, pz = g->state.player_pos.z / 1000.f;
-    r->camera_x = px - (r->conversation ? 0 : 6) * sy;
-    r->camera_z = pz - (r->conversation ? 0 : 6) * cy;
-    r->camera_y = py + (r->conversation ? 1.5f : 4.3f);
+    r->camera_x = px - (r->conversation || fp ? 0 : 6) * sy;
+    r->camera_z = pz - (r->conversation || fp ? 0 : 6) * cy;
+    r->camera_y = py + (r->conversation ? 1.5f : fp ? 1.6f : 4.3f);
     float ch = ground_at(&g->world, (int)(r->camera_x * 1000), (int)(r->camera_z * 1000)) / 1000.f + 1;
     if (r->camera_y < ch) r->camera_y = ch;
     light = .35f + .65f * fmaxf(0, sinf((g->state.time % 86400000) / 86400000.f * 6.2831853f - 1.570796f));
@@ -331,7 +336,7 @@ void render(Renderer* r, const Game* g) {
         }
     Pos n = npc_position(g);
     person(n.x / 1000.f, n.y / 1000.f, n.z / 1000.f, 1, g->state.time / 6000.f);
-    if (!r->conversation) person(px, py, pz, 0, g->state.time / 900.f);
+    if (!r->conversation && !fp) person(px, py, pz, 0, g->state.time / 900.f);
     /* Phos motes are rendering only: no particle state in canonical save. */
     for (int i = 0; i < 18; i++) {
         uint32_t h = hash32((uint32_t)i + g->world.seed);

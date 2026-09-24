@@ -6,5 +6,5 @@
 {"stage":"social","passed":3814,"product_bytes":1592,"modules":23,"evidence":64,"state_bytes":13744,"wire_bytes":4404}
 {"stage":"bridge","passed":163,"legacy_state":21840,"ws_state":13744,"evidence":16,"revision":13,"wire_bytes":1974}
 {"suite":"authority_merge_persistence","checks":3873,"status":"PASS","cases":["A","B","C","D","E"],"state_bytes":13744,"wire_bytes":1968}
-{"checks":864,"failures":0,"seeds":100,"seed_validation_ms":2712.656,"render_mean_ms":5.512,"game_bytes":35320,"renderer_bytes":153636,"npc_bytes":5384,"state_bytes":21840,"save_bytes":734,"wire_crc32":3349299003,"physical_status":"PENDING"}
-{"status":"PASS","checks":9395,"color_parity":1,"async_ownership_cycles":1000,"source_bytes":76800,"scanout_bytes":307200,"ppa_extra_bytes":384000,"reference_mean_ms":0.708808,"portable_mean_ms":0.265576,"reference_p95_ms":0.714069,"portable_p95_ms":0.268486,"checksum":999600,"pie_physical":"PENDING","ppa_physical":"PENDING"}
+{"checks":864,"failures":0,"seeds":100,"seed_validation_ms":2716.572,"render_mean_ms":5.239,"game_bytes":35320,"renderer_bytes":153640,"npc_bytes":5384,"state_bytes":21840,"save_bytes":734,"wire_crc32":3349299003,"physical_status":"PENDING"}
+{"status":"PASS","checks":9395,"color_parity":1,"async_ownership_cycles":1000,"source_bytes":76800,"scanout_bytes":307200,"ppa_extra_bytes":384000,"reference_mean_ms":0.708803,"portable_mean_ms":0.265622,"reference_p95_ms":0.713615,"portable_p95_ms":0.268742,"checksum":999600,"pie_physical":"PENDING","ppa_physical":"PENDING"}

@@ -314,7 +314,9 @@ int main(int argc, char** argv) {
                     else if (k == SDLK_t) {
                         dialogue_open = 1;
                         reply.text[0] = 0;
-                    } else if (k == SDLK_e) {
+                    } else if (k == SDLK_i)
+                        frame.first_person = !frame.first_person;
+                    else if (k == SDLK_u || k == SDLK_e) {
                         if (dist2(game.state.player_pos, npc_position(&game)) < 2200LL * 2200) talk("Hello");
                         else
                             apply(REPAIR, IT_COUPLING, 1, 0);
@@ -343,7 +345,9 @@ int main(int argc, char** argv) {
         uint32_t current = SDL_GetTicks(), dt = current - previous;
         previous = current;
         if (!dialogue_open) {
-            Input in = {(int16_t)((keys[SDL_SCANCODE_W] - keys[SDL_SCANCODE_S]) * 1000 + touch_forward), (int16_t)((keys[SDL_SCANCODE_D] - keys[SDL_SCANCODE_A]) * 1000 + touch_strafe), (int16_t)((keys[SDL_SCANCODE_LEFT] - keys[SDL_SCANCODE_RIGHT]) * 2 + touch_turn), keys[SDL_SCANCODE_SPACE], keys[SDL_SCANCODE_LSHIFT], 0};
+            /* +turn is clockwise (right): RIGHT turns right, like O/P and
+               the fixed touch zone on device. */
+            Input in = {(int16_t)((keys[SDL_SCANCODE_W] - keys[SDL_SCANCODE_S]) * 1000 + touch_forward), (int16_t)((keys[SDL_SCANCODE_D] - keys[SDL_SCANCODE_A]) * 1000 + touch_strafe), (int16_t)((keys[SDL_SCANCODE_RIGHT] - keys[SDL_SCANCODE_LEFT]) * 2 + touch_turn), keys[SDL_SCANCODE_SPACE], keys[SDL_SCANCODE_LSHIFT], 0};
             if (in.forward > 1000) in.forward = 1000;
             if (in.forward < -1000) in.forward = -1000;
             if (in.strafe > 1000) in.strafe = 1000;

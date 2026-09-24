@@ -8,6 +8,7 @@ typedef struct {
     uint32_t triangles, pixels_written;
     float camera_x, camera_y, camera_z, yaw, pitch;
     int conversation;
+    int first_person;
     uint32_t frame;
 } Renderer;
 int render_load_assets(const char*);

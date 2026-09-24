@@ -614,6 +614,32 @@ macro 4,419, resource 322, anomaly 130, creature 920, social 3,814, bridge
 163, authority-merge 3,873; legacy 864/0; presentation 9,395; causal
 before/after replays pass).
 
+Keyboard controls (added after the user's first hands-on round; deployed
+and smoke-verified, physical key testing still pending): W/A/S/D movement
+(W forward, S back, A/D strafe), O/P camera turn left/right, I toggles a
+first-person eye-level view against the default chase view (presentation
+state only, never saved), U interacts (opens/leaves the conversation view;
+Esc also leaves it). The kernel keyboard stream is per-key press/release
+events, but LVGL's keypad pipeline collapses them to one-shot KEY events
+(its indev reports RELEASED whenever the driver queue is empty), so
+hold-to-move and chords are impossible through the group: while the game
+view is active the app latches the stream itself — every LVGL keypad indev
+is disabled each frame (a disabled indev stops calling its read callback,
+so the device queues back up; keyboards connecting mid-run are covered by
+the per-frame walk) and each `KEYBOARD_TYPE` device is drained through the
+exported `keyboard_read_key` for true held-key state. While talking, the
+latch is released so keys type into the textarea through LVGL again; on
+app close the latch is always released. Trade-off: an app crash would
+leave the keypad indevs disabled until reboot. Touch turn and the desktop
+arrow keys were sign-inverted against the yaw convention (+turn is
+clockwise/right) and are fixed to match O/P. Desktop gains I and U for
+parity. Measured on device after the change: generation 39.3 ms, reload 1,
+explicit PSRAM 496,160 B (+4 for the view field), loop ~132 ms, no
+watchdog; new app undefineds beyond the prior build are exactly seven
+(keyboard_read_key, KEYBOARD_TYPE, device_for_each_of_type,
+lv_event_get_key, lv_indev_enable/get_next/get_type), all verified in the
+flashed firmware's symbol table.
+
 Still required: stack high-water on a clean app close (the remote close
 gap above blocked exercising the close path; the instrumented close-path
 telemetry is in place for the next round); power-loss/torn-save testing;

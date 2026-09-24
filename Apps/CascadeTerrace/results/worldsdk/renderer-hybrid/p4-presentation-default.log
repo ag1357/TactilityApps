@@ -7,7 +7,7 @@ Executing "cmake -G Ninja -B /media/cloud/2982-E16B/tactility_p4_work/repos/Tact
 -- KCONFIG_REPORT_VERBOSITY not set, using default
 -- Project sdkconfig file /media/cloud/2982-E16B/tactility_p4_work/repos/TactilityApps/Apps/CascadeTerrace/sdkconfig
 Loading defaults file /media/cloud/2982-E16B/tactility_p4_work/repos/TactilityApps/Apps/CascadeTerrace/sdkconfig.defaults...
-NOTE: /tmp/kconfgen_tmpcqcx0une:15: CONFIG_ESP_SYSTEM_MEMPROT_FEATURE_LOCK was replaced with CONFIG_ESP_SYSTEM_MEMPROT_PMS_LOCK
+NOTE: /tmp/kconfgen_tmpat1uz2a1:15: CONFIG_ESP_SYSTEM_MEMPROT_FEATURE_LOCK was replaced with CONFIG_ESP_SYSTEM_MEMPROT_PMS_LOCK
 NOTE: unknown kconfig symbol 'FATFS_LFN_HEAP' assigned to 'y' in /media/cloud/2982-E16B/tactility_p4_work/repos/TactilityApps/Apps/CascadeTerrace/sdkconfig.defaults
 NOTE: unknown kconfig symbol 'FATFS_VOLUME_COUNT' assigned to '3' in /media/cloud/2982-E16B/tactility_p4_work/repos/TactilityApps/Apps/CascadeTerrace/sdkconfig.defaults
 Default value for ESP32P4_SELECTS_REV_LESS_V3 in sdkconfig is y but it is n according to Kconfig.
@@ -29,18 +29,18 @@ Using default value from sdkconfig (n).
 NOTE: Kconfig parser version: 1
 NOTE: Kconfig defaults policy: use sdkconfig
 NOTE: Status: Finished with notifications
-NOTE: /media/cloud/2982-E16B/tactility_p4_work/tools/esp-idf-v6.1/components/esp_hw_support/Kconfig:143: ESP_SLEEP_GPIO_RESET_WORKAROUND: Kconfig default value: y, sdkconfig default value: n, using n from sdkconfig
-NOTE: /media/cloud/2982-E16B/tactility_p4_work/tools/esp-idf-v6.1/components/mbedtls/Kconfig:65: MBEDTLS_THREADING_C: Kconfig default value: y, sdkconfig default value: n, using n from sdkconfig
-NOTE: /media/cloud/2982-E16B/tactility_p4_work/tools/esp-idf-v6.1/components/mbedtls/Kconfig:1113: MBEDTLS_DHM_C: Kconfig default value: n, sdkconfig default value: y, using y from sdkconfig
-NOTE: /media/cloud/2982-E16B/tactility_p4_work/tools/esp-idf-v6.1/components/mbedtls/Kconfig:1387: MBEDTLS_LARGE_KEY_SOFTWARE_MPI: Kconfig default value: y, sdkconfig default value: n, using n from sdkconfig
-NOTE: /media/cloud/2982-E16B/tactility_p4_work/tools/esp-idf-v6.1/components/esp_hw_support/./port/esp32p4/Kconfig.hw_support:4: ESP32P4_SELECTS_REV_LESS_V3: Kconfig default value: n, sdkconfig default value: y, using y from sdkconfig
-NOTE: /media/cloud/2982-E16B/tactility_p4_work/tools/esp-idf-v6.1/components/esp_pm/Kconfig:3: PM_SLEEP_FUNC_IN_IRAM: Kconfig default value: n, sdkconfig default value: y, using y from sdkconfig
 NOTE: /media/cloud/2982-E16B/tactility_p4_work/tools/esp-idf-v6.1/components/mbedtls/Kconfig:1248: MBEDTLS_SHA3_C: Kconfig default value: n, sdkconfig default value: y, using y from sdkconfig
+NOTE: /media/cloud/2982-E16B/tactility_p4_work/tools/esp-idf-v6.1/components/esp_hw_support/./port/esp32p4/Kconfig.hw_support:4: ESP32P4_SELECTS_REV_LESS_V3: Kconfig default value: n, sdkconfig default value: y, using y from sdkconfig
+NOTE: /media/cloud/2982-E16B/tactility_p4_work/tools/esp-idf-v6.1/components/mbedtls/Kconfig:1387: MBEDTLS_LARGE_KEY_SOFTWARE_MPI: Kconfig default value: y, sdkconfig default value: n, using n from sdkconfig
 NOTE: /media/cloud/2982-E16B/tactility_p4_work/tools/esp-idf-v6.1/components/mbedtls/Kconfig:900: MBEDTLS_ARIA_C: Kconfig default value: n, sdkconfig default value: y, using y from sdkconfig
+NOTE: /media/cloud/2982-E16B/tactility_p4_work/tools/esp-idf-v6.1/components/esp_hw_support/Kconfig:143: ESP_SLEEP_GPIO_RESET_WORKAROUND: Kconfig default value: y, sdkconfig default value: n, using n from sdkconfig
+NOTE: /media/cloud/2982-E16B/tactility_p4_work/tools/esp-idf-v6.1/components/mbedtls/Kconfig:1113: MBEDTLS_DHM_C: Kconfig default value: n, sdkconfig default value: y, using y from sdkconfig
+NOTE: /media/cloud/2982-E16B/tactility_p4_work/tools/esp-idf-v6.1/components/mbedtls/Kconfig:65: MBEDTLS_THREADING_C: Kconfig default value: y, sdkconfig default value: n, using n from sdkconfig
+NOTE: /media/cloud/2982-E16B/tactility_p4_work/tools/esp-idf-v6.1/components/esp_pm/Kconfig:3: PM_SLEEP_FUNC_IN_IRAM: Kconfig default value: n, sdkconfig default value: y, using y from sdkconfig
 NOTE: /media/cloud/2982-E16B/tactility_p4_work/tools/esp-idf-v6.1/components/esp_hw_support/./port/esp32p4/Kconfig.hw_support:13: ESP32P4_REV_MIN: Kconfig default selection: ESP32P4_REV_MIN_0, sdkconfig default selection: ESP32P4_REV_MIN_1, using ESP32P4_REV_MIN_1 from sdkconfig
 NOTE: /media/cloud/2982-E16B/tactility_p4_work/tools/esp-idf-v6.1/components/mbedtls/Kconfig:9: MBEDTLS_COMPILER_OPTIMIZATION: Kconfig default selection: MBEDTLS_COMPILER_OPTIMIZATION_SIZE, sdkconfig default selection: MBEDTLS_COMPILER_OPTIMIZATION_NONE, using MBEDTLS_COMPILER_OPTIMIZATION_NONE from sdkconfig
-NOTE: /media/cloud/2982-E16B/tactility_p4_work/tools/esp-idf-v6.1/components/esp_system/Kconfig:202: ESP_SYSTEM_MEMPROT_PMS_LOCK has user-set value n from /tmp/kconfgen_tmpcqcx0une but is not visible (disabled dependency)
-NOTE: /media/cloud/2982-E16B/tactility_p4_work/tools/esp-idf-v6.1/components/freertos/Kconfig:7: FREERTOS_SMP has user-set value n from /tmp/kconfgen_tmpcqcx0une but is not visible (disabled dependency)
+NOTE: /media/cloud/2982-E16B/tactility_p4_work/tools/esp-idf-v6.1/components/esp_system/Kconfig:202: ESP_SYSTEM_MEMPROT_PMS_LOCK has user-set value n from /tmp/kconfgen_tmpat1uz2a1 but is not visible (disabled dependency)
+NOTE: /media/cloud/2982-E16B/tactility_p4_work/tools/esp-idf-v6.1/components/freertos/Kconfig:7: FREERTOS_SMP has user-set value n from /tmp/kconfgen_tmpat1uz2a1 but is not visible (disabled dependency)
 -- Detecting C compiler ABI info
 -- Detecting C compiler ABI info - done
 -- Detecting CXX compiler ABI info
@@ -54,7 +54,7 @@ NOTE: /media/cloud/2982-E16B/tactility_p4_work/tools/esp-idf-v6.1/components/fre
 -- Detecting CXX compiler ABI info
 -- Detecting CXX compiler ABI info - done
 -- Adding linker script /media/cloud/2982-E16B/tactility_p4_work/tools/esp-idf-v6.1/components/riscv/ld/rom.api.ld
--- App "cascadeterrace" version: f47a60d-dirty
+-- App "cascadeterrace" version: 7890943-dirty
 -- Setting up mbedtls configuration
 -- Adding linker script /media/cloud/2982-E16B/tactility_p4_work/tools/esp-idf-v6.1/components/esp_hal_wdt/esp32p4/rom.wdt.ld
 -- Adding linker script /media/cloud/2982-E16B/tactility_p4_work/tools/esp-idf-v6.1/components/esp_system/ld/esp32p4/memory.ld.in
@@ -87,39 +87,39 @@ Call Stack (most recent call first):
 
 -- Components: TactilitySDK app-module app_update bootloader bootloader_support crypt-module cxx efuse esp_app_format esp_blockdev esp_bootloader_format esp_common esp_driver_dma esp_driver_gpio esp_driver_ppa esp_hal_ana_conv esp_hal_cam esp_hal_clock esp_hal_dma esp_hal_gpio esp_hal_gpspi esp_hal_mspi esp_hal_pmu esp_hal_ppa esp_hal_regi2c esp_hal_rtc_timer esp_hal_security esp_hal_systimer esp_hal_timg esp_hal_touch_sens esp_hal_uart esp_hal_usb esp_hal_wdt esp_hw_support esp_libc esp_mm esp_partition esp_pm esp_rom esp_security esp_stdio esp_system esp_timer esp_usb_cdc_rom_console esptool_py freertos gps-module hal heap log lvgl-module lvgl-window-manager-module main mbedtls partition_table pthread riscv service-module soc spi_flash
 -- Component paths: /media/cloud/2982-E16B/tactility_p4_work/repos/Tactility/release/TactilitySDK/0.8.0-dev-esp32p4/TactilitySDK /media/cloud/2982-E16B/tactility_p4_work/repos/Tactility/release/TactilitySDK/0.8.0-dev-esp32p4/TactilitySDK/Modules/app-module /media/cloud/2982-E16B/tactility_p4_work/tools/esp-idf-v6.1/components/app_update /media/cloud/2982-E16B/tactility_p4_work/tools/esp-idf-v6.1/components/bootloader /media/cloud/2982-E16B/tactility_p4_work/tools/esp-idf-v6.1/components/bootloader_support /media/cloud/2982-E16B/tactility_p4_work/repos/Tactility/release/TactilitySDK/0.8.0-dev-esp32p4/TactilitySDK/Modules/crypt-module /media/cloud/2982-E16B/tactility_p4_work/tools/esp-idf-v6.1/components/cxx /media/cloud/2982-E16B/tactility_p4_work/tools/esp-idf-v6.1/components/efuse /media/cloud/2982-E16B/tactility_p4_work/tools/esp-idf-v6.1/components/esp_app_format /media/cloud/2982-E16B/tactility_p4_work/tools/esp-idf-v6.1/components/esp_blockdev /media/cloud/2982-E16B/tactility_p4_work/tools/esp-idf-v6.1/components/esp_bootloader_format /media/cloud/2982-E16B/tactility_p4_work/tools/esp-idf-v6.1/components/esp_common /media/cloud/2982-E16B/tactility_p4_work/tools/esp-idf-v6.1/components/esp_driver_dma /media/cloud/2982-E16B/tactility_p4_work/tools/esp-idf-v6.1/components/esp_driver_gpio /media/cloud/2982-E16B/tactility_p4_work/tools/esp-idf-v6.1/components/esp_driver_ppa /media/cloud/2982-E16B/tactility_p4_work/tools/esp-idf-v6.1/components/esp_hal_ana_conv /media/cloud/2982-E16B/tactility_p4_work/tools/esp-idf-v6.1/components/esp_hal_cam /media/cloud/2982-E16B/tactility_p4_work/tools/esp-idf-v6.1/components/esp_hal_clock /media/cloud/2982-E16B/tactility_p4_work/tools/esp-idf-v6.1/components/esp_hal_dma /media/cloud/2982-E16B/tactility_p4_work/tools/esp-idf-v6.1/components/esp_hal_gpio /media/cloud/2982-E16B/tactility_p4_work/tools/esp-idf-v6.1/components/esp_hal_gpspi /media/cloud/2982-E16B/tactility_p4_work/tools/esp-idf-v6.1/components/esp_hal_mspi /media/cloud/2982-E16B/tactility_p4_work/tools/esp-idf-v6.1/components/esp_hal_pmu /media/cloud/2982-E16B/tactility_p4_work/tools/esp-idf-v6.1/components/esp_hal_ppa /media/cloud/2982-E16B/tactility_p4_work/tools/esp-idf-v6.1/components/esp_hal_regi2c /media/cloud/2982-E16B/tactility_p4_work/tools/esp-idf-v6.1/components/esp_hal_rtc_timer /media/cloud/2982-E16B/tactility_p4_work/tools/esp-idf-v6.1/components/esp_hal_security /media/cloud/2982-E16B/tactility_p4_work/tools/esp-idf-v6.1/components/esp_hal_systimer /media/cloud/2982-E16B/tactility_p4_work/tools/esp-idf-v6.1/components/esp_hal_timg /media/cloud/2982-E16B/tactility_p4_work/tools/esp-idf-v6.1/components/esp_hal_touch_sens /media/cloud/2982-E16B/tactility_p4_work/tools/esp-idf-v6.1/components/esp_hal_uart /media/cloud/2982-E16B/tactility_p4_work/tools/esp-idf-v6.1/components/esp_hal_usb /media/cloud/2982-E16B/tactility_p4_work/tools/esp-idf-v6.1/components/esp_hal_wdt /media/cloud/2982-E16B/tactility_p4_work/tools/esp-idf-v6.1/components/esp_hw_support /media/cloud/2982-E16B/tactility_p4_work/tools/esp-idf-v6.1/components/esp_libc /media/cloud/2982-E16B/tactility_p4_work/tools/esp-idf-v6.1/components/esp_mm /media/cloud/2982-E16B/tactility_p4_work/tools/esp-idf-v6.1/components/esp_partition /media/cloud/2982-E16B/tactility_p4_work/tools/esp-idf-v6.1/components/esp_pm /media/cloud/2982-E16B/tactility_p4_work/tools/esp-idf-v6.1/components/esp_rom /media/cloud/2982-E16B/tactility_p4_work/tools/esp-idf-v6.1/components/esp_security /media/cloud/2982-E16B/tactility_p4_work/tools/esp-idf-v6.1/components/esp_stdio /media/cloud/2982-E16B/tactility_p4_work/tools/esp-idf-v6.1/components/esp_system /media/cloud/2982-E16B/tactility_p4_work/tools/esp-idf-v6.1/components/esp_timer /media/cloud/2982-E16B/tactility_p4_work/tools/esp-idf-v6.1/components/esp_usb_cdc_rom_console /media/cloud/2982-E16B/tactility_p4_work/tools/esp-idf-v6.1/components/esptool_py /media/cloud/2982-E16B/tactility_p4_work/tools/esp-idf-v6.1/components/freertos /media/cloud/2982-E16B/tactility_p4_work/repos/Tactility/release/TactilitySDK/0.8.0-dev-esp32p4/TactilitySDK/Modules/gps-module /media/cloud/2982-E16B/tactility_p4_work/tools/esp-idf-v6.1/components/hal /media/cloud/2982-E16B/tactility_p4_work/tools/esp-idf-v6.1/components/heap /media/cloud/2982-E16B/tactility_p4_work/tools/esp-idf-v6.1/components/log /media/cloud/2982-E16B/tactility_p4_work/repos/Tactility/release/TactilitySDK/0.8.0-dev-esp32p4/TactilitySDK/Modules/lvgl-module /media/cloud/2982-E16B/tactility_p4_work/repos/Tactility/release/TactilitySDK/0.8.0-dev-esp32p4/TactilitySDK/Modules/lvgl-window-manager-module /media/cloud/2982-E16B/tactility_p4_work/repos/TactilityApps/Apps/CascadeTerrace/main /media/cloud/2982-E16B/tactility_p4_work/tools/esp-idf-v6.1/components/mbedtls /media/cloud/2982-E16B/tactility_p4_work/tools/esp-idf-v6.1/components/partition_table /media/cloud/2982-E16B/tactility_p4_work/tools/esp-idf-v6.1/components/pthread /media/cloud/2982-E16B/tactility_p4_work/tools/esp-idf-v6.1/components/riscv /media/cloud/2982-E16B/tactility_p4_work/repos/Tactility/release/TactilitySDK/0.8.0-dev-esp32p4/TactilitySDK/Modules/service-module /media/cloud/2982-E16B/tactility_p4_work/tools/esp-idf-v6.1/components/soc /media/cloud/2982-E16B/tactility_p4_work/tools/esp-idf-v6.1/components/spi_flash
--- Configuring done (7.5s)
+-- Configuring done (7.6s)
 -- Generating done (0.6s)
 -- Build files have been written to: /media/cloud/2982-E16B/tactility_p4_work/repos/TactilityApps/Apps/CascadeTerrace/build-p4-native
 Executing action: elf
 Running ninja in directory /media/cloud/2982-E16B/tactility_p4_work/repos/TactilityApps/Apps/CascadeTerrace/build-p4-native
 Executing "ninja elf"...
-[1/24] Building C object esp-idf/main/CMakeFiles/__idf_main.dir/__/core/presentation.c.obj
+[1/24] Building C object esp-idf/main/CMakeFiles/__idf_main.dir/presentation_p4.c.obj
 [2/24] Building C object esp-idf/main/CMakeFiles/__idf_main.dir/__/world/schema.c.obj
-[3/24] Building C object esp-idf/main/CMakeFiles/__idf_main.dir/presentation_p4.c.obj
-[4/24] Building C object esp-idf/main/CMakeFiles/__idf_main.dir/__/world/traversal.c.obj
+[3/24] Building C object esp-idf/main/CMakeFiles/__idf_main.dir/__/core/presentation.c.obj
+[4/24] Building C object esp-idf/main/CMakeFiles/__idf_main.dir/__/world/resource.c.obj
 [5/24] Building C object esp-idf/main/CMakeFiles/__idf_main.dir/__/world/geometry.c.obj
-[6/24] Building C object esp-idf/main/CMakeFiles/__idf_main.dir/__/world/recipe.c.obj
-[7/24] Building C object esp-idf/main/CMakeFiles/__idf_main.dir/__/world/resource.c.obj
-[8/24] Building C object esp-idf/main/CMakeFiles/__idf_main.dir/__/world/social.c.obj
-[9/24] Building C object esp-idf/main/CMakeFiles/__idf_main.dir/__/world/state.c.obj
-[10/24] Building C object esp-idf/main/CMakeFiles/__idf_main.dir/__/content/cascade_adapter.c.obj
-[11/24] Building C object esp-idf/main/CMakeFiles/__idf_main.dir/__/world/creature.c.obj
-[12/24] Building C object esp-idf/main/CMakeFiles/__idf_main.dir/__/world/persistence.c.obj
-[13/24] Building C object esp-idf/main/CMakeFiles/__idf_main.dir/main.c.obj
+[6/24] Building C object esp-idf/main/CMakeFiles/__idf_main.dir/__/world/traversal.c.obj
+[7/24] Building C object esp-idf/main/CMakeFiles/__idf_main.dir/main.c.obj
 In file included from /media/cloud/2982-E16B/tactility_p4_work/repos/Tactility/release/TactilitySDK/0.8.0-dev-esp32p4/TactilitySDK/Libraries/lvgl/include/src/lv_init.h:16,
                  from /media/cloud/2982-E16B/tactility_p4_work/repos/Tactility/release/TactilitySDK/0.8.0-dev-esp32p4/TactilitySDK/Libraries/lvgl/include/lvgl.h:21,
                  from /media/cloud/2982-E16B/tactility_p4_work/repos/TactilityApps/Apps/CascadeTerrace/main/main.c:11:
 /media/cloud/2982-E16B/tactility_p4_work/repos/Tactility/release/TactilitySDK/0.8.0-dev-esp32p4/TactilitySDK/Libraries/lvgl/include/src/lv_conf_internal.h:65:17: note: '#pragma message: Possible failure to include lv_conf.h, please read the comment in this file if you get errors'
    65 |         #pragma message("Possible failure to include lv_conf.h, please read the comment in this file if you get errors")
       |                 ^~~~~~~
-[14/24] Building C object esp-idf/main/CMakeFiles/__idf_main.dir/__/core/general_dialogue.c.obj
-[15/24] Building C object esp-idf/main/CMakeFiles/__idf_main.dir/semantic-portable.c.obj
+[8/24] Building C object esp-idf/main/CMakeFiles/__idf_main.dir/__/world/creature.c.obj
+[9/24] Building C object esp-idf/main/CMakeFiles/__idf_main.dir/__/world/recipe.c.obj
+[10/24] Building C object esp-idf/main/CMakeFiles/__idf_main.dir/__/world/social.c.obj
+[11/24] Building C object esp-idf/main/CMakeFiles/__idf_main.dir/__/world/state.c.obj
+[12/24] Building C object esp-idf/main/CMakeFiles/__idf_main.dir/__/content/cascade_adapter.c.obj
+[13/24] Building C object esp-idf/main/CMakeFiles/__idf_main.dir/__/core/general_dialogue.c.obj
+[14/24] Building C object esp-idf/main/CMakeFiles/__idf_main.dir/__/research/rung_a/cognition.c.obj
+[15/24] Building C object esp-idf/main/CMakeFiles/__idf_main.dir/__/core/world.c.obj
 [16/24] Building C object esp-idf/main/CMakeFiles/__idf_main.dir/__/core/decision.c.obj
-[17/24] Building C object esp-idf/main/CMakeFiles/__idf_main.dir/__/core/persistence.c.obj
-[18/24] Building C object esp-idf/main/CMakeFiles/__idf_main.dir/__/core/state.c.obj
-[19/24] Building C object esp-idf/main/CMakeFiles/__idf_main.dir/__/research/rung_a/cognition.c.obj
-[20/24] Building C object esp-idf/main/CMakeFiles/__idf_main.dir/__/core/world.c.obj
-[21/24] Building C object esp-idf/main/CMakeFiles/__idf_main.dir/__/core/dialogue.c.obj
+[17/24] Building C object esp-idf/main/CMakeFiles/__idf_main.dir/__/world/persistence.c.obj
+[18/24] Building C object esp-idf/main/CMakeFiles/__idf_main.dir/semantic-portable.c.obj
+[19/24] Building C object esp-idf/main/CMakeFiles/__idf_main.dir/__/core/state.c.obj
+[20/24] Building C object esp-idf/main/CMakeFiles/__idf_main.dir/__/core/dialogue.c.obj
+[21/24] Building C object esp-idf/main/CMakeFiles/__idf_main.dir/__/core/persistence.c.obj
 [22/24] Building C object esp-idf/main/CMakeFiles/__idf_main.dir/__/core/render.c.obj
 [23/24] Linking C static library esp-idf/main/libmain.a
 [24/24] Build ELF: cascadeterrace.app.elf

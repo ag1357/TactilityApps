@@ -18,6 +18,8 @@
 #include <stdlib.h>
 #include <string.h>
 #include <sys/stat.h>
+#include <tactility/device.h>
+#include <tactility/drivers/keyboard.h>
 #include <tactility/freertos/task.h>
 #include <tactility/memory.h>
 #include <time.h>
@@ -29,6 +31,22 @@ static lv_obj_t *canvas, *textarea;
 static uint16_t* canvas_pixels;
 static Input input;
 static int pending, talking, experimental, reply_offset, presentation_requested;
+/* Hardware keyboard bindings (CardKB2 via the fork's BLE/USB HID host):
+   W/A/S/D movement, O/P camera turn, I first/third-person toggle, U interact.
+   The kernel keyboard stream is per-key press/release events, but LVGL's
+   keypad pipeline collapses them to one-shot KEY events (its indev reports
+   RELEASED whenever the driver queue is empty), so hold-to-move and chords
+   are impossible through the group. While the game view is active the app
+   therefore latches the stream itself: every LVGL keypad indev is disabled
+   (a disabled indev stops calling its read callback, so the device queues
+   back up for us) and each KEYBOARD_TYPE device is drained here for real
+   held-key state. While talking, the latch is released so keys type into
+   the textarea through LVGL again. key_held/first_person/key_u_edge are
+   touched only by this task; `pending` is applied inside the lvgl lock. */
+enum { K_W, K_A, K_S, K_D, K_O, K_P, K_I, K_U };
+static uint8_t key_held;
+static uint8_t first_person;
+static uint8_t key_u_edge;
 static char submitted[128];
 static char save_base[256] = "/sdcard/cascade.save";
 static char telemetry_path[256];
@@ -118,12 +136,65 @@ static void touch(lv_event_t* e) {
         input.strafe = p.x < width / 6 ? -600 : p.x > width / 3 ? 600
                                                                 : 0;
     } else
-        input.turn = p.x < width * 3 / 4 ? 2 : -2;
+        /* +turn is clockwise (right): pressing the left of the turn zone
+           must turn left, matching O/P and every other control. */
+        input.turn = p.x < width * 3 / 4 ? -2 : 2;
+}
+/* Game-key mapping for the latched stream. */
+static int game_key(uint32_t key) {
+    switch (key) {
+        case 'w': case 'W': return K_W;
+        case 'a': case 'A': return K_A;
+        case 's': case 'S': return K_S;
+        case 'd': case 'D': return K_D;
+        case 'o': case 'O': return K_O;
+        case 'p': case 'P': return K_P;
+        case 'i': case 'I': return K_I;
+        case 'u': case 'U': return K_U;
+    }
+    return -1;
+}
+/* Drains one keyboard device under the device-ledger lock (kept brief).
+   Non-game keys have no meaning in the game view and are discarded. */
+static bool keyboard_drain(struct Device* device, void* context) {
+    (void)context;
+    struct KeyboardKeyData d;
+    while (keyboard_read_key(device, &d) == ERROR_NONE && d.key != 0) {
+        int k = game_key(d.key);
+        if (k < 0) continue;
+        if (d.pressed) {
+            if (!(key_held & (1u << k))) {
+                if (k == K_I) first_person = !first_person;
+                if (k == K_U) key_u_edge = 1;
+            }
+            key_held |= (uint8_t)(1u << k);
+        } else
+            key_held &= (uint8_t)~(1u << k);
+    }
+    return true; /* keep iterating over further keyboards */
+}
+/* latched=1: the app owns the key stream (LVGL keypad indevs disabled);
+   latched=0: LVGL owns it (typing through the textarea). Runs under the
+   lvgl lock; re-applied every frame so keyboards connecting mid-run are
+   covered too. */
+static void keyboards_latched(int latched) {
+    lv_indev_t* indev = NULL;
+    while ((indev = lv_indev_get_next(indev)) != NULL)
+        if (lv_indev_get_type(indev) == LV_INDEV_TYPE_KEYPAD)
+            lv_indev_enable(indev, !latched);
 }
 static void submit(lv_event_t* e) {
     if (lv_event_get_code(e) == LV_EVENT_READY) {
         snprintf(submitted, sizeof(submitted), "%s", lv_textarea_get_text(textarea));
         pending = 10;
+        lv_textarea_set_text(textarea, "");
+    }
+}
+/* Esc leaves the conversation view (codepoints arrive untranslated from the
+   fork's keyboard path: CODEPOINT_ESCAPE == LV_KEY_ESC numerically). */
+static void text_key(lv_event_t* e) {
+    if (lv_event_get_code(e) == LV_EVENT_KEY && lv_event_get_key(e) == LV_KEY_ESC) {
+        talking = 0;
         lv_textarea_set_text(textarea, "");
     }
 }
@@ -150,7 +221,7 @@ static void create(lv_obj_t* root, void* data) {
     lv_obj_set_pos(textarea, 0, lv_obj_get_height(root) - 75);
     lv_textarea_set_one_line(textarea, true);
     lv_textarea_set_max_length(textarea, 127);
-    lv_textarea_set_placeholder_text(textarea, "CardKB2: type, then Enter");
+    lv_textarea_set_placeholder_text(textarea, "Type, then Enter (Esc closes)");
     /* Add to an explicit hardware-only group: no software keyboard is created. */
     lv_group_t* group = lv_group_get_default();
     if (group) {
@@ -158,12 +229,16 @@ static void create(lv_obj_t* root, void* data) {
         lv_group_focus_obj(textarea);
     }
     lv_obj_add_event_cb(textarea, submit, LV_EVENT_READY, NULL);
+    lv_obj_add_event_cb(textarea, text_key, LV_EVENT_KEY, NULL);
     lv_obj_add_flag(textarea, LV_OBJ_FLAG_HIDDEN);
 }
 static void destroy(void* data) {
     (void)data;
     canvas = textarea = NULL;
     input = (Input) {0};
+    key_held = 0;
+    first_person = 0;
+    key_u_edge = 0;
 }
 static void action(int code, const char* text) {
     Operation o = {OP_NONE, PLAYER_ID, 0, IT_CHIT, 1, NULL};
@@ -316,6 +391,7 @@ int main(int argc, char** argv) {
                                          &mon_handle, tskNO_AFFINITY) == pdPASS;
     emit("{\"type\":\"monitor_task\",\"ok\":%d}\n", mon_ok);
     int closing = 0;
+    int was_talking = 0;
     uint64_t previous = micros();
     while (!closing) {
         mon_stage = ST_POLL;
@@ -323,10 +399,29 @@ int main(int argc, char** argv) {
         while (app_event_poll(&sub, &event) == ERROR_NONE)
             if (event.type == APP_EVENT_CLOSE) closing = 1;
         if (closing) break;
+        /* Game mode: drain every keyboard device ourselves (LVGL keypad
+           indevs are disabled in the present stage below, so the queues
+           hold press AND release events for us). */
+        if (!talking) device_for_each_of_type(&KEYBOARD_TYPE, NULL, keyboard_drain);
         mon_stage = ST_UI;
         lvgl_lock();
         Input in = input;
         input.jump = 0;
+        if (key_u_edge) {
+            key_u_edge = 0;
+            pending = 2;
+        }
+        /* Keys held while unlatched were never seen releasing: start clean. */
+        if (!talking && was_talking) key_held = 0;
+        was_talking = talking;
+        /* Held keys override touch (nobody uses both at once). +turn is
+           clockwise, so P (right) is positive like the fixed touch zone. */
+        int fwd = ((key_held >> K_W) & 1) - ((key_held >> K_S) & 1);
+        int str = ((key_held >> K_D) & 1) - ((key_held >> K_A) & 1);
+        int trn = ((key_held >> K_P) & 1) - ((key_held >> K_O) & 1);
+        if (fwd) in.forward = (int16_t)(fwd * 1000);
+        if (str) in.strafe = (int16_t)(str * 600);
+        if (trn) in.turn = (int16_t)(trn * 2);
         int cmd = pending;
         pending = 0;
         char text[128];
@@ -342,6 +437,7 @@ int main(int argc, char** argv) {
         mon_stage = ST_RENDER;
         t = micros();
         r->conversation = talking;
+        r->first_person = first_person;
         render(r, g);
         uint64_t frame_us = micros() - t;
         draw_panel(r, 0, 0, W, 12, 0x1108);
@@ -353,7 +449,7 @@ int main(int argc, char** argv) {
             draw_text(r, 2, H / 2 + 1, reply.text + reply_offset, 0xffff, 238);
         } else {
             draw_panel(r, 0, H - 30, W, 25, 0x1108);
-            draw_text(r, 2, H - 29, g->notice, 0xffff, 238);
+            draw_text(r, 2, H - 29, g->notice[0] ? g->notice : "WASD move  O/P cam  I view  U talk", 0xffff, 238);
         }
         mon_stage = ST_PRESENT;
         uint64_t presentation_start=micros();
@@ -363,9 +459,13 @@ int main(int argc, char** argv) {
                 lv_canvas_set_buffer(canvas,canvas_pixels,W*2,H*2,LV_COLOR_FORMAT_RGB565);
                 lv_obj_invalidate(canvas);
             }
-            if (talking) lv_obj_remove_flag(textarea, LV_OBJ_FLAG_HIDDEN);
-            else
+            if (talking) {
+                lv_obj_remove_flag(textarea, LV_OBJ_FLAG_HIDDEN);
+                lv_group_focus_obj(textarea);
+            } else
                 lv_obj_add_flag(textarea, LV_OBJ_FLAG_HIDDEN);
+            /* Hand the key stream to whoever needs it this frame. */
+            keyboards_latched(!talking);
         }
         lvgl_unlock();
         mon_frame = r->frame;
@@ -391,6 +491,11 @@ int main(int argc, char** argv) {
     ct_present_close();
     emit("{\"type\":\"close_present\",\"backend\":\"%s\"}\n", ct_present_name());
     mon_stage = ST_WIN_RM;
+    /* Release the key stream back to LVGL before the window goes away, or
+       every later app would find the keypad indevs disabled. */
+    lvgl_lock();
+    keyboards_latched(0);
+    lvgl_unlock();
     window_manager_remove(window);
     emit("{\"type\":\"close_window\"}\n");
     mon_stage = ST_UNSUB;

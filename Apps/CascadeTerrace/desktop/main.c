@@ -32,14 +32,14 @@ static void present(void) {
     draw_panel(&frame, 0, 11, W, 10, 0x218e);
     draw_text(&frame, 3, 11, hud, 0xbfff, 0);
     if (dialogue_open) {
-        draw_panel(&frame, 0, 77, W, 83, 0x1108);
-        draw_text(&frame, 3, 78, "KYRA | ESC TO LEAVE", 0x5ff6, 0);
-        draw_text(&frame, 3, 89, reply.text + reply_offset, 0xffff, 237);
-        draw_panel(&frame, 0, 148, W, 12, 0x298f);
-        draw_text(&frame, 3, 150, entry, 0xffb4, 237);
+        draw_panel(&frame, 0, H / 2 - 40, W, H / 2 - 52, 0x1108);
+        draw_text(&frame, 3, H / 2 - 39, "KYRA | ESC TO LEAVE", 0x5ff6, 0);
+        draw_text(&frame, 3, H / 2 - 28, reply.text + reply_offset, 0xffff, 237);
+        draw_panel(&frame, 0, H - 12, W, 12, 0x298f);
+        draw_text(&frame, 3, H - 10, entry, 0xffb4, 237);
     } else {
-        draw_panel(&frame, 0, 137, W, 23, 0x1108);
-        draw_text(&frame, 3, 138, game.notice, 0xffff, 237);
+        draw_panel(&frame, 0, H - 23, W, 23, 0x1108);
+        draw_text(&frame, 3, H - 22, game.notice, 0xffff, 237);
     }
     SDL_UpdateTexture(texture, NULL, frame.pixels, W * 2);
     SDL_RenderClear(display);
@@ -246,6 +246,8 @@ int main(int argc, char** argv) {
         fprintf(stderr, "SDL: %s\n", SDL_GetError());
         return 1;
     }
+    /* Aspect-correct letterbox in the resizable window (portrait frame). */
+    SDL_RenderSetLogicalSize(display, W, H);
     render_load_assets("assets/kyra.mesh");
     game_new(&game, seed, variant);
     if (load && !load_game(&game, save_path)) {

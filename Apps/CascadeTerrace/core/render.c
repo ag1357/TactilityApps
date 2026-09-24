@@ -66,7 +66,12 @@ static V transform(V v) {
     float f = x * sy + z * cy;
     return (V) {x * cy - z * sy, y * cp - f * sp, y * sp + f * cp};
 }
-static P project(V v) { return (P) {120 + v.x * 145 / v.z, 78 - v.y * 145 / v.z, v.z}; }
+/* Projection derives from W/H (portrait 160x240 since the panel fit fix);
+   the focal length preserves the original horizontal half-fov
+   (atan(120/145) at 240 wide), so the lateral view is unchanged at any
+   aspect while the taller frame simply shows more sky and ground. */
+#define PROJ_F (145.f * W / 240)
+static P project(V v) { return (P) {W / 2 + v.x * PROJ_F / v.z, H / 2 - v.y * PROJ_F / v.z, v.z}; }
 static float edge(P a, P b, float x, float y) { return (x - a.x) * (b.y - a.y) - (y - a.y) * (b.x - a.x); }
 /* Conservative row spans. These only remove impossible coverage candidates;
  * the original float coverage and reciprocal-depth expressions remain below.

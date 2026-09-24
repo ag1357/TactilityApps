@@ -31,7 +31,34 @@ static Input input;
 static int pending, talking, experimental, reply_offset, presentation_requested;
 static char submitted[128];
 static char save_base[256] = "/sdcard/cascade.save";
+static char telemetry_path[256];
 static FILE* telemetry;
+/* Physical-diagnosis instrumentation (Gate 6 live hardware round): the
+   telemetry stream is made durable AND live-readable by closing and
+   reopening it in append mode after each record — firmware exports no
+   fsync, and FATFS keeps the directory-entry size stale until close/sync,
+   so the web file API would otherwise keep reporting a 0-byte file until
+   app exit. A low-cost monitor task reports loop progress from OUTSIDE the
+   main loop so a stuck section is pinpointed by the frozen stage in the
+   last monitor lines. */
+static volatile uint32_t mon_frame;
+static volatile int mon_stage;
+static volatile uint64_t mon_iter_us;
+static volatile int mon_done;
+enum { ST_POLL = 0, ST_UI, ST_ACTION, ST_TICK, ST_RENDER, ST_PRESENT, ST_WAIT,
+       ST_CLOSE_SEEN, ST_SAVE, ST_PRES_CLOSE, ST_WIN_RM, ST_UNSUB, ST_DONE };
+static const char* STAGE_NAMES[] = { "poll", "ui", "action", "tick", "render",
+                                     "present", "wait", "close_seen", "save",
+                                     "pres_close", "win_rm", "unsub", "done" };
+/* File-only emit: safe from the monitor task (no printf interleaving).
+   Both emit paths serialize on one mutex because telemetry_sync swaps the
+   FILE* while the other task may be writing. */
+static SemaphoreHandle_t telemetry_mutex;
+static void telemetry_sync_locked(void) {
+    if (!telemetry) return;
+    fclose(telemetry);
+    telemetry = fopen(telemetry_path, "ab");
+}
 static void emit(const char* fmt, ...) {
     char line[512];
     va_list args;
@@ -40,10 +67,34 @@ static void emit(const char* fmt, ...) {
     va_end(args);
     if (n < 0) return;
     printf("%s", line);
-    if (telemetry) {
+    if (telemetry && telemetry_mutex && xSemaphoreTake(telemetry_mutex, pdMS_TO_TICKS(500)) == pdTRUE) {
         fwrite(line, 1, strlen(line), telemetry);
-        fflush(telemetry);
+        telemetry_sync_locked();
+        xSemaphoreGive(telemetry_mutex);
     }
+}
+static void emit_file(const char* line, size_t n) {
+    if (telemetry && n > 0 && telemetry_mutex && xSemaphoreTake(telemetry_mutex, pdMS_TO_TICKS(500)) == pdTRUE) {
+        fwrite(line, 1, n, telemetry);
+        telemetry_sync_locked();
+        xSemaphoreGive(telemetry_mutex);
+    }
+}
+static void monitor_task(void* arg) {
+    (void)arg;
+    int ticks = 0;
+    while (!mon_done) {
+        vTaskDelay(pdMS_TO_TICKS(50));
+        if (++ticks < 40) continue; /* one line per ~2 s */
+        ticks = 0;
+        char line[160];
+        int n = snprintf(line, sizeof(line),
+                         "{\"type\":\"monitor\",\"frame\":%lu,\"stage\":\"%s\",\"iter_us\":%llu}\n",
+                         (unsigned long)mon_frame, STAGE_NAMES[mon_stage & 15],
+                         (unsigned long long)mon_iter_us);
+        emit_file(line, (size_t)n);
+    }
+    /* returning deletes the task */
 }
 static uint64_t micros(void) { return (uint64_t)esp_timer_get_time(); }
 static void button(lv_event_t* e) {
@@ -61,8 +112,9 @@ static void touch(lv_event_t* e) {
     lv_point_t p;
     lv_indev_get_point(d, &p);
     int width = lv_obj_get_width(lv_obj_get_parent(canvas));
+    int height = lv_obj_get_height(lv_obj_get_parent(canvas));
     if (p.x < width / 2) {
-        input.forward = p.y < 200 ? 1000 : -1000;
+        input.forward = p.y < height * 5 / 8 ? 1000 : -1000;
         input.strafe = p.x < width / 6 ? -600 : p.x > width / 3 ? 600
                                                                 : 0;
     } else
@@ -202,7 +254,11 @@ int main(int argc, char** argv) {
         FILE* mode_file=fopen(asset,"rb");
         if(mode_file){int m=fgetc(mode_file);if(m>='0'&&m<='4')experimental=m-'0';fclose(mode_file);}
     }
-    if (app_paths_get_user_data_path("ag1357.cascadeterrace", "qualification.jsonl", asset, sizeof(asset)) == ERROR_NONE) telemetry = fopen(asset, "ab");
+    if (app_paths_get_user_data_path("ag1357.cascadeterrace", "qualification.jsonl", asset, sizeof(asset)) == ERROR_NONE) {
+        telemetry = fopen(asset, "ab");
+        snprintf(telemetry_path, sizeof(telemetry_path), "%s", asset);
+        telemetry_mutex = xSemaphoreCreateMutex();
+    }
     if (app_paths_get_assets_path("ag1357.cascadeterrace", "kyra.mesh", asset, sizeof(asset)) == ERROR_NONE) render_load_assets(asset);
     struct MemoryPolicy external = {MEMORY_CAPABILITY_EXTERNAL, 0, 16};
     g = memory_calloc_with_policy(1, sizeof(Game), &external);
@@ -255,12 +311,19 @@ int main(int argc, char** argv) {
         memory_free(canvas_pixels);memory_free(r);memory_free(g);return 2;
     }
     WindowId window = window_manager_create_ext(app_scheduler_current_app_id(), create, destroy, NULL);
+    static TaskHandle_t mon_handle;
+    int mon_ok = xTaskCreatePinnedToCore(monitor_task, "ctmon", 4096, NULL, 1,
+                                         &mon_handle, tskNO_AFFINITY) == pdPASS;
+    emit("{\"type\":\"monitor_task\",\"ok\":%d}\n", mon_ok);
     int closing = 0;
     uint64_t previous = micros();
     while (!closing) {
+        mon_stage = ST_POLL;
         struct AppEvent event;
         while (app_event_poll(&sub, &event) == ERROR_NONE)
             if (event.type == APP_EVENT_CLOSE) closing = 1;
+        if (closing) break;
+        mon_stage = ST_UI;
         lvgl_lock();
         Input in = input;
         input.jump = 0;
@@ -269,12 +332,14 @@ int main(int argc, char** argv) {
         char text[128];
         snprintf(text, sizeof(text), "%s", submitted);
         lvgl_unlock();
+        mon_stage = ST_ACTION;
         if (cmd) action(cmd, text);
         if (cmd == 1) in.jump = 1;
         uint64_t current = micros();
         uint64_t period_us = current - previous;
         if (!talking) game_tick(g, in, (uint32_t)((current - previous) / 1000));
         previous = current;
+        mon_stage = ST_RENDER;
         t = micros();
         r->conversation = talking;
         render(r, g);
@@ -284,12 +349,13 @@ int main(int argc, char** argv) {
         snprintf(hud, sizeof(hud), "CASCADE | %d CHITS | %d PU", (int)g->state.player.quantity[IT_CHIT], (int)(g->state.player.quantity[19] / 1000));
         draw_text(r, 2, 2, hud, 0xffff, 238);
         if (talking) {
-            draw_panel(r, 0, 80, W, 65, 0x1108);
-            draw_text(r, 2, 81, reply.text + reply_offset, 0xffff, 238);
+            draw_panel(r, 0, H / 2, W, 65, 0x1108);
+            draw_text(r, 2, H / 2 + 1, reply.text + reply_offset, 0xffff, 238);
         } else {
-            draw_panel(r, 0, 130, W, 25, 0x1108);
-            draw_text(r, 2, 131, g->notice, 0xffff, 238);
+            draw_panel(r, 0, H - 30, W, 25, 0x1108);
+            draw_text(r, 2, H - 29, g->notice, 0xffff, 238);
         }
+        mon_stage = ST_PRESENT;
         uint64_t presentation_start=micros();
         lvgl_lock();
         if (canvas) {
@@ -302,15 +368,37 @@ int main(int argc, char** argv) {
                 lv_obj_add_flag(textarea, LV_OBJ_FLAG_HIDDEN);
         }
         lvgl_unlock();
+        mon_frame = r->frame;
+        mon_stage = ST_WAIT;
+        uint64_t work_us = micros() - current;
+        mon_iter_us = work_us;
+        if (work_us > 250000)
+            emit("{\"type\":\"slow_iter\",\"us\":%llu,\"frame\":%lu}\n",
+                 (unsigned long long)work_us, (unsigned long)r->frame);
         if(qualify && r->frame%30==0) emit("{\"type\":\"presentation_sample\",\"backend\":\"%s\",\"submit_and_poll_us\":%llu,\"in_flight\":%u}\n",ct_present_name(),(unsigned long long)(micros()-presentation_start),ct_present_busy());
         if (qualify && r->frame % 30 == 0) emit("{\"type\":\"frame\",\"period_us\":%llu,\"work_us\":%llu,\"render_us\":%llu}\n", (unsigned long long)period_us, (unsigned long long)(micros() - current), (unsigned long long)frame_us);
         task_event_group_wait_any(&events, NULL, pdMS_TO_TICKS(20));
     }
-    save_game(g, save_base);
+    mon_stage = ST_CLOSE_SEEN;
+    emit("{\"type\":\"close_seen\",\"frame\":%lu}\n", (unsigned long)mon_frame);
+    mon_stage = ST_SAVE;
+    {
+        uint64_t t0 = micros();
+        int ok = save_game(g, save_base);
+        emit("{\"type\":\"close_save\",\"ok\":%d,\"us\":%llu}\n", ok, (unsigned long long)(micros() - t0));
+    }
+    mon_stage = ST_PRES_CLOSE;
     ct_present_close();
+    emit("{\"type\":\"close_present\",\"backend\":\"%s\"}\n", ct_present_name());
+    mon_stage = ST_WIN_RM;
     window_manager_remove(window);
+    emit("{\"type\":\"close_window\"}\n");
+    mon_stage = ST_UNSUB;
     app_event_unsubscribe(&sub);
     task_event_group_destruct(&events);
+    mon_done = 1;
+    mon_stage = ST_DONE;
+    emit("{\"type\":\"close_done\"}\n");
     memory_free(canvas_pixels);
     memory_free(r);
     memory_free(g);

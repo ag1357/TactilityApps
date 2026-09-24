@@ -85,7 +85,8 @@ Kyra/intake multiplayer game.
 | RC: exact portable 2x presentation + gated PIE/PPA backends | `b1229f0` |
 | RD: presentation lifecycle reconciliation (open-once at init) | containing commit |
 | V: sparse deterministic creatures and schedules | containing commit |
-| VI: canonical events, witnesses and social projections; mapping sheet | containing commit |
+| VI: canonical events, witnesses and social projections; mapping sheet | `f47a60d` |
+| VI-P: first physical P4 round on Device A (display fit, measurements, durable telemetry) | containing commit |
 
 ## Build and reproduce
 
@@ -211,9 +212,14 @@ loopback. Internet deployment, rate limiting and offline branch upload are absen
 
 ## Native P4 build and deployment
 
-Qualified **build only**: ESP-IDF v6.1-dev, commit
-`f21b4c238152dc9e3a24fbad9afe33a3d15f6cfd`, riscv32 toolchain
-`esp-15.2.0_20250929`, TactilitySDK `0.8.0-dev` for esp32p4.
+Qualified **build only**: ESP-IDF v6.1 release (tag v6.1.0, toolchain
+riscv32 `esp-15.2.0_20251204`, installed under the work drive at
+`tools/esp-idf-v6.1` + `tools/espressif-idf6`; the earlier v6.1-dev
+checkout at `f21b4c238152dc9e3a24fbad9afe33a3d15f6cfd` was replaced for
+Tactility compatibility and produced a byte-identical app ELF), TactilitySDK
+`0.8.0-dev` for esp32p4. The live-hardware round builds the app against
+the fork-generated SDK (`repos/Tactility/release/TactilitySDK/0.8.0-dev-esp32p4/TactilitySDK`)
+so its exports match the flashed firmware exactly.
 Tactility now requires ESP-IDF 6; the qualified toolchain is installed under
 the work drive (esp-idf-v6.1 + espressif-idf6 tools + TactilitySDK), with
 `IDF_TOOLS_PATH` pointing at the IDF 6 tool root so the older v5.5.2 install
@@ -552,13 +558,69 @@ work; never silently reinterpret old checkpoint data. The v1 save fixture is
 regenerated whenever the recipe CRC changes (decode against the old product,
 re-bind the CRC, re-encode); never hand-edit it.
 
-## Physical validation still required
+## Physical validation: first live-hardware round DONE (2026-09-24), remainder required
 
-Measure loader compatibility; internal RAM versus PSRAM allocation; stack high
-water and heap fragmentation; render p50/p95/max; input/touch/CardKB2; storage
-stalls; repeated save/reload and actual power loss; prolonged thermal behavior;
-then native network disconnect/reconnect and simultaneous players. The PPA
-presentation backend is implemented but experimental: it still needs
-firmware-export verification and physical timing/visual/cache/display
-qualification before promotion (PIE likewise needs physical execution/parity).
-Audio is unimplemented. Desktop timings are not physical P4 measurements.
+Device A (Waveshare ESP32-P4-WIFI6-Touch-LCD-3.5, the user's important
+device) runs the ag1357 fork firmware `work/waveshare-p4-audio-exports`
+@ `e423c281` on ESP-IDF v6.1 release (riscv32 `esp-15.2.0_20251204`;
+the fork SDK at `repos/Tactility/release/TactilitySDK/0.8.0-dev-esp32p4`).
+A full pre-change backup of the device's mutable state lives at
+`/media/cloud/2982-E16B/tactility_p4_work/backups/device-a/2026-09-24/`
+(65 files: all four external apps, every settings/user-data tree, crash
+log, SHA-256 manifest; restore via `/fs/upload`). The game installs as an
+external ELF through the web API (`PUT /api/apps/install`, port 80) and
+runs with **zero unresolved symbols** against the firmware export table.
+
+Measured on device (single instance, portable presentation, evidence in
+`results/worldsdk/p4-physical.jsonl` and the live serial capture):
+generation 36 ms; explicit PSRAM 496,156 B (Game + Renderer + canvas +
+presentation); heap internal free 129,691 B (min watermark 92,440, largest
+block 51,200), PSRAM free 32.44 MB (min 31.49 MB), 33 tasks; render p50
+136.6 ms / p95 139.2 ms / max 140.9 ms at 818 triangles (landscape frame;
+the portrait frame renders ~1,098 triangles in 120-153 ms); frame period
+p50 175 ms (~5.7 fps, render-bound at 92% of frame work); portable 2x
+presentation submit+poll p50 4.47 ms / p95 4.64 ms; cognition probes
+1.5-2.1 ms with honest abstention on unknowable questions; save 7.1-8.3 ms;
+**save/reload across reboots proven on device** (`reload: 1` boot lines
+after `cascade.save.1` exists); touch functional (user-confirmed), input is
+keyboard-first (CardKB2 BLE/USB HID via the fork's HID host; the app
+creates no software keyboard). Display fit fixed this round: the panel's
+LVGL space is 320x480 portrait, so the game now renders 160x240 internally
+(same 38,400-px budget and buffer sizes) with the projection derived from
+W/H (horizontal half-fov preserved), the 2x presentation filling the panel
+exactly — verified by screenshot analysis (no bars, content edge to edge;
+`results/worldsdk/p4-physical-screenshot.png`).
+
+Device findings (firmware-side, recorded for the fork mission, not fixed
+here): (1) the webserver's `/api/apps/run` deliberately starts instances
+ALONGSIDE the running app ("no stop the existing one first" in
+`WebServerService.cpp`; the README's stop-first claim is stale), and there
+is no remote close — repeated runs stack instances, and stacked
+CPU-bound instances starve IDLE0 and trip the task watchdog (observed;
+recovery by reset); a single instance runs clean with no watchdog for the
+whole session. (2) The user reports the CardKB2 BLE keyboard must be
+manually re-paired after every device reset — a bonding-persistence issue
+in the fork's BLE HID host, queued for that mission. (3) Opening
+`/dev/ttyACM0` may pulse the device's auto-reset (known); ModemManager
+must be stopped for serial work and restarted after.
+
+App-side hardening from this round: the telemetry stream is now durable
+and live-readable (each record closes/reopens the append file because the
+firmware exports no `fsync` and FATFS keeps the dirent size stale until
+close), and a low-cost monitor task reports loop progress (frame, stage,
+iteration time) from outside the main loop every ~2 s — both proven on
+device. All C gates re-run green after the portrait change (traversal 56,
+macro 4,419, resource 322, anomaly 130, creature 920, social 3,814, bridge
+163, authority-merge 3,873; legacy 864/0; presentation 9,395; causal
+before/after replays pass).
+
+Still required: stack high-water on a clean app close (the remote close
+gap above blocked exercising the close path; the instrumented close-path
+telemetry is in place for the next round); power-loss/torn-save testing;
+prolonged thermal soak; repeated save/reload under play; native network
+disconnect/reconnect and simultaneous players on device; PIE/PPA physical
+qualification — these are firmware-build variants (`CT_PRESENT_PIE/PPA`)
+and the PPA backend additionally needs firmware-export verification
+(`ppa_*` symbols are not app-visible), so they need an explicit flashing
+decision on Device A, not an app install. Audio is unimplemented. Desktop
+timings are not physical P4 measurements.

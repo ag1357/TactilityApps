@@ -4,8 +4,12 @@
 #include <stdint.h>
 #define GEN_VERSION 1
 #define MAP_N 81
-#define W 240
-#define H 160
+/* Portrait internal resolution: the reference handheld panel's LVGL space is
+   320x480, so the 2x presentation output (W*2 x H*2) fills it exactly with no
+   overflow or letterbox. Same 38,400-pixel budget as the old 240x160, so
+   Renderer arrays and measured render cost are unchanged. */
+#define W 160
+#define H 240
 #define EVENT_CAP 96
 #define MEMORY_CAP 32
 #define MAX_FACTS 48

@@ -4,7 +4,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <unistd.h>
-#define WIRE_CAP 12000
+#define WIRE_CAP 16384
 /* Single streaming codec also computes the canonical semantic hash without a
    temporary state copy. Explicit widths give host/P4 parity, independent of ABI. */
 typedef struct {
@@ -25,6 +25,15 @@ static void put(Writer* w, uint32_t v, unsigned bytes) {
         w->crc ^= b;
         for (int k = 0; k < 8; k++) w->crc = (w->crc >> 1) ^ (0xedb88320U & (0U - (w->crc & 1)));
     }
+}
+/* Is any Gate 6 social state present? Such states encode as wire 4, which
+   always carries the resource, creature and social sections (zero counts
+   where unused) so decoding never depends on older gates' emission rules. */
+static int social_active(const WsState* s) {
+    if (s->ev_count || s->pend_count) return 1;
+    for (int i = 0; i < s->player_count; i++)
+        if (s->receipt[i].sequence) return 1;
+    return 0;
 }
 static void payload(const WsState* s, Writer* w, int tail) {
     for (int i = 0; i < 4; i++) put(w, s->ancestry.word[i], 4);
@@ -84,10 +93,10 @@ static void payload(const WsState* s, Writer* w, int tail) {
             put(w, o->amount, 2);
             put(w, o->aux, 2);
         }
-    /* Resource section, only for reservoir states. Schema 1 states keep the
-       published byte layout exactly; reservoir states carry wire version 2
-       in the header and this appended section. */
-    if (s->reservoir_count || s->creature_count) {
+    /* Resource section, only for reservoir states (and always inside wire
+       4). Schema 1 states keep the published byte layout exactly; reservoir
+       states carry wire version 2 in the header and this appended section. */
+    if (s->reservoir_count || s->creature_count || social_active(s)) {
         put(w, s->reservoir_count, 2);
         put(w, s->site_count, 2);
         put(w, s->clock_s, 4);
@@ -114,8 +123,9 @@ static void payload(const WsState* s, Writer* w, int tail) {
     }
     /* Creature exception section, only for states that override generated
        placement: wire version 3 carries the resource section above plus
-       this table. Generated-only states stay wire 2 or 1 byte for byte. */
-    if (s->creature_count) {
+       this table. Generated-only states stay wire 2 or 1 byte for byte;
+       wire 4 always carries it, with a zero count allowed. */
+    if (s->creature_count || social_active(s)) {
         put(w, s->creature_count, 2);
         put(w, 0, 2);
         for (int i = 0; i < s->creature_count; i++) {
@@ -127,8 +137,60 @@ static void payload(const WsState* s, Writer* w, int tail) {
             put(w, e->pad, 2);
         }
     }
+    /* Gate 6 social section: evidence capsules, pending dispatches and
+       per-player retry receipts. Wire version 4 always carries the resource
+       and creature sections too (with zero counts where unused) so its
+       layout is position-independent of the older gates; states without
+       social activity keep their published wire 1/2/3 bytes unchanged. */
+    if (social_active(s)) {
+        put(w, s->ev_count, 2);
+        put(w, s->pend_count, 2);
+        for (int i = 0; i < s->ev_count; i++) {
+            const WsEvidence* e = &s->ev[i];
+            put(w, e->observer, 4);
+            put(w, e->subject, 4);
+            put(w, e->teller, 4);
+            put(w, e->root, 4);
+            put(w, e->kind, 2);
+            put(w, e->confidence, 2);
+            put(w, e->context, 2);
+            put(w, e->clock_s, 4);
+            put(w, e->salience, 2);
+            put(w, e->reserved, 2);
+            put(w, (uint16_t)e->valence, 2);
+            put(w, e->pad, 2);
+        }
+        for (int i = 0; i < s->pend_count; i++) {
+            const WsPending* p = &s->pend[i];
+            put(w, p->observer, 4);
+            put(w, p->subject, 4);
+            put(w, p->teller, 4);
+            put(w, p->root, 4);
+            put(w, p->deliver_s, 4);
+            put(w, p->kind, 2);
+            put(w, p->confidence, 2);
+            put(w, p->context, 2);
+            put(w, p->salience, 2);
+            put(w, p->reserved, 2);
+            put(w, (uint16_t)p->valence, 2);
+            put(w, p->pad, 2);
+        }
+        for (int i = 0; i < s->player_count; i++) {
+            const WsReceipt* rc = &s->receipt[i];
+            put(w, rc->sequence, 4);
+            put(w, rc->epoch, 4);
+            put(w, rc->base_revision, 4);
+            put(w, rc->revision, 4);
+            put(w, rc->action, 2);
+            put(w, rc->target, 2);
+            put(w, rc->amount, 2);
+            put(w, rc->aux, 2);
+            put(w, rc->status, 2);
+            put(w, rc->flags, 2);
+        }
+    }
 }
-static int bounded(const WsState* s) { return s->count <= WS_CAP && s->player_count <= WS_PLAYER_CAP && s->feed_count <= WS_FEED_CAP && s->tail_count <= WS_TAIL_CAP && s->reservoir_count <= WS_RESERVOIR_CAP && s->site_count <= WS_SITE_CAP && s->creature_count <= WS_CREX_CAP; }
+static int bounded(const WsState* s) { return s->count <= WS_CAP && s->player_count <= WS_PLAYER_CAP && s->feed_count <= WS_FEED_CAP && s->tail_count <= WS_TAIL_CAP && s->reservoir_count <= WS_RESERVOIR_CAP && s->site_count <= WS_SITE_CAP && s->creature_count <= WS_CREX_CAP && s->ev_count <= WS_EV_CAP && s->pend_count <= WS_PEND_CAP; }
 uint32_t ws_state_hash(const WsState* s) {
     if (!bounded(s)) return 0;
     Writer w = {0, 0, 0, ~0U, 0};
@@ -143,7 +205,7 @@ size_t ws_state_encode(const WsState* s, uint8_t* p, size_t cap) {
     uint32_t crc = ~w.crc;
     Writer header = {p, 0, 16, 0, 0};
     put(&header, 0x31535743U, 4);
-    put(&header, s->creature_count ? 3 : s->reservoir_count ? 2 : 1, 2);
+    put(&header, social_active(s) ? 4 : s->creature_count ? 3 : s->reservoir_count ? 2 : 1, 2);
     put(&header, WS_GENERATOR, 2);
     put(&header, (uint32_t)w.n, 4);
     put(&header, crc, 4);
@@ -172,14 +234,14 @@ WsError ws_state_decode(WsState* s, const WsRecipe* recipe, const uint8_t* p, si
     Reader r = {p, 0, n, 0};
     if (get(&r, 4) != 0x31535743U) return WS_FORMAT;
     unsigned wire = get(&r, 2);
-    if ((wire != 1 && wire != 2 && wire != 3) || get(&r, 2) != WS_GENERATOR) return WS_VERSION;
+    if ((wire != 1 && wire != 2 && wire != 3 && wire != 4) || get(&r, 2) != WS_GENERATOR) return WS_VERSION;
     if (get(&r, 4) != n || get(&r, 4) != ws_crc(p + 16, n - 16)) return WS_FORMAT;
     /* Validate counts and exact length before writes. Decode into a staging
        state when preserving an existing canonical state across failures. */
     unsigned count = p[40] | p[41] << 8, players = p[42] | p[43] << 8, feeds = p[44] | p[45] << 8, tails = p[46] | p[47] << 8;
     if (count > WS_CAP || players > WS_PLAYER_CAP || feeds > WS_FEED_CAP || tails > WS_TAIL_CAP) return WS_BOUNDS;
     size_t base = 48 + count * 28 + players * 538 + players * players * 12 + feeds * 16 + tails * 20;
-    unsigned rcount = 0, scount = 0, ccount = 0;
+    unsigned rcount = 0, scount = 0, ccount = 0, ecount = 0, pcount = 0;
     if (wire >= 2) {
         if (n < base + 8) return WS_BOUNDS;
         rcount = p[base] | p[base + 1] << 8;
@@ -190,6 +252,20 @@ WsError ws_state_decode(WsState* s, const WsRecipe* recipe, const uint8_t* p, si
             if (n < rsec + 4) return WS_BOUNDS;
             ccount = p[rsec] | p[rsec + 1] << 8;
             if (!ccount || ccount > WS_CREX_CAP || n != rsec + 4 + 24 * ccount) return WS_BOUNDS;
+        } else if (wire == 4) {
+            /* Wire 4 always carries resource, creature and social sections;
+               zero counts are legal, lengths are exact. */
+            if (n < rsec + 4) return WS_BOUNDS;
+            ccount = p[rsec] | p[rsec + 1] << 8;
+            if (ccount > WS_CREX_CAP) return WS_BOUNDS;
+            size_t csec = rsec + 4 + 24 * ccount;
+            if (n < csec + 4) return WS_BOUNDS;
+            ecount = p[csec] | p[csec + 1] << 8;
+            pcount = p[csec + 2] | p[csec + 3] << 8;
+            if (ecount > WS_EV_CAP || pcount > WS_PEND_CAP) return WS_BOUNDS;
+            /* Evidence/pending records are 34 explicit bytes each (4x u32,
+               3x u16, u32 clock, 4x u16); receipts are 28. */
+            if (n != csec + 4 + 34 * ecount + 34 * pcount + 28 * players) return WS_BOUNDS;
         } else if (n != rsec)
             return WS_BOUNDS;
     } else if (n != base)
@@ -273,7 +349,7 @@ WsError ws_state_decode(WsState* s, const WsRecipe* recipe, const uint8_t* p, si
         s->used_total = (uint64_t)get(&r, 4) | (uint64_t)get(&r, 4) << 32;
         s->lost_total = (uint64_t)get(&r, 4) | (uint64_t)get(&r, 4) << 32;
     }
-    if (wire == 3) {
+    if (wire == 3 || wire == 4) {
         s->creature_count = (uint16_t)get(&r, 2);
         (void)get(&r, 2); /* structural zero pad */
         for (int i = 0; i < s->creature_count; i++) {
@@ -283,6 +359,53 @@ WsError ws_state_decode(WsState* s, const WsRecipe* recipe, const uint8_t* p, si
             e->aux = (uint16_t)get(&r, 2);
             e->reserved = (uint16_t)get(&r, 2);
             e->pad = (uint16_t)get(&r, 2);
+        }
+    }
+    if (wire == 4) {
+        s->ev_count = (uint16_t)get(&r, 2);
+        s->pend_count = (uint16_t)get(&r, 2);
+        for (int i = 0; i < s->ev_count; i++) {
+            WsEvidence* e = &s->ev[i];
+            e->observer = get(&r, 4);
+            e->subject = get(&r, 4);
+            e->teller = get(&r, 4);
+            e->root = get(&r, 4);
+            e->kind = (uint16_t)get(&r, 2);
+            e->confidence = (uint16_t)get(&r, 2);
+            e->context = (uint16_t)get(&r, 2);
+            e->clock_s = get(&r, 4);
+            e->salience = (uint16_t)get(&r, 2);
+            e->reserved = (uint16_t)get(&r, 2);
+            e->valence = (int16_t)get(&r, 2);
+            e->pad = (uint16_t)get(&r, 2);
+        }
+        for (int i = 0; i < s->pend_count; i++) {
+            WsPending* p2 = &s->pend[i];
+            p2->observer = get(&r, 4);
+            p2->subject = get(&r, 4);
+            p2->teller = get(&r, 4);
+            p2->root = get(&r, 4);
+            p2->deliver_s = get(&r, 4);
+            p2->kind = (uint16_t)get(&r, 2);
+            p2->confidence = (uint16_t)get(&r, 2);
+            p2->context = (uint16_t)get(&r, 2);
+            p2->salience = (uint16_t)get(&r, 2);
+            p2->reserved = (uint16_t)get(&r, 2);
+            p2->valence = (int16_t)get(&r, 2);
+            p2->pad = (uint16_t)get(&r, 2);
+        }
+        for (int i = 0; i < s->player_count; i++) {
+            WsReceipt* rc = &s->receipt[i];
+            rc->sequence = get(&r, 4);
+            rc->epoch = get(&r, 4);
+            rc->base_revision = get(&r, 4);
+            rc->revision = get(&r, 4);
+            rc->action = (uint16_t)get(&r, 2);
+            rc->target = (uint16_t)get(&r, 2);
+            rc->amount = (uint16_t)get(&r, 2);
+            rc->aux = (uint16_t)get(&r, 2);
+            rc->status = (uint16_t)get(&r, 2);
+            rc->flags = (uint16_t)get(&r, 2);
         }
     }
     WsError e = r.bad ? WS_FORMAT : ws_state_validate(s, recipe);
@@ -312,7 +435,7 @@ int ws_save(const WsState* s, const char* base) {
         Reader rd = {data, 0, length, 0};
         unsigned magic = get(&rd, 4);
         unsigned wsv = get(&rd, 2);
-        if (magic != 0x31535743U || (wsv != 1 && wsv != 2 && wsv != 3) || get(&rd, 2) != WS_GENERATOR || get(&rd, 4) != length || get(&rd, 4) != ws_crc(data + 16, length - 16)) continue;
+        if (magic != 0x31535743U || (wsv != 1 && wsv != 2 && wsv != 3 && wsv != 4) || get(&rd, 2) != WS_GENERATOR || get(&rd, 4) != length || get(&rd, 4) != ws_crc(data + 16, length - 16)) continue;
         rd.n = 36;
         uint32_t revision = get(&rd, 4);
         if (newest < 0 || revision >= newest_revision) {

@@ -6,7 +6,7 @@ This handoff describes its containing checkpoint. Resolve the exact current
 checkpoint with `git rev-parse HEAD` after fetching this branch; do not start
 again from the cognition branch. No unpublished context is required.
 
-**Status: FIFTH IMPLEMENTATION GATE PASSED.** The SDK continuous-traversal
+**Status: SIXTH IMPLEMENTATION GATE PASSED.** The SDK continuous-traversal
 promotion gate passes 18/18 declared walk edges, the adversarial spatial
 suite passes 15/15 with impossible connections failing generation cleanly,
 and the macro-geography gate passes: the full §49 hierarchy is generated
@@ -40,7 +40,21 @@ offscreen entities without tick replay, and persistent death/relocation/
 pinning exceptions override the generated defaults through the authority
 with fail-closed codes — all with bit-exact C/Python parity over every
 creature and time, including 32-bit clock wrap, and Gate I–IV literals
-preserved bit-for-bit. The normal Cascade game
+preserved bit-for-bit. The canonical event/social gate passes: the
+existing game actions cross one canonical boundary
+(`content/cascade_adapter.c` bridge with a bounded honest vocabulary,
+legacy gameplay authority and outcomes proven byte-identical) into
+versioned events with retry receipts, witness projection onto actual NPCs
+through the engine's own geometry (occlusion and range literals exact),
+directed evidence capsules with hearsay degradation and time decay,
+separate conduct/relationship projections, delayed institutional dispatch
+on the canonical clock, hidden-truth isolation across three world
+variants, and the full wire-v4/save/compaction round trip — with
+C/Python parity over every observer-subject pair at every step, and the
+two-client TCP scenario proving private speech, receipt replay after
+reconnect and the delayed guild notice through a restarted server. The
+mapping sheet the content schema requires is published as
+`docs/WORLD_SDK_MAPPING.md`. The normal Cascade game
 remains playable and passes its original suite. The bounded renderer
 evaluation is complete and the hybrid renderer it recommended is
 integrated and promoted (incremental-span rasterizer + portable exact-2x
@@ -71,6 +85,7 @@ Kyra/intake multiplayer game.
 | RC: exact portable 2x presentation + gated PIE/PPA backends | `b1229f0` |
 | RD: presentation lifecycle reconciliation (open-once at init) | containing commit |
 | V: sparse deterministic creatures and schedules | containing commit |
+| VI: canonical events, witnesses and social projections; mapping sheet | containing commit |
 
 ## Build and reproduce
 
@@ -83,13 +98,16 @@ python3 tools/worldsdk/sdk.py schema
 ```
 
 The qualification script now exits **0** with the traversal, adversarial,
-macro-geography, resource/ecology, nonlocal anomaly and creature gates
-green. Do not
+macro-geography, resource/ecology, nonlocal anomaly, creature and
+canonical event/social gates green. Do not
 change it to ignore a failure if one reappears; it must exit nonzero when
 any gate fails.
 Results are in `results/worldsdk/`. It needs a C11 compiler, Python standard
 library, and an SDL2 runtime for the rendered clients. No model training,
 cloud cognition or GPU is required.
+The sanitizer refresh over all ten C suites is
+`./scripts/sanitize-world-sdk.sh` (ASan/UBSan, clean; records in
+`results/worldsdk/sanitizer.txt`).
 
 For the normal desktop game and standalone SDK viewer, install SDL2 development
 headers and run:
@@ -136,15 +154,25 @@ python3 tools/worldsdk/macro_test.py
 python3 tools/worldsdk/resource_test.py
 python3 tools/worldsdk/anomaly_test.py
 python3 tools/worldsdk/creature_test.py
+python3 tools/worldsdk/social_test.py
 ```
 
 The first test uses two protocol client processes, real TCP, reconnect and a
-terminated/restarted server, in two phases: the cascade entity-op phase, then
-the macro Gate-4 scenario (both clients walk the derived trail, one rides the
+terminated/restarted server, in three phases: the cascade entity-op phase,
+then the macro Gate-4 scenario (both clients walk the derived trail, one rides the
 winze lift, the open gate crosses both ways under server authority, the lode
 is depleted through regional ops, both clients derive the closed gate from the
 public replica, the far seat falls back to the lift, reconnect resumes, and a
-restarted server restores the closed gate). The second uses two actual
+restarted server restores the closed gate), then the social scenario on the
+Terrace Commons fixture (one client extracts at the field, walks out of the
+station's south entrance to the yard beside kyra, speaks privately — SHOW and
+TELL commit canonical events that never touch the public feed — reconnects and
+replays the exact command to a receipt answer with nothing re-charged, walks
+the declared route to the market and files a REPORT with the guild clerk that
+is not news until the canonical clock passes the dispatch delay, which the
+test advances between server generations; a fresh server then publishes the
+faction notice to every client through the public replica). The second uses
+two actual
 SDL-rendered processes. The third is the release gate over all declared walk
 edges; it must pass. The fourth generates the fifteen adversarial spatial
 cases and must pass with the impossible connections failing generation
@@ -165,7 +193,19 @@ per creature (dwell/travel/wrap/skip), periodicity, query parity and
 determinism, exception parity with exact literals, fail-closed mutation
 codes matching C, wire-v3 round trip and malformed products, plus three
 generalization seeds; `./build/creature_sdk_test` is its C side (920
-checks with exact literals).
+checks with exact literals). The ninth is the social parity gate (20,465
+checks): full observer×subject view/cite parity at every step against the
+C mirrors, §6.7 informs and delayed delivery with degraded confidence,
+trust/restitution/decay-clock/pinned literals, private-op feed isolation,
+claim-grade speech with the teller kept, fail-closed parity, a byte-exact
+Python mirror of the whole v4 wire (payload, header and CRC) against the
+C encoder, save/restore, and cascade generalization; `./build/social_sdk_test`
+is its C side (3,814 checks with exact literals) and `./build/bridge_sdk_test`
+is the legacy→canonical bridge gate (163 checks: dual-game outcome
+preservation by memcmp after every operation, witness confidences, receipt
+replay, hidden-truth isolation over three world variants, wire v4 round
+trip and save/restore). The mapping sheet for the whole boundary is
+`docs/WORLD_SDK_MAPPING.md`.
 Resume tokens are local `.keys` files excluded from Git. The server only binds
 loopback. Internet deployment, rate limiting and offline branch upload are absent.
 
@@ -238,10 +278,18 @@ A native P4 SDK-mode client remains to be integrated and measured.
   order with a cap contract, and authority-side persistent exceptions
   (DEAD/RELOCATED/PINNED) overriding generated defaults, fail-closed.
 - `persistence.c`: explicit wire codec, semantic hash, two-slot save/recovery;
-  conditional version-2 resource section (schema-1 states unchanged).
+  conditional version-2 resource section (schema-1 states unchanged);
+  conditional version-4 social section (evidence/pending/receipts).
+- `social.c`: directed evidence capsules, witness projection bookkeeping,
+  hearsay degradation and time decay, conduct views and citations,
+  institutional filing with delayed delivery, and the canonical clock
+  advance for schema-1 worlds.
 - `content/worlds/`: human source plus compiled default Cascade include.
 - `content/cascade_adapter.c`: intentional game-specific role mapping. The SDK
   has no character or mystery names. Legacy terrain/mystery code remains intact.
+  Gate VI adds the `Bridge` canonical event boundary (`bridge_init`,
+  `bridge_apply`): the legacy game stays the gameplay authority while the
+  same acts cross into the authority state as versioned events.
 - `core/render.c`: shared software rasterizer plus SDK geometry/peer entry points.
 - `tools/worldsdk/`: finite source compiler, inspection, generators, probes,
   authority transport and rendered clients. No hidden assets or trained models.
@@ -347,6 +395,68 @@ creature and a dense time sweep including 32-bit wrap, plus three
 generalization seeds); deterministic qualification now rejects 7,650
 malformed products.
 
+**Canonical event/social gate: PASSED.** The boundary is the bridge in
+`content/cascade_adapter.c`: `bridge_init` checks the Cascade cast
+(station 4, market 6, kyra 15, waterfall field 9) and `bridge_apply` runs
+the legacy game first — the gameplay authority — then its canonical echo,
+with four honest statuses (COMMITTED, DENIED, UNMAPPED, REFUSED) and a
+bounded vocabulary: REPAIR/DAMAGE map to the station, EXTRACT to the
+field, SHOW/TELL/TRANSFER/GIVE/BUY/SELL-with-kyra to the canonical
+SHOW/TELL/EXCHANGE, and the promise lifecycle to WS_PROMISE with
+kept/breach evidence on the promise_state 1→2/1→3 transitions (teller =
+the player for promise speech, 0 for authority-observed facts); market
+trades with non-person counterparties, notes, and time mechanics stay
+UNMAPPED rather than being fictionally mapped. The C gate proves the
+legacy `State` is byte-identical (memcmp after every operation) whether
+or not the bridge is attached, across all three fixture variants — so the
+canonical layer adds observation without touching gameplay, and the
+hidden-truth case shows three worlds with different secrets producing one
+identical canonical hash. Canonical commits carry one revision watermark
+and retry receipts (replays answer from the receipt with no repeated cost
+or reward; fingerprint mismatches are stale reuse, not retries). After
+each commit the authority projects the act onto actual NPC witnesses
+through the engine's own witness gate — distance, scope and 128-sample
+occlusion — so kyra at 940, dax/marisol at 790 witness the station
+damage, oren out of range and toma occluded stay exactly uninformed, and
+the station-edge literal is 900. Retained evidence capsules
+(`WsEvidence`, 64-cap) carry observer/subject/teller/root, epistemic
+class, confidence, context, valence, salience and the canonical clock
+anchor; hearsay degrades to 3/4 capped at 750 and can never rise through
+copying; decay is a fixed integer bucket (86,400 s) with salience ≥ 500
+pinned forever; the same root retold replaces instead of stacking (the
+§6.7 exchange case: kyra's plain projection is replaced by the exchange's
+own record, acts 7, trust 481). Conduct projections (`ws_social_view`)
+are pure functions of (records, clock) — counts by class, decayed
+confidence capped at 1000, trust bounded ±1000 and a revision watermark —
+with arena/defense halving and restitution doubling evaluated at view
+time so history is never rewritten; `ws_social_cite` hands dialogue the
+strongest actual cause. Private speech (SHOW/TELL/EXCHANGE) commits as
+`WS_QUIET`: canonical history, never public news. REPORT files the
+observer's strongest retained evidence with a clerk NPC
+(`ws_file`); delivery waits for the canonical clock to pass
+`WS_REPORT_DELAY_S` (3600 s), settles at the next authority touch
+(`ws_social_settle`, driven from `ws_apply`, `ws_inform` and the resource
+tick, plus `ws_clock_advance` for schema-1 worlds) and publishes the
+faction notice at 3/4 degraded confidence. NPC↔NPC and authority-mediated
+information flows through `ws_inform` with the same record machinery
+(self-reports rejected, roots must reference committed revisions). The
+wire gains a conditional version-4 section (evidence/pending 34 B each,
+receipts 28 B per player; v1/v2/v3 unchanged without social records —
+`ws_state_hash` is the CRC32 of the tail-less payload, pinned by a
+byte-identical Python mirror of payload, header and CRC). The fixture is
+Terrace Commons (`content/worlds/social.json`, 23 modules, 1,592 bytes):
+the station/market/field cast, dax and marisol in witness range, oren
+ranged out, toma occluded behind the north wall, the clerk at the market,
+and a walkable yard beside kyra with a declared station↔yard walk link so
+protocol clients reach private-speech range. The C proof gate runs 3,814
+checks with exact literals; the bridge gate 163; the Python parity gate
+20,465 over every observer-subject pair at every step; the two-client TCP
+scenario (2,385 total) proves the private feed untouched, the receipt
+replay after reconnect, and the delayed faction notice published by a
+fresh server after the clock passes. The full mapping sheet — conceptual
+field → actual SDK field → unit → version → migration → test, with typed
+time, rounding and RNG frozen — is `docs/WORLD_SDK_MAPPING.md`.
+
 **The bounded renderer evaluation the mission ordered at the end of Gate 4
 is complete** — measured, not speculated, with all evidence in
 `results/worldsdk/renderer-eval/` and the full write-up in
@@ -386,11 +496,11 @@ and physical timing/visual/cache/display qualification.** No further
 renderer or PPA research before physical P4 testing (see
 `docs/RENDERER_HYBRID.md` and `results/worldsdk/renderer-hybrid/`).
 
-After that, the next work is bridging the existing game's
-Phos/evidence/economy/quest actions into this single semantic authority,
-replacing the separate fixture with an experimental normal-game
-multiplayer mode, and implementing P4 network transport — in that order,
-each under its own gate. The spatial foundation
+After that, the next work is the multiplayer gate — replacing the separate
+fixture with an experimental normal-game multiplayer mode over the now-proven
+canonical event boundary (versioned commands, receipts, witnesses and social
+projections are the multiplayer substrate), then implementing P4 network
+transport — in that order, each under its own gate. The spatial foundation
 enforces
 topology-before-geometry (declared walk edges cut 4000 mm ports into room
 walls; every room keeps a default public south entrance), the surface
@@ -409,10 +519,13 @@ provenance only after the authority and traversal boundaries are sound.
 Geometry fidelity labels do not yet implement cold storage streaming, NPC
 simulation LOD, or full room chunk eviction.
 
-The SDK witness function is a distance/attention/conspicuousness gate with coarse
-128-sample occlusion. It is not yet connected to NPC knowledge records and does
-not model sound. Do not describe it as a complete witness system. Directed social
-state currently handles promises/reliability only; no universal reputation score.
+The SDK witness function is a distance/attention/conspicuousness gate with
+coarse 128-sample occlusion; since Gate VI it feeds NPC knowledge records
+(`witness_project` → `WsEvidence`), but it still does not model sound and
+its occlusion is coarse, so do not describe it as a complete perception
+system. Directed social state covers observed acts, claims, promises,
+kept/breach, restitution and institutional reports with decay — not a
+universal reputation score, and no morality scalar.
 
 ## Add recipes and validate safely
 

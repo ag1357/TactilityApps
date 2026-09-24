@@ -95,6 +95,71 @@ class CreatureEx(C.Structure):
     ]
 
 
+class Evidence(C.Structure):
+    _fields_ = [
+        ("observer", C.c_uint32),
+        ("subject", C.c_uint32),
+        ("teller", C.c_uint32),
+        ("root", C.c_uint32),
+        ("kind", C.c_uint16),
+        ("confidence", C.c_uint16),
+        ("context", C.c_uint16),
+        ("clock_s", C.c_uint32),
+        ("salience", C.c_uint16),
+        ("reserved", C.c_uint16),
+        ("valence", C.c_int16),
+        ("pad", C.c_uint16),
+    ]
+
+
+class Pending(C.Structure):
+    _fields_ = [
+        ("observer", C.c_uint32),
+        ("subject", C.c_uint32),
+        ("teller", C.c_uint32),
+        ("root", C.c_uint32),
+        ("deliver_s", C.c_uint32),
+        ("kind", C.c_uint16),
+        ("confidence", C.c_uint16),
+        ("context", C.c_uint16),
+        ("salience", C.c_uint16),
+        ("reserved", C.c_uint16),
+        ("valence", C.c_int16),
+        ("pad", C.c_uint16),
+    ]
+
+
+class Receipt(C.Structure):
+    _fields_ = [
+        ("sequence", C.c_uint32),
+        ("epoch", C.c_uint32),
+        ("base_revision", C.c_uint32),
+        ("revision", C.c_uint32),
+        ("action", C.c_uint16),
+        ("target", C.c_uint16),
+        ("amount", C.c_uint16),
+        ("aux", C.c_uint16),
+        ("status", C.c_uint16),
+        ("flags", C.c_uint16),
+    ]
+
+
+class View(C.Structure):
+    _fields_ = [
+        ("trust", C.c_int16),
+        ("acts", C.c_uint16),
+        ("claims", C.c_uint16),
+        ("contradictions", C.c_uint16),
+        ("restitutions", C.c_uint16),
+        ("promises", C.c_uint16),
+        ("kept", C.c_uint16),
+        ("breaches", C.c_uint16),
+        ("reports", C.c_uint16),
+        ("confidence", C.c_uint16),
+        ("watermark", C.c_uint32),
+    ]
+
+
 class State(C.Structure):
     _fields_ = [
         ("ancestry", Id),
@@ -122,6 +187,11 @@ class State(C.Structure):
         ("recovered_total", C.c_uint64),
         ("used_total", C.c_uint64),
         ("lost_total", C.c_uint64),
+        ("ev_count", C.c_uint16),
+        ("pend_count", C.c_uint16),
+        ("ev", Evidence * 64),
+        ("pend", Pending * 8),
+        ("receipt", Receipt * 8),
     ]
 
 
@@ -158,6 +228,10 @@ ACTIONS = {
     "EXCAVATE": 11,
     "CONVERT": 12,
     "SPEND": 13,
+    "SHOW": 14,
+    "TELL": 15,
+    "REPORT": 16,
+    "EXCHANGE": 17,
 }
 
 
@@ -168,6 +242,15 @@ def library():
     l.ws_join.argtypes = [C.POINTER(State), C.c_uint32]
     l.ws_apply.argtypes = [C.POINTER(State), C.POINTER(Recipe), Context, Operation]
     l.ws_apply.restype = Disposition
+    l.ws_inform.argtypes = [
+        C.POINTER(State), C.POINTER(Recipe), C.c_uint32, C.c_uint32,
+        C.c_uint32, C.c_uint16, C.c_uint16, C.c_uint16, C.c_int16,
+        C.c_uint16, C.c_uint32,
+    ]
+    l.ws_social_view.argtypes = [C.POINTER(State), C.c_uint32, C.c_uint32, C.POINTER(View)]
+    l.ws_social_cite.argtypes = [C.POINTER(State), C.c_uint32, C.c_uint32, C.POINTER(C.c_uint32), C.POINTER(C.c_uint16), C.POINTER(C.c_uint16)]
+    l.ws_social_settle.argtypes = [C.POINTER(State), C.POINTER(Recipe)]
+    l.ws_clock_advance.argtypes = [C.POINTER(State), C.POINTER(Recipe), C.c_uint32]
     l.ws_move.argtypes = [C.POINTER(Recipe), C.POINTER(Address), C.c_int32, C.c_int32]
     l.ws_use_link.argtypes = [C.POINTER(Recipe), C.POINTER(Traveler)]
     l.ws_use_link_state.argtypes = [C.POINTER(Recipe), C.POINTER(State), C.POINTER(Traveler)]

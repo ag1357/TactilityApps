@@ -380,6 +380,143 @@ def main():
         macro_report["restart_level"] = snap["world"]["reservoirs"]["level"][3]
         macro_report["restart_derived_closed"] = True
 
+        # ---- phase 3: the social product (Gate 6 canonical events) ----
+        # Two clients over real TCP: one extracts at the field, walks to the
+        # station yard and speaks privately to kyra (show, tell: committed
+        # canonical events that never touch the public feed), reconnects and
+        # replays the exact command (the receipt answers, nothing re-charged),
+        # then walks the declared route to the market and files a formal
+        # report with the guild clerk. The report is not news until the
+        # authority clock passes the dispatch delay; the test advances the
+        # persisted canonical clock between server generations (the fixture
+        # server has no clock), and a fresh server publishes the faction's
+        # receipt to every client through the public replica.
+        social_report = {}
+        social_save = str(pathlib.Path(temp) / "social-world")
+        slib = World(str(ROOT / "build/social.cws"), social_save).lib
+        sdata = (ROOT / "build/social.cws").read_bytes()
+        srecipe = Recipe()
+        assert slib.ws_load(C.byref(srecipe), sdata, len(sdata)) == 0
+        snames = [m["name"] for m in json.loads((ROOT / "content/worlds/social.json").read_text())["modules"]]
+        sids = {n: i for i, n in enumerate(snames)}
+        scenters = {}
+        for i in range(srecipe.count):
+            out = Module()
+            slib.ws_materialize(C.byref(srecipe), i, C.byref(out))
+            scenters[snames[i]] = (out.pos.x, out.pos.y, out.pos.z)
+        scost = C.c_uint64()
+        spath = (C.c_uint16 * 128)()
+
+        def swalk_route(send, position, i, a, b):
+            n = slib.ws_route_cost(C.byref(srecipe), a, b, 1, C.byref(scost), spath, 128)
+            assert n > 0
+            route = [snames[k] for k in spath[:n]]
+            for name in route:  # include the start: the client may stand off-route
+                tx, _, tz = scenters[name]
+                for _ in range(4000):
+                    p = position(i)
+                    dx, dz = tx - p["x"], tz - p["z"]
+                    dist = math.hypot(dx, dz)
+                    if dist < 150:
+                        break
+                    m = max(abs(dx), abs(dz), 1)
+                    step = 1000 if dist > 2000 else 100
+                    check(send(i, {"cmd": "move", "dx": int(dx * step / m), "dz": int(dz * step / m)}, quiet=True)["ok"])
+                else:
+                    raise AssertionError(f"client {i} could not reach {name}")
+
+        def social_ready(send, snapshot, position):
+            def sact(i, action, target, amount=0, aux=0, sequence=None):
+                v = snapshot(i)
+                e = v["world"]["entities"][target]
+                return send(
+                    i,
+                    {
+                        "cmd": "act",
+                        "action": action,
+                        "target": target,
+                        "sequence": sequence
+                        if sequence is not None
+                        else v["you"]["sequence"] + 1,
+                        "epoch": e["epoch"],
+                        "base_revision": e["revision"],
+                        "amount": amount,
+                        "aux": aux,
+                        "recipe_sha256": v["world"]["recipe_sha256"],
+                    },
+                )
+
+            spawn = position(0)
+            check((spawn["x"], spawn["z"]) == (scenters["station"][0], scenters["station"][2]))
+            # extract at the hydro field, then walk out of the station's
+            # south entrance to the yard beside kyra
+            check(sact(0, "EXTRACT", sids["hydro_field"], 10)["ok"])
+            check(snapshot(0)["you"]["inventory"][1] == 10)
+            for _ in range(15):
+                check(send(0, {"cmd": "move", "dx": 0, "dz": 1000}, quiet=True)["ok"])
+            p0 = position(0)
+            ky = scenters["kyra"]
+            check(abs(p0["x"] - ky[0]) <= 3000 and abs(p0["z"] - ky[2]) <= 3000 and abs(p0["y"] - ky[1]) <= 3000)
+            # private speech: committed canonical events, never public news
+            feed_before = len(snapshot(1)["world"]["feed"])
+            rev_before = snapshot(1)["world"]["revision"]
+            check(sact(0, "TELL", sids["kyra"], 0, 18)["ok"])
+            vshow = sact(0, "SHOW", sids["kyra"], 1, 1)
+            check(vshow["ok"])
+            show_seq = vshow["you"]["sequence"]  # the last committed command
+            v1 = snapshot(1)
+            check(len(v1["world"]["feed"]) == feed_before)  # nothing published
+            check(v1["world"]["revision"] == rev_before + 2)  # but both committed
+            # reconnect and replay the exact command: the receipt answers
+            check(send(0, "reconnect")["ok"])
+            v = sact(0, "SHOW", sids["kyra"], 1, 1, sequence=show_seq)
+            check(v["ok"] and v["world"]["revision"] == rev_before + 2)  # replay
+            check(v["you"]["inventory"][1] == 10)
+            # walk the declared route to the market and file with the clerk
+            swalk_route(send, position, 0, sids["station"], sids["market"])
+            for _ in range(13):
+                check(send(0, {"cmd": "move", "dx": -1000, "dz": 0}, quiet=True)["ok"])
+            clerk = scenters["clerk"]
+            p0 = position(0)
+            check(abs(p0["x"] - clerk[0]) <= 3000 and abs(p0["z"] - clerk[2]) <= 3000)
+            v = sact(0, "REPORT", sids["clerk"], 0, 18)
+            check(v["ok"])
+            # the report is filed but not yet news: the dispatch delay holds
+            for c in (0, 1):
+                feeds = snapshot(c)["world"]["feed"]
+                check(all(f["kind"] != 5 for f in feeds))
+            v0, v1 = snapshot(0), snapshot(1)
+            check(v0["public_hash"] == v1["public_hash"])
+            social_report["filed_revision"] = v0["world"]["revision"]
+            social_report["private_feed_untouched"] = True
+            social_report["receipt_replay"] = True
+
+        phase("build/social.cws", social_save, social_ready)
+
+        # The authority clock passes the dispatch delay between server
+        # generations (the fixture server has no clock; this is the same
+        # authority touch the C and Python suites drive directly).
+        delivered = World(ROOT / "build/social.cws", social_save)
+        check(delivered.state.pend_count == 1)
+        delivered.lib.ws_clock_advance(
+            C.byref(delivered.state), C.byref(delivered.recipe), 3600
+        )
+        check(delivered.state.pend_count == 0)
+        notice = [f for f in delivered.state.feed[: delivered.state.feed_count] if f.kind == 5]
+        check(len(notice) == 1 and notice[0].target == sids["clerk"])
+        delivered.checkpoint()
+
+        def social_after(send, snapshot, position):
+            # a fresh server generation publishes the faction's receipt
+            v0, v1 = snapshot(0), snapshot(1)
+            feeds = v0["world"]["feed"]
+            check(any(f["kind"] == 5 and f["target"] == sids["clerk"] for f in feeds))
+            check(v0["public_hash"] == v1["public_hash"])
+            social_report["delivered_notice"] = True
+            social_report["delivery_revision"] = notice[0].revision
+
+        phase("build/social.cws", social_save, social_after)
+
         report = {
             "status": "PASS",
             "checks": checks,
@@ -389,13 +526,14 @@ def main():
             "public_replica_convergence": True,
             "private_relationships_sent": False,
             "anomaly_gate": macro_report,
+            "social_boundary": social_report,
             "traces": traces,
             "limitations": [
                 "No P4 network transport qualification",
                 "No Internet deployment: plaintext transport and movement rate limits pending",
                 "Offline merge verified by C suite; network branch upload is not implemented",
                 "Clients are protocol harnesses, not integrated game clients",
-                "Fixture server has no clock: recharge-driven reopening is proven by the C and Python suites",
+                "Fixture server has no clock: the Gate 6 dispatch delay is advanced by the test between server generations through the same authority touch the C and Python suites drive",
             ],
         }
         (ROOT / "results/worldsdk/network.json").write_text(

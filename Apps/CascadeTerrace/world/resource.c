@@ -111,6 +111,9 @@ void ws_resources_tick(WsState* s, const WsRecipe* r, uint32_t delta_s) {
             }
         }
     }
+    /* Canonical clock boundary: due institutional dispatches deliver here
+       so pending reports follow commit order deterministically. */
+    ws_social_settle(s, r);
 }
 
 int ws_ledger_check(const WsState* s, const WsRecipe* r) {
@@ -299,6 +302,6 @@ WsDisposition ws_resource_apply(WsState* s, const WsRecipe* r, WsContext c, WsOp
     d.status = WS_OK;
     d.world_changed = 1;
     d.revision = s->revision;
-    ws_record(s, c, op, op.action == WS_EXCAVATE ? WS_DISCOVERY : WS_WORLD_EVENT);
+    ws_record(s, r, c, op, op.action == WS_EXCAVATE ? WS_DISCOVERY : WS_WORLD_EVENT);
     return d;
 }

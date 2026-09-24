@@ -4,7 +4,7 @@ CPPFLAGS += -Icore -DCG_TRAINED_MODEL
 SDL_CFLAGS ?= $(shell sdl2-config --cflags)
 SDL_LIBS ?= $(shell sdl2-config --libs)
 SEMANTIC = core/semantic.c core/decision.c
-WORLD_SDK = world/schema.c world/recipe.c world/geometry.c world/traversal.c world/state.c world/resource.c world/creature.c world/persistence.c
+WORLD_SDK = world/schema.c world/recipe.c world/geometry.c world/traversal.c world/state.c world/resource.c world/creature.c world/social.c world/persistence.c
 CORE = $(WORLD_SDK) content/cascade_adapter.c $(SEMANTIC) core/general_dialogue.c research/rung_a/cognition.c core/world.c core/state.c core/dialogue.c core/persistence.c core/render.c
 all: build/cascade build/test
 build/world_sdk_test: $(WORLD_SDK) tests/world_sdk.c world/sdk.h | build
@@ -27,6 +27,14 @@ build/creature_sdk_test: $(WORLD_SDK) tests/creature_sdk.c world/state.h content
 	$(CC) $(CFLAGS) $(filter %.c,$^) -o $@
 creature-test: build/creature_sdk_test
 	./build/creature_sdk_test
+build/social_sdk_test: $(WORLD_SDK) tests/social_sdk.c world/state.h content/worlds/social.inc | build
+	$(CC) $(CFLAGS) $(filter %.c,$^) -o $@
+social-test: build/social_sdk_test
+	./build/social_sdk_test
+build/bridge_sdk_test: $(WORLD_SDK) content/cascade_adapter.c core/world.c core/state.c tests/bridge_sdk.c content/cascade_adapter.h core/game.h content/worlds/cascade.inc | build
+	$(CC) $(CPPFLAGS) $(CFLAGS) $(filter %.c,$^) -o $@
+bridge-test: build/bridge_sdk_test
+	./build/bridge_sdk_test
 build:
 	mkdir -p build
 build/cascade: $(CORE) desktop/main.c | build

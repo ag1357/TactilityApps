@@ -13,12 +13,18 @@ python3 tools/worldsdk/macro.py > /dev/null
 # its C proof gate and Python parity gate run below as well.
 # Gate 5: the product carries sparse creature species (schema 4) with
 # deterministic placement and schedules; both gates run below too.
-make build/world_sdk_test build/macro_sdk_test build/resource_sdk_test build/anomaly_sdk_test build/creature_sdk_test build/world_state_test build/libsdk.so build/libworldview.so build/test build/presentation_test
+# Gate 6: the social fixture product (canonical event boundary + witness
+# projections) and the legacy->canonical bridge; C gates, the Python parity
+# gate, and the network social phase run below.
+python3 tools/worldsdk/sdk.py compile content/worlds/social.json --output build/social.cws --c-include content/worlds/social.inc > results/worldsdk/social-manifest.json
+make build/world_sdk_test build/macro_sdk_test build/resource_sdk_test build/anomaly_sdk_test build/creature_sdk_test build/social_sdk_test build/bridge_sdk_test build/world_state_test build/libsdk.so build/libworldview.so build/test build/presentation_test
 ./build/world_sdk_test > results/worldsdk/traversal.json
 ./build/macro_sdk_test > results/worldsdk/macro.json
 ./build/resource_sdk_test > results/worldsdk/resource.json
 ./build/anomaly_sdk_test > results/worldsdk/anomaly.json
 ./build/creature_sdk_test > results/worldsdk/creature.json
+./build/social_sdk_test > results/worldsdk/social.json
+./build/bridge_sdk_test > results/worldsdk/bridge.json
 ./build/world_state_test > results/worldsdk/state.json
 ./build/test > results/worldsdk/legacy-final.txt
 ./build/presentation_test > results/worldsdk/renderer-hybrid/presentation-desktop.json
@@ -32,3 +38,4 @@ python3 tools/worldsdk/macro_test.py
 python3 tools/worldsdk/resource_test.py
 python3 tools/worldsdk/anomaly_test.py
 python3 tools/worldsdk/creature_test.py
+python3 tools/worldsdk/social_test.py

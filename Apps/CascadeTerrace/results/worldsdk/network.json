@@ -1,6 +1,6 @@
 {
   "status": "PASS",
-  "checks": 2103,
+  "checks": 2385,
   "clients": 2,
   "transport": "TCP loopback; separate OS client processes",
   "server_restart": true,
@@ -12,6 +12,13 @@
     "crossed_both_directions": true,
     "restart_level": 28930,
     "restart_derived_closed": true
+  },
+  "social_boundary": {
+    "filed_revision": 7,
+    "private_feed_untouched": true,
+    "receipt_replay": true,
+    "delivered_notice": true,
+    "delivery_revision": 8
   },
   "traces": [
     {
@@ -16637,6 +16644,2030 @@
       "status": 7,
       "public_hash": "a1511fccd8ee2c6e6c8f119bfc15642e4fcb9b7aaf4ff4e4f6a9e9eb43dd3348",
       "revision": 5
+    },
+    {
+      "client": 0,
+      "phase": "social",
+      "request": "snapshot",
+      "status": 0,
+      "public_hash": "0b2f90fa2fa3c1ffea3db3626304c2f9bee3c77ee1d011db18d4011f1b67e9e3",
+      "revision": 3
+    },
+    {
+      "client": 0,
+      "phase": "social",
+      "request": "snapshot",
+      "status": 0,
+      "public_hash": "0b2f90fa2fa3c1ffea3db3626304c2f9bee3c77ee1d011db18d4011f1b67e9e3",
+      "revision": 3
+    },
+    {
+      "client": 0,
+      "phase": "social",
+      "request": "act",
+      "status": 0,
+      "public_hash": "f0311343c25318ac583daf2ce78ab96a239eec0be3870b2115c1277aab2fe6b5",
+      "revision": 4
+    },
+    {
+      "client": 0,
+      "phase": "social",
+      "request": "snapshot",
+      "status": 0,
+      "public_hash": "f0311343c25318ac583daf2ce78ab96a239eec0be3870b2115c1277aab2fe6b5",
+      "revision": 4
+    },
+    {
+      "client": 0,
+      "phase": "social",
+      "request": "snapshot",
+      "status": 0,
+      "public_hash": "f0311343c25318ac583daf2ce78ab96a239eec0be3870b2115c1277aab2fe6b5",
+      "revision": 4
+    },
+    {
+      "client": 1,
+      "phase": "social",
+      "request": "snapshot",
+      "status": 0,
+      "public_hash": "f0311343c25318ac583daf2ce78ab96a239eec0be3870b2115c1277aab2fe6b5",
+      "revision": 4
+    },
+    {
+      "client": 1,
+      "phase": "social",
+      "request": "snapshot",
+      "status": 0,
+      "public_hash": "f0311343c25318ac583daf2ce78ab96a239eec0be3870b2115c1277aab2fe6b5",
+      "revision": 4
+    },
+    {
+      "client": 0,
+      "phase": "social",
+      "request": "snapshot",
+      "status": 0,
+      "public_hash": "f0311343c25318ac583daf2ce78ab96a239eec0be3870b2115c1277aab2fe6b5",
+      "revision": 4
+    },
+    {
+      "client": 0,
+      "phase": "social",
+      "request": "act",
+      "status": 0,
+      "public_hash": "d3d58819efc2f1285d080317245ae59881174b1092e054efc136da85794f0e44",
+      "revision": 5
+    },
+    {
+      "client": 0,
+      "phase": "social",
+      "request": "snapshot",
+      "status": 0,
+      "public_hash": "d3d58819efc2f1285d080317245ae59881174b1092e054efc136da85794f0e44",
+      "revision": 5
+    },
+    {
+      "client": 0,
+      "phase": "social",
+      "request": "act",
+      "status": 0,
+      "public_hash": "485ad53397719e4cc26a3d8698bbbc0005f92d77b9f09a04e80f0b822a971c98",
+      "revision": 6
+    },
+    {
+      "client": 1,
+      "phase": "social",
+      "request": "snapshot",
+      "status": 0,
+      "public_hash": "485ad53397719e4cc26a3d8698bbbc0005f92d77b9f09a04e80f0b822a971c98",
+      "revision": 6
+    },
+    {
+      "client": 0,
+      "phase": "social",
+      "request": "reconnect",
+      "status": null,
+      "public_hash": "485ad53397719e4cc26a3d8698bbbc0005f92d77b9f09a04e80f0b822a971c98",
+      "revision": 6
+    },
+    {
+      "client": 0,
+      "phase": "social",
+      "request": "snapshot",
+      "status": 0,
+      "public_hash": "485ad53397719e4cc26a3d8698bbbc0005f92d77b9f09a04e80f0b822a971c98",
+      "revision": 6
+    },
+    {
+      "client": 0,
+      "phase": "social",
+      "request": "act",
+      "status": 0,
+      "public_hash": "485ad53397719e4cc26a3d8698bbbc0005f92d77b9f09a04e80f0b822a971c98",
+      "revision": 6
+    },
+    {
+      "client": 0,
+      "phase": "social",
+      "request": "snapshot",
+      "status": 0,
+      "public_hash": "485ad53397719e4cc26a3d8698bbbc0005f92d77b9f09a04e80f0b822a971c98",
+      "revision": 6
+    },
+    {
+      "client": 0,
+      "phase": "social",
+      "request": "snapshot",
+      "status": 0,
+      "public_hash": "485ad53397719e4cc26a3d8698bbbc0005f92d77b9f09a04e80f0b822a971c98",
+      "revision": 6
+    },
+    {
+      "client": 0,
+      "phase": "social",
+      "request": "snapshot",
+      "status": 0,
+      "public_hash": "485ad53397719e4cc26a3d8698bbbc0005f92d77b9f09a04e80f0b822a971c98",
+      "revision": 6
+    },
+    {
+      "client": 0,
+      "phase": "social",
+      "request": "snapshot",
+      "status": 0,
+      "public_hash": "485ad53397719e4cc26a3d8698bbbc0005f92d77b9f09a04e80f0b822a971c98",
+      "revision": 6
+    },
+    {
+      "client": 0,
+      "phase": "social",
+      "request": "snapshot",
+      "status": 0,
+      "public_hash": "485ad53397719e4cc26a3d8698bbbc0005f92d77b9f09a04e80f0b822a971c98",
+      "revision": 6
+    },
+    {
+      "client": 0,
+      "phase": "social",
+      "request": "snapshot",
+      "status": 0,
+      "public_hash": "485ad53397719e4cc26a3d8698bbbc0005f92d77b9f09a04e80f0b822a971c98",
+      "revision": 6
+    },
+    {
+      "client": 0,
+      "phase": "social",
+      "request": "snapshot",
+      "status": 0,
+      "public_hash": "485ad53397719e4cc26a3d8698bbbc0005f92d77b9f09a04e80f0b822a971c98",
+      "revision": 6
+    },
+    {
+      "client": 0,
+      "phase": "social",
+      "request": "snapshot",
+      "status": 0,
+      "public_hash": "485ad53397719e4cc26a3d8698bbbc0005f92d77b9f09a04e80f0b822a971c98",
+      "revision": 6
+    },
+    {
+      "client": 0,
+      "phase": "social",
+      "request": "snapshot",
+      "status": 0,
+      "public_hash": "485ad53397719e4cc26a3d8698bbbc0005f92d77b9f09a04e80f0b822a971c98",
+      "revision": 6
+    },
+    {
+      "client": 0,
+      "phase": "social",
+      "request": "snapshot",
+      "status": 0,
+      "public_hash": "485ad53397719e4cc26a3d8698bbbc0005f92d77b9f09a04e80f0b822a971c98",
+      "revision": 6
+    },
+    {
+      "client": 0,
+      "phase": "social",
+      "request": "snapshot",
+      "status": 0,
+      "public_hash": "485ad53397719e4cc26a3d8698bbbc0005f92d77b9f09a04e80f0b822a971c98",
+      "revision": 6
+    },
+    {
+      "client": 0,
+      "phase": "social",
+      "request": "snapshot",
+      "status": 0,
+      "public_hash": "485ad53397719e4cc26a3d8698bbbc0005f92d77b9f09a04e80f0b822a971c98",
+      "revision": 6
+    },
+    {
+      "client": 0,
+      "phase": "social",
+      "request": "snapshot",
+      "status": 0,
+      "public_hash": "485ad53397719e4cc26a3d8698bbbc0005f92d77b9f09a04e80f0b822a971c98",
+      "revision": 6
+    },
+    {
+      "client": 0,
+      "phase": "social",
+      "request": "snapshot",
+      "status": 0,
+      "public_hash": "485ad53397719e4cc26a3d8698bbbc0005f92d77b9f09a04e80f0b822a971c98",
+      "revision": 6
+    },
+    {
+      "client": 0,
+      "phase": "social",
+      "request": "snapshot",
+      "status": 0,
+      "public_hash": "485ad53397719e4cc26a3d8698bbbc0005f92d77b9f09a04e80f0b822a971c98",
+      "revision": 6
+    },
+    {
+      "client": 0,
+      "phase": "social",
+      "request": "snapshot",
+      "status": 0,
+      "public_hash": "485ad53397719e4cc26a3d8698bbbc0005f92d77b9f09a04e80f0b822a971c98",
+      "revision": 6
+    },
+    {
+      "client": 0,
+      "phase": "social",
+      "request": "snapshot",
+      "status": 0,
+      "public_hash": "485ad53397719e4cc26a3d8698bbbc0005f92d77b9f09a04e80f0b822a971c98",
+      "revision": 6
+    },
+    {
+      "client": 0,
+      "phase": "social",
+      "request": "snapshot",
+      "status": 0,
+      "public_hash": "485ad53397719e4cc26a3d8698bbbc0005f92d77b9f09a04e80f0b822a971c98",
+      "revision": 6
+    },
+    {
+      "client": 0,
+      "phase": "social",
+      "request": "snapshot",
+      "status": 0,
+      "public_hash": "485ad53397719e4cc26a3d8698bbbc0005f92d77b9f09a04e80f0b822a971c98",
+      "revision": 6
+    },
+    {
+      "client": 0,
+      "phase": "social",
+      "request": "snapshot",
+      "status": 0,
+      "public_hash": "485ad53397719e4cc26a3d8698bbbc0005f92d77b9f09a04e80f0b822a971c98",
+      "revision": 6
+    },
+    {
+      "client": 0,
+      "phase": "social",
+      "request": "snapshot",
+      "status": 0,
+      "public_hash": "485ad53397719e4cc26a3d8698bbbc0005f92d77b9f09a04e80f0b822a971c98",
+      "revision": 6
+    },
+    {
+      "client": 0,
+      "phase": "social",
+      "request": "snapshot",
+      "status": 0,
+      "public_hash": "485ad53397719e4cc26a3d8698bbbc0005f92d77b9f09a04e80f0b822a971c98",
+      "revision": 6
+    },
+    {
+      "client": 0,
+      "phase": "social",
+      "request": "snapshot",
+      "status": 0,
+      "public_hash": "485ad53397719e4cc26a3d8698bbbc0005f92d77b9f09a04e80f0b822a971c98",
+      "revision": 6
+    },
+    {
+      "client": 0,
+      "phase": "social",
+      "request": "snapshot",
+      "status": 0,
+      "public_hash": "485ad53397719e4cc26a3d8698bbbc0005f92d77b9f09a04e80f0b822a971c98",
+      "revision": 6
+    },
+    {
+      "client": 0,
+      "phase": "social",
+      "request": "snapshot",
+      "status": 0,
+      "public_hash": "485ad53397719e4cc26a3d8698bbbc0005f92d77b9f09a04e80f0b822a971c98",
+      "revision": 6
+    },
+    {
+      "client": 0,
+      "phase": "social",
+      "request": "snapshot",
+      "status": 0,
+      "public_hash": "485ad53397719e4cc26a3d8698bbbc0005f92d77b9f09a04e80f0b822a971c98",
+      "revision": 6
+    },
+    {
+      "client": 0,
+      "phase": "social",
+      "request": "snapshot",
+      "status": 0,
+      "public_hash": "485ad53397719e4cc26a3d8698bbbc0005f92d77b9f09a04e80f0b822a971c98",
+      "revision": 6
+    },
+    {
+      "client": 0,
+      "phase": "social",
+      "request": "snapshot",
+      "status": 0,
+      "public_hash": "485ad53397719e4cc26a3d8698bbbc0005f92d77b9f09a04e80f0b822a971c98",
+      "revision": 6
+    },
+    {
+      "client": 0,
+      "phase": "social",
+      "request": "snapshot",
+      "status": 0,
+      "public_hash": "485ad53397719e4cc26a3d8698bbbc0005f92d77b9f09a04e80f0b822a971c98",
+      "revision": 6
+    },
+    {
+      "client": 0,
+      "phase": "social",
+      "request": "snapshot",
+      "status": 0,
+      "public_hash": "485ad53397719e4cc26a3d8698bbbc0005f92d77b9f09a04e80f0b822a971c98",
+      "revision": 6
+    },
+    {
+      "client": 0,
+      "phase": "social",
+      "request": "snapshot",
+      "status": 0,
+      "public_hash": "485ad53397719e4cc26a3d8698bbbc0005f92d77b9f09a04e80f0b822a971c98",
+      "revision": 6
+    },
+    {
+      "client": 0,
+      "phase": "social",
+      "request": "snapshot",
+      "status": 0,
+      "public_hash": "485ad53397719e4cc26a3d8698bbbc0005f92d77b9f09a04e80f0b822a971c98",
+      "revision": 6
+    },
+    {
+      "client": 0,
+      "phase": "social",
+      "request": "snapshot",
+      "status": 0,
+      "public_hash": "485ad53397719e4cc26a3d8698bbbc0005f92d77b9f09a04e80f0b822a971c98",
+      "revision": 6
+    },
+    {
+      "client": 0,
+      "phase": "social",
+      "request": "snapshot",
+      "status": 0,
+      "public_hash": "485ad53397719e4cc26a3d8698bbbc0005f92d77b9f09a04e80f0b822a971c98",
+      "revision": 6
+    },
+    {
+      "client": 0,
+      "phase": "social",
+      "request": "snapshot",
+      "status": 0,
+      "public_hash": "485ad53397719e4cc26a3d8698bbbc0005f92d77b9f09a04e80f0b822a971c98",
+      "revision": 6
+    },
+    {
+      "client": 0,
+      "phase": "social",
+      "request": "snapshot",
+      "status": 0,
+      "public_hash": "485ad53397719e4cc26a3d8698bbbc0005f92d77b9f09a04e80f0b822a971c98",
+      "revision": 6
+    },
+    {
+      "client": 0,
+      "phase": "social",
+      "request": "snapshot",
+      "status": 0,
+      "public_hash": "485ad53397719e4cc26a3d8698bbbc0005f92d77b9f09a04e80f0b822a971c98",
+      "revision": 6
+    },
+    {
+      "client": 0,
+      "phase": "social",
+      "request": "snapshot",
+      "status": 0,
+      "public_hash": "485ad53397719e4cc26a3d8698bbbc0005f92d77b9f09a04e80f0b822a971c98",
+      "revision": 6
+    },
+    {
+      "client": 0,
+      "phase": "social",
+      "request": "snapshot",
+      "status": 0,
+      "public_hash": "485ad53397719e4cc26a3d8698bbbc0005f92d77b9f09a04e80f0b822a971c98",
+      "revision": 6
+    },
+    {
+      "client": 0,
+      "phase": "social",
+      "request": "snapshot",
+      "status": 0,
+      "public_hash": "485ad53397719e4cc26a3d8698bbbc0005f92d77b9f09a04e80f0b822a971c98",
+      "revision": 6
+    },
+    {
+      "client": 0,
+      "phase": "social",
+      "request": "snapshot",
+      "status": 0,
+      "public_hash": "485ad53397719e4cc26a3d8698bbbc0005f92d77b9f09a04e80f0b822a971c98",
+      "revision": 6
+    },
+    {
+      "client": 0,
+      "phase": "social",
+      "request": "snapshot",
+      "status": 0,
+      "public_hash": "485ad53397719e4cc26a3d8698bbbc0005f92d77b9f09a04e80f0b822a971c98",
+      "revision": 6
+    },
+    {
+      "client": 0,
+      "phase": "social",
+      "request": "snapshot",
+      "status": 0,
+      "public_hash": "485ad53397719e4cc26a3d8698bbbc0005f92d77b9f09a04e80f0b822a971c98",
+      "revision": 6
+    },
+    {
+      "client": 0,
+      "phase": "social",
+      "request": "snapshot",
+      "status": 0,
+      "public_hash": "485ad53397719e4cc26a3d8698bbbc0005f92d77b9f09a04e80f0b822a971c98",
+      "revision": 6
+    },
+    {
+      "client": 0,
+      "phase": "social",
+      "request": "snapshot",
+      "status": 0,
+      "public_hash": "485ad53397719e4cc26a3d8698bbbc0005f92d77b9f09a04e80f0b822a971c98",
+      "revision": 6
+    },
+    {
+      "client": 0,
+      "phase": "social",
+      "request": "snapshot",
+      "status": 0,
+      "public_hash": "485ad53397719e4cc26a3d8698bbbc0005f92d77b9f09a04e80f0b822a971c98",
+      "revision": 6
+    },
+    {
+      "client": 0,
+      "phase": "social",
+      "request": "snapshot",
+      "status": 0,
+      "public_hash": "485ad53397719e4cc26a3d8698bbbc0005f92d77b9f09a04e80f0b822a971c98",
+      "revision": 6
+    },
+    {
+      "client": 0,
+      "phase": "social",
+      "request": "snapshot",
+      "status": 0,
+      "public_hash": "485ad53397719e4cc26a3d8698bbbc0005f92d77b9f09a04e80f0b822a971c98",
+      "revision": 6
+    },
+    {
+      "client": 0,
+      "phase": "social",
+      "request": "snapshot",
+      "status": 0,
+      "public_hash": "485ad53397719e4cc26a3d8698bbbc0005f92d77b9f09a04e80f0b822a971c98",
+      "revision": 6
+    },
+    {
+      "client": 0,
+      "phase": "social",
+      "request": "snapshot",
+      "status": 0,
+      "public_hash": "485ad53397719e4cc26a3d8698bbbc0005f92d77b9f09a04e80f0b822a971c98",
+      "revision": 6
+    },
+    {
+      "client": 0,
+      "phase": "social",
+      "request": "snapshot",
+      "status": 0,
+      "public_hash": "485ad53397719e4cc26a3d8698bbbc0005f92d77b9f09a04e80f0b822a971c98",
+      "revision": 6
+    },
+    {
+      "client": 0,
+      "phase": "social",
+      "request": "snapshot",
+      "status": 0,
+      "public_hash": "485ad53397719e4cc26a3d8698bbbc0005f92d77b9f09a04e80f0b822a971c98",
+      "revision": 6
+    },
+    {
+      "client": 0,
+      "phase": "social",
+      "request": "snapshot",
+      "status": 0,
+      "public_hash": "485ad53397719e4cc26a3d8698bbbc0005f92d77b9f09a04e80f0b822a971c98",
+      "revision": 6
+    },
+    {
+      "client": 0,
+      "phase": "social",
+      "request": "snapshot",
+      "status": 0,
+      "public_hash": "485ad53397719e4cc26a3d8698bbbc0005f92d77b9f09a04e80f0b822a971c98",
+      "revision": 6
+    },
+    {
+      "client": 0,
+      "phase": "social",
+      "request": "snapshot",
+      "status": 0,
+      "public_hash": "485ad53397719e4cc26a3d8698bbbc0005f92d77b9f09a04e80f0b822a971c98",
+      "revision": 6
+    },
+    {
+      "client": 0,
+      "phase": "social",
+      "request": "snapshot",
+      "status": 0,
+      "public_hash": "485ad53397719e4cc26a3d8698bbbc0005f92d77b9f09a04e80f0b822a971c98",
+      "revision": 6
+    },
+    {
+      "client": 0,
+      "phase": "social",
+      "request": "snapshot",
+      "status": 0,
+      "public_hash": "485ad53397719e4cc26a3d8698bbbc0005f92d77b9f09a04e80f0b822a971c98",
+      "revision": 6
+    },
+    {
+      "client": 0,
+      "phase": "social",
+      "request": "snapshot",
+      "status": 0,
+      "public_hash": "485ad53397719e4cc26a3d8698bbbc0005f92d77b9f09a04e80f0b822a971c98",
+      "revision": 6
+    },
+    {
+      "client": 0,
+      "phase": "social",
+      "request": "snapshot",
+      "status": 0,
+      "public_hash": "485ad53397719e4cc26a3d8698bbbc0005f92d77b9f09a04e80f0b822a971c98",
+      "revision": 6
+    },
+    {
+      "client": 0,
+      "phase": "social",
+      "request": "snapshot",
+      "status": 0,
+      "public_hash": "485ad53397719e4cc26a3d8698bbbc0005f92d77b9f09a04e80f0b822a971c98",
+      "revision": 6
+    },
+    {
+      "client": 0,
+      "phase": "social",
+      "request": "snapshot",
+      "status": 0,
+      "public_hash": "485ad53397719e4cc26a3d8698bbbc0005f92d77b9f09a04e80f0b822a971c98",
+      "revision": 6
+    },
+    {
+      "client": 0,
+      "phase": "social",
+      "request": "snapshot",
+      "status": 0,
+      "public_hash": "485ad53397719e4cc26a3d8698bbbc0005f92d77b9f09a04e80f0b822a971c98",
+      "revision": 6
+    },
+    {
+      "client": 0,
+      "phase": "social",
+      "request": "snapshot",
+      "status": 0,
+      "public_hash": "485ad53397719e4cc26a3d8698bbbc0005f92d77b9f09a04e80f0b822a971c98",
+      "revision": 6
+    },
+    {
+      "client": 0,
+      "phase": "social",
+      "request": "snapshot",
+      "status": 0,
+      "public_hash": "485ad53397719e4cc26a3d8698bbbc0005f92d77b9f09a04e80f0b822a971c98",
+      "revision": 6
+    },
+    {
+      "client": 0,
+      "phase": "social",
+      "request": "snapshot",
+      "status": 0,
+      "public_hash": "485ad53397719e4cc26a3d8698bbbc0005f92d77b9f09a04e80f0b822a971c98",
+      "revision": 6
+    },
+    {
+      "client": 0,
+      "phase": "social",
+      "request": "snapshot",
+      "status": 0,
+      "public_hash": "485ad53397719e4cc26a3d8698bbbc0005f92d77b9f09a04e80f0b822a971c98",
+      "revision": 6
+    },
+    {
+      "client": 0,
+      "phase": "social",
+      "request": "snapshot",
+      "status": 0,
+      "public_hash": "485ad53397719e4cc26a3d8698bbbc0005f92d77b9f09a04e80f0b822a971c98",
+      "revision": 6
+    },
+    {
+      "client": 0,
+      "phase": "social",
+      "request": "snapshot",
+      "status": 0,
+      "public_hash": "485ad53397719e4cc26a3d8698bbbc0005f92d77b9f09a04e80f0b822a971c98",
+      "revision": 6
+    },
+    {
+      "client": 0,
+      "phase": "social",
+      "request": "snapshot",
+      "status": 0,
+      "public_hash": "485ad53397719e4cc26a3d8698bbbc0005f92d77b9f09a04e80f0b822a971c98",
+      "revision": 6
+    },
+    {
+      "client": 0,
+      "phase": "social",
+      "request": "snapshot",
+      "status": 0,
+      "public_hash": "485ad53397719e4cc26a3d8698bbbc0005f92d77b9f09a04e80f0b822a971c98",
+      "revision": 6
+    },
+    {
+      "client": 0,
+      "phase": "social",
+      "request": "snapshot",
+      "status": 0,
+      "public_hash": "485ad53397719e4cc26a3d8698bbbc0005f92d77b9f09a04e80f0b822a971c98",
+      "revision": 6
+    },
+    {
+      "client": 0,
+      "phase": "social",
+      "request": "snapshot",
+      "status": 0,
+      "public_hash": "485ad53397719e4cc26a3d8698bbbc0005f92d77b9f09a04e80f0b822a971c98",
+      "revision": 6
+    },
+    {
+      "client": 0,
+      "phase": "social",
+      "request": "snapshot",
+      "status": 0,
+      "public_hash": "485ad53397719e4cc26a3d8698bbbc0005f92d77b9f09a04e80f0b822a971c98",
+      "revision": 6
+    },
+    {
+      "client": 0,
+      "phase": "social",
+      "request": "snapshot",
+      "status": 0,
+      "public_hash": "485ad53397719e4cc26a3d8698bbbc0005f92d77b9f09a04e80f0b822a971c98",
+      "revision": 6
+    },
+    {
+      "client": 0,
+      "phase": "social",
+      "request": "snapshot",
+      "status": 0,
+      "public_hash": "485ad53397719e4cc26a3d8698bbbc0005f92d77b9f09a04e80f0b822a971c98",
+      "revision": 6
+    },
+    {
+      "client": 0,
+      "phase": "social",
+      "request": "snapshot",
+      "status": 0,
+      "public_hash": "485ad53397719e4cc26a3d8698bbbc0005f92d77b9f09a04e80f0b822a971c98",
+      "revision": 6
+    },
+    {
+      "client": 0,
+      "phase": "social",
+      "request": "snapshot",
+      "status": 0,
+      "public_hash": "485ad53397719e4cc26a3d8698bbbc0005f92d77b9f09a04e80f0b822a971c98",
+      "revision": 6
+    },
+    {
+      "client": 0,
+      "phase": "social",
+      "request": "snapshot",
+      "status": 0,
+      "public_hash": "485ad53397719e4cc26a3d8698bbbc0005f92d77b9f09a04e80f0b822a971c98",
+      "revision": 6
+    },
+    {
+      "client": 0,
+      "phase": "social",
+      "request": "snapshot",
+      "status": 0,
+      "public_hash": "485ad53397719e4cc26a3d8698bbbc0005f92d77b9f09a04e80f0b822a971c98",
+      "revision": 6
+    },
+    {
+      "client": 0,
+      "phase": "social",
+      "request": "snapshot",
+      "status": 0,
+      "public_hash": "485ad53397719e4cc26a3d8698bbbc0005f92d77b9f09a04e80f0b822a971c98",
+      "revision": 6
+    },
+    {
+      "client": 0,
+      "phase": "social",
+      "request": "snapshot",
+      "status": 0,
+      "public_hash": "485ad53397719e4cc26a3d8698bbbc0005f92d77b9f09a04e80f0b822a971c98",
+      "revision": 6
+    },
+    {
+      "client": 0,
+      "phase": "social",
+      "request": "snapshot",
+      "status": 0,
+      "public_hash": "485ad53397719e4cc26a3d8698bbbc0005f92d77b9f09a04e80f0b822a971c98",
+      "revision": 6
+    },
+    {
+      "client": 0,
+      "phase": "social",
+      "request": "snapshot",
+      "status": 0,
+      "public_hash": "485ad53397719e4cc26a3d8698bbbc0005f92d77b9f09a04e80f0b822a971c98",
+      "revision": 6
+    },
+    {
+      "client": 0,
+      "phase": "social",
+      "request": "snapshot",
+      "status": 0,
+      "public_hash": "485ad53397719e4cc26a3d8698bbbc0005f92d77b9f09a04e80f0b822a971c98",
+      "revision": 6
+    },
+    {
+      "client": 0,
+      "phase": "social",
+      "request": "snapshot",
+      "status": 0,
+      "public_hash": "485ad53397719e4cc26a3d8698bbbc0005f92d77b9f09a04e80f0b822a971c98",
+      "revision": 6
+    },
+    {
+      "client": 0,
+      "phase": "social",
+      "request": "snapshot",
+      "status": 0,
+      "public_hash": "485ad53397719e4cc26a3d8698bbbc0005f92d77b9f09a04e80f0b822a971c98",
+      "revision": 6
+    },
+    {
+      "client": 0,
+      "phase": "social",
+      "request": "snapshot",
+      "status": 0,
+      "public_hash": "485ad53397719e4cc26a3d8698bbbc0005f92d77b9f09a04e80f0b822a971c98",
+      "revision": 6
+    },
+    {
+      "client": 0,
+      "phase": "social",
+      "request": "snapshot",
+      "status": 0,
+      "public_hash": "485ad53397719e4cc26a3d8698bbbc0005f92d77b9f09a04e80f0b822a971c98",
+      "revision": 6
+    },
+    {
+      "client": 0,
+      "phase": "social",
+      "request": "snapshot",
+      "status": 0,
+      "public_hash": "485ad53397719e4cc26a3d8698bbbc0005f92d77b9f09a04e80f0b822a971c98",
+      "revision": 6
+    },
+    {
+      "client": 0,
+      "phase": "social",
+      "request": "snapshot",
+      "status": 0,
+      "public_hash": "485ad53397719e4cc26a3d8698bbbc0005f92d77b9f09a04e80f0b822a971c98",
+      "revision": 6
+    },
+    {
+      "client": 0,
+      "phase": "social",
+      "request": "snapshot",
+      "status": 0,
+      "public_hash": "485ad53397719e4cc26a3d8698bbbc0005f92d77b9f09a04e80f0b822a971c98",
+      "revision": 6
+    },
+    {
+      "client": 0,
+      "phase": "social",
+      "request": "snapshot",
+      "status": 0,
+      "public_hash": "485ad53397719e4cc26a3d8698bbbc0005f92d77b9f09a04e80f0b822a971c98",
+      "revision": 6
+    },
+    {
+      "client": 0,
+      "phase": "social",
+      "request": "snapshot",
+      "status": 0,
+      "public_hash": "485ad53397719e4cc26a3d8698bbbc0005f92d77b9f09a04e80f0b822a971c98",
+      "revision": 6
+    },
+    {
+      "client": 0,
+      "phase": "social",
+      "request": "snapshot",
+      "status": 0,
+      "public_hash": "485ad53397719e4cc26a3d8698bbbc0005f92d77b9f09a04e80f0b822a971c98",
+      "revision": 6
+    },
+    {
+      "client": 0,
+      "phase": "social",
+      "request": "snapshot",
+      "status": 0,
+      "public_hash": "485ad53397719e4cc26a3d8698bbbc0005f92d77b9f09a04e80f0b822a971c98",
+      "revision": 6
+    },
+    {
+      "client": 0,
+      "phase": "social",
+      "request": "snapshot",
+      "status": 0,
+      "public_hash": "485ad53397719e4cc26a3d8698bbbc0005f92d77b9f09a04e80f0b822a971c98",
+      "revision": 6
+    },
+    {
+      "client": 0,
+      "phase": "social",
+      "request": "snapshot",
+      "status": 0,
+      "public_hash": "485ad53397719e4cc26a3d8698bbbc0005f92d77b9f09a04e80f0b822a971c98",
+      "revision": 6
+    },
+    {
+      "client": 0,
+      "phase": "social",
+      "request": "snapshot",
+      "status": 0,
+      "public_hash": "485ad53397719e4cc26a3d8698bbbc0005f92d77b9f09a04e80f0b822a971c98",
+      "revision": 6
+    },
+    {
+      "client": 0,
+      "phase": "social",
+      "request": "snapshot",
+      "status": 0,
+      "public_hash": "485ad53397719e4cc26a3d8698bbbc0005f92d77b9f09a04e80f0b822a971c98",
+      "revision": 6
+    },
+    {
+      "client": 0,
+      "phase": "social",
+      "request": "snapshot",
+      "status": 0,
+      "public_hash": "485ad53397719e4cc26a3d8698bbbc0005f92d77b9f09a04e80f0b822a971c98",
+      "revision": 6
+    },
+    {
+      "client": 0,
+      "phase": "social",
+      "request": "snapshot",
+      "status": 0,
+      "public_hash": "485ad53397719e4cc26a3d8698bbbc0005f92d77b9f09a04e80f0b822a971c98",
+      "revision": 6
+    },
+    {
+      "client": 0,
+      "phase": "social",
+      "request": "snapshot",
+      "status": 0,
+      "public_hash": "485ad53397719e4cc26a3d8698bbbc0005f92d77b9f09a04e80f0b822a971c98",
+      "revision": 6
+    },
+    {
+      "client": 0,
+      "phase": "social",
+      "request": "snapshot",
+      "status": 0,
+      "public_hash": "485ad53397719e4cc26a3d8698bbbc0005f92d77b9f09a04e80f0b822a971c98",
+      "revision": 6
+    },
+    {
+      "client": 0,
+      "phase": "social",
+      "request": "snapshot",
+      "status": 0,
+      "public_hash": "485ad53397719e4cc26a3d8698bbbc0005f92d77b9f09a04e80f0b822a971c98",
+      "revision": 6
+    },
+    {
+      "client": 0,
+      "phase": "social",
+      "request": "snapshot",
+      "status": 0,
+      "public_hash": "485ad53397719e4cc26a3d8698bbbc0005f92d77b9f09a04e80f0b822a971c98",
+      "revision": 6
+    },
+    {
+      "client": 0,
+      "phase": "social",
+      "request": "snapshot",
+      "status": 0,
+      "public_hash": "485ad53397719e4cc26a3d8698bbbc0005f92d77b9f09a04e80f0b822a971c98",
+      "revision": 6
+    },
+    {
+      "client": 0,
+      "phase": "social",
+      "request": "snapshot",
+      "status": 0,
+      "public_hash": "485ad53397719e4cc26a3d8698bbbc0005f92d77b9f09a04e80f0b822a971c98",
+      "revision": 6
+    },
+    {
+      "client": 0,
+      "phase": "social",
+      "request": "snapshot",
+      "status": 0,
+      "public_hash": "485ad53397719e4cc26a3d8698bbbc0005f92d77b9f09a04e80f0b822a971c98",
+      "revision": 6
+    },
+    {
+      "client": 0,
+      "phase": "social",
+      "request": "snapshot",
+      "status": 0,
+      "public_hash": "485ad53397719e4cc26a3d8698bbbc0005f92d77b9f09a04e80f0b822a971c98",
+      "revision": 6
+    },
+    {
+      "client": 0,
+      "phase": "social",
+      "request": "snapshot",
+      "status": 0,
+      "public_hash": "485ad53397719e4cc26a3d8698bbbc0005f92d77b9f09a04e80f0b822a971c98",
+      "revision": 6
+    },
+    {
+      "client": 0,
+      "phase": "social",
+      "request": "snapshot",
+      "status": 0,
+      "public_hash": "485ad53397719e4cc26a3d8698bbbc0005f92d77b9f09a04e80f0b822a971c98",
+      "revision": 6
+    },
+    {
+      "client": 0,
+      "phase": "social",
+      "request": "snapshot",
+      "status": 0,
+      "public_hash": "485ad53397719e4cc26a3d8698bbbc0005f92d77b9f09a04e80f0b822a971c98",
+      "revision": 6
+    },
+    {
+      "client": 0,
+      "phase": "social",
+      "request": "snapshot",
+      "status": 0,
+      "public_hash": "485ad53397719e4cc26a3d8698bbbc0005f92d77b9f09a04e80f0b822a971c98",
+      "revision": 6
+    },
+    {
+      "client": 0,
+      "phase": "social",
+      "request": "snapshot",
+      "status": 0,
+      "public_hash": "485ad53397719e4cc26a3d8698bbbc0005f92d77b9f09a04e80f0b822a971c98",
+      "revision": 6
+    },
+    {
+      "client": 0,
+      "phase": "social",
+      "request": "snapshot",
+      "status": 0,
+      "public_hash": "485ad53397719e4cc26a3d8698bbbc0005f92d77b9f09a04e80f0b822a971c98",
+      "revision": 6
+    },
+    {
+      "client": 0,
+      "phase": "social",
+      "request": "snapshot",
+      "status": 0,
+      "public_hash": "485ad53397719e4cc26a3d8698bbbc0005f92d77b9f09a04e80f0b822a971c98",
+      "revision": 6
+    },
+    {
+      "client": 0,
+      "phase": "social",
+      "request": "snapshot",
+      "status": 0,
+      "public_hash": "485ad53397719e4cc26a3d8698bbbc0005f92d77b9f09a04e80f0b822a971c98",
+      "revision": 6
+    },
+    {
+      "client": 0,
+      "phase": "social",
+      "request": "snapshot",
+      "status": 0,
+      "public_hash": "485ad53397719e4cc26a3d8698bbbc0005f92d77b9f09a04e80f0b822a971c98",
+      "revision": 6
+    },
+    {
+      "client": 0,
+      "phase": "social",
+      "request": "snapshot",
+      "status": 0,
+      "public_hash": "485ad53397719e4cc26a3d8698bbbc0005f92d77b9f09a04e80f0b822a971c98",
+      "revision": 6
+    },
+    {
+      "client": 0,
+      "phase": "social",
+      "request": "snapshot",
+      "status": 0,
+      "public_hash": "485ad53397719e4cc26a3d8698bbbc0005f92d77b9f09a04e80f0b822a971c98",
+      "revision": 6
+    },
+    {
+      "client": 0,
+      "phase": "social",
+      "request": "snapshot",
+      "status": 0,
+      "public_hash": "485ad53397719e4cc26a3d8698bbbc0005f92d77b9f09a04e80f0b822a971c98",
+      "revision": 6
+    },
+    {
+      "client": 0,
+      "phase": "social",
+      "request": "snapshot",
+      "status": 0,
+      "public_hash": "485ad53397719e4cc26a3d8698bbbc0005f92d77b9f09a04e80f0b822a971c98",
+      "revision": 6
+    },
+    {
+      "client": 0,
+      "phase": "social",
+      "request": "snapshot",
+      "status": 0,
+      "public_hash": "485ad53397719e4cc26a3d8698bbbc0005f92d77b9f09a04e80f0b822a971c98",
+      "revision": 6
+    },
+    {
+      "client": 0,
+      "phase": "social",
+      "request": "snapshot",
+      "status": 0,
+      "public_hash": "485ad53397719e4cc26a3d8698bbbc0005f92d77b9f09a04e80f0b822a971c98",
+      "revision": 6
+    },
+    {
+      "client": 0,
+      "phase": "social",
+      "request": "snapshot",
+      "status": 0,
+      "public_hash": "485ad53397719e4cc26a3d8698bbbc0005f92d77b9f09a04e80f0b822a971c98",
+      "revision": 6
+    },
+    {
+      "client": 0,
+      "phase": "social",
+      "request": "snapshot",
+      "status": 0,
+      "public_hash": "485ad53397719e4cc26a3d8698bbbc0005f92d77b9f09a04e80f0b822a971c98",
+      "revision": 6
+    },
+    {
+      "client": 0,
+      "phase": "social",
+      "request": "snapshot",
+      "status": 0,
+      "public_hash": "485ad53397719e4cc26a3d8698bbbc0005f92d77b9f09a04e80f0b822a971c98",
+      "revision": 6
+    },
+    {
+      "client": 0,
+      "phase": "social",
+      "request": "snapshot",
+      "status": 0,
+      "public_hash": "485ad53397719e4cc26a3d8698bbbc0005f92d77b9f09a04e80f0b822a971c98",
+      "revision": 6
+    },
+    {
+      "client": 0,
+      "phase": "social",
+      "request": "snapshot",
+      "status": 0,
+      "public_hash": "485ad53397719e4cc26a3d8698bbbc0005f92d77b9f09a04e80f0b822a971c98",
+      "revision": 6
+    },
+    {
+      "client": 0,
+      "phase": "social",
+      "request": "snapshot",
+      "status": 0,
+      "public_hash": "485ad53397719e4cc26a3d8698bbbc0005f92d77b9f09a04e80f0b822a971c98",
+      "revision": 6
+    },
+    {
+      "client": 0,
+      "phase": "social",
+      "request": "snapshot",
+      "status": 0,
+      "public_hash": "485ad53397719e4cc26a3d8698bbbc0005f92d77b9f09a04e80f0b822a971c98",
+      "revision": 6
+    },
+    {
+      "client": 0,
+      "phase": "social",
+      "request": "snapshot",
+      "status": 0,
+      "public_hash": "485ad53397719e4cc26a3d8698bbbc0005f92d77b9f09a04e80f0b822a971c98",
+      "revision": 6
+    },
+    {
+      "client": 0,
+      "phase": "social",
+      "request": "snapshot",
+      "status": 0,
+      "public_hash": "485ad53397719e4cc26a3d8698bbbc0005f92d77b9f09a04e80f0b822a971c98",
+      "revision": 6
+    },
+    {
+      "client": 0,
+      "phase": "social",
+      "request": "snapshot",
+      "status": 0,
+      "public_hash": "485ad53397719e4cc26a3d8698bbbc0005f92d77b9f09a04e80f0b822a971c98",
+      "revision": 6
+    },
+    {
+      "client": 0,
+      "phase": "social",
+      "request": "snapshot",
+      "status": 0,
+      "public_hash": "485ad53397719e4cc26a3d8698bbbc0005f92d77b9f09a04e80f0b822a971c98",
+      "revision": 6
+    },
+    {
+      "client": 0,
+      "phase": "social",
+      "request": "snapshot",
+      "status": 0,
+      "public_hash": "485ad53397719e4cc26a3d8698bbbc0005f92d77b9f09a04e80f0b822a971c98",
+      "revision": 6
+    },
+    {
+      "client": 0,
+      "phase": "social",
+      "request": "snapshot",
+      "status": 0,
+      "public_hash": "485ad53397719e4cc26a3d8698bbbc0005f92d77b9f09a04e80f0b822a971c98",
+      "revision": 6
+    },
+    {
+      "client": 0,
+      "phase": "social",
+      "request": "snapshot",
+      "status": 0,
+      "public_hash": "485ad53397719e4cc26a3d8698bbbc0005f92d77b9f09a04e80f0b822a971c98",
+      "revision": 6
+    },
+    {
+      "client": 0,
+      "phase": "social",
+      "request": "snapshot",
+      "status": 0,
+      "public_hash": "485ad53397719e4cc26a3d8698bbbc0005f92d77b9f09a04e80f0b822a971c98",
+      "revision": 6
+    },
+    {
+      "client": 0,
+      "phase": "social",
+      "request": "snapshot",
+      "status": 0,
+      "public_hash": "485ad53397719e4cc26a3d8698bbbc0005f92d77b9f09a04e80f0b822a971c98",
+      "revision": 6
+    },
+    {
+      "client": 0,
+      "phase": "social",
+      "request": "snapshot",
+      "status": 0,
+      "public_hash": "485ad53397719e4cc26a3d8698bbbc0005f92d77b9f09a04e80f0b822a971c98",
+      "revision": 6
+    },
+    {
+      "client": 0,
+      "phase": "social",
+      "request": "snapshot",
+      "status": 0,
+      "public_hash": "485ad53397719e4cc26a3d8698bbbc0005f92d77b9f09a04e80f0b822a971c98",
+      "revision": 6
+    },
+    {
+      "client": 0,
+      "phase": "social",
+      "request": "snapshot",
+      "status": 0,
+      "public_hash": "485ad53397719e4cc26a3d8698bbbc0005f92d77b9f09a04e80f0b822a971c98",
+      "revision": 6
+    },
+    {
+      "client": 0,
+      "phase": "social",
+      "request": "snapshot",
+      "status": 0,
+      "public_hash": "485ad53397719e4cc26a3d8698bbbc0005f92d77b9f09a04e80f0b822a971c98",
+      "revision": 6
+    },
+    {
+      "client": 0,
+      "phase": "social",
+      "request": "snapshot",
+      "status": 0,
+      "public_hash": "485ad53397719e4cc26a3d8698bbbc0005f92d77b9f09a04e80f0b822a971c98",
+      "revision": 6
+    },
+    {
+      "client": 0,
+      "phase": "social",
+      "request": "snapshot",
+      "status": 0,
+      "public_hash": "485ad53397719e4cc26a3d8698bbbc0005f92d77b9f09a04e80f0b822a971c98",
+      "revision": 6
+    },
+    {
+      "client": 0,
+      "phase": "social",
+      "request": "snapshot",
+      "status": 0,
+      "public_hash": "485ad53397719e4cc26a3d8698bbbc0005f92d77b9f09a04e80f0b822a971c98",
+      "revision": 6
+    },
+    {
+      "client": 0,
+      "phase": "social",
+      "request": "snapshot",
+      "status": 0,
+      "public_hash": "485ad53397719e4cc26a3d8698bbbc0005f92d77b9f09a04e80f0b822a971c98",
+      "revision": 6
+    },
+    {
+      "client": 0,
+      "phase": "social",
+      "request": "snapshot",
+      "status": 0,
+      "public_hash": "485ad53397719e4cc26a3d8698bbbc0005f92d77b9f09a04e80f0b822a971c98",
+      "revision": 6
+    },
+    {
+      "client": 0,
+      "phase": "social",
+      "request": "snapshot",
+      "status": 0,
+      "public_hash": "485ad53397719e4cc26a3d8698bbbc0005f92d77b9f09a04e80f0b822a971c98",
+      "revision": 6
+    },
+    {
+      "client": 0,
+      "phase": "social",
+      "request": "snapshot",
+      "status": 0,
+      "public_hash": "485ad53397719e4cc26a3d8698bbbc0005f92d77b9f09a04e80f0b822a971c98",
+      "revision": 6
+    },
+    {
+      "client": 0,
+      "phase": "social",
+      "request": "snapshot",
+      "status": 0,
+      "public_hash": "485ad53397719e4cc26a3d8698bbbc0005f92d77b9f09a04e80f0b822a971c98",
+      "revision": 6
+    },
+    {
+      "client": 0,
+      "phase": "social",
+      "request": "snapshot",
+      "status": 0,
+      "public_hash": "485ad53397719e4cc26a3d8698bbbc0005f92d77b9f09a04e80f0b822a971c98",
+      "revision": 6
+    },
+    {
+      "client": 0,
+      "phase": "social",
+      "request": "snapshot",
+      "status": 0,
+      "public_hash": "485ad53397719e4cc26a3d8698bbbc0005f92d77b9f09a04e80f0b822a971c98",
+      "revision": 6
+    },
+    {
+      "client": 0,
+      "phase": "social",
+      "request": "snapshot",
+      "status": 0,
+      "public_hash": "485ad53397719e4cc26a3d8698bbbc0005f92d77b9f09a04e80f0b822a971c98",
+      "revision": 6
+    },
+    {
+      "client": 0,
+      "phase": "social",
+      "request": "snapshot",
+      "status": 0,
+      "public_hash": "485ad53397719e4cc26a3d8698bbbc0005f92d77b9f09a04e80f0b822a971c98",
+      "revision": 6
+    },
+    {
+      "client": 0,
+      "phase": "social",
+      "request": "snapshot",
+      "status": 0,
+      "public_hash": "485ad53397719e4cc26a3d8698bbbc0005f92d77b9f09a04e80f0b822a971c98",
+      "revision": 6
+    },
+    {
+      "client": 0,
+      "phase": "social",
+      "request": "snapshot",
+      "status": 0,
+      "public_hash": "485ad53397719e4cc26a3d8698bbbc0005f92d77b9f09a04e80f0b822a971c98",
+      "revision": 6
+    },
+    {
+      "client": 0,
+      "phase": "social",
+      "request": "snapshot",
+      "status": 0,
+      "public_hash": "485ad53397719e4cc26a3d8698bbbc0005f92d77b9f09a04e80f0b822a971c98",
+      "revision": 6
+    },
+    {
+      "client": 0,
+      "phase": "social",
+      "request": "snapshot",
+      "status": 0,
+      "public_hash": "485ad53397719e4cc26a3d8698bbbc0005f92d77b9f09a04e80f0b822a971c98",
+      "revision": 6
+    },
+    {
+      "client": 0,
+      "phase": "social",
+      "request": "snapshot",
+      "status": 0,
+      "public_hash": "485ad53397719e4cc26a3d8698bbbc0005f92d77b9f09a04e80f0b822a971c98",
+      "revision": 6
+    },
+    {
+      "client": 0,
+      "phase": "social",
+      "request": "snapshot",
+      "status": 0,
+      "public_hash": "485ad53397719e4cc26a3d8698bbbc0005f92d77b9f09a04e80f0b822a971c98",
+      "revision": 6
+    },
+    {
+      "client": 0,
+      "phase": "social",
+      "request": "snapshot",
+      "status": 0,
+      "public_hash": "485ad53397719e4cc26a3d8698bbbc0005f92d77b9f09a04e80f0b822a971c98",
+      "revision": 6
+    },
+    {
+      "client": 0,
+      "phase": "social",
+      "request": "snapshot",
+      "status": 0,
+      "public_hash": "485ad53397719e4cc26a3d8698bbbc0005f92d77b9f09a04e80f0b822a971c98",
+      "revision": 6
+    },
+    {
+      "client": 0,
+      "phase": "social",
+      "request": "snapshot",
+      "status": 0,
+      "public_hash": "485ad53397719e4cc26a3d8698bbbc0005f92d77b9f09a04e80f0b822a971c98",
+      "revision": 6
+    },
+    {
+      "client": 0,
+      "phase": "social",
+      "request": "snapshot",
+      "status": 0,
+      "public_hash": "485ad53397719e4cc26a3d8698bbbc0005f92d77b9f09a04e80f0b822a971c98",
+      "revision": 6
+    },
+    {
+      "client": 0,
+      "phase": "social",
+      "request": "snapshot",
+      "status": 0,
+      "public_hash": "485ad53397719e4cc26a3d8698bbbc0005f92d77b9f09a04e80f0b822a971c98",
+      "revision": 6
+    },
+    {
+      "client": 0,
+      "phase": "social",
+      "request": "snapshot",
+      "status": 0,
+      "public_hash": "485ad53397719e4cc26a3d8698bbbc0005f92d77b9f09a04e80f0b822a971c98",
+      "revision": 6
+    },
+    {
+      "client": 0,
+      "phase": "social",
+      "request": "snapshot",
+      "status": 0,
+      "public_hash": "485ad53397719e4cc26a3d8698bbbc0005f92d77b9f09a04e80f0b822a971c98",
+      "revision": 6
+    },
+    {
+      "client": 0,
+      "phase": "social",
+      "request": "snapshot",
+      "status": 0,
+      "public_hash": "485ad53397719e4cc26a3d8698bbbc0005f92d77b9f09a04e80f0b822a971c98",
+      "revision": 6
+    },
+    {
+      "client": 0,
+      "phase": "social",
+      "request": "snapshot",
+      "status": 0,
+      "public_hash": "485ad53397719e4cc26a3d8698bbbc0005f92d77b9f09a04e80f0b822a971c98",
+      "revision": 6
+    },
+    {
+      "client": 0,
+      "phase": "social",
+      "request": "snapshot",
+      "status": 0,
+      "public_hash": "485ad53397719e4cc26a3d8698bbbc0005f92d77b9f09a04e80f0b822a971c98",
+      "revision": 6
+    },
+    {
+      "client": 0,
+      "phase": "social",
+      "request": "snapshot",
+      "status": 0,
+      "public_hash": "485ad53397719e4cc26a3d8698bbbc0005f92d77b9f09a04e80f0b822a971c98",
+      "revision": 6
+    },
+    {
+      "client": 0,
+      "phase": "social",
+      "request": "snapshot",
+      "status": 0,
+      "public_hash": "485ad53397719e4cc26a3d8698bbbc0005f92d77b9f09a04e80f0b822a971c98",
+      "revision": 6
+    },
+    {
+      "client": 0,
+      "phase": "social",
+      "request": "snapshot",
+      "status": 0,
+      "public_hash": "485ad53397719e4cc26a3d8698bbbc0005f92d77b9f09a04e80f0b822a971c98",
+      "revision": 6
+    },
+    {
+      "client": 0,
+      "phase": "social",
+      "request": "snapshot",
+      "status": 0,
+      "public_hash": "485ad53397719e4cc26a3d8698bbbc0005f92d77b9f09a04e80f0b822a971c98",
+      "revision": 6
+    },
+    {
+      "client": 0,
+      "phase": "social",
+      "request": "snapshot",
+      "status": 0,
+      "public_hash": "485ad53397719e4cc26a3d8698bbbc0005f92d77b9f09a04e80f0b822a971c98",
+      "revision": 6
+    },
+    {
+      "client": 0,
+      "phase": "social",
+      "request": "snapshot",
+      "status": 0,
+      "public_hash": "485ad53397719e4cc26a3d8698bbbc0005f92d77b9f09a04e80f0b822a971c98",
+      "revision": 6
+    },
+    {
+      "client": 0,
+      "phase": "social",
+      "request": "snapshot",
+      "status": 0,
+      "public_hash": "485ad53397719e4cc26a3d8698bbbc0005f92d77b9f09a04e80f0b822a971c98",
+      "revision": 6
+    },
+    {
+      "client": 0,
+      "phase": "social",
+      "request": "snapshot",
+      "status": 0,
+      "public_hash": "485ad53397719e4cc26a3d8698bbbc0005f92d77b9f09a04e80f0b822a971c98",
+      "revision": 6
+    },
+    {
+      "client": 0,
+      "phase": "social",
+      "request": "snapshot",
+      "status": 0,
+      "public_hash": "485ad53397719e4cc26a3d8698bbbc0005f92d77b9f09a04e80f0b822a971c98",
+      "revision": 6
+    },
+    {
+      "client": 0,
+      "phase": "social",
+      "request": "snapshot",
+      "status": 0,
+      "public_hash": "485ad53397719e4cc26a3d8698bbbc0005f92d77b9f09a04e80f0b822a971c98",
+      "revision": 6
+    },
+    {
+      "client": 0,
+      "phase": "social",
+      "request": "snapshot",
+      "status": 0,
+      "public_hash": "485ad53397719e4cc26a3d8698bbbc0005f92d77b9f09a04e80f0b822a971c98",
+      "revision": 6
+    },
+    {
+      "client": 0,
+      "phase": "social",
+      "request": "snapshot",
+      "status": 0,
+      "public_hash": "485ad53397719e4cc26a3d8698bbbc0005f92d77b9f09a04e80f0b822a971c98",
+      "revision": 6
+    },
+    {
+      "client": 0,
+      "phase": "social",
+      "request": "snapshot",
+      "status": 0,
+      "public_hash": "485ad53397719e4cc26a3d8698bbbc0005f92d77b9f09a04e80f0b822a971c98",
+      "revision": 6
+    },
+    {
+      "client": 0,
+      "phase": "social",
+      "request": "snapshot",
+      "status": 0,
+      "public_hash": "485ad53397719e4cc26a3d8698bbbc0005f92d77b9f09a04e80f0b822a971c98",
+      "revision": 6
+    },
+    {
+      "client": 0,
+      "phase": "social",
+      "request": "snapshot",
+      "status": 0,
+      "public_hash": "485ad53397719e4cc26a3d8698bbbc0005f92d77b9f09a04e80f0b822a971c98",
+      "revision": 6
+    },
+    {
+      "client": 0,
+      "phase": "social",
+      "request": "snapshot",
+      "status": 0,
+      "public_hash": "485ad53397719e4cc26a3d8698bbbc0005f92d77b9f09a04e80f0b822a971c98",
+      "revision": 6
+    },
+    {
+      "client": 0,
+      "phase": "social",
+      "request": "snapshot",
+      "status": 0,
+      "public_hash": "485ad53397719e4cc26a3d8698bbbc0005f92d77b9f09a04e80f0b822a971c98",
+      "revision": 6
+    },
+    {
+      "client": 0,
+      "phase": "social",
+      "request": "snapshot",
+      "status": 0,
+      "public_hash": "485ad53397719e4cc26a3d8698bbbc0005f92d77b9f09a04e80f0b822a971c98",
+      "revision": 6
+    },
+    {
+      "client": 0,
+      "phase": "social",
+      "request": "snapshot",
+      "status": 0,
+      "public_hash": "485ad53397719e4cc26a3d8698bbbc0005f92d77b9f09a04e80f0b822a971c98",
+      "revision": 6
+    },
+    {
+      "client": 0,
+      "phase": "social",
+      "request": "snapshot",
+      "status": 0,
+      "public_hash": "485ad53397719e4cc26a3d8698bbbc0005f92d77b9f09a04e80f0b822a971c98",
+      "revision": 6
+    },
+    {
+      "client": 0,
+      "phase": "social",
+      "request": "snapshot",
+      "status": 0,
+      "public_hash": "485ad53397719e4cc26a3d8698bbbc0005f92d77b9f09a04e80f0b822a971c98",
+      "revision": 6
+    },
+    {
+      "client": 0,
+      "phase": "social",
+      "request": "snapshot",
+      "status": 0,
+      "public_hash": "485ad53397719e4cc26a3d8698bbbc0005f92d77b9f09a04e80f0b822a971c98",
+      "revision": 6
+    },
+    {
+      "client": 0,
+      "phase": "social",
+      "request": "snapshot",
+      "status": 0,
+      "public_hash": "485ad53397719e4cc26a3d8698bbbc0005f92d77b9f09a04e80f0b822a971c98",
+      "revision": 6
+    },
+    {
+      "client": 0,
+      "phase": "social",
+      "request": "snapshot",
+      "status": 0,
+      "public_hash": "485ad53397719e4cc26a3d8698bbbc0005f92d77b9f09a04e80f0b822a971c98",
+      "revision": 6
+    },
+    {
+      "client": 0,
+      "phase": "social",
+      "request": "snapshot",
+      "status": 0,
+      "public_hash": "485ad53397719e4cc26a3d8698bbbc0005f92d77b9f09a04e80f0b822a971c98",
+      "revision": 6
+    },
+    {
+      "client": 0,
+      "phase": "social",
+      "request": "snapshot",
+      "status": 0,
+      "public_hash": "485ad53397719e4cc26a3d8698bbbc0005f92d77b9f09a04e80f0b822a971c98",
+      "revision": 6
+    },
+    {
+      "client": 0,
+      "phase": "social",
+      "request": "snapshot",
+      "status": 0,
+      "public_hash": "485ad53397719e4cc26a3d8698bbbc0005f92d77b9f09a04e80f0b822a971c98",
+      "revision": 6
+    },
+    {
+      "client": 0,
+      "phase": "social",
+      "request": "snapshot",
+      "status": 0,
+      "public_hash": "485ad53397719e4cc26a3d8698bbbc0005f92d77b9f09a04e80f0b822a971c98",
+      "revision": 6
+    },
+    {
+      "client": 0,
+      "phase": "social",
+      "request": "snapshot",
+      "status": 0,
+      "public_hash": "485ad53397719e4cc26a3d8698bbbc0005f92d77b9f09a04e80f0b822a971c98",
+      "revision": 6
+    },
+    {
+      "client": 0,
+      "phase": "social",
+      "request": "snapshot",
+      "status": 0,
+      "public_hash": "485ad53397719e4cc26a3d8698bbbc0005f92d77b9f09a04e80f0b822a971c98",
+      "revision": 6
+    },
+    {
+      "client": 0,
+      "phase": "social",
+      "request": "snapshot",
+      "status": 0,
+      "public_hash": "485ad53397719e4cc26a3d8698bbbc0005f92d77b9f09a04e80f0b822a971c98",
+      "revision": 6
+    },
+    {
+      "client": 0,
+      "phase": "social",
+      "request": "snapshot",
+      "status": 0,
+      "public_hash": "485ad53397719e4cc26a3d8698bbbc0005f92d77b9f09a04e80f0b822a971c98",
+      "revision": 6
+    },
+    {
+      "client": 0,
+      "phase": "social",
+      "request": "snapshot",
+      "status": 0,
+      "public_hash": "485ad53397719e4cc26a3d8698bbbc0005f92d77b9f09a04e80f0b822a971c98",
+      "revision": 6
+    },
+    {
+      "client": 0,
+      "phase": "social",
+      "request": "snapshot",
+      "status": 0,
+      "public_hash": "485ad53397719e4cc26a3d8698bbbc0005f92d77b9f09a04e80f0b822a971c98",
+      "revision": 6
+    },
+    {
+      "client": 0,
+      "phase": "social",
+      "request": "snapshot",
+      "status": 0,
+      "public_hash": "485ad53397719e4cc26a3d8698bbbc0005f92d77b9f09a04e80f0b822a971c98",
+      "revision": 6
+    },
+    {
+      "client": 0,
+      "phase": "social",
+      "request": "snapshot",
+      "status": 0,
+      "public_hash": "485ad53397719e4cc26a3d8698bbbc0005f92d77b9f09a04e80f0b822a971c98",
+      "revision": 6
+    },
+    {
+      "client": 0,
+      "phase": "social",
+      "request": "snapshot",
+      "status": 0,
+      "public_hash": "485ad53397719e4cc26a3d8698bbbc0005f92d77b9f09a04e80f0b822a971c98",
+      "revision": 6
+    },
+    {
+      "client": 0,
+      "phase": "social",
+      "request": "snapshot",
+      "status": 0,
+      "public_hash": "485ad53397719e4cc26a3d8698bbbc0005f92d77b9f09a04e80f0b822a971c98",
+      "revision": 6
+    },
+    {
+      "client": 0,
+      "phase": "social",
+      "request": "snapshot",
+      "status": 0,
+      "public_hash": "485ad53397719e4cc26a3d8698bbbc0005f92d77b9f09a04e80f0b822a971c98",
+      "revision": 6
+    },
+    {
+      "client": 0,
+      "phase": "social",
+      "request": "snapshot",
+      "status": 0,
+      "public_hash": "485ad53397719e4cc26a3d8698bbbc0005f92d77b9f09a04e80f0b822a971c98",
+      "revision": 6
+    },
+    {
+      "client": 0,
+      "phase": "social",
+      "request": "snapshot",
+      "status": 0,
+      "public_hash": "485ad53397719e4cc26a3d8698bbbc0005f92d77b9f09a04e80f0b822a971c98",
+      "revision": 6
+    },
+    {
+      "client": 0,
+      "phase": "social",
+      "request": "snapshot",
+      "status": 0,
+      "public_hash": "485ad53397719e4cc26a3d8698bbbc0005f92d77b9f09a04e80f0b822a971c98",
+      "revision": 6
+    },
+    {
+      "client": 0,
+      "phase": "social",
+      "request": "snapshot",
+      "status": 0,
+      "public_hash": "485ad53397719e4cc26a3d8698bbbc0005f92d77b9f09a04e80f0b822a971c98",
+      "revision": 6
+    },
+    {
+      "client": 0,
+      "phase": "social",
+      "request": "snapshot",
+      "status": 0,
+      "public_hash": "485ad53397719e4cc26a3d8698bbbc0005f92d77b9f09a04e80f0b822a971c98",
+      "revision": 6
+    },
+    {
+      "client": 0,
+      "phase": "social",
+      "request": "snapshot",
+      "status": 0,
+      "public_hash": "485ad53397719e4cc26a3d8698bbbc0005f92d77b9f09a04e80f0b822a971c98",
+      "revision": 6
+    },
+    {
+      "client": 0,
+      "phase": "social",
+      "request": "snapshot",
+      "status": 0,
+      "public_hash": "485ad53397719e4cc26a3d8698bbbc0005f92d77b9f09a04e80f0b822a971c98",
+      "revision": 6
+    },
+    {
+      "client": 0,
+      "phase": "social",
+      "request": "snapshot",
+      "status": 0,
+      "public_hash": "485ad53397719e4cc26a3d8698bbbc0005f92d77b9f09a04e80f0b822a971c98",
+      "revision": 6
+    },
+    {
+      "client": 0,
+      "phase": "social",
+      "request": "snapshot",
+      "status": 0,
+      "public_hash": "485ad53397719e4cc26a3d8698bbbc0005f92d77b9f09a04e80f0b822a971c98",
+      "revision": 6
+    },
+    {
+      "client": 0,
+      "phase": "social",
+      "request": "snapshot",
+      "status": 0,
+      "public_hash": "485ad53397719e4cc26a3d8698bbbc0005f92d77b9f09a04e80f0b822a971c98",
+      "revision": 6
+    },
+    {
+      "client": 0,
+      "phase": "social",
+      "request": "snapshot",
+      "status": 0,
+      "public_hash": "485ad53397719e4cc26a3d8698bbbc0005f92d77b9f09a04e80f0b822a971c98",
+      "revision": 6
+    },
+    {
+      "client": 0,
+      "phase": "social",
+      "request": "snapshot",
+      "status": 0,
+      "public_hash": "485ad53397719e4cc26a3d8698bbbc0005f92d77b9f09a04e80f0b822a971c98",
+      "revision": 6
+    },
+    {
+      "client": 0,
+      "phase": "social",
+      "request": "snapshot",
+      "status": 0,
+      "public_hash": "485ad53397719e4cc26a3d8698bbbc0005f92d77b9f09a04e80f0b822a971c98",
+      "revision": 6
+    },
+    {
+      "client": 0,
+      "phase": "social",
+      "request": "snapshot",
+      "status": 0,
+      "public_hash": "485ad53397719e4cc26a3d8698bbbc0005f92d77b9f09a04e80f0b822a971c98",
+      "revision": 6
+    },
+    {
+      "client": 0,
+      "phase": "social",
+      "request": "snapshot",
+      "status": 0,
+      "public_hash": "485ad53397719e4cc26a3d8698bbbc0005f92d77b9f09a04e80f0b822a971c98",
+      "revision": 6
+    },
+    {
+      "client": 0,
+      "phase": "social",
+      "request": "snapshot",
+      "status": 0,
+      "public_hash": "485ad53397719e4cc26a3d8698bbbc0005f92d77b9f09a04e80f0b822a971c98",
+      "revision": 6
+    },
+    {
+      "client": 0,
+      "phase": "social",
+      "request": "snapshot",
+      "status": 0,
+      "public_hash": "485ad53397719e4cc26a3d8698bbbc0005f92d77b9f09a04e80f0b822a971c98",
+      "revision": 6
+    },
+    {
+      "client": 0,
+      "phase": "social",
+      "request": "snapshot",
+      "status": 0,
+      "public_hash": "485ad53397719e4cc26a3d8698bbbc0005f92d77b9f09a04e80f0b822a971c98",
+      "revision": 6
+    },
+    {
+      "client": 0,
+      "phase": "social",
+      "request": "snapshot",
+      "status": 0,
+      "public_hash": "485ad53397719e4cc26a3d8698bbbc0005f92d77b9f09a04e80f0b822a971c98",
+      "revision": 6
+    },
+    {
+      "client": 0,
+      "phase": "social",
+      "request": "snapshot",
+      "status": 0,
+      "public_hash": "485ad53397719e4cc26a3d8698bbbc0005f92d77b9f09a04e80f0b822a971c98",
+      "revision": 6
+    },
+    {
+      "client": 0,
+      "phase": "social",
+      "request": "act",
+      "status": 0,
+      "public_hash": "5b6cca0f105aedc97d7e7d4db0dec4e8e5e281f6d81033d5e4a110f01dd196b6",
+      "revision": 7
+    },
+    {
+      "client": 0,
+      "phase": "social",
+      "request": "snapshot",
+      "status": 0,
+      "public_hash": "5b6cca0f105aedc97d7e7d4db0dec4e8e5e281f6d81033d5e4a110f01dd196b6",
+      "revision": 7
+    },
+    {
+      "client": 1,
+      "phase": "social",
+      "request": "snapshot",
+      "status": 0,
+      "public_hash": "5b6cca0f105aedc97d7e7d4db0dec4e8e5e281f6d81033d5e4a110f01dd196b6",
+      "revision": 7
+    },
+    {
+      "client": 0,
+      "phase": "social",
+      "request": "snapshot",
+      "status": 0,
+      "public_hash": "5b6cca0f105aedc97d7e7d4db0dec4e8e5e281f6d81033d5e4a110f01dd196b6",
+      "revision": 7
+    },
+    {
+      "client": 1,
+      "phase": "social",
+      "request": "snapshot",
+      "status": 0,
+      "public_hash": "5b6cca0f105aedc97d7e7d4db0dec4e8e5e281f6d81033d5e4a110f01dd196b6",
+      "revision": 7
+    },
+    {
+      "client": 0,
+      "phase": "social",
+      "request": "snapshot",
+      "status": 0,
+      "public_hash": "b5170f7d8f2d7364438ebeef0b08d53e49d8b11c73f81d6b706b017a082adf1d",
+      "revision": 10
+    },
+    {
+      "client": 1,
+      "phase": "social",
+      "request": "snapshot",
+      "status": 0,
+      "public_hash": "b5170f7d8f2d7364438ebeef0b08d53e49d8b11c73f81d6b706b017a082adf1d",
+      "revision": 10
     }
   ],
   "limitations": [
@@ -16644,6 +18675,6 @@
     "No Internet deployment: plaintext transport and movement rate limits pending",
     "Offline merge verified by C suite; network branch upload is not implemented",
     "Clients are protocol harnesses, not integrated game clients",
-    "Fixture server has no clock: recharge-driven reopening is proven by the C and Python suites"
+    "Fixture server has no clock: the Gate 6 dispatch delay is advanced by the test between server generations through the same authority touch the C and Python suites drive"
   ]
 }

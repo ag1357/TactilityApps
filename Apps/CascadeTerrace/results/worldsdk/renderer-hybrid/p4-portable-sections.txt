@@ -1,18 +1,3 @@
-build-p4-native/cascadeterrace.app.elf  :
-section          size     addr
-.hash             612      212
-.dynsym          1344      824
-.dynstr          1214     2168
-.rela.dyn        5304     3384
-.rela.plt         972     8688
-.plt             1328     9664
-.text           59144    10992
-.rodata        112944    70136
-.data.rel.ro     3176   187176
-.got               16   190496
-.got.plt          332   190512
-.data             644   190844
-.bss           135232   191488
-Total          322262
-
-
+   text	   data	    bss	    dec	    hex	filename
+ 184154	   4168	 135752	 324074	  4f1ea	build-p4-native/cascadeterrace.app.elf
+ 185654	   4196	 135776	 325626	  4f7fa	/tmp/p4-ppa.elf

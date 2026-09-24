@@ -19,7 +19,20 @@ typedef enum { WS_EXTRACT = 1,
                   strictly sequential, and never merge offline. */
                WS_EXCAVATE,
                WS_CONVERT,
-               WS_SPEND } WsAction;
+               WS_SPEND,
+               /* Gate 6: information and exchange vocabulary. SHOW presents
+                  an inventory item to an NPC (private, evidence-forming).
+                  TELL asserts a claim about a subject to an NPC (claims are
+                  recorded as claims, never verified as truth). REPORT files
+                  the actor's retained evidence about a subject with a
+                  clerk NPC for delayed institutional delivery. EXCHANGE
+                  notarizes an exchange with a counterparty (the goods
+                  accounting stays with the callers this gate). All four are
+                  committed canonical events with retry receipts. */
+               WS_SHOW,
+               WS_TELL,
+               WS_REPORT,
+               WS_EXCHANGE } WsAction;
 typedef enum { WS_BOUNTY,
                WS_TRADE,
                WS_PLAYER_NOTE,
@@ -73,6 +86,66 @@ typedef struct {
     WsId id;
     uint16_t kind, aux, reserved, pad;
 } WsCreatureEx;
+/* Directed evidence records (Gate 6): the retained causal capsules behind
+   social projections. Handles are positional: an NPC observer is its entity
+   index + 1 (1..WS_CAP); a player handle is 0x10000 + player index. Teller 0
+   means direct observation; any other teller marks reported (hearsay)
+   evidence whose confidence was degraded at formation and can never rise
+   through copying. `root` is the committed revision the record traces to;
+   kind is the epistemic class; valence is the authority-assigned contextual
+   valence of the referenced act; salience >= WS_EV_PINNED keeps the record
+   outside time decay. Uninformed observers simply have no records. */
+#define WS_EV_CAP 64
+#define WS_EV_PLAYER 0x10000u
+#define WS_EV_PINNED 500
+enum { WS_EV_ACT = 1, WS_EV_CLAIM, WS_EV_CONTRADICT, WS_EV_RESTITUTION,
+       WS_EV_PROMISE, WS_EV_KEPT, WS_EV_BREACH, WS_EV_REPORT };
+/* Typed context tags alter interpretation without rewriting history:
+   consensual or defensive force counts differently, a shown item is a
+   presentation, a promise context marks commitment speech. */
+enum { WS_CTX_NONE = 0, WS_CTX_ARENA, WS_CTX_DEFENSE, WS_CTX_RESTITUTION,
+       WS_CTX_SHOWN, WS_CTX_PROMISE, WS_CTX_DISPATCH };
+typedef struct {
+    uint32_t observer, subject, teller, root;
+    uint16_t kind, confidence, context;
+    uint32_t clock_s;
+    uint16_t salience, reserved;
+    int16_t valence;
+    uint16_t pad;
+} WsEvidence;
+/* Pending institutional reports: a filed report is delivered to its clerk
+   only when the canonical clock passes deliver_s, at the next authority
+   touch. Repeated filings of the same (observer, root, teller) replace the
+   pending entry instead of stacking. */
+#define WS_PEND_CAP 8
+/* Institutional dispatch delay in canonical world seconds: a filed report
+   reaches its clerk when the clock passes, never instantly. */
+#define WS_REPORT_DELAY_S 3600
+typedef struct {
+    uint32_t observer, subject, teller, root, deliver_s;
+    uint16_t kind, confidence, context, salience, reserved;
+    int16_t valence;
+    uint16_t pad;
+} WsPending;
+/* Retry receipts: an entity command that committed returns its exact
+   disposition to any later replay of the same (player, sequence, op) with no
+   repeated cost or reward. Fingerprints mismatching a stored sequence are
+   stale sequence reuse, not retries. */
+typedef struct {
+    uint32_t sequence, epoch, base_revision, revision;
+    uint16_t action, target, amount, aux, status;
+    uint16_t flags; /* bit 0 rewarded, bit 1 world_changed, bit 2 historical */
+} WsReceipt;
+/* Deterministic projection of retained evidence for one directed
+   observer -> subject pair. Pure function of (records, clock): integer
+   decay buckets evaluated against stored anchors, so query frequency,
+   save/reload and C/Python targets all answer identically. */
+typedef struct {
+    int16_t trust; /* bounded -1000..1000 estimate */
+    uint16_t acts, claims, contradictions, restitutions, promises, kept, breaches, reports;
+    uint16_t confidence; /* total decayed weight, capped 1000 */
+    uint32_t watermark;  /* latest committed root seen */
+} WsView;
 typedef struct {
     WsId ancestry;
     uint32_t recipe_crc, revision;
@@ -90,6 +163,12 @@ typedef struct {
     WsSite sites[WS_SITE_CAP];
     WsCreatureEx crex[WS_CREX_CAP];
     uint64_t recovered_total, used_total, lost_total;
+    /* Gate 6 social state: evidence capsules, pending dispatches and
+       per-player retry receipts. Wire section v4. */
+    uint16_t ev_count, pend_count;
+    WsEvidence ev[WS_EV_CAP];
+    WsPending pend[WS_PEND_CAP];
+    WsReceipt receipt[WS_PLAYER_CAP];
 } WsState;
 typedef struct {
     uint32_t player;
@@ -140,8 +219,43 @@ int ws_creature_query(const WsRecipe*, const WsState*, WsPos lo, WsPos hi, uint3
 WsError ws_creature_except(WsState*, const WsRecipe*, WsId id, uint16_t kind, uint16_t aux);
 /* Is id a creature this recipe can generate (validation helper)? */
 int ws_creature_known(const WsRecipe*, WsId);
-/* Tail and feed recording shared by the entity and resource op paths. */
-void ws_record(WsState*, WsContext, WsOperation, uint16_t kind);
+/* Tail and feed recording shared by the entity and resource op paths.
+   feed_kind WS_QUIET records the committed event in the tail only: the act
+   is canonical history but not public news (private conversations). After
+   the entry, the authority projects the act onto actual NPC witnesses
+   through the shared witness gate, so informed observers gain direct
+   evidence and everyone else stays unchanged. */
+void ws_record(WsState*, const WsRecipe*, WsContext, WsOperation, uint16_t feed_kind);
+#define WS_QUIET 0xFFFFu
+/* Gate 6 social projections (world/social.c). ws_social_view derives one
+   directed observer -> subject estimate from retained evidence; the
+   conduct counts, decayed confidence and watermark are the whole answer,
+   never a scalar morality. ws_social_cite returns the strongest retained
+   evidence handle so dialogue can explain a view through an actual cause,
+   or reports the honest empty limit. */
+int ws_social_view(const WsState*, uint32_t observer, uint32_t subject, WsView* out);
+int ws_social_cite(const WsState*, uint32_t observer, uint32_t subject, uint32_t* root, uint16_t* kind, uint16_t* salience);
+/* Authority-side evidence formation for mediated information: the same
+   record machinery witness projection uses, available to server scripts
+   and NPC-to-NPC flows. root must reference a committed revision. */
+WsError ws_inform(WsState*, const WsRecipe*, uint32_t observer, uint32_t subject, uint32_t teller, uint16_t kind, uint16_t confidence, uint16_t context, int16_t valence, uint16_t salience, uint32_t root);
+/* Authority-side institutional filing: an observer submits its strongest
+   retained evidence about a subject to a clerk NPC for delayed delivery
+   (the NPC-to-institution information edge). */
+WsError ws_file(WsState*, const WsRecipe*, uint32_t clerk, uint32_t observer, uint32_t subject);
+/* Deliver pending institutional reports whose clock has passed, at an
+   authority boundary; called from ws_apply, ws_inform and the resource
+   tick so delivery order follows canonical commit order. */
+void ws_social_settle(WsState*, const WsRecipe*);
+/* Advance the canonical world clock for schema-1 worlds without regional
+   reservoirs (the resource tick only drives clocked states) and settle
+   due dispatches. Bounded per call like the resource tick. */
+void ws_clock_advance(WsState*, const WsRecipe*, uint32_t delta_s);
+/* Structural handle check shared by evidence formation and validation. */
+int ws_ev_handle_ok(const WsState*, const WsRecipe*, uint32_t);
+/* Bounded evidence table append with (observer, root, teller, kind)
+   replacement semantics; shared by op paths, informs and deliveries. */
+void ws_evidence_put(WsState*, const WsEvidence*);
 /* base must be a server-retained authenticated branch checkpoint, never a
    client-supplied assertion. Routine merge is deterministic, not AI-mediated. */
 WsDisposition ws_merge(WsState*, const WsState*, const WsRecipe*, WsContext, WsOperation);

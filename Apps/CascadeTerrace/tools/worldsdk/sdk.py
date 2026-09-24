@@ -1025,6 +1025,162 @@ def route_cost_state(modules, links, features, reservoirs, state, a, b, caps=CAP
     return dist[b], path
 
 
+# ---- Gate 6: directed social evidence and projections (pure mirrors) ----
+# Records are retained causal capsules (dicts with observer, subject,
+# teller, root, kind, confidence, context, clock, salience, valence); views
+# are pure functions of (records, clock). Nothing ranks people: each answer
+# is one directed observer->subject estimate with its counts, and an
+# observer without records is unchanged.
+
+EV_CAP = 64
+EV_PLAYER = 0x10000
+EV_PINNED = 500
+EV_DECAY_S = 86400
+EV_REPORTED_MAX = 750
+EV_REPORTED_SHARE = 3
+PEND_CAP = 8
+REPORT_DELAY_S = 3600
+FEED_CAP = 16
+EV_ACT, EV_CLAIM, EV_CONTRADICT, EV_RESTITUTION, EV_PROMISE = 1, 2, 3, 4, 5
+EV_KEPT, EV_BREACH, EV_REPORT = 6, 7, 8
+CTX_NONE, CTX_ARENA, CTX_DEFENSE, CTX_RESTITUTION = 0, 1, 2, 3
+CTX_SHOWN, CTX_PROMISE, CTX_DISPATCH = 4, 5, 6
+QUIET = 0xFFFF
+FEED_FACTION_NOTICE = 5
+# Authority-assigned contextual valence per committed action (mirror of
+# WS_VALENCE): what a witness's projection makes of the act itself.
+ACTION_VALENCE = {
+    1: 0, 2: 300, 3: -300, 4: 100, 5: 0, 6: 0, 7: 300, 8: -500,
+    9: 50, 10: 200, 11: -100, 12: 0, 13: 0, 14: 50, 15: 0, 16: 0, 17: 100,
+}
+
+
+def _trunc_div(a, b):
+    """C integer division truncates toward zero."""
+    q = abs(a) // abs(b)
+    return q if (a < 0) == (b < 0) else -q
+
+
+def effective(rec):
+    """Interpretation before aggregation: consensual or defensive force
+    counts at half weight, restitution doubles its own positive
+    contribution, claims carry no valence at all."""
+    v = rec["valence"]
+    if rec["context"] in (CTX_ARENA, CTX_DEFENSE) and v < 0:
+        v = _trunc_div(v, 2)
+    if rec["context"] == CTX_RESTITUTION and v > 0:
+        v *= 2
+    return max(-1000, min(1000, v))
+
+
+def social_view(records, clock):
+    """Mirror of ws_social_view: fixed integer decay buckets against stored
+    anchors (pinned records skip decay, minor history beyond the window is
+    gone), so query frequency, save/reload and C/Python all agree."""
+    out = {
+        "trust": 0, "acts": 0, "claims": 0, "contradictions": 0,
+        "restitutions": 0, "promises": 0, "kept": 0, "breaches": 0,
+        "reports": 0, "confidence": 0, "watermark": 0,
+    }
+    counts = {
+        EV_ACT: "acts", EV_CLAIM: "claims", EV_CONTRADICT: "contradictions",
+        EV_RESTITUTION: "restitutions", EV_PROMISE: "promises",
+        EV_KEPT: "kept", EV_BREACH: "breaches", EV_REPORT: "reports",
+    }
+    for rec in records[:EV_CAP]:
+        if rec["observer"] < 0 or rec["subject"] < 0:
+            continue
+        bucket = 0 if rec["salience"] >= EV_PINNED else (clock - rec["clock"]) // EV_DECAY_S
+        if bucket > 15:
+            continue
+        weight = rec["confidence"] >> bucket
+        out["trust"] += _trunc_div(effective(rec) * weight, 1000)
+        out["confidence"] += weight
+        out["watermark"] = max(out["watermark"], rec["root"])
+        out[counts[rec["kind"]]] += 1
+    out["trust"] = max(-1000, min(1000, out["trust"]))
+    out["confidence"] = min(1000, out["confidence"])
+    return out
+
+
+def social_cite(records):
+    """Mirror of ws_social_cite: strongest retained cause, ties to the
+    latest committed root; None is the honest empty limit."""
+    found = None
+    for rec in records[:EV_CAP]:
+        found = rec if found is None or rec["salience"] > found["salience"] or (
+            rec["salience"] == found["salience"] and rec["root"] > found["root"]
+        ) else found
+    return None if found is None else (found["root"], found["kind"], found["salience"])
+
+
+def evidence_put(records, rec):
+    """Mirror of ws_evidence_put: a repeated (observer, root, teller, kind)
+    replaces instead of appending; the table is a bounded ring."""
+    for i, at in enumerate(records):
+        if (at["observer"], at["root"], at["teller"], at["kind"]) == (
+            rec["observer"], rec["root"], rec["teller"], rec["kind"]
+        ):
+            records[i] = dict(rec)
+            return
+    if len(records) == EV_CAP:
+        del records[0]
+    records.append(dict(rec))
+
+
+def social_settle(m):
+    """Mirror of ws_social_settle over a mirror state dict (ev, pend, feed,
+    revision, clock_s, players): due dispatches deliver degraded
+    REPORT-class evidence to the clerk, the public feed records the
+    faction's receipt, and each delivery is its own canonical revision."""
+    i = 0
+    while i < len(m["pend"]):
+        p = m["pend"][i]
+        if m["clock_s"] < p["deliver_s"]:
+            i += 1
+            continue
+        conf = p["confidence"] * EV_REPORTED_SHARE // 4
+        delivered = {
+            "observer": p["observer"], "subject": p["subject"],
+            "teller": p["teller"], "root": p["root"], "kind": EV_REPORT,
+            "confidence": min(EV_REPORTED_MAX, conf), "context": p["context"],
+            "clock": m["clock_s"], "salience": p["salience"],
+            "valence": p["valence"],
+        }
+        del m["pend"][i]
+        m["revision"] += 1
+        teller = p["teller"]
+        actor = m["players"][teller - EV_PLAYER]["id"] if EV_PLAYER <= teller < EV_PLAYER + len(m["players"]) else 0
+        evidence_put(m["ev"], delivered)
+        if len(m["feed"]) == FEED_CAP:
+            del m["feed"][0]
+        m["feed"].append({
+            "revision": m["revision"], "actor": actor, "epoch": m["revision"],
+            "target": p["observer"] - 1, "kind": FEED_FACTION_NOTICE,
+        })
+
+
+def ev_handle_ok(m, h):
+    """Mirror of ws_ev_handle_ok over a mirror state dict (npcs: set of
+    entity indexes flagged NPC, players: list of joined players)."""
+    if not h:
+        return False
+    if h >= EV_PLAYER:
+        return h - EV_PLAYER < len(m["players"])
+    return h <= m["npc_count"] and (h - 1) in m["npcs"]
+
+
+def witness_confidence(observer, event):
+    """Mirror of the shared witness gate for open sightlines: confidence is
+    (30000 - manhattan) // 30, and 0 beyond the 30000 mm window. Occlusion
+    is engine geometry (proved by the C fixture); scenarios that need it
+    declare the occluded pairs themselves."""
+    d = sum(abs(a - b) for a, b in zip(observer, event))
+    if d >= 30000:
+        return 0
+    return (30000 - d) * 1000 * 1000 // 30_000_000
+
+
 def compile_recipe(src):
     if set(src) - {
         "schema",

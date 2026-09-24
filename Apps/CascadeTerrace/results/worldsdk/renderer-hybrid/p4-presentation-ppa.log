@@ -6,16 +6,16 @@ Executing "cmake -G Ninja -DPYTHON_DEPS_CHECKED=1 -DPYTHON=/media/cloud/2982-E16
 -- ESP-TEE is currently supported only on the esp32c6;esp32h2;esp32c5 SoCs
 -- Project sdkconfig file /media/cloud/2982-E16B/tactility_p4_work/repos/TactilityApps/Apps/CascadeTerrace/sdkconfig
 Loading defaults file /media/cloud/2982-E16B/tactility_p4_work/repos/TactilityApps/Apps/CascadeTerrace/sdkconfig.defaults...
-NOTE: /tmp/kconfgen_tmpo8bxb0yp:15: CONFIG_ESP_SYSTEM_MEMPROT_FEATURE_LOCK was replaced with CONFIG_ESP_SYSTEM_MEMPROT_PMS_LOCK
+NOTE: /tmp/kconfgen_tmp5mdjb1pz:15: CONFIG_ESP_SYSTEM_MEMPROT_FEATURE_LOCK was replaced with CONFIG_ESP_SYSTEM_MEMPROT_PMS_LOCK
 NOTE: unknown kconfig symbol 'FATFS_LFN_HEAP' assigned to 'y' in /media/cloud/2982-E16B/tactility_p4_work/repos/TactilityApps/Apps/CascadeTerrace/sdkconfig.defaults
 NOTE: unknown kconfig symbol 'FATFS_VOLUME_COUNT' assigned to '3' in /media/cloud/2982-E16B/tactility_p4_work/repos/TactilityApps/Apps/CascadeTerrace/sdkconfig.defaults
 NOTE: Kconfig parser version: 1
 NOTE: Kconfig defaults policy: use sdkconfig
 NOTE: Status: Finished with notifications
-NOTE: /media/cloud/2982-E16B/tactility_p4_work/tools/esp-idf-v6.1/components/esp_system/Kconfig:201: ESP_SYSTEM_MEMPROT_PMS_LOCK has user-set value n from /tmp/kconfgen_tmpo8bxb0yp but is not visible (disabled dependency)
-NOTE: /media/cloud/2982-E16B/tactility_p4_work/tools/esp-idf-v6.1/components/freertos/Kconfig:7: FREERTOS_SMP has user-set value n from /tmp/kconfgen_tmpo8bxb0yp but is not visible (disabled dependency)
+NOTE: /media/cloud/2982-E16B/tactility_p4_work/tools/esp-idf-v6.1/components/esp_system/Kconfig:201: ESP_SYSTEM_MEMPROT_PMS_LOCK has user-set value n from /tmp/kconfgen_tmp5mdjb1pz but is not visible (disabled dependency)
+NOTE: /media/cloud/2982-E16B/tactility_p4_work/tools/esp-idf-v6.1/components/freertos/Kconfig:7: FREERTOS_SMP has user-set value n from /tmp/kconfgen_tmp5mdjb1pz but is not visible (disabled dependency)
 -- Adding linker script /media/cloud/2982-E16B/tactility_p4_work/tools/esp-idf-v6.1/components/riscv/ld/rom.api.ld
--- App "cascadeterrace" version: 841bf99-dirty
+-- App "cascadeterrace" version: f144807-dirty
 -- USING O3
 -- Adding linker script /media/cloud/2982-E16B/tactility_p4_work/tools/esp-idf-v6.1/components/esp_system/ld/esp32p4/memory.ld.in
 --   -> Preprocessing .in script: /media/cloud/2982-E16B/tactility_p4_work/tools/esp-idf-v6.1/components/esp_system/ld/esp32p4/memory.ld.in
@@ -48,39 +48,40 @@ Call Stack (most recent call first):
 
 -- Components: TactilitySDK app-module app_update bootloader bootloader_support crypt-module cxx efuse esp_app_format esp_blockdev esp_bootloader_format esp_common esp_driver_gpio esp_driver_ppa esp_hal_dma esp_hal_i2c esp_hal_lcd esp_hal_mspi esp_hal_timg esp_hal_wdt esp_hw_support esp_libc esp_mm esp_partition esp_pm esp_rom esp_security esp_stdio esp_system esp_timer esp_usb_cdc_rom_console esptool_py freertos gps-module hal heap log lvgl-module lvgl-window-manager-module main mbedtls partition_table pthread riscv service-module soc spi_flash
 -- Component paths: /media/cloud/2982-E16B/tactility_p4_work/tools/TactilitySDK /media/cloud/2982-E16B/tactility_p4_work/tools/TactilitySDK/Modules/app-module /media/cloud/2982-E16B/tactility_p4_work/tools/esp-idf-v6.1/components/app_update /media/cloud/2982-E16B/tactility_p4_work/tools/esp-idf-v6.1/components/bootloader /media/cloud/2982-E16B/tactility_p4_work/tools/esp-idf-v6.1/components/bootloader_support /media/cloud/2982-E16B/tactility_p4_work/tools/TactilitySDK/Modules/crypt-module /media/cloud/2982-E16B/tactility_p4_work/tools/esp-idf-v6.1/components/cxx /media/cloud/2982-E16B/tactility_p4_work/tools/esp-idf-v6.1/components/efuse /media/cloud/2982-E16B/tactility_p4_work/tools/esp-idf-v6.1/components/esp_app_format /media/cloud/2982-E16B/tactility_p4_work/tools/esp-idf-v6.1/components/esp_blockdev /media/cloud/2982-E16B/tactility_p4_work/tools/esp-idf-v6.1/components/esp_bootloader_format /media/cloud/2982-E16B/tactility_p4_work/tools/esp-idf-v6.1/components/esp_common /media/cloud/2982-E16B/tactility_p4_work/tools/esp-idf-v6.1/components/esp_driver_gpio /media/cloud/2982-E16B/tactility_p4_work/tools/esp-idf-v6.1/components/esp_driver_ppa /media/cloud/2982-E16B/tactility_p4_work/tools/esp-idf-v6.1/components/esp_hal_dma /media/cloud/2982-E16B/tactility_p4_work/tools/esp-idf-v6.1/components/esp_hal_i2c /media/cloud/2982-E16B/tactility_p4_work/tools/esp-idf-v6.1/components/esp_hal_lcd /media/cloud/2982-E16B/tactility_p4_work/tools/esp-idf-v6.1/components/esp_hal_mspi /media/cloud/2982-E16B/tactility_p4_work/tools/esp-idf-v6.1/components/esp_hal_timg /media/cloud/2982-E16B/tactility_p4_work/tools/esp-idf-v6.1/components/esp_hal_wdt /media/cloud/2982-E16B/tactility_p4_work/tools/esp-idf-v6.1/components/esp_hw_support /media/cloud/2982-E16B/tactility_p4_work/tools/esp-idf-v6.1/components/esp_libc /media/cloud/2982-E16B/tactility_p4_work/tools/esp-idf-v6.1/components/esp_mm /media/cloud/2982-E16B/tactility_p4_work/tools/esp-idf-v6.1/components/esp_partition /media/cloud/2982-E16B/tactility_p4_work/tools/esp-idf-v6.1/components/esp_pm /media/cloud/2982-E16B/tactility_p4_work/tools/esp-idf-v6.1/components/esp_rom /media/cloud/2982-E16B/tactility_p4_work/tools/esp-idf-v6.1/components/esp_security /media/cloud/2982-E16B/tactility_p4_work/tools/esp-idf-v6.1/components/esp_stdio /media/cloud/2982-E16B/tactility_p4_work/tools/esp-idf-v6.1/components/esp_system /media/cloud/2982-E16B/tactility_p4_work/tools/esp-idf-v6.1/components/esp_timer /media/cloud/2982-E16B/tactility_p4_work/tools/esp-idf-v6.1/components/esp_usb_cdc_rom_console /media/cloud/2982-E16B/tactility_p4_work/tools/esp-idf-v6.1/components/esptool_py /media/cloud/2982-E16B/tactility_p4_work/tools/esp-idf-v6.1/components/freertos /media/cloud/2982-E16B/tactility_p4_work/tools/TactilitySDK/Modules/gps-module /media/cloud/2982-E16B/tactility_p4_work/tools/esp-idf-v6.1/components/hal /media/cloud/2982-E16B/tactility_p4_work/tools/esp-idf-v6.1/components/heap /media/cloud/2982-E16B/tactility_p4_work/tools/esp-idf-v6.1/components/log /media/cloud/2982-E16B/tactility_p4_work/tools/TactilitySDK/Modules/lvgl-module /media/cloud/2982-E16B/tactility_p4_work/tools/TactilitySDK/Modules/lvgl-window-manager-module /media/cloud/2982-E16B/tactility_p4_work/repos/TactilityApps/Apps/CascadeTerrace/main /media/cloud/2982-E16B/tactility_p4_work/tools/esp-idf-v6.1/components/mbedtls /media/cloud/2982-E16B/tactility_p4_work/tools/esp-idf-v6.1/components/partition_table /media/cloud/2982-E16B/tactility_p4_work/tools/esp-idf-v6.1/components/pthread /media/cloud/2982-E16B/tactility_p4_work/tools/esp-idf-v6.1/components/riscv /media/cloud/2982-E16B/tactility_p4_work/tools/TactilitySDK/Modules/service-module /media/cloud/2982-E16B/tactility_p4_work/tools/esp-idf-v6.1/components/soc /media/cloud/2982-E16B/tactility_p4_work/tools/esp-idf-v6.1/components/spi_flash
--- Configuring done (5.7s)
+-- Configuring done (5.8s)
 -- Generating done (0.4s)
 -- Build files have been written to: /media/cloud/2982-E16B/tactility_p4_work/repos/TactilityApps/Apps/CascadeTerrace/build-p4-native
 Executing action: elf
 Running ninja in directory /media/cloud/2982-E16B/tactility_p4_work/repos/TactilityApps/Apps/CascadeTerrace/build-p4-native
 Executing "ninja elf"...
-[1/24] Building ASM object esp-idf/main/CMakeFiles/__idf_main.dir/presentation_pie.S.obj
-[2/24] Building C object esp-idf/main/CMakeFiles/__idf_main.dir/__/core/presentation.c.obj
-[3/24] Building C object esp-idf/main/CMakeFiles/__idf_main.dir/__/world/schema.c.obj
-[4/24] Building C object esp-idf/main/CMakeFiles/__idf_main.dir/presentation_p4.c.obj
-[5/24] Building C object esp-idf/main/CMakeFiles/__idf_main.dir/__/world/recipe.c.obj
-[6/24] Building C object esp-idf/main/CMakeFiles/__idf_main.dir/__/world/traversal.c.obj
-[7/24] Building C object esp-idf/main/CMakeFiles/__idf_main.dir/__/world/geometry.c.obj
-[8/24] Building C object esp-idf/main/CMakeFiles/__idf_main.dir/__/world/state.c.obj
-[9/24] Building C object esp-idf/main/CMakeFiles/__idf_main.dir/__/world/resource.c.obj
-[10/24] Building C object esp-idf/main/CMakeFiles/__idf_main.dir/__/content/cascade_adapter.c.obj
-[11/24] Building C object esp-idf/main/CMakeFiles/__idf_main.dir/__/core/general_dialogue.c.obj
-[12/24] Building C object esp-idf/main/CMakeFiles/__idf_main.dir/main.c.obj
+[1/25] Building ASM object esp-idf/main/CMakeFiles/__idf_main.dir/presentation_pie.S.obj
+[2/25] Building C object esp-idf/main/CMakeFiles/__idf_main.dir/__/core/presentation.c.obj
+[3/25] Building C object esp-idf/main/CMakeFiles/__idf_main.dir/__/world/schema.c.obj
+[4/25] Building C object esp-idf/main/CMakeFiles/__idf_main.dir/presentation_p4.c.obj
+[5/25] Building C object esp-idf/main/CMakeFiles/__idf_main.dir/__/world/geometry.c.obj
+[6/25] Building C object esp-idf/main/CMakeFiles/__idf_main.dir/__/world/traversal.c.obj
+[7/25] Building C object esp-idf/main/CMakeFiles/__idf_main.dir/__/world/social.c.obj
+[8/25] Building C object esp-idf/main/CMakeFiles/__idf_main.dir/__/world/state.c.obj
+[9/25] Building C object esp-idf/main/CMakeFiles/__idf_main.dir/main.c.obj
 In file included from /media/cloud/2982-E16B/tactility_p4_work/tools/TactilitySDK/Libraries/lvgl/include/src/lv_init.h:16,
                  from /media/cloud/2982-E16B/tactility_p4_work/tools/TactilitySDK/Libraries/lvgl/include/lvgl.h:21,
                  from /media/cloud/2982-E16B/tactility_p4_work/repos/TactilityApps/Apps/CascadeTerrace/main/main.c:11:
 /media/cloud/2982-E16B/tactility_p4_work/tools/TactilitySDK/Libraries/lvgl/include/src/lv_conf_internal.h:65:17: note: '#pragma message: Possible failure to include lv_conf.h, please read the comment in this file if you get errors'
    65 |         #pragma message("Possible failure to include lv_conf.h, please read the comment in this file if you get errors")
       |                 ^~~~~~~
-[13/24] Building C object esp-idf/main/CMakeFiles/__idf_main.dir/__/world/creature.c.obj
-[14/24] Building C object esp-idf/main/CMakeFiles/__idf_main.dir/__/world/persistence.c.obj
-[15/24] Building C object esp-idf/main/CMakeFiles/__idf_main.dir/__/core/decision.c.obj
-[16/24] Building C object esp-idf/main/CMakeFiles/__idf_main.dir/semantic-portable.c.obj
-[17/24] Building C object esp-idf/main/CMakeFiles/__idf_main.dir/__/core/dialogue.c.obj
-[18/24] Building C object esp-idf/main/CMakeFiles/__idf_main.dir/__/core/world.c.obj
-[19/24] Building C object esp-idf/main/CMakeFiles/__idf_main.dir/__/research/rung_a/cognition.c.obj
-[20/24] Building C object esp-idf/main/CMakeFiles/__idf_main.dir/__/core/persistence.c.obj
-[21/24] Building C object esp-idf/main/CMakeFiles/__idf_main.dir/__/core/state.c.obj
-[22/24] Building C object esp-idf/main/CMakeFiles/__idf_main.dir/__/core/render.c.obj
-[23/24] Linking C static library esp-idf/main/libmain.a
-[24/24] Build ELF: cascadeterrace.app.elf
+[10/25] Building C object esp-idf/main/CMakeFiles/__idf_main.dir/__/world/resource.c.obj
+[11/25] Building C object esp-idf/main/CMakeFiles/__idf_main.dir/__/world/recipe.c.obj
+[12/25] Building C object esp-idf/main/CMakeFiles/__idf_main.dir/__/world/creature.c.obj
+[13/25] Building C object esp-idf/main/CMakeFiles/__idf_main.dir/__/content/cascade_adapter.c.obj
+[14/25] Building C object esp-idf/main/CMakeFiles/__idf_main.dir/__/core/general_dialogue.c.obj
+[15/25] Building C object esp-idf/main/CMakeFiles/__idf_main.dir/__/research/rung_a/cognition.c.obj
+[16/25] Building C object esp-idf/main/CMakeFiles/__idf_main.dir/__/world/persistence.c.obj
+[17/25] Building C object esp-idf/main/CMakeFiles/__idf_main.dir/__/core/decision.c.obj
+[18/25] Building C object esp-idf/main/CMakeFiles/__idf_main.dir/semantic-portable.c.obj
+[19/25] Building C object esp-idf/main/CMakeFiles/__idf_main.dir/__/core/world.c.obj
+[20/25] Building C object esp-idf/main/CMakeFiles/__idf_main.dir/__/core/dialogue.c.obj
+[21/25] Building C object esp-idf/main/CMakeFiles/__idf_main.dir/__/core/persistence.c.obj
+[22/25] Building C object esp-idf/main/CMakeFiles/__idf_main.dir/__/core/state.c.obj
+[23/25] Building C object esp-idf/main/CMakeFiles/__idf_main.dir/__/core/render.c.obj
+[24/25] Linking C static library esp-idf/main/libmain.a
+[25/25] Build ELF: cascadeterrace.app.elf

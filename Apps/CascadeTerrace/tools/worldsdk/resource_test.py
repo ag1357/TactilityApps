@@ -132,7 +132,7 @@ def main():
         results["checks"] += 1
         assert cond, label
 
-    check(C.sizeof(State) == 10920, "State ctypes layout drift")
+    check(C.sizeof(State) == 13744, "State ctypes layout drift")
 
     # 1. Committed artifacts are exactly the generator output (schema 4).
     built = macro.build(SEED)

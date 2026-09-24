@@ -1,1 +1,1 @@
-{"suite":"authority_merge_persistence","checks":3767,"status":"PASS","cases":["A","B","C","D","E"],"state_bytes":10920,"wire_bytes":1864}
+{"suite":"authority_merge_persistence","checks":3873,"status":"PASS","cases":["A","B","C","D","E"],"state_bytes":13744,"wire_bytes":1968}

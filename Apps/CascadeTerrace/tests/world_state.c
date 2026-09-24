@@ -84,7 +84,17 @@ int main(void) {
     CHECK(ws_apply(&s, &r, ctx(101, 14, 0), decor).status == WS_OK);
     CHECK(s.entities[14].decor[0] == 1 && s.players[0].inventory[0] == 1);
     hash = ws_state_hash(&s);
-    CHECK(ws_apply(&s, &r, ctx(101, 14, 0), decor).status == WS_STALE && ws_state_hash(&s) == hash);
+    /* Gate 6 retry contract: the exact repeat returns the committed
+       receipt (same disposition, same revision) and touches nothing; a
+       different op under the same consumed sequence stays stale. */
+    d = ws_apply(&s, &r, ctx(101, 14, 0), decor);
+    CHECK(d.status == WS_OK && d.rewarded == 0 && d.world_changed == 1 && d.revision && ws_state_hash(&s) == hash);
+    CHECK(s.entities[14].decor[0] == 1 && s.players[0].inventory[0] == 1);
+    {
+        WsOperation reuse = decor;
+        reuse.amount = 2;
+        CHECK(ws_apply(&s, &r, ctx(101, 14, 0), reuse).status == WS_STALE && ws_state_hash(&s) == hash);
+    }
     WsOperation transfer = op(WS_TRANSFER, 16, 4);
     transfer.aux = 102;
     transfer.amount = 7;

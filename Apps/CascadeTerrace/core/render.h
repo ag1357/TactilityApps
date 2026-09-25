@@ -7,6 +7,7 @@ typedef struct {
     uint16_t pixels[W * H], depth[W * H];
     uint32_t triangles, pixels_written;
     float camera_x, camera_y, camera_z, yaw, pitch;
+    float look_pitch; /* Private local look offset in radians; never saved. */
     int conversation;
     int first_person;
     uint32_t frame;

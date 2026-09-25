@@ -195,6 +195,7 @@ int load_game(Game* g, const char* base) {
     if (!found) return 0;
     memset(g, 0, sizeof(*g));
     g->state = best_state;
+    g->actor.facing = g->state.yaw; /* Legacy saves have no independent actor pose. */
     generate(&g->world, best_state.seed, best_state.forced_variant == 255 ? -1 : best_state.forced_variant);
     snprintf(g->notice, sizeof(g->notice), "Restored generation %u", (unsigned)best_state.save_generation);
     return 1;

@@ -198,7 +198,23 @@ static void cone(float x, float y, float z, float r, float h, uint32_t col) {
         tri((V) {x + r * cosf(a), y, z + r * sinf(a)}, (V) {x, y + h, z}, (V) {x + r * cosf(b), y, z + r * sinf(b)}, col, .7f + i * .07f);
     }
 }
-static void person(float x, float y, float z, int kyra, float phase) {
+/* Rotate every body part about the actor's origin, including its faces. */
+static void actor_box(float ox, float oy, float oz, float cs, float sn,
+                      float x, float y, float z, float w, float h, float d, uint32_t col) {
+    V v[8];
+    for (int i = 0; i < 8; i++) {
+        float lx = x + ((i & 1) ? w : -w);
+        float lz = z + ((i & 2) ? d : -d);
+        v[i] = (V){ox + lx * cs + lz * sn, oy + y + ((i & 4) ? h : 0),
+                   oz + lz * cs - lx * sn};
+    }
+    quad(v[0], v[1], v[5], v[4], col, .8f);
+    quad(v[1], v[3], v[7], v[5], col, .65f);
+    quad(v[3], v[2], v[6], v[7], col, 1);
+    quad(v[2], v[0], v[4], v[6], col, .9f);
+    quad(v[4], v[5], v[7], v[6], col, 1.1f);
+}
+static void person(float x, float y, float z, int kyra, float phase, float facing) {
     float walk = sinf(phase) * .12f;
     if (kyra) {
         for (int i = 0; i < kyra_count; i++) {
@@ -207,16 +223,16 @@ static void person(float x, float y, float z, int kyra, float phase) {
         }
         return;
     }
-    uint32_t cloth = kyra ? 0x39bcc5 : 0xe8ad66;
-    box(x - .20f, y, z + walk, .13f, .72f, .14f, 0x253647);
-    box(x + .20f, y, z - walk, .13f, .72f, .14f, 0x253647);
-    box(x, y + .65f, z, .35f, .60f, .22f, cloth);
-    box(x, y + 1.26f, z, .23f, .39f, .22f, 0xd9a376);
-    box(x, y + 1.59f, z, .27f, .17f, .25f, kyra ? 0x493e66 : 0x28344f);
-    box(x - .48f, y + .75f, z - walk, .10f, .45f, .12f, cloth);
-    box(x + .48f, y + .75f, z + walk, .10f, .45f, .12f, cloth);
-    box(x, y + 1.28f, z + .231f, .19f, .08f, .02f, 0x79dce3);
-    if (kyra) box(x + .29f, y + .72f, z, .12f, .2f, .29f, 0xc09755);
+    float cs = cosf(facing), sn = sinf(facing);
+    uint32_t cloth = 0xe8ad66;
+    actor_box(x,y,z,cs,sn, -.20f, 0, walk, .13f, .72f, .14f, 0x253647);
+    actor_box(x,y,z,cs,sn, .20f, 0, -walk, .13f, .72f, .14f, 0x253647);
+    actor_box(x,y,z,cs,sn, 0, .65f, 0, .35f, .60f, .22f, cloth);
+    actor_box(x,y,z,cs,sn, 0, 1.26f, 0, .23f, .39f, .22f, 0xd9a376);
+    actor_box(x,y,z,cs,sn, 0, 1.59f, 0, .27f, .17f, .25f, 0x28344f);
+    actor_box(x,y,z,cs,sn, -.48f, .75f, -walk, .10f, .45f, .12f, cloth);
+    actor_box(x,y,z,cs,sn, .48f, .75f, walk, .10f, .45f, .12f, cloth);
+    actor_box(x,y,z,cs,sn, 0, 1.28f, .231f, .19f, .08f, .02f, 0x79dce3);
 }
 static void building(const Game* g, int i) {
     const Site* s = &g->world.sites[i];
@@ -276,7 +292,7 @@ void render(Renderer* r, const Game* g) {
      * drawn); the default remains the established chase view (6 m back,
      * 4.3 m up). first_person is presentation state only: never saved. */
     int fp = r->first_person && !r->conversation;
-    r->pitch = r->conversation ? 0 : (fp ? 0.f : -.19f);
+    r->pitch = r->conversation ? 0 : (fp ? 0.f : -.19f) + fmaxf(-.9f, fminf(.9f, r->look_pitch));
     cy = cosf(yaw);
     sy = sinf(yaw);
     cp = cosf(r->pitch);
@@ -335,8 +351,8 @@ void render(Renderer* r, const Game* g) {
             box(p.x / 1000.f, p.y / 1000.f + .15f, p.z / 1000.f, i ? .45f : .8f, .25f, .3f, i ? 0xebd7a2 : 0xdcb66c);
         }
     Pos n = npc_position(g);
-    person(n.x / 1000.f, n.y / 1000.f, n.z / 1000.f, 1, g->state.time / 6000.f);
-    if (!r->conversation && !fp) person(px, py, pz, 0, g->state.time / 900.f);
+    person(n.x / 1000.f, n.y / 1000.f, n.z / 1000.f, 1, 0, 0);
+    if (!r->conversation && !fp) person(px, py, pz, 0, g->actor.phase_milliradians / 1000.f, g->actor.facing * .01745329252f);
     /* Phos motes are rendering only: no particle state in canonical save. */
     for (int i = 0; i < 18; i++) {
         uint32_t h = hash32((uint32_t)i + g->world.seed);
@@ -436,7 +452,7 @@ void render_world(Renderer *r,const WsRecipe *world,WsAddress player,int yaw,WsM
             prev=s;have=1;
         }
     }
-    person(player.pos.x/1000.f,player.pos.y/1000.f,player.pos.z/1000.f,0,r->frame/20.f);
+    person(player.pos.x/1000.f,player.pos.y/1000.f,player.pos.z/1000.f,0,0,0);
 }
-void render_world_peer(WsPos p) { person(p.x/1000.f,p.y/1000.f,p.z/1000.f,1,0); }
+void render_world_peer(WsPos p) { person(p.x/1000.f,p.y/1000.f,p.z/1000.f,1,0,0); }
 void render_world_marker(WsPos p,uint32_t rgb) { box(p.x/1000.f,p.y/1000.f,p.z/1000.f,.4f,.8f,.4f,rgb); }

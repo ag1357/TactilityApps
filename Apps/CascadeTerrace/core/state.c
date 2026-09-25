@@ -94,6 +94,7 @@ void game_new(Game* g, uint32_t seed, int variant) {
     s->player_pos.y = ground_at(&g->world, s->player_pos.x, s->player_pos.z);
     s->grounded = 1;
     s->yaw = 180;
+    g->actor.facing = s->yaw;
     s->player.quantity[IT_CHIT] = 0;
     s->kyra.quantity[IT_CHIT] = 34;
     s->kyra.quantity[IT_CONCENTRATOR] = 1;
@@ -291,6 +292,27 @@ void game_tick(Game* g, Input in, uint32_t real_ms) {
                 s->grounded = 1;
             }
         }
+        /* Collision-resolved motion, not requested input or camera motion,
+           owns the actor's facing and locomotion. Integer trig keeps this
+           transient state deterministic across host and device builds. */
+        g->actor.move_x = p.x - s->player_pos.x;
+        g->actor.move_z = p.z - s->player_pos.z;
+        int moved = g->actor.move_x || g->actor.move_z;
+        if (moved) {
+            int32_t facing = 0;
+            int64_t best = INT64_MIN;
+            for (int angle = 0; angle < 360; angle++) {
+                int64_t dot = (int64_t)g->actor.move_x * sine[angle] +
+                              (int64_t)g->actor.move_z * sine[(angle + 90) % 360];
+                if (dot > best) { best = dot; facing = angle; }
+            }
+            g->actor.facing = facing;
+        }
+        g->actor.locomotion = !s->grounded ? CT_LOCOMOTION_AIR :
+            !moved ? CT_LOCOMOTION_IDLE : in.run ? CT_LOCOMOTION_RUN : CT_LOCOMOTION_WALK;
+        if (moved && s->grounded)
+            g->actor.phase_milliradians = (g->actor.phase_milliradians +
+                (in.run ? 170U : 100U)) % 6283U;
         s->player_pos = p;
     }
 }

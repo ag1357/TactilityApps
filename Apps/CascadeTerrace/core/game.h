@@ -4,10 +4,8 @@
 #include <stdint.h>
 #define GEN_VERSION 1
 #define MAP_N 81
-/* Portrait internal resolution: the reference handheld panel's LVGL space is
-   320x480, so the 2x presentation output (W*2 x H*2) fills it exactly with no
-   overflow or letterbox. Same 38,400-pixel budget as the old 240x160, so
-   Renderer arrays and measured render cost are unchanged. */
+/* Bounded internal render budget. The platform fits this image to its current
+   content viewport; these dimensions do not describe a physical display. */
 #define W 160
 #define H 240
 #define EVENT_CAP 96
@@ -104,11 +102,22 @@ typedef struct {
     uint16_t event_count;
     Event events[EVENT_CAP];
 } State;
+typedef enum { CT_LOCOMOTION_IDLE, CT_LOCOMOTION_WALK,
+               CT_LOCOMOTION_RUN, CT_LOCOMOTION_AIR } CtLocomotion;
+/* Transient presentation state, deliberately outside the saved State wire.
+   Actor orientation is independent of the local camera's legacy State.yaw. */
+typedef struct {
+    int32_t facing;
+    int32_t move_x, move_z; /* Actual displacement in the last 20 ms step. */
+    uint32_t phase_milliradians;
+    CtLocomotion locomotion;
+} CtActorPresentation;
 typedef struct {
     Generated world;
     State state;
     uint32_t substep;
     char notice[192];
+    CtActorPresentation actor;
 } Game;
 typedef struct {
     int16_t forward, strafe, turn;

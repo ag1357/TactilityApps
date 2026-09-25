@@ -1,0 +1,10 @@
+{"stage":"traversal","passed":56,"recipe_workspace_bytes":12012,"product_bytes":1200}
+{"stage":"macro","passed":4419,"product_bytes":2196,"modules":22,"links":13,"features":1,"exceptions":5}
+{"stage":"resource","passed":322,"product_bytes":2196,"reservoirs":4,"state_bytes":13744}
+{"stage":"anomaly","passed":130,"product_bytes":2196,"modules":22,"links":13,"gate_cost":1500,"open_level":80000}
+{"stage":"creature","passed":920,"product_bytes":2196,"species":8,"slots":36,"recipe_bytes":12012,"state_bytes":13744}
+{"stage":"social","passed":3814,"product_bytes":1592,"modules":23,"evidence":64,"state_bytes":13744,"wire_bytes":4404}
+{"stage":"bridge","passed":163,"legacy_state":21840,"ws_state":13744,"evidence":16,"revision":13,"wire_bytes":1974}
+{"suite":"authority_merge_persistence","checks":3873,"status":"PASS","cases":["A","B","C","D","E"],"state_bytes":13744,"wire_bytes":1968}
+{"checks":864,"failures":0,"seeds":100,"seed_validation_ms":1320.101,"render_mean_ms":2.943,"game_bytes":35336,"renderer_bytes":153644,"npc_bytes":5384,"state_bytes":21840,"save_bytes":734,"wire_crc32":3349299003,"physical_status":"PENDING"}
+{"status":"PASS","checks":9395,"color_parity":1,"async_ownership_cycles":1000,"source_bytes":76800,"scanout_bytes":307200,"ppa_extra_bytes":384000,"reference_mean_ms":0.339922,"portable_mean_ms":0.162278,"reference_p95_ms":0.484523,"portable_p95_ms":0.232673,"checksum":999600,"pie_physical":"PENDING","ppa_physical":"PENDING"}

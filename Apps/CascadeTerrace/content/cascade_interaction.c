@@ -2,9 +2,7 @@
 #include "../core/interaction.h"
 #include <string.h>
 
-int ct_interaction_resolve(const Game* g, CtInteraction* out) {
-    if (!g) { if (out) memset(out, 0, sizeof(*out)); return 0; }
-    CtInteraction candidates[5] = {0};
+static size_t current_candidates(const Game* g, CtInteraction candidates[5]) {
     size_t count = 0;
     candidates[count++] = (CtInteraction){KYRA_ID, CT_INTERACT_NPC, npc_position(g), 2200,
         {OP_NONE, PLAYER_ID, KYRA_ID, IT_CHIT, 0, NULL}, "Talk to Kyra"};
@@ -22,7 +20,19 @@ int ct_interaction_resolve(const Game* g, CtInteraction* out) {
     }
     candidates[count++] = (CtInteraction){3, CT_INTERACT_TRADE, g->world.sites[MARKET].center, 2500,
         {BUY, PLAYER_ID, 3, IT_COUPLING, 1, NULL}, "Buy replacement coupling"};
-    return ct_interaction_select(g, candidates, count, out);
+    return count;
+}
+int ct_interaction_resolve(const Game* g, CtInteraction* out) {
+    if (!g) { if(out) memset(out,0,sizeof(*out));return 0; }
+    CtInteraction candidates[5]={0};size_t count=current_candidates(g,candidates);
+    return ct_interaction_select(g,candidates,count,out);
+}
+int ct_interaction_refresh(const Game* g,uint32_t id,CtInteraction* out) {
+    if(out)memset(out,0,sizeof(*out));if(!g||!out||!id)return 0;
+    CtInteraction candidates[5]={0};size_t count=current_candidates(g,candidates);
+    for(size_t i=0;i<count;i++)if(candidates[i].entity_id==id)
+        return ct_interaction_select(g,&candidates[i],1,out);
+    return 0;
 }
 
 int ct_interaction_dialogue_supported(const CtInteraction* target) {

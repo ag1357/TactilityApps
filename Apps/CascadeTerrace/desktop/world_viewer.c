@@ -25,7 +25,7 @@ int main(int argc, char** argv) {
     int headless = argc > 2 && !strcmp(argv[2], "--headless");
     if (headless) SDL_setenv("SDL_VIDEODRIVER", "dummy", 1);
     if (SDL_Init(SDL_INIT_VIDEO | SDL_INIT_TIMER)) return 2;
-    SDL_Window* window = SDL_CreateWindow("World SDK experimental traversal", 0, 0, 960, 640, 0);
+    SDL_Window* window = SDL_CreateWindow("Anaphorum World SDK - experimental traversal", 0, 0, 960, 640, 0);
     SDL_Renderer* display = SDL_CreateRenderer(window, -1, SDL_RENDERER_SOFTWARE);
     SDL_Texture* texture = SDL_CreateTexture(display, SDL_PIXELFORMAT_RGB565, SDL_TEXTUREACCESS_STREAMING, W, H);
     if (!window || !display || !texture) return 2;

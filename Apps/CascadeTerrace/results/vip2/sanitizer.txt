@@ -1,0 +1,14 @@
+{"stage":"viewport","pixel_inverse_checks":1723276,"sizes":8}
+PASS defaults, held chords, opposing directions, no artificial release
+PASS slow-frame queued edges, repeat suppression, time-weighted movement, overflow telemetry
+PASS independent devices, two gamepad identities, disconnect reconciliation
+PASS queued menu direction taps and analog navigation hysteresis
+PASS transitions inhibit held controls, capture conflict/cancel/replace/defaults
+PASS analog capture/negative direction/deadzone/hysteresis; pulse-only backend restrictions
+PASS versioned atomic binding round-trip and malformed/conflicting load rollback
+PASS independent host sampler during 150ms render stall: 12 ticks; mean 10.132ms min 10.083ms max 10.437ms
+Action input tests passed
+VI-P2 lifecycle: 74 checks passed (150 ms render, revoke/resume, close/join)
+VI-P2 I2C: protocol, multi-device isolation, pulse semantics, config: PASS
+VI-P2 I2C platform: operation-scoped refs, reconnect, failures, close: PASS
+VI-P2 gameplay: 51 checks passed

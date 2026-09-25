@@ -6,6 +6,7 @@
 set -euo pipefail
 cd "$(dirname "$0")/.."
 mkdir -p build results/worldsdk
+export ASAN_OPTIONS="${ASAN_OPTIONS:-detect_leaks=0:abort_on_error=1}"
 SAN="-fsanitize=address,undefined -fno-sanitize-recover=all"
 run() {
   local out="$1"; shift

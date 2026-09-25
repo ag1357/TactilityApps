@@ -1,0 +1,17 @@
+ESP-IDF v6.1 (6.1.0), exact fork-generated SDK with packaging correction dd18d0f.
+{
+  "status": "P4 BUILD PRODUCED; PENDING PHYSICAL VALIDATION",
+  "binary_bytes": 214472,
+  "package_bytes": 225280,
+  "elf_sha256": "7e7130f4676fe7beabc0514a303246184f1f2a6460805a3f12521eca8c9e076b",
+  "package_sha256": "684903021a092f920d5f88f3d217e77a372db7fe59198fb5efcce6106127a8aa",
+  "format": "Tactility manifest v0.3 / USTAR / esp32p4 external ELF"
+}
+{
+  "elf_sha256": "7e7130f4676fe7beabc0514a303246184f1f2a6460805a3f12521eca8c9e076b",
+  "elf_bytes": 214472,
+  "import_count": 133,
+  "missing_from_pinned_export_tables": [],
+  "firmware_checkout": "dd18d0f0c2b871b21800eb172627c34c931d91d4",
+  "scope": "Source-table membership; physical loader and enabled runtime modules remain unmeasured"
+}

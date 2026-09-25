@@ -18,6 +18,15 @@ int main(void) {
             assert(out[y*v.w+x]==src[ry*160+rx]);checks++;
         }
         free(out);
+        unsigned stride=(unsigned)v.w+3;
+        out=malloc(((size_t)stride*v.h+1)*sizeof(*out));assert(out);
+        for(size_t i=0;i<(size_t)stride*v.h;i++)out[i]=0xeeee;
+        ct_viewport_scale_stride(out,src,&v,stride);
+        for(int y=0;y<v.h;y++)for(unsigned x=0;x<stride;x++) {
+            if(x<(unsigned)v.w){assert(ct_viewport_inverse(&v,v.x+(int)x,v.y+y,&rx,&ry));assert(out[(size_t)y*stride+x]==src[ry*160+rx]);}
+            else assert(out[(size_t)y*stride+x]==0xeeee);
+        }
+        free(out);
     }
     printf("{\"stage\":\"viewport\",\"pixel_inverse_checks\":%u,\"sizes\":8}\n",checks);
 }

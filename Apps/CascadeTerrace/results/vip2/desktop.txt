@@ -1,0 +1,1 @@
+VI-P2 desktop: layouts, menu, capture/conflict/capacity, short tap through 150ms stall, queued menu tap, focus reconciliation, per-finger outside release, Quit passed.

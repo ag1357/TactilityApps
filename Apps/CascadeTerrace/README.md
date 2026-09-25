@@ -1,10 +1,12 @@
+> VI-P2 platform/input/lifecycle proving branch: [implementation, evidence and remaining device qualification](docs/VI_P2_REPORT.md).
+
 > General cognition research continuation: [measured results, failures and build instructions](docs/GENERAL_COGNITION.md). Modes 2–4 are experimental; mode 0 remains default. Q1 is incomplete and physical qualification remains pending.
 
-# Cascade Terrace — P4 RPG implementation
+# Anaphorum — P4 RPG implementation
 
 **Playable implementation checkpoint. Q1 is incomplete; Q2 has no physical results.**
 
-A shared C runtime generates the valley, renders at 240×160, accepts movement and free text, applies inventory/repair/Phos operations, and saves sparse state and bounded NPC memories. Desktop uses SDL2. P4 uses Tactility's native external-app ABI and LVGL canvas. No cloud cognition.
+A shared C runtime generates the valley, renders at a bounded 160×240, accepts movement and free text, applies inventory/repair/Phos operations, and saves sparse state and bounded NPC memories. Desktop uses SDL2. P4 uses Tactility's native external-app ABI and LVGL canvas. No cloud cognition.
 
 ## Desktop
 

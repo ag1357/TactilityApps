@@ -1,6 +1,6 @@
 option(CT_PRESENT_PIE "Compile experimental P4 PIE nearest-neighbor backend" OFF)
 option(CT_PRESENT_PPA "Compile experimental PPA backend; requires firmware PPA exports" OFF)
-set(CT_PRESENT_SOURCES "presentation_p4.c" "../core/presentation.c")
+set(CT_PRESENT_SOURCES "presentation_p4.c" "../core/presentation.c" "../core/viewport.c")
 if(CT_PRESENT_PIE)
     list(APPEND CT_PRESENT_SOURCES "presentation_pie.S")
 endif()
@@ -12,7 +12,7 @@ string(REPLACE "r->values[i]);" "(int)r->values[i]);" CG_PORTABLE_SOURCE "${CG_P
 string(REPLACE "f->source,name(v,f->source)" "(unsigned)f->source,name(v,f->source)" CG_PORTABLE_SOURCE "${CG_PORTABLE_SOURCE}")
 file(WRITE "${CMAKE_CURRENT_BINARY_DIR}/semantic-portable.c" "${CG_PORTABLE_SOURCE}")
 include("$ENV{TACTILITY_SDK_PATH}/TactilitySDK.cmake")
-tactility_component_register(SRCS "main.c" ${CT_PRESENT_SOURCES} "../world/schema.c" "../world/recipe.c" "../world/geometry.c" "../world/traversal.c" "../world/state.c" "../world/resource.c" "../world/creature.c" "../world/social.c" "../world/persistence.c" "../content/cascade_adapter.c" "${CMAKE_CURRENT_BINARY_DIR}/semantic-portable.c" "../core/decision.c" "../core/general_dialogue.c" "../research/rung_a/cognition.c" "../core/world.c" "../core/state.c" "../core/dialogue.c" "../core/persistence.c" "../core/render.c" INCLUDE_DIRS "../core" PRIV_REQUIRES esp_driver_ppa)
+tactility_component_register(SRCS "main.c" "i2c_input.c" "../core/action_input.c" "../core/platform_lifecycle.c" "../core/i2c_controls.c" "../core/interaction.c" "../content/cascade_interaction.c" ${CT_PRESENT_SOURCES} "../world/schema.c" "../world/recipe.c" "../world/geometry.c" "../world/traversal.c" "../world/state.c" "../world/resource.c" "../world/creature.c" "../world/social.c" "../world/persistence.c" "../content/cascade_adapter.c" "${CMAKE_CURRENT_BINARY_DIR}/semantic-portable.c" "../core/decision.c" "../core/general_dialogue.c" "../research/rung_a/cognition.c" "../core/world.c" "../core/state.c" "../core/dialogue.c" "../core/persistence.c" "../core/render.c" INCLUDE_DIRS "../core" PRIV_REQUIRES esp_driver_ppa)
 
 target_compile_definitions(${COMPONENT_LIB} PRIVATE CG_TRAINED_MODEL)
 

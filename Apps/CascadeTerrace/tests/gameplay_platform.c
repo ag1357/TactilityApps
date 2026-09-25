@@ -30,6 +30,14 @@ int main(void) {
         CHECK(target.entity_id == KYRA_ID && ct_interaction_dialogue_supported(&target));
         memset(&target, 0, sizeof(target)); /* Session close clears identity. */
     }
+    int64_t saved_time=game.state.time;
+    CHECK(ct_interaction_refresh(&game,KYRA_ID,&target));
+    game.state.time=900*60000LL;
+    CHECK(!ct_interaction_refresh(&game,KYRA_ID,&target)); /* Old anchor cannot keep a moved NPC reachable. */
+    game.state.player_pos=npc_position(&game);
+    CHECK(ct_interaction_refresh(&game,KYRA_ID,&target));
+    CHECK(!ct_interaction_refresh(&game,999999,&target));
+    game.state.time=saved_time;game.state.player_pos=npc;
     game.state.player_pos.y += 2500;
     CHECK(!ct_interaction_resolve(&game, &target)); /* Not merely planar distance. */
     game.state.player_pos = npc;

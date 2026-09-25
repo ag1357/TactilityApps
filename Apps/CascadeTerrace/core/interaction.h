@@ -19,5 +19,7 @@ typedef struct {
 int ct_interaction_select(const Game*, const CtInteraction*, size_t, CtInteraction*);
 /* Current Cascade content adapter: only actual rendered/authored entities. */
 int ct_interaction_resolve(const Game*, CtInteraction*);
+/* Refresh a selected identity against current materialized content and reachability. */
+int ct_interaction_refresh(const Game*, uint32_t entity_id, CtInteraction*);
 int ct_interaction_dialogue_supported(const CtInteraction*);
 #endif

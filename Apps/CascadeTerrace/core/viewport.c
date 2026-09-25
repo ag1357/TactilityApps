@@ -13,7 +13,11 @@ int ct_viewport_inverse(const CtViewport* v,int x,int y,int* rx,int* ry) {
     *rx=(int)((int64_t)(x-v->x)*v->render_w/v->w);
     *ry=(int)((int64_t)(y-v->y)*v->render_h/v->h);return 1;
 }
-void ct_viewport_scale(uint16_t* dst,const uint16_t* src,const CtViewport* v) {
+void ct_viewport_scale_stride(uint16_t* dst,const uint16_t* src,const CtViewport* v,unsigned stride) {
     for(int y=0;y<v->h;y++)for(int x=0;x<v->w;x++)
-        dst[(size_t)y*v->w+x]=src[(size_t)((int64_t)y*v->render_h/v->h)*v->render_w+(int64_t)x*v->render_w/v->w];
+        dst[(size_t)y*stride+x]=src[(size_t)((int64_t)y*v->render_h/v->h)*v->render_w+(int64_t)x*v->render_w/v->w];
+}
+
+void ct_viewport_scale(uint16_t* dst,const uint16_t* src,const CtViewport* v) {
+    ct_viewport_scale_stride(dst,src,v,(unsigned)v->w);
 }

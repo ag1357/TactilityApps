@@ -111,8 +111,21 @@ static void lifecycle_grant_locked(void) {
     ct_lifecycle_grant(&lifecycle);
 }
 static void lifecycle_revoke_locked(void) {
+    /* WindowDestroyWidgetsFn must not acquire input_mutex (Tactility's
+     * destroy callback contract forbids taking another lock while LVGL and
+     * the window-manager lifecycle lock are held). Publish revoke only; the
+     * sampler clears stale state after verifying this exact revoked epoch is
+     * still current. */
     ct_lifecycle_revoke(&lifecycle);
-    clear_input();
+}
+static void clear_revoked_epoch(unsigned revoked_epoch) {
+    lock_input();
+    if(!atomic_load(&lifecycle.granted) && !atomic_load(&lifecycle.closing) &&
+       revoked_epoch==atomic_load(&lifecycle.epoch)) {
+        ai_clear(&actions,micros());
+        ai_disconnect(&actions,1,micros());
+    }
+    unlock_input();
 }
 static int i2c_event_admitted(unsigned event_epoch) {
     return atomic_load(&lifecycle.granted) && !atomic_load(&lifecycle.closing) &&
@@ -228,9 +241,11 @@ static int32_t input_task(void *context) {
         unsigned current_epoch=atomic_load(&lifecycle.epoch);
         int owns=atomic_load(&lifecycle.granted)&&atomic_load(&mode)!=CONVERSATION;
         if(current_epoch!=epoch||owns!=owned_last) {
-            /* Grant/revoke/mode owners already cleared stale state while holding
-             * LVGL. An observer must only reset its own bookkeeping here; a
-             * second clear can erase input sampled after the transition. */
+            /* Grant clears before publishing active. Revoke callbacks are
+             * lock-free, so clear only while the exact observed revoked epoch
+             * is still current; a later grant changes epoch first and protects
+             * any fresh post-grant input from this late observer. */
+            if(!atomic_load(&lifecycle.granted))clear_revoked_epoch(current_epoch);
             epoch=current_epoch;previous=0;owned_last=owns;
             /* LVGL may have consumed releases while we did not own this stream. */
             lock_input();for(unsigned i=0;i<8;i++)if(keyboard_sources[i].id){ai_disconnect(&actions,keyboard_sources[i].instance,micros());keyboard_sources[i]=(KeyboardSource){0};}unlock_input();

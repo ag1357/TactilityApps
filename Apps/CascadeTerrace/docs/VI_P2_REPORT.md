@@ -1,5 +1,17 @@
 # Anaphorum VI-P2 — implementation and qualification report
 
+> **Post-publication preservation — 2026-09-25:** review after `ab88b02` found a
+> resume/focus race: more than one epoch observer could clear `AiInput` after a
+> fresh post-grant keypress had already been accepted. The preserved follow-up is
+> `e3748db` + `0b4d0b9`. Grant now clears stale input before publishing active;
+> revoke remains lock-free as required by Tactility's destroy-widget contract;
+> a delayed sampler clears only while the exact revoked epoch is still current;
+> delayed I2C callbacks re-check epoch admission while committing input. This
+> follow-up is pushed but still requires the exact fork-SDK P4 cross-build and
+> full VI-P2 qualification to be rerun; do not represent `ab88b02` alone as the
+> final VI-P2 head.
+
+
 2026-09-25. Branch: `work/anaphorum-vip2-platform-input`, continuing the existing mission from exact `eeb7de9fce00f15ebd2f14c07a388d6574fb7957`. This is the bounded platform/input/lifecycle gate. No multiplayer, renderer optimization campaign, new cognition, or new world canon was undertaken.
 
 Implementation and host gates pass. A default P4 external app was built with ESP-IDF **v6.1 / 6.1.0** and an SDK generated from the upgraded Tactility fork. Physical Device A performance, background CPU, heap reclamation, and wired input remain unmeasured. The shared keypad ownership limitation and optional I2C controller limitation below remain qualification constraints.

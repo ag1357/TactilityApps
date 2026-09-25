@@ -94,3 +94,8 @@ build/presentation_test: core/presentation.c tests/presentation.c core/presentat
 .PHONY: presentation-test
 presentation-test: build/presentation_test
 	./build/presentation_test
+
+build/viewport_test: core/viewport.c tests/viewport.c core/viewport.h | build
+	$(CC) $(CPPFLAGS) $(CFLAGS) $(filter %.c,$^) -o $@
+viewport-test: build/viewport_test
+	./build/viewport_test

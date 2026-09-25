@@ -101,6 +101,23 @@ static void keyboards_latched(int take) {
 static void clear_input(void) {
     lock_input();ai_clear(&actions,micros());ai_disconnect(&actions,1,micros());unlock_input();
 }
+/* Window-manager create/destroy callbacks run with the LVGL lock held. Make those
+ * callbacks the sole owner of lifecycle input clearing: stale state is cleared
+ * before a grant is published and immediately after a revoke is published.
+ * Epoch observers must never clear input later, because a sampler may already
+ * have accepted a real post-grant keypress by then. */
+static void lifecycle_grant_locked(void) {
+    clear_input();
+    ct_lifecycle_grant(&lifecycle);
+}
+static void lifecycle_revoke_locked(void) {
+    ct_lifecycle_revoke(&lifecycle);
+    clear_input();
+}
+static int i2c_event_admitted(unsigned event_epoch) {
+    return atomic_load(&lifecycle.granted) && !atomic_load(&lifecycle.closing) &&
+           event_epoch == atomic_load(&lifecycle.epoch);
+}
 /* Capture reserves existing digital Menu/Back bindings as cancellation controls. */
 static int capture_cancel_source(AiControl source,int value) {
     if(atomic_load(&mode)!=CAPTURE||!value||source.kind!=AI_DIGITAL)return 0;
@@ -114,7 +131,8 @@ static int capture_cancel_source(AiControl source,int value) {
 }
 static void i2c_emit(void *context,uint32_t instance,AiControl source,int value,uint64_t now) {
     (void)context;
-    if(!atomic_load(&lifecycle.granted)||atomic_load(&lifecycle.closing)||i2c_epoch!=atomic_load(&lifecycle.epoch))return;
+    unsigned event_epoch=i2c_epoch;
+    if(!i2c_event_admitted(event_epoch))return;
     int m=atomic_load(&mode);
     if(source.backend==AI_BACKEND_CARDKB2) {
         if(source.control==10)source.control=13;
@@ -124,6 +142,7 @@ static void i2c_emit(void *context,uint32_t instance,AiControl source,int value,
         unsigned key=source.control;
         if(m==CONVERSATION) {
             lvgl_lock();
+            if(!i2c_event_admitted(event_epoch)){lvgl_unlock();return;}
             if(textarea&&atomic_load(&mode)==CONVERSATION) {
                 if(key==27)atomic_store(&command,CMD_RESUME);
                 else if(key==13){snprintf(submitted,sizeof(submitted),"%s",lv_textarea_get_text(textarea));lv_textarea_set_text(textarea,"");atomic_store(&command,CMD_SUBMIT);}
@@ -133,18 +152,25 @@ static void i2c_emit(void *context,uint32_t instance,AiControl source,int value,
             lvgl_unlock();wake();return;
         }
         if(m==MENU||m==CONTROLS||m==CONFLICT) {
+            if(!i2c_event_admitted(event_epoch))return;
             if(key=='w'||key=='W'){atomic_fetch_sub(&menu_steps,1);wake();return;}
             if(key=='s'||key=='S'){atomic_fetch_add(&menu_steps,1);wake();return;}
         }
         if(key>='A'&&key<='Z')source.control=(uint16_t)(key+'a'-'A');
     }
     lock_input();
+    /* The callback may have waited behind a transition's input clear. Recheck
+     * admission while holding the same mutex so a delayed old-epoch sample
+     * cannot repopulate freshly cleared state. */
+    if(!i2c_event_admitted(event_epoch)){unlock_input();return;}
     if(capture_cancel_source(source,value))atomic_store(&command,CMD_CANCEL);
     else ai_device_event(&actions,instance,source,value,now);
     last_source=source;last_source_value=value;input_events++;unlock_input();
 }
 static void i2c_disconnect(void *context,uint32_t instance,uint64_t now) {
-    (void)context;lock_input();ai_disconnect(&actions,instance,now);input_disconnects++;unlock_input();
+    (void)context;unsigned event_epoch=i2c_epoch;lock_input();
+    if(i2c_event_admitted(event_epoch)){ai_disconnect(&actions,instance,now);input_disconnects++;}
+    unlock_input();
 }
 typedef struct { uint32_t id,instance;unsigned seen; } KeyboardSource;
 static KeyboardSource keyboard_sources[8];
@@ -202,7 +228,10 @@ static int32_t input_task(void *context) {
         unsigned current_epoch=atomic_load(&lifecycle.epoch);
         int owns=atomic_load(&lifecycle.granted)&&atomic_load(&mode)!=CONVERSATION;
         if(current_epoch!=epoch||owns!=owned_last) {
-            clear_input();epoch=current_epoch;previous=0;owned_last=owns;
+            /* Grant/revoke/mode owners already cleared stale state while holding
+             * LVGL. An observer must only reset its own bookkeeping here; a
+             * second clear can erase input sampled after the transition. */
+            epoch=current_epoch;previous=0;owned_last=owns;
             /* LVGL may have consumed releases while we did not own this stream. */
             lock_input();for(unsigned i=0;i<8;i++)if(keyboard_sources[i].id){ai_disconnect(&actions,keyboard_sources[i].instance,micros());keyboard_sources[i]=(KeyboardSource){0};}unlock_input();
         }
@@ -359,10 +388,10 @@ static void create(lv_obj_t *root,void *context) {
     lv_group_t *group=lv_group_get_default();if(group)lv_group_add_obj(group,textarea);
     lv_obj_add_event_cb(textarea,submit,LV_EVENT_ALL,NULL);
     if(atomic_load(&mode)==CONVERSATION){lv_obj_remove_flag(textarea,LV_OBJ_FLAG_HIDDEN);lv_group_focus_obj(textarea);}else lv_obj_add_flag(textarea,LV_OBJ_FLAG_HIDDEN);
-    menu_build();ct_lifecycle_grant(&lifecycle);wake();
+    menu_build();lifecycle_grant_locked();wake();
 }
 static void destroy(void *context) {
-    (void)context;ct_lifecycle_revoke(&lifecycle);
+    (void)context;lifecycle_revoke_locked();
     keyboards_latched(0);root_widget=canvas=overlay=textarea=hint=move_feedback=look_feedback=NULL;focus_count=0;touch_zone=-1;wake();
 }
 static void change_mode(int m) {
@@ -454,7 +483,7 @@ int main(int argc,char **argv) {
         struct AppEvent event;while(app_event_poll(&sub,&event)==ERROR_NONE)if(event.type==APP_EVENT_CLOSE)ct_lifecycle_close(&lifecycle);
         if(atomic_load(&lifecycle.closing))break;
         if(!atomic_load(&lifecycle.granted)){task_event_group_wait_any(&events,NULL,portMAX_DELAY);previous=micros();continue;}
-        unsigned epoch=atomic_load(&lifecycle.epoch);if(epoch!=seen_epoch){clear_input();previous=micros();seen_epoch=epoch;jump_pending=0;yaw_remainder=0;}
+        unsigned epoch=atomic_load(&lifecycle.epoch);if(epoch!=seen_epoch){previous=micros();seen_epoch=epoch;jump_pending=0;yaw_remainder=0;}
         AiFrame frame;lock_input();ai_consume(&actions,micros(),&frame);unsigned captured=actions.capture_state;
         if(captured==AI_CAPTURE_READY&&atomic_load(&mode)==CAPTURE){conflict_binding=actions.candidate;AiBindResult b=ai_capture_accept(&actions,0,micros());if(b!=AI_BIND_OK)ai_capture_cancel(&actions,micros());last_ui_capture=b==AI_BIND_OK?1:b==AI_BIND_CONFLICT?2:3;}
         unlock_input();

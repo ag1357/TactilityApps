@@ -10,6 +10,21 @@
 > follow-up is pushed but still requires the exact fork-SDK P4 cross-build and
 > full VI-P2 qualification to be rerun; do not represent `ab88b02` alone as the
 > final VI-P2 head.
+>
+> **Rerun complete — 2026-09-27, at `e240e8d`:** the corrected SDK was
+> regenerated from the exact packaging branch (`dd18d0f`, on runtime
+> `e423c281`) and the full sequence rerun: Gates I–VI qualification pass
+> (legacy 864/0; save 734 bytes; wire CRC32 3349299003; 18/18 navigation,
+> 15/15 adversarial), all VI-P2 platform suites pass, ten world + six VI-P2
+> ASan/UBSan suites pass, and a clean cross-build against the corrected SDK
+> produced `cascadeterrace.app.elf` sha256
+> `5a7634bdb99ad0972266b8305868d1d9a2f68dadddf0f51282ac02c017a20a7c`
+> (214,776 bytes) with 133 imports and zero missing from the pinned export
+> tables. The cross-build now carries
+> `LV_CONF_KCONFIG_EXTERNAL_INCLUDE="tactility_lvgl_sdkconfig.h"` and emits no
+> LVGL configuration pragma; zero compiler warnings. Refreshed evidence:
+> `results/vip2/`, `results/p4-build.json`, `releases/vip2/`. `e240e8d`
+> remains the corrected final VI-P2 head.
 
 
 2026-09-25. Branch: `work/anaphorum-vip2-platform-input`, continuing the existing mission from exact `eeb7de9fce00f15ebd2f14c07a388d6574fb7957`. This is the bounded platform/input/lifecycle gate. No multiplayer, renderer optimization campaign, new cognition, or new world canon was undertaken.

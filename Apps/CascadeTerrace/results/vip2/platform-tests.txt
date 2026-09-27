@@ -8,9 +8,8 @@ PASS queued menu direction taps and analog navigation hysteresis
 PASS transitions inhibit held controls, capture conflict/cancel/replace/defaults
 PASS analog capture/negative direction/deadzone/hysteresis; pulse-only backend restrictions
 PASS versioned atomic binding round-trip and malformed/conflicting load rollback
-PASS independent host sampler during 150ms render stall: 12 ticks; mean 10.101ms min 10.079ms max 10.160ms
+PASS independent host sampler during 150ms render stall: 12 ticks; mean 10.072ms min 10.056ms max 10.148ms
 Action input tests passed
-cc -Icore -DCG_TRAINED_MODEL -O2 -g -std=c11 -Wall -Wextra -Werror -Wno-misleading-indentation core/action_input.c core/viewport.c core/interaction.c content/cascade_interaction.c world/schema.c world/recipe.c world/geometry.c world/traversal.c world/state.c world/resource.c world/creature.c world/social.c world/persistence.c content/cascade_adapter.c core/semantic.c core/decision.c core/general_dialogue.c research/rung_a/cognition.c core/world.c core/state.c core/dialogue.c core/persistence.c core/render.c tests/gameplay_platform.c -lm -o build/gameplay_platform_test
 ./build/gameplay_platform_test
 VI-P2 gameplay: 51 checks passed
 ./build/platform_lifecycle_test

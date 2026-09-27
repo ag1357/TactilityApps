@@ -1,0 +1,32 @@
+Device A hands-on round (user-driven), captured via persistent serial logger.
+Capture: /tmp/device-serial.log during the session; aggregate analysis below.
+
+Boots observed (last): bindings_loaded:1 on reload after user Controls
+customization -> persisted controls.cfg loads on device.
+
+Input events summed once per run (counters are cumulative per run):
+per-run finals [0, 0, 9242, 278], total 9520, dropped 0,
+disconnects 0. No app-queue loss across the whole capture.
+Real hardware source: keyboard backend 1, device 2108859648, controls as
+ASCII codes (119 w / 97 a / 115 s / 100 d / 105 i / 111 o / 112 p / 117 u / 8 BS / 10 Enter).
+Analog-fraction source_action lines with backend:0 belong to the earlier scripted
+qualification source, not hardware. No touch-backend source_action in this capture.
+
+Camera look loop (user report: camera keeps turning sometimes):
+LOOK axis pinned at +/-1000 across multi-second spans interleaved with unrelated
+key activity (view toggle 'i', movement 'w', menu Backspace), e.g. capture lines
+5414..5432 (~10 s, last sources 'w' then 'i' with value 0) and 5321..5326.
+During those spans the input counters show zero drops and zero disconnects, so
+no release event was lost by the app queue: the BLE keyboard release notification
+never arrived. With no elapsed-time release heuristic by design, the digital LOOK
+hold persists until the same key is tapped again. Tapping the look key once
+clears it immediately (observed: stuck span ends without a crash or reboot).
+
+Quit path: three close_done events, input_task_joined:true, buffers_released:true,
+internal_free ~132000-135000, psram_free ~32.8 MB. No save_done in this capture;
+the save path remains qualified by earlier rounds (save 734 bytes). No interact or
+jump edges recorded in this capture; those paths remain qualified by tests.
+
+Also observed in this capture: one input sampler max gap of 1.17 s (max_us 1173002)
+during the hands-on session with the sampler otherwise averaging ~13.9-25.9 ms.
+No watchdog reboot during the user session.

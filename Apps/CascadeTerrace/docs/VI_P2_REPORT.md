@@ -62,6 +62,33 @@
 > capture at `/tmp/device-serial.log` and the device's `qualification.jsonl`
 > will record the hands-on input evidence), interaction affordance range,
 > idle/walk/run/facing, and Save/Quit + heap return.
+>
+> **Device A hands-on round — 2026-09-27:** the user completed the hands-on
+> session; aggregate telemetry is extracted in
+> `results/vip2/device-a-hands-on.txt`. The user reports one residual defect:
+> a **camera look loop** — the camera sometimes keeps turning. The capture
+> shows the LOOK axis pinned at ±1000 across 4–10 s spans interleaved with
+> unrelated key activity (view toggle `i`, movement `w`, menu Backspace),
+> while the input counters record zero drops and zero disconnects
+> (9520 events summed once per run across the capture). The release
+> notification never arrived from the BLE keyboard link, and since this gate
+> deliberately implements no elapsed-time release heuristic, the digital LOOK
+> hold persists until the same key is tapped again; one tap clears it
+> immediately. The keyboard BLE link is the failing component this day
+> (see `esp_hosted` controller init failures above). Candidate fixes, both
+> requiring a requalification round: firmware-side BLE HID report robustness
+> (fork mission), or an app-side bounded staleness guard for digital keyboard
+> sources, which changes the documented no-release-timeout semantics. Also
+> observed: `bindings_loaded:1` on reload after user Controls customization
+> (persisted controls.cfg loads on device); three clean `close_done` events
+> with `input_task_joined:true`, `buffers_released:true` and heap return
+> (internal_free ~132–135 KB, psram_free ~32.8 MB); no watchdog reboot during
+> the user session; one input sampler max gap of 1.17 s during the session.
+> This capture recorded no touch-backend source_action, no SAVE event and no
+> interact/jump edges; those paths remain qualified by tests and earlier
+> rounds. The optional I2C rewiring path (CardKB2 on GPIO4/5) remains blocked
+> on board provisioning as documented in `VI_P2_I2C.md` — and CardKB2 I2C is
+> press-only, so it cannot replace held keyboard movement/camera controls.
 
 
 2026-09-25. Branch: `work/anaphorum-vip2-platform-input`, continuing the existing mission from exact `eeb7de9fce00f15ebd2f14c07a388d6574fb7957`. This is the bounded platform/input/lifecycle gate. No multiplayer, renderer optimization campaign, new cognition, or new world canon was undertaken.

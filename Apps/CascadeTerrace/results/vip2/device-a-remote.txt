@@ -1,0 +1,38 @@
+# Anaphorum VI-P2 Device A remote verification - 2026-09-27
+# Qualification-marked build (elf sha256 5a7634bd...), installed via PUT /api/apps/install.
+# Channel: web API (station on Kugelblitz Boson, 192.168.1.147) + persistent UART capture.
+
+## Run 1: single granted instance, ~530 s continuous rendering, no watchdog
+{"type":"boot","title":"Anaphorum","reload":1,"bindings_loaded":0,"input_period_target_us":10000,"physical":"PENDING"}
+{"type":"i2c_config","configured":0,"worker":0}
+{"type":"input","samples":122,"mean_us":19230,"min_us":156,"max_us":122009,"events":0,"disconnects":0,"dropped":0}
+{"type":"frame","frame":30,"render_present_us":216484,"viewport_w":308,"viewport_h":462}
+{"type":"frame","frame":2520,"render_present_us":205703,"viewport_w":308,"viewport_h":462}
+
+## Revoke/background: cover app launched (tactility.systeminfo, instance 4)
+I (646740) WebServerService: POST /api/apps/run
+I (646741) app_manager: [instance 4] starting tactility.systeminfo with parent 0
+# Between the cover launch and the (unrelated) http-server crash 73 s later:
+# frame lines: 0, input/source_action lines: 0 - render and input consumption
+# suspended immediately and completely by the revoke.
+
+## Firmware defect (not the app): /api/screenshot stack protection fault -> device reboot
+I (151884) WebServerService: Screenshot will be saved to: /sdcard/tactility/webscreenshot6.png
+Guru Meditation Error: Core  1 panic'ed (Stack protection fault). 
+
+Stack bounds: 0x4ff5aa6c - 0x4ff5c9e0
+
+## Run 2: relaunch after the crash reboot
+{"type":"boot","title":"Anaphorum","reload":1,"bindings_loaded":0,"input_period_target_us":10000,"physical":"PENDING"}
+# Task watchdog (informational, no reboot): IDLE0 starved twice, CPU0 running app_4:
+E (135462) task_wdt: Task watchdog got triggered. The following tasks/users did not reset the watchdog in time:
+E (135462) task_wdt:  - IDLE0 (CPU 0)
+E (140462) task_wdt: Task watchdog got triggered. The following tasks/users did not reset the watchdog in time:
+E (140462) task_wdt:  - IDLE0 (CPU 0)
+# The app kept rendering through and past both triggers; latest telemetry:
+{"type":"frame","frame":990,"render_present_us":209330,"viewport_w":308,"viewport_h":462}
+{"type":"frame","frame":1020,"render_present_us":208106,"viewport_w":308,"viewport_h":462}
+{"type":"input","samples":10407,"mean_us":21007,"min_us":9107,"max_us":146236,"events":0,"disconnects":0,"dropped":0}
+
+## Counts over the whole capture
+# watchdog triggers: 2 (both in run 2 at 39-44 s of app runtime; run 1: zero in 530 s)

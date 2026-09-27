@@ -25,6 +25,43 @@
 > LVGL configuration pragma; zero compiler warnings. Refreshed evidence:
 > `results/vip2/`, `results/p4-build.json`, `releases/vip2/`. `e240e8d`
 > remains the corrected final VI-P2 head.
+>
+> **Device A remote verification — 2026-09-27 (commit `90fd702`):** the
+> qualification-marked build of the rerun ELF was deployed by app install and
+> observed through the web API and a persistent UART capture
+> (`results/vip2/device-a-remote.txt`). Verified remotely: save/reload on
+> device (`reload:1` across repeated boots); the viewport measures 308x462 —
+> an exact 2:3 fit of the 160x240 image inside the supplied content root,
+> aspect preserved, system chrome untouched (visual confirmation is blocked
+> by the screenshot defect below); the revoke/background claim — launching a
+> cover app (`tactility.systeminfo`) froze the granted instance's frame and
+> input/source_action telemetry immediately and completely (zero lines in the
+> 73 s until the unrelated crash below), i.e. render and input consumption
+> stop on revoke; default configuration creates no I2C worker
+> (`i2c_config configured:0 worker:0`); the independent input sampler runs
+> through render stalls on device (mean ~20.5 ms per acquisition against the
+> 10 ms target, min 9.1 ms, max 146 ms blocked by one render frame, no gaps);
+> single granted instance renders ~5.7 fps (~210 ms/frame) for ~9 minutes in
+> run 1 with zero watchdog events. Device findings recorded, not fixed here:
+> (1) app-side: run 2 tripped the IDLE0 task watchdog twice at 39-44 s of app
+> runtime (informational print, no reboot, rendering and sampling continued
+> through it; run 1 had zero in 530 s) — the PLAY loop's 1 ms wait is
+> marginal IDLE feeding; candidate fix for the next round is a bounded loop
+> wait, which requires requalification. (2) firmware: `/api/screenshot`
+> overflowed the `http-server` task's stack (stack protection fault, device
+> reboot) once it acquired the LVGL lock — screenshot evidence is unavailable
+> and this likely explains the pre-existing `crash.txt`; queued for the fork
+> mission. (3) firmware: `esp_hosted_bt_controller_init/enable` failed on
+> every boot this day — the BLE keyboard path is down until the device is
+> power-cycled, blocking the keyboard-dependent physical claims. (4) the
+> webserver drops large file transfers mid-stream while an app renders
+> (269 KB telemetry download repeatedly failed; small requests fine).
+> Hands-required claims remain: touch inverse mapping, responsiveness during
+> slow render, hold/chords/release, resume-first-keypress (the app is left
+> running in the foreground with the qualification marker on, so the serial
+> capture at `/tmp/device-serial.log` and the device's `qualification.jsonl`
+> will record the hands-on input evidence), interaction affordance range,
+> idle/walk/run/facing, and Save/Quit + heap return.
 
 
 2026-09-25. Branch: `work/anaphorum-vip2-platform-input`, continuing the existing mission from exact `eeb7de9fce00f15ebd2f14c07a388d6574fb7957`. This is the bounded platform/input/lifecycle gate. No multiplayer, renderer optimization campaign, new cognition, or new world canon was undertaken.

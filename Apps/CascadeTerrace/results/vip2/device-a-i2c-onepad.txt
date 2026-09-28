@@ -1,0 +1,78 @@
+Device A external I2C provisioning + first physical gamepad (one-pad) round.
+Date: 2026-09-28. User hands-on quick test complete.
+
+Firmware: fork branch work/waveshare-p4-external-i2c, commit d9f7434e
+(on runtime e423c281 + SDK packaging dd18d0f). Provisioned a generic
+external I2C controller as board capability: second P4 controller
+(I2C_NUM_1), SDA GPIO4 / SCL GPIO5 per the official schematic audit
+(expansion-header nets, no other claimant), 100 kHz, no IRQ, no eFuse,
+no pull-up flags (attached device supplies 3.3 V-referenced pull-ups).
+Device name "i2c-external" through the existing exported I2C-controller
+API (device_get_by_name). Internal I2C0 (GPIO7/8), AetherLink UART
+(GPIO2/3) and the C6/ESP-Hosted transport untouched. Pre-flash tests:
+DevicetreeCompiler 10, SDK packaging 4, TactilityKernel 145 cases/786
+assertions, Tactility 74, TactilityFreeRtos 79, app-module 372,
+app-posix 17, http 65, service 62, crypt 20 - all pass. Flashed and
+boot-verified (mandatory DTS device start would abort boot on a GPIO
+ownership conflict). Firmware sha256:
+  Tactility.elf  21e0ee6e81b9becc0102957293ad4a23d38132931919f07f071c26e57a9e8596
+  Tactility.bin  fae2cba69c1338b56a11e6aa9087baeaf667e46f0498157db25843ba5126b026
+  system.bin    2e7a6eb766becec84b03f219b3a76ac4e3b0df7afb7fb2488557c0b0dd5edc23
+
+App side: qualification-marked package (same qualified ELF sha256
+5a7634bdb99ad0972266b8305868d1d9a2f68dadddf0f51282ac02c017a20a7c,
+package sha256 252678c7f59f1fce33ac196cfe3ef793096fc9142c2ef63fac31f9ce6ef2c9ad)
+installed over the existing app (SD app data untouched by the flash).
+controls-i2c.cfg ("ANAPHORUM_I2C 1 / seesaw i2c-external 0x50") delivered
+into the game user-data directory via a one-time carrier app
+(ag1357.ctcarrier) built against the same SDK; console confirmation:
+"ctcarrier: copied 41 bytes to game user data".
+
+Boot telemetry (qualification marker on):
+  {"type":"boot","title":"Anaphorum","reload":1,"bindings_loaded":1}
+  {"type":"i2c_config","configured":1,"worker":1}
+The app opened the "i2c-external" controller by name and the optional
+I2C worker runs - end-to-end controller/API/config path verified live.
+
+Physical pad: Adafruit Mini I2C STEMMA QT Gamepad with seesaw (product
+5743), default address 0x50, VIN from 3.3 V (pull-ups 3.3 V-referenced).
+Product/version detection passed (the adapter rejects a wrong product ID,
+so a live source proves the 5743 check). Source identity 3358264790.
+
+Electrical finding: with the pad unpowered, the external bus polls failed
+with "i2c.master: clear bus failed" + "reset hardware failed" (26
+occurrences; STEMMA pull-ups tied to a dead rail hold SDA low). After
+powering the pad, the bus recovered with no reboot: 3 transport
+disconnects total, then a clean reconnect and zero further disconnects
+across the rest of the session. Source-isolated: gameplay, rendering,
+keyboard input and the input sampler continued unaffected throughout.
+
+Hands-on (user quick test, telemetry in /tmp/device-serial-i2c.log):
+- Controls -> Bind New captured analog joystick values (raw 395, 20 seen)
+  during binding.
+- Joystick bound to MOVE_X/MOVE_Y: full range to +/-1000 with
+  intermediate values (-986, -195, 43, 251, 680, 825, 995...) observed;
+  clean return to zero after release, no stuck axis.
+- Held button state: held bitmask 32 (Start) observed, with simultaneous
+  joystick values [680,825] - button+joystick chord works.
+- No stuck state after release: values, held and axes all return to zero.
+- User reports commands "much more responsive" than the BLE keyboard.
+- Input sampler mean ~19.7 ms per acquisition vs 10 ms target while
+  rendering at ~210 ms/frame; max sample gap 130 ms (one render frame),
+  no gaps; zero dropped events.
+
+Not separately re-evidenced tonight: LOOK button bindings (axes[2]/[3] stayed
+zero in the capture windows; the quick test focused on movement), and
+restart persistence of the specific I2C binds (the bindings persistence
+path is shared with the previously verified keyboard bindings; only one
+app boot occurred tonight, before binding).
+
+Dual-pad readiness (second pad on order): config-only. Adding the second
+5743 at 0x51 is a single extra controls-i2c.cfg line ("seesaw
+i2c-external 0x51"); identities are stable across line reordering and
+per-device disconnect isolation is covered by the i2c_controls tests
+(two-device identities, source-isolated disconnect, rejection of duplicate
+bus/address pairs). No source change required beyond configuration and
+Controls bindings. CardKB2 I2C remains optional for text/menu input.
+
+VI-P2 stops here per mission plan; next gate: P4 frame performance.

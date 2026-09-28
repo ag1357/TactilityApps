@@ -89,6 +89,32 @@
 > rounds. The optional I2C rewiring path (CardKB2 on GPIO4/5) remains blocked
 > on board provisioning as documented in `VI_P2_I2C.md` — and CardKB2 I2C is
 > press-only, so it cannot replace held keyboard movement/camera controls.
+>
+> **External I2C provisioned + first physical gamepad — 2026-09-28:** the
+> Tactility fork now provisions a generic external I2C controller
+> (`work/waveshare-p4-external-i2c` @ `d9f7434e`): second P4 controller,
+> SDA GPIO4 / SCL GPIO5 per the official schematic audit, 100 kHz, stable
+> generic name `i2c-external` through the exported I2C-controller API. All
+> fork host tests green pre-flash; firmware flashed to Device A
+> (`Tactility.elf` sha256
+> `21e0ee6e81b9becc0102957293ad4a23d38132931919f07f071c26e57a9e8596`)
+> and boot-verified. `controls-i2c.cfg` (`seesaw i2c-external 0x50`) was
+> delivered to the game user-data directory via a one-time carrier app
+> (same SDK); the qualification-marked package (same qualified ELF
+> `5a7634bd...`, package sha `252678c7...`) was reinstalled and launched:
+> `i2c_config configured:1 worker:1`, seesaw 5743 product detection passed.
+> Hands-on quick test with the physical pad: Bind New captured joystick
+> analog values; MOVE_X/MOVE_Y bound and exercised across the full ±1000
+> range with clean return-to-zero; held button with simultaneous joystick
+> (chord) verified; no stuck state after release; the user reports commands
+> much more responsive than the BLE keyboard path. Electrical finding: an
+> unpowered pad holds SDA low through the STEMMA pull-up rail
+> (`clear bus failed`), recovering without reboot once powered — 3 transport
+> disconnects total, then stable. Not separately re-evidenced tonight: LOOK
+> button bindings and restart persistence of the specific I2C binds. The
+> second 5743 (0x51, movement/camera split) is on order and remains
+> config-only. Evidence: `results/vip2/device-a-i2c-onepad.txt`. VI-P2 stops
+> here; the next gate is the P4 frame-performance campaign.
 
 
 2026-09-25. Branch: `work/anaphorum-vip2-platform-input`, continuing the existing mission from exact `eeb7de9fce00f15ebd2f14c07a388d6574fb7957`. This is the bounded platform/input/lifecycle gate. No multiplayer, renderer optimization campaign, new cognition, or new world canon was undertaken.
@@ -106,7 +132,7 @@ Implementation and host gates pass. A default P4 external app was built with ESP
 | E | `e03ed7757bd974fe0ba041c65d464cc94b9e9870` | Nearby interaction identities and actual-motion actor pose |
 | F | The commit containing this report | Integrated native/SDL frontends, regression evidence, default P4 package |
 
-The separate Tactility SDK packaging correction is [dd18d0f](https://github.com/ag1357/Tactility/commit/dd18d0f0c2b871b21800eb172627c34c931d91d4), on `work/anaphorum-vip2-sdk-packaging`. It changes three build/test files. Firmware runtime, drivers, DTS, exports, scheduler, pins, C6 firmware, and eFuses were not modified or flashed.
+The separate Tactility SDK packaging correction is [dd18d0f](https://github.com/ag1357/Tactility/commit/dd18d0f0c2b871b21800eb172627c34c931d91d4), on `work/anaphorum-vip2-sdk-packaging`. It changes three build/test files. Firmware runtime, drivers, DTS, exports, scheduler, pins, C6 firmware, and eFuses were not modified or flashed by that correction. The later external-I2C provisioning (`work/waveshare-p4-external-i2c` @ `d9f7434e`, above) is the one deliberate firmware change since: one DTS node adding the `i2c-external` board controller; nothing else in the firmware was modified.
 
 ## Layout and normal UI
 

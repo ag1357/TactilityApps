@@ -121,6 +121,30 @@ Primary references:
 
 ## Board ownership audit and exact remaining blocker
 
+**Update — 2026-09-28: the external controller is provisioned.** Fork branch
+`work/waveshare-p4-external-i2c`, commit `d9f7434e` (on runtime `e423c281` +
+SDK packaging `dd18d0f`), provisions a generic external I2C controller as a
+board capability: the second P4 I2C controller (`I2C_NUM_1`), SDA **GPIO4** /
+SCL **GPIO5** per the official schematic's expansion-header nets (no other
+claimant), initial frequency **100 kHz**, no IRQ, no eFuse, no permanent
+configuration, no pull-up flags (the attached device supplies 3.3 V-referenced
+pull-ups). The device name is the stable generic identity **`i2c-external`**,
+opened by external apps through the existing exported I2C-controller API
+(`device_get_by_name`). Internal I2C0 (GPIO7/8), AetherLink UART (GPIO2/3)
+and the C6/ESP-Hosted transport are untouched. All fork host tests were green
+before flashing; the flashed firmware's
+`Tactility.elf` sha256 is
+`21e0ee6e81b9becc0102957293ad4a23d38132931919f07f071c26e57a9e8596`.
+On Device A the app's optional worker opened the controller by name
+(`i2c_config configured:1 worker:1`) and the first physical 5743 at `0x50`
+passed product detection. With an unpowered pad the external bus showed
+`clear bus failed`/`reset hardware failed` (SDA held low through the STEMMA
+pull-up rail) and recovered without reboot once the pad was powered; see
+`results/vip2/device-a-i2c-onepad.txt`. The dual-pad arrangement (a second
+5743 at `0x51`) remains config-only.
+
+The historical audit (pre-provisioning) is retained below.
+
 The examined fork DTS at the revision above declares:
 
 | Function | Owned P4 pins / bus |

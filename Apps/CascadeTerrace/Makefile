@@ -108,6 +108,10 @@ build/gameplay_platform_test: $(CORE) tests/gameplay_platform.c | build
 	$(CC) $(CPPFLAGS) $(CFLAGS) $(filter %.c,$^) -lm -o $@
 gameplay-platform-test: build/gameplay_platform_test
 	./build/gameplay_platform_test
+build/raster_band_test: $(CORE) tests/raster_band.c | build
+	$(CC) $(CPPFLAGS) $(CFLAGS) $(filter %.c,$^) -lm -o $@
+raster-band-test: build/raster_band_test
+	./build/raster_band_test
 build/i2c_controls_test: core/action_input.c core/i2c_controls.c tests/i2c_controls.c | build
 	$(CC) $(CPPFLAGS) $(CFLAGS) $(filter %.c,$^) -o $@
 i2c-controls-test: build/i2c_controls_test
@@ -123,4 +127,4 @@ build/i2c_platform_test: main/i2c_input.c core/i2c_controls.c tests/i2c_platform
 i2c-platform-test: build/i2c_platform_test
 	./build/i2c_platform_test
 .PHONY: vip2-test
-vip2-test: viewport-test action-input-test gameplay-platform-test platform-lifecycle-test i2c-controls-test i2c-platform-test
+vip2-test: viewport-test action-input-test gameplay-platform-test raster-band-test platform-lifecycle-test i2c-controls-test i2c-platform-test

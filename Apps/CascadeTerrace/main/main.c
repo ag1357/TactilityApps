@@ -33,7 +33,12 @@ static Game *g;
 static Renderer *r;
 static AiInput actions;
 static SemaphoreHandle_t input_mutex;
-static Thread *sampler,*i2c_worker;
+static Thread *sampler,*i2c_worker,*band_helper;
+static SemaphoreHandle_t band_go,band_done;
+static int band_active;
+/* Helper band duration: written by the helper before its done give, read by
+ * the main task after the matching take, so the semaphore orders the access. */
+static volatile uint32_t band_helper_scene_us;
 static AiInput binding_snapshot;
 static CtI2cInput peripherals;
 static struct TaskEventGroup events, sampler_events, i2c_events;
@@ -87,6 +92,8 @@ typedef struct {
     uint32_t present[PROF_PRESENT_N];
     unsigned present_n;
     uint64_t tri, cands, tests, writes;
+    uint64_t band_tri, band_cands; /* helper-core share, pre-fold */
+    uint64_t band_main_us, band_helper_us;
 } Prof;
 static Prof prof;
 static void prof_reset(void) { memset(&prof, 0, sizeof prof); for (int s = 0; s < PS_COUNT; s++) prof.min[s] = 0xFFFFFFFFu; }
@@ -114,12 +121,16 @@ static void prof_emit(void) {
     memcpy(sorted, ring, sizeof sorted);
     qsort(sorted, pn, sizeof sorted[0], prof_u32_cmp);
     unsigned p95 = pn ? (pn * 95 + 99) / 100 - 1 : 0;
-    off += snprintf(line + off, sizeof line - (size_t)off, ",\"present_p95_us\":%lu,\"triangles\":%llu,\"candidates\":%llu,\"depth_tests\":%llu,\"writes\":%llu}\n",
+    off += snprintf(line + off, sizeof line - (size_t)off, ",\"present_p95_us\":%lu,\"triangles\":%llu,\"candidates\":%llu,\"depth_tests\":%llu,\"writes\":%llu,\"band_tri\":%llu,\"band_cands\":%llu,\"band_main_us\":%lu,\"band_helper_us\":%lu}\n",
                     (unsigned long)(pn ? sorted[p95] : 0),
                     (unsigned long long)(prof.n ? prof.tri / prof.n : 0),
                     (unsigned long long)(prof.n ? prof.cands / prof.n : 0),
                     (unsigned long long)(prof.n ? prof.tests / prof.n : 0),
-                    (unsigned long long)(prof.n ? prof.writes / prof.n : 0));
+                    (unsigned long long)(prof.n ? prof.writes / prof.n : 0),
+                    (unsigned long long)(prof.n ? prof.band_tri / prof.n : 0),
+                    (unsigned long long)(prof.n ? prof.band_cands / prof.n : 0),
+                    (unsigned long)(prof.n ? prof.band_main_us / prof.n : 0),
+                    (unsigned long)(prof.n ? prof.band_helper_us / prof.n : 0));
     emit("%s", line);
     prof_reset();
 }
@@ -286,6 +297,24 @@ static bool keyboard_drain(struct Device *device,void *context) {
         unlock_input();
     }
     return true;
+}
+/* Band-split render helper: draws the bottom row band while the main task
+ * draws the top band of the same prepared frame. Identical per-pixel
+ * expressions and fragment order as the serial renderer; rows are disjoint,
+ * so output is exact. Never takes the input mutex or any LVGL lock. */
+static int32_t band_task(void *context) {
+    (void)context;
+    render_band_thread(1);
+    while (!atomic_load(&lifecycle.closing)) {
+        if (xSemaphoreTake(band_go, portMAX_DELAY) != pdTRUE) break;
+        if (atomic_load(&lifecycle.closing)) break;
+        uint64_t t0 = micros();
+        render_scene(r, g, H / 2, H);
+        /* Written before the done give; read after its take - ordered. */
+        band_helper_scene_us = (uint32_t)(micros() - t0);
+        xSemaphoreGive(band_done);
+    }
+    return 0;
 }
 static int32_t input_task(void *context) {
     (void)context;
@@ -525,6 +554,7 @@ int main(int argc,char **argv) {
     if(!g||!r||!input_mutex){memory_free(g);memory_free(r);if(input_mutex)vSemaphoreDelete(input_mutex);if(telemetry)fclose(telemetry);return 2;}
     game_new(g,42,-1);int reloaded=load_game(g,save_path);ai_init(&actions);int bindings_loaded=ai_bindings_load(&actions,binding_path,micros());
     emit("{\"type\":\"boot\",\"title\":\"Anaphorum\",\"reload\":%d,\"bindings_loaded\":%d,\"input_period_target_us\":10000,\"physical\":\"PENDING\"}\n",reloaded,bindings_loaded);
+    emit("{\"type\":\"heap\",\"internal_free\":%u,\"internal_largest\":%u,\"psram_free\":%u,\"psram_largest\":%u}\n",(unsigned)heap_caps_get_free_size(MALLOC_CAP_INTERNAL),(unsigned)heap_caps_get_largest_free_block(MALLOC_CAP_INTERNAL),(unsigned)heap_caps_get_free_size(MALLOC_CAP_SPIRAM),(unsigned)heap_caps_get_largest_free_block(MALLOC_CAP_SPIRAM));
     task_event_group_construct(&events);task_event_group_construct(&sampler_events);task_event_group_construct(&i2c_events);task_event_group_claim_bit(&events,&window_bit);task_event_group_claim_bit(&sampler_events,&sampler_bit);task_event_group_claim_bit(&i2c_events,&i2c_bit);
     struct AppEventSubscription sub={0};int subscribed=app_event_subscribe(&sub,&events)==ERROR_NONE;
     WindowId window=0;int result=0;
@@ -543,6 +573,24 @@ int main(int argc,char **argv) {
         }
     }
     emit("{\"type\":\"i2c_config\",\"configured\":%d,\"worker\":%d}\n",peripheral_count,i2c_worker!=NULL);
+    /* Band-split helper pinned to the second core; falls back to the serial
+     * renderer when it cannot start, and at close via the go semaphore. */
+    band_go=xSemaphoreCreateBinary();
+    band_done=xSemaphoreCreateBinary();
+    if(band_go&&band_done) {
+        /* 4 KB stack: nested scene calls use well under 1 KB on P4 builds.
+         * Normal priority (peer of the app task, below LVGL): the LVGL task's
+         * per-frame canvas redraw preempts the helper's band, which measured
+         * best overall - it also throttles the helper's PSRAM traffic, leaving
+         * the main band's memory bandwidth mostly intact. Raising the helper
+         * above LVGL or balancing the split across quarters both regressed
+         * (measured symmetric ~2x raster stretch from shared-memory
+         * contention; see results/p4-band-split-optimization.txt). */
+        band_helper=thread_alloc_full("anaphorum-band",4096,band_task,NULL,1);
+        if(band_helper&&thread_start(band_helper)==ERROR_NONE)band_active=1;
+        else if(band_helper){thread_free(band_helper);band_helper=NULL;}
+    }
+    emit("{\"type\":\"band_config\",\"active\":%d}\n",band_active);
     /* Stage profiler: buffered in RAM, emitted once per 30 rendered frames.
      * No file or console I/O happens in the per-frame hot path. */
     render_set_clock(micros);
@@ -598,7 +646,25 @@ int main(int argc,char **argv) {
         prof_record(PS_TICK,(uint32_t)(micros()-ps));
         if((m==PLAY||m==CONVERSATION)&&atomic_load(&lifecycle.granted)) {
             uint64_t start=micros();r->conversation=m==CONVERSATION;r->first_person=first_person;
-            ps=micros();render(r,g);prof_record(PS_RENDER,(uint32_t)(micros()-ps));
+            ps=micros();
+            if(band_active) {
+                render_prepare(r,g);
+                render_clear(r);
+                xSemaphoreGive(band_go);
+                uint64_t scene_start=micros();
+                render_scene(r,g,0,H/2);
+                prof.band_main_us+=(uint32_t)(micros()-scene_start);
+                /* Peer-priority helper: the main task blocks here while the
+                 * second core finishes its band, so no frame is dropped and
+                 * no second-scale input starvation is added. */
+                xSemaphoreTake(band_done,portMAX_DELAY);
+                prof.band_helper_us+=band_helper_scene_us;
+                prof.band_tri+=r->band_triangles;prof.band_cands+=r->band_candidates;
+                render_band_fold(r);
+                r->scene_us=(uint32_t)(micros()-scene_start);
+            } else
+                render(r,g);
+            prof_record(PS_RENDER,(uint32_t)(micros()-ps));
             prof_record(PS_CLEAR,r->clear_us);prof_record(PS_SCENE,r->scene_us);
             prof.tri+=r->triangles;prof.cands+=r->raster_candidates;prof.tests+=r->depth_tests;prof.writes+=r->pixels_written;prof.n++;
             ps=micros();
@@ -623,7 +689,7 @@ int main(int argc,char **argv) {
         }
         if(qualify&&current-last_report>=2000000) {
             lock_input();uint32_t count=input_samples,min=input_min_us,max=input_max_us,ev=input_events,dis=input_disconnects,drop=actions.dropped_events;uint64_t sum=input_total_us;AiControl source=last_source;int value=last_source_value;unlock_input();
-            emit("{\"type\":\"input\",\"samples\":%lu,\"mean_us\":%llu,\"min_us\":%lu,\"max_us\":%lu,\"events\":%lu,\"disconnects\":%lu,\"dropped\":%lu}\n",(unsigned long)count,(unsigned long long)(count?sum/count:0),(unsigned long)min,(unsigned long)max,(unsigned long)ev,(unsigned long)dis,(unsigned long)drop);emit("{\"type\":\"source_action\",\"backend\":%u,\"device\":%lu,\"control\":%u,\"value\":%d,\"held\":%lu,\"axes\":[%d,%d,%d,%d],\"jump_edges\":%u,\"interact_edges\":%u}\n",source.backend,(unsigned long)source.device,source.control,value,(unsigned long)frame.held,frame.axes[0],frame.axes[1],frame.axes[2],frame.axes[3],frame.pressed[AI_JUMP],frame.pressed[AI_INTERACT]);last_report=current;
+            emit("{\"type\":\"input\",\"samples\":%lu,\"mean_us\":%llu,\"min_us\":%lu,\"max_us\":%lu,\"events\":%lu,\"disconnects\":%lu,\"dropped\":%lu}\n",(unsigned long)count,(unsigned long long)(count?sum/count:0),(unsigned long)min,(unsigned long)max,(unsigned long)ev,(unsigned long)dis,(unsigned long)drop);emit("{\"type\":\"source_action\",\"backend\":%u,\"device\":%lu,\"control\":%u,\"value\":%d,\"held\":%lu,\"axes\":[%d,%d,%d,%d],\"jump_edges\":%u,\"interact_edges\":%u}\n",source.backend,(unsigned long)source.device,source.control,value,(unsigned long)frame.held,frame.axes[0],frame.axes[1],frame.axes[2],frame.axes[3],frame.pressed[AI_JUMP],frame.pressed[AI_INTERACT]);emit("{\"type\":\"heap\",\"internal_free\":%u,\"internal_largest\":%u,\"psram_free\":%u,\"psram_largest\":%u}\n",(unsigned)heap_caps_get_free_size(MALLOC_CAP_INTERNAL),(unsigned)heap_caps_get_largest_free_block(MALLOC_CAP_INTERNAL),(unsigned)heap_caps_get_free_size(MALLOC_CAP_SPIRAM),(unsigned)heap_caps_get_largest_free_block(MALLOC_CAP_SPIRAM));last_report=current;
         }
         ps=micros();
         task_event_group_wait_any(&events,NULL,pdMS_TO_TICKS(m==PLAY||m==CONVERSATION?1:10));
@@ -631,6 +697,9 @@ int main(int argc,char **argv) {
     }
 cleanup:
     ct_lifecycle_close(&lifecycle);wake();
+    if(band_helper){xSemaphoreGive(band_go);thread_join(band_helper,portMAX_DELAY,1);thread_free(band_helper);band_helper=NULL;band_active=0;}
+    if(band_go){vSemaphoreDelete(band_go);band_go=NULL;}
+    if(band_done){vSemaphoreDelete(band_done);band_done=NULL;}
     if(i2c_worker){thread_join(i2c_worker,portMAX_DELAY,1);thread_free(i2c_worker);i2c_worker=NULL;}
     if(sampler){thread_join(sampler,portMAX_DELAY,1);thread_free(sampler);sampler=NULL;}
     emit("{\"type\":\"input_joined\",\"frame\":%lu}\n",(unsigned long)r->frame);
@@ -640,6 +709,6 @@ cleanup:
     task_event_group_release_bit(&events,window_bit);task_event_group_release_bit(&sampler_events,sampler_bit);task_event_group_release_bit(&i2c_events,i2c_bit);
     task_event_group_destruct(&events);task_event_group_destruct(&sampler_events);task_event_group_destruct(&i2c_events);
     memory_free(canvas_pixels);memory_free(r);memory_free(g);vSemaphoreDelete(input_mutex);
-    emit("{\"type\":\"close_done\",\"input_task_joined\":true,\"buffers_released\":true,\"internal_free\":%u,\"psram_free\":%u}\n",(unsigned)heap_caps_get_free_size(MALLOC_CAP_INTERNAL),(unsigned)heap_caps_get_free_size(MALLOC_CAP_SPIRAM));
+    emit("{\"type\":\"close_done\",\"input_task_joined\":true,\"buffers_released\":true,\"internal_free\":%u,\"internal_largest\":%u,\"psram_free\":%u,\"psram_largest\":%u}\n",(unsigned)heap_caps_get_free_size(MALLOC_CAP_INTERNAL),(unsigned)heap_caps_get_largest_free_block(MALLOC_CAP_INTERNAL),(unsigned)heap_caps_get_free_size(MALLOC_CAP_SPIRAM),(unsigned)heap_caps_get_largest_free_block(MALLOC_CAP_SPIRAM));
     if(telemetry)fclose(telemetry);return result;
 }

@@ -12,314 +12,314 @@
       "captured_triangles": 3870,
       "samples": [
         {
-          "reference_frame_ms": 1.893921,
-          "candidate_frame_ms": 2.085346,
-          "reference_raster_replay_ms": 1.586417,
-          "candidate_raster_replay_ms": 1.773941,
-          "reference_total_ms": 2.043106,
-          "candidate_total_ms": 2.157773
+          "reference_frame_ms": 1.898372,
+          "candidate_frame_ms": 2.21416,
+          "reference_raster_replay_ms": 1.593321,
+          "candidate_raster_replay_ms": 1.900083,
+          "reference_total_ms": 2.046702,
+          "candidate_total_ms": 2.295698
         },
         {
-          "reference_frame_ms": 1.88966,
-          "candidate_frame_ms": 2.082963,
-          "reference_raster_replay_ms": 1.583392,
-          "candidate_raster_replay_ms": 1.775856,
-          "reference_total_ms": 2.041988,
-          "candidate_total_ms": 2.198469
+          "reference_frame_ms": 1.897456,
+          "candidate_frame_ms": 2.212531,
+          "reference_raster_replay_ms": 1.592448,
+          "candidate_raster_replay_ms": 1.911809,
+          "reference_total_ms": 2.051171,
+          "candidate_total_ms": 2.289896
         },
         {
-          "reference_frame_ms": 1.897563,
-          "candidate_frame_ms": 2.085342,
-          "reference_raster_replay_ms": 1.585152,
-          "candidate_raster_replay_ms": 1.775291,
-          "reference_total_ms": 2.048727,
-          "candidate_total_ms": 2.162397
+          "reference_frame_ms": 1.900117,
+          "candidate_frame_ms": 2.210207,
+          "reference_raster_replay_ms": 1.595698,
+          "candidate_raster_replay_ms": 1.900008,
+          "reference_total_ms": 2.048511,
+          "candidate_total_ms": 2.283378
         },
         {
-          "reference_frame_ms": 1.89166,
-          "candidate_frame_ms": 2.086852,
-          "reference_raster_replay_ms": 1.583544,
-          "candidate_raster_replay_ms": 1.775658,
-          "reference_total_ms": 2.043349,
-          "candidate_total_ms": 2.159162
+          "reference_frame_ms": 1.898476,
+          "candidate_frame_ms": 2.21124,
+          "reference_raster_replay_ms": 1.591757,
+          "candidate_raster_replay_ms": 1.898747,
+          "reference_total_ms": 2.049292,
+          "candidate_total_ms": 2.294104
         },
         {
-          "reference_frame_ms": 1.892461,
-          "candidate_frame_ms": 2.083154,
-          "reference_raster_replay_ms": 1.587141,
-          "candidate_raster_replay_ms": 1.77456,
-          "reference_total_ms": 2.047505,
-          "candidate_total_ms": 2.157948
+          "reference_frame_ms": 1.899437,
+          "candidate_frame_ms": 2.213217,
+          "reference_raster_replay_ms": 1.592175,
+          "candidate_raster_replay_ms": 1.898053,
+          "reference_total_ms": 2.047968,
+          "candidate_total_ms": 2.284458
         },
         {
-          "reference_frame_ms": 1.893617,
-          "candidate_frame_ms": 2.084354,
-          "reference_raster_replay_ms": 1.581417,
-          "candidate_raster_replay_ms": 1.775354,
-          "reference_total_ms": 2.04609,
-          "candidate_total_ms": 2.154905
+          "reference_frame_ms": 1.896502,
+          "candidate_frame_ms": 2.21415,
+          "reference_raster_replay_ms": 1.593401,
+          "candidate_raster_replay_ms": 1.899279,
+          "reference_total_ms": 2.048625,
+          "candidate_total_ms": 2.315474
         },
         {
-          "reference_frame_ms": 1.892186,
-          "candidate_frame_ms": 2.086475,
-          "reference_raster_replay_ms": 1.583814,
-          "candidate_raster_replay_ms": 1.777644,
-          "reference_total_ms": 2.046384,
-          "candidate_total_ms": 2.158851
+          "reference_frame_ms": 1.897777,
+          "candidate_frame_ms": 2.211171,
+          "reference_raster_replay_ms": 1.59084,
+          "candidate_raster_replay_ms": 1.897647,
+          "reference_total_ms": 2.046945,
+          "candidate_total_ms": 2.298016
         }
       ],
-      "reference_frame_p95_ms": 1.910027,
-      "candidate_frame_p95_ms": 2.109085,
-      "reference_total_p95_ms": 2.06103,
-      "candidate_total_p95_ms": 2.262495,
+      "reference_frame_p95_ms": 1.915388,
+      "candidate_frame_p95_ms": 2.228444,
+      "reference_total_p95_ms": 2.061758,
+      "candidate_total_p95_ms": 2.36587,
       "median": {
-        "reference_frame_ms": 1.892461,
-        "candidate_frame_ms": 2.085342,
-        "reference_raster_replay_ms": 1.583814,
-        "candidate_raster_replay_ms": 1.775354,
-        "reference_total_ms": 2.04609,
-        "candidate_total_ms": 2.158851
+        "reference_frame_ms": 1.898372,
+        "candidate_frame_ms": 2.212531,
+        "reference_raster_replay_ms": 1.592448,
+        "candidate_raster_replay_ms": 1.899279,
+        "reference_total_ms": 2.048511,
+        "candidate_total_ms": 2.294104
       },
-      "raster_replay_speedup": 0.8921116577313595,
-      "frame_speedup": 0.9075062987270194,
-      "total_speedup": 0.9477680488370898
+      "raster_replay_speedup": 0.8384486955313043,
+      "frame_speedup": 0.8580092211137381,
+      "total_speedup": 0.8929460041916147
     },
     {
       "scene": "vista",
       "captured_triangles": 130,
       "samples": [
         {
-          "reference_frame_ms": 0.384516,
-          "candidate_frame_ms": 0.441299,
-          "reference_raster_replay_ms": 0.366152,
-          "candidate_raster_replay_ms": 0.42587,
-          "reference_total_ms": 0.535115,
-          "candidate_total_ms": 0.513985
+          "reference_frame_ms": 0.385937,
+          "candidate_frame_ms": 0.461271,
+          "reference_raster_replay_ms": 0.366903,
+          "candidate_raster_replay_ms": 0.444941,
+          "reference_total_ms": 0.536436,
+          "candidate_total_ms": 0.527762
         },
         {
-          "reference_frame_ms": 0.380646,
-          "candidate_frame_ms": 0.443401,
-          "reference_raster_replay_ms": 0.36543,
-          "candidate_raster_replay_ms": 0.426228,
-          "reference_total_ms": 0.535361,
-          "candidate_total_ms": 0.509521
+          "reference_frame_ms": 0.381155,
+          "candidate_frame_ms": 0.462286,
+          "reference_raster_replay_ms": 0.3661,
+          "candidate_raster_replay_ms": 0.445129,
+          "reference_total_ms": 0.535407,
+          "candidate_total_ms": 0.527494
         },
         {
-          "reference_frame_ms": 0.383762,
-          "candidate_frame_ms": 0.441214,
-          "reference_raster_replay_ms": 0.367408,
-          "candidate_raster_replay_ms": 0.427347,
-          "reference_total_ms": 0.532731,
-          "candidate_total_ms": 0.50248
+          "reference_frame_ms": 0.385201,
+          "candidate_frame_ms": 0.459,
+          "reference_raster_replay_ms": 0.368223,
+          "candidate_raster_replay_ms": 0.445505,
+          "reference_total_ms": 0.534331,
+          "candidate_total_ms": 0.52617
         },
         {
-          "reference_frame_ms": 0.380931,
-          "candidate_frame_ms": 0.44609,
-          "reference_raster_replay_ms": 0.366833,
-          "candidate_raster_replay_ms": 0.428387,
-          "reference_total_ms": 0.532735,
-          "candidate_total_ms": 0.503077
+          "reference_frame_ms": 0.381386,
+          "candidate_frame_ms": 0.461501,
+          "reference_raster_replay_ms": 0.367725,
+          "candidate_raster_replay_ms": 0.44673,
+          "reference_total_ms": 0.534353,
+          "candidate_total_ms": 0.520051
         },
         {
-          "reference_frame_ms": 0.386735,
-          "candidate_frame_ms": 0.443972,
-          "reference_raster_replay_ms": 0.365827,
-          "candidate_raster_replay_ms": 0.425994,
-          "reference_total_ms": 0.533561,
-          "candidate_total_ms": 0.501779
+          "reference_frame_ms": 0.38764,
+          "candidate_frame_ms": 0.459642,
+          "reference_raster_replay_ms": 0.367163,
+          "candidate_raster_replay_ms": 0.445422,
+          "reference_total_ms": 0.534554,
+          "candidate_total_ms": 0.520578
         },
         {
-          "reference_frame_ms": 0.384303,
-          "candidate_frame_ms": 0.445772,
-          "reference_raster_replay_ms": 0.365021,
-          "candidate_raster_replay_ms": 0.426171,
-          "reference_total_ms": 0.533252,
-          "candidate_total_ms": 0.504131
+          "reference_frame_ms": 0.384099,
+          "candidate_frame_ms": 0.463822,
+          "reference_raster_replay_ms": 0.367275,
+          "candidate_raster_replay_ms": 0.444995,
+          "reference_total_ms": 0.536363,
+          "candidate_total_ms": 0.523276
         },
         {
-          "reference_frame_ms": 0.383443,
-          "candidate_frame_ms": 0.443622,
-          "reference_raster_replay_ms": 0.365803,
-          "candidate_raster_replay_ms": 0.425824,
-          "reference_total_ms": 0.535766,
-          "candidate_total_ms": 0.513322
+          "reference_frame_ms": 0.385444,
+          "candidate_frame_ms": 0.463467,
+          "reference_raster_replay_ms": 0.366648,
+          "candidate_raster_replay_ms": 0.444582,
+          "reference_total_ms": 0.535792,
+          "candidate_total_ms": 0.529976
         }
       ],
-      "reference_frame_p95_ms": 0.393043,
-      "candidate_frame_p95_ms": 0.455136,
-      "reference_total_p95_ms": 0.541026,
-      "candidate_total_p95_ms": 0.524452,
+      "reference_frame_p95_ms": 0.392981,
+      "candidate_frame_p95_ms": 0.470241,
+      "reference_total_p95_ms": 0.541648,
+      "candidate_total_p95_ms": 0.551074,
       "median": {
-        "reference_frame_ms": 0.383762,
-        "candidate_frame_ms": 0.443622,
-        "reference_raster_replay_ms": 0.365827,
-        "candidate_raster_replay_ms": 0.426171,
-        "reference_total_ms": 0.533561,
-        "candidate_total_ms": 0.504131
+        "reference_frame_ms": 0.385201,
+        "candidate_frame_ms": 0.461501,
+        "reference_raster_replay_ms": 0.367163,
+        "candidate_raster_replay_ms": 0.445129,
+        "reference_total_ms": 0.535407,
+        "candidate_total_ms": 0.52617
       },
-      "raster_replay_speedup": 0.858404255568774,
-      "frame_speedup": 0.8650653033438377,
-      "total_speedup": 1.058377683578276
+      "raster_replay_speedup": 0.8248462805164346,
+      "frame_speedup": 0.8346699140413564,
+      "total_speedup": 1.01755516278009
     },
     {
       "scene": "cave",
       "captured_triangles": 133,
       "samples": [
         {
-          "reference_frame_ms": 0.353521,
-          "candidate_frame_ms": 0.401742,
-          "reference_raster_replay_ms": 0.344261,
-          "candidate_raster_replay_ms": 0.392054,
-          "reference_total_ms": 0.503179,
-          "candidate_total_ms": 0.470957
+          "reference_frame_ms": 0.355096,
+          "candidate_frame_ms": 0.414256,
+          "reference_raster_replay_ms": 0.344453,
+          "candidate_raster_replay_ms": 0.405816,
+          "reference_total_ms": 0.505267,
+          "candidate_total_ms": 0.484046
         },
         {
-          "reference_frame_ms": 0.350402,
-          "candidate_frame_ms": 0.403072,
-          "reference_raster_replay_ms": 0.342647,
-          "candidate_raster_replay_ms": 0.391852,
-          "reference_total_ms": 0.502126,
-          "candidate_total_ms": 0.46093
+          "reference_frame_ms": 0.350442,
+          "candidate_frame_ms": 0.415253,
+          "reference_raster_replay_ms": 0.342765,
+          "candidate_raster_replay_ms": 0.406206,
+          "reference_total_ms": 0.504138,
+          "candidate_total_ms": 0.486905
         },
         {
-          "reference_frame_ms": 0.355379,
-          "candidate_frame_ms": 0.401269,
-          "reference_raster_replay_ms": 0.343035,
-          "candidate_raster_replay_ms": 0.391723,
-          "reference_total_ms": 0.502838,
-          "candidate_total_ms": 0.466278
+          "reference_frame_ms": 0.354565,
+          "candidate_frame_ms": 0.413074,
+          "reference_raster_replay_ms": 0.344272,
+          "candidate_raster_replay_ms": 0.40611,
+          "reference_total_ms": 0.505972,
+          "candidate_total_ms": 0.486542
         },
         {
-          "reference_frame_ms": 0.352649,
-          "candidate_frame_ms": 0.402654,
-          "reference_raster_replay_ms": 0.342516,
-          "candidate_raster_replay_ms": 0.391308,
-          "reference_total_ms": 0.503523,
-          "candidate_total_ms": 0.48018
+          "reference_frame_ms": 0.35037,
+          "candidate_frame_ms": 0.415817,
+          "reference_raster_replay_ms": 0.343832,
+          "candidate_raster_replay_ms": 0.406655,
+          "reference_total_ms": 0.505118,
+          "candidate_total_ms": 0.484836
         },
         {
-          "reference_frame_ms": 0.353172,
-          "candidate_frame_ms": 0.399582,
-          "reference_raster_replay_ms": 0.342873,
-          "candidate_raster_replay_ms": 0.391472,
-          "reference_total_ms": 0.502418,
-          "candidate_total_ms": 0.470973
+          "reference_frame_ms": 0.354455,
+          "candidate_frame_ms": 0.414105,
+          "reference_raster_replay_ms": 0.343949,
+          "candidate_raster_replay_ms": 0.405917,
+          "reference_total_ms": 0.50504,
+          "candidate_total_ms": 0.502288
         },
         {
-          "reference_frame_ms": 0.351439,
-          "candidate_frame_ms": 0.403806,
-          "reference_raster_replay_ms": 0.342523,
-          "candidate_raster_replay_ms": 0.3923,
-          "reference_total_ms": 0.501996,
-          "candidate_total_ms": 0.466659
+          "reference_frame_ms": 0.350946,
+          "candidate_frame_ms": 0.415809,
+          "reference_raster_replay_ms": 0.342398,
+          "candidate_raster_replay_ms": 0.406593,
+          "reference_total_ms": 0.504211,
+          "candidate_total_ms": 0.48502
         },
         {
-          "reference_frame_ms": 0.358159,
-          "candidate_frame_ms": 0.403725,
-          "reference_raster_replay_ms": 0.343286,
-          "candidate_raster_replay_ms": 0.391634,
-          "reference_total_ms": 0.501778,
-          "candidate_total_ms": 0.467779
+          "reference_frame_ms": 0.354723,
+          "candidate_frame_ms": 0.413574,
+          "reference_raster_replay_ms": 0.343922,
+          "candidate_raster_replay_ms": 0.406643,
+          "reference_total_ms": 0.506845,
+          "candidate_total_ms": 0.493975
         }
       ],
-      "reference_frame_p95_ms": 0.368172,
-      "candidate_frame_p95_ms": 0.414395,
-      "reference_total_p95_ms": 0.505692,
-      "candidate_total_p95_ms": 0.485192,
+      "reference_frame_p95_ms": 0.359667,
+      "candidate_frame_p95_ms": 0.418574,
+      "reference_total_p95_ms": 0.516259,
+      "candidate_total_p95_ms": 0.5805,
       "median": {
-        "reference_frame_ms": 0.353172,
-        "candidate_frame_ms": 0.402654,
-        "reference_raster_replay_ms": 0.342873,
-        "candidate_raster_replay_ms": 0.391723,
-        "reference_total_ms": 0.502418,
-        "candidate_total_ms": 0.467779
+        "reference_frame_ms": 0.354455,
+        "candidate_frame_ms": 0.414256,
+        "reference_raster_replay_ms": 0.343922,
+        "candidate_raster_replay_ms": 0.406206,
+        "reference_total_ms": 0.505118,
+        "candidate_total_ms": 0.486542
       },
-      "raster_replay_speedup": 0.875294532105595,
-      "frame_speedup": 0.8771103726772862,
-      "total_speedup": 1.074049925285231
+      "raster_replay_speedup": 0.8466689315273531,
+      "frame_speedup": 0.8556424046966128,
+      "total_speedup": 1.0381796432784836
     },
     {
       "scene": "closeup",
       "captured_triangles": 169,
       "samples": [
         {
-          "reference_frame_ms": 0.722784,
-          "candidate_frame_ms": 0.826528,
-          "reference_raster_replay_ms": 0.695772,
-          "candidate_raster_replay_ms": 0.799528,
-          "reference_total_ms": 0.87055,
-          "candidate_total_ms": 0.888283
+          "reference_frame_ms": 0.722791,
+          "candidate_frame_ms": 0.841592,
+          "reference_raster_replay_ms": 0.695991,
+          "candidate_raster_replay_ms": 0.81973,
+          "reference_total_ms": 0.871448,
+          "candidate_total_ms": 0.911494
         },
         {
-          "reference_frame_ms": 0.717415,
-          "candidate_frame_ms": 0.826325,
-          "reference_raster_replay_ms": 0.694083,
-          "candidate_raster_replay_ms": 0.798634,
-          "reference_total_ms": 0.870556,
-          "candidate_total_ms": 0.889809
+          "reference_frame_ms": 0.717147,
+          "candidate_frame_ms": 0.845154,
+          "reference_raster_replay_ms": 0.69547,
+          "candidate_raster_replay_ms": 0.821771,
+          "reference_total_ms": 0.871017,
+          "candidate_total_ms": 0.91603
         },
         {
-          "reference_frame_ms": 0.722378,
-          "candidate_frame_ms": 0.823085,
-          "reference_raster_replay_ms": 0.695179,
-          "candidate_raster_replay_ms": 0.797385,
-          "reference_total_ms": 0.870662,
-          "candidate_total_ms": 0.897375
+          "reference_frame_ms": 0.721572,
+          "candidate_frame_ms": 0.839756,
+          "reference_raster_replay_ms": 0.696681,
+          "candidate_raster_replay_ms": 0.817005,
+          "reference_total_ms": 0.871533,
+          "candidate_total_ms": 0.905627
         },
         {
-          "reference_frame_ms": 0.716555,
-          "candidate_frame_ms": 0.823333,
-          "reference_raster_replay_ms": 0.694954,
-          "candidate_raster_replay_ms": 0.799431,
-          "reference_total_ms": 0.869802,
-          "candidate_total_ms": 0.889098
+          "reference_frame_ms": 0.717494,
+          "candidate_frame_ms": 0.842198,
+          "reference_raster_replay_ms": 0.695579,
+          "candidate_raster_replay_ms": 0.817792,
+          "reference_total_ms": 0.869641,
+          "candidate_total_ms": 0.90511
         },
         {
-          "reference_frame_ms": 0.720352,
-          "candidate_frame_ms": 0.82095,
-          "reference_raster_replay_ms": 0.695267,
-          "candidate_raster_replay_ms": 0.798875,
-          "reference_total_ms": 0.871894,
-          "candidate_total_ms": 0.889978
+          "reference_frame_ms": 0.721004,
+          "candidate_frame_ms": 0.843181,
+          "reference_raster_replay_ms": 0.696641,
+          "candidate_raster_replay_ms": 0.817447,
+          "reference_total_ms": 0.871156,
+          "candidate_total_ms": 0.899117
         },
         {
-          "reference_frame_ms": 0.716062,
-          "candidate_frame_ms": 0.82432,
-          "reference_raster_replay_ms": 0.694504,
-          "candidate_raster_replay_ms": 0.799375,
-          "reference_total_ms": 0.868634,
-          "candidate_total_ms": 0.883456
+          "reference_frame_ms": 0.718754,
+          "candidate_frame_ms": 0.840801,
+          "reference_raster_replay_ms": 0.694657,
+          "candidate_raster_replay_ms": 0.815952,
+          "reference_total_ms": 0.871145,
+          "candidate_total_ms": 0.910982
         },
         {
-          "reference_frame_ms": 0.720997,
-          "candidate_frame_ms": 0.821596,
-          "reference_raster_replay_ms": 0.696035,
-          "candidate_raster_replay_ms": 0.798572,
-          "reference_total_ms": 0.869629,
-          "candidate_total_ms": 0.882212
+          "reference_frame_ms": 0.722449,
+          "candidate_frame_ms": 0.840478,
+          "reference_raster_replay_ms": 0.696262,
+          "candidate_raster_replay_ms": 0.816912,
+          "reference_total_ms": 0.873818,
+          "candidate_total_ms": 0.909354
         }
       ],
-      "reference_frame_p95_ms": 0.729084,
-      "candidate_frame_p95_ms": 0.835224,
-      "reference_total_p95_ms": 0.879184,
-      "candidate_total_p95_ms": 0.921424,
+      "reference_frame_p95_ms": 0.729555,
+      "candidate_frame_p95_ms": 0.853166,
+      "reference_total_p95_ms": 0.880277,
+      "candidate_total_p95_ms": 0.946852,
       "median": {
-        "reference_frame_ms": 0.720352,
-        "candidate_frame_ms": 0.823333,
-        "reference_raster_replay_ms": 0.695179,
-        "candidate_raster_replay_ms": 0.798875,
-        "reference_total_ms": 0.87055,
-        "candidate_total_ms": 0.889098
+        "reference_frame_ms": 0.721004,
+        "candidate_frame_ms": 0.841592,
+        "reference_raster_replay_ms": 0.695991,
+        "candidate_raster_replay_ms": 0.817447,
+        "reference_total_ms": 0.871156,
+        "candidate_total_ms": 0.909354
       },
-      "raster_replay_speedup": 0.870197465185417,
-      "frame_speedup": 0.8749218117092356,
-      "total_speedup": 0.979138407689591
+      "raster_replay_speedup": 0.851420336731311,
+      "frame_speedup": 0.856714417437428,
+      "total_speedup": 0.9579943564332483
     }
   ],
   "host": "Linux-6.18.39+rpt-rpi-2712-aarch64-with-glibc2.41",
   "reference_commit": "347f90d2ce20c9f5d05f4d3169b8fa5d83e2915c",
   "reference_sha256": "208b455af924949e04c15a7ba940bfa8469ec31f737506fb76a8d8d17ffce838",
-  "candidate_sha256": "0fb8881b37b3f81ddc44c2d72a62e0cef69c17746b32776333c1b2f603b31661",
+  "candidate_sha256": "8f2ec932dc97af3c8e1c60a09f9bf2e617821776ff31610e951bfc202c0cc9f6",
   "compiler": "cc (Debian 14.2.0-19) 14.2.0",
   "sanitized": false,
   "asan_options": "",

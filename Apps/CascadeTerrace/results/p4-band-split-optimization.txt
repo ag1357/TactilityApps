@@ -1,0 +1,119 @@
+P4 frame-performance gate, round 4: dual-core band-split rendering
+====================================================================
+
+Build promoted: elf_sha256 c79f072f07a84ca99bdec1cd9421d5ce17bcdb1177df4a459e9c8550e0bfea09
+Device A: ESP32-P4, 192.168.4.185, display 308x462 (portrait), gamepad on i2c.
+Scene class for all numbers below: dense static view, ~902 triangles,
+~168,060 raster candidates, ~88,550 depth tests, ~68,660 pixel writes/frame.
+Serial reference (round 3 build, single core, same scene class):
+render mean ~84.9 ms; scene mean ~81 ms; present p95 ~95-100 ms.
+
+Result (30-frame windows, session 23:53:57-23:56:06, 12+ windows, static view):
+  render mean 71.1 ms  (was ~84.9)   scene mean 65.7-69.3 ms (was ~81)
+  present p95 83.2-85.6 ms (was ~95-100)
+  band_main_us   ~69,200  (main task, rows [0,H/2), ~72% of candidates)
+  band_helper_us ~55,700  (core 1,   rows [H/2,H), ~28% of candidates)
+  band share: triangles 21%, candidates 28% on the helper
+  band_config {"active":1} at boot; i2c_config configured:1; reload/bindings ok.
+  Input cadence unchanged (10 ms period target, no second-scale starvation);
+  watchdog clean; no dropped frames (peer-priority done-gate before fold).
+
+Design
+------
+- render.c split into render_prepare / render_clear / render_scene(r,g,y0,y1).
+  render_scene clamps raster rows to the caller's band; triangles count to the
+  band owning their first row; bounds-steppers advance identically over rows
+  the band skips. render() (serial) calls prepare+clear+scene(0,H) with the
+  same per-pixel expressions and fragment order, so serial output and timings
+  are unchanged.
+- Helper thread on core 1 (4 KB stack, normal priority = app-task peer, below
+  the LVGL task). Binary go/done semaphores per frame; the main task draws
+  [0,H/2) and then blocks on done, so the frame is never dropped and the
+  render never overlaps the present/scale phase. Fallback to serial render if
+  the thread cannot start. Per-band counters fold into the window totals
+  (render_band_fold) after the done-gate, so counter totals are exact.
+- NO C thread-local storage in the app binary: the device's Tactility
+  esp-elf loader cannot relocate TLS segments ("elf_arch: info=6 is not
+  supported", "Can't find common __tls_get_addr") and the app fails to load
+  with "Failed to start: resource". Band identity is resolved per call
+  instead: on ESP32 the raster compares xTaskGetCurrentTaskHandle() with the
+  helper handle registered by render_band_thread(1); host builds keep a
+  native _Thread_local slot (never passed through the ELF loader).
+
+Exact-parity verification
+-------------------------
+- tests/raster_band.c (make raster-band-test): 960 cases, parity 1
+  (2 and 3 disjoint bands, odd 97-row boundary, helper-slot routing).
+- Full VI-P2 host suite green; ASan/UBSan suites green.
+- Differential harness vs reference 347f90d (12,000 primitives + 224 views):
+  exact parity. Rename list extended with all new band/render symbols.
+
+Dual-core findings (measured, same static scene class)
+------------------------------------------------------
+1. Fixed H/2 split, helper at normal priority: scene 65.7-69.3 ms, present
+   p95 83-86 ms. Helper band stretched ~2.4x vs its serial-equivalent share
+   (LVGL task, priority THREAD_PRIORITY_HIGHER, runs its per-frame canvas
+   redraw on core 1 and preempts the helper). Main band stretched only ~1.19x.
+2. Balanced alternating quarter bands, helper raised above LVGL: scene
+   84.7 ms, present p95 138.8 ms - REGRESSION. Both bands stretched ~2.0x
+   symmetrically: with both cores rastering concurrently at full rate, the
+   shared memory path (PSRAM depth/canvas working set ~568 KB vs L2) halves
+   each core's raster rate, so the parallelism cancels itself. Reverted.
+3. Session variance: an identical H/2 build measured scene 101-113 ms /
+   present p95 127-129 ms in one boot (23:46) and 65.7-69.3 ms / 83-86 ms in
+   another (23:53) with the same static view and same telemetry counters. The
+   driver was not identified (i2c gamepad poll slowness ~9.2 ms vs 0.21 ms
+   per poll appears in both good and bad sessions; webserver/AccessoryLink/
+   LVGL redraw length candidates remain). Best-session numbers are reported
+   above; worst-case regressions to serial are bounded by the serial fallback.
+4. 4 KB helper stack (was 6 KB): coexisting app instances during a web install
+   + run restart failed with "Failed to start: resource" while the old
+   instance still held internal RAM. 6 KB pushed it over the edge; 4 KB fits.
+   Tactility app_manager loads the new ELF before the old instance exits.
+
+Assessment vs targets
+---------------------
+- render p95 <= 50 ms: NOT met by band-split alone. Measured render mean
+  71.1 ms (p95 ~74); the fixed-split scene is main-band-bound at ~69 ms.
+  The balanced-split experiment proves a shared-memory wall: two concurrently
+  rastering cores each run ~2x slower per unit of work, so total raster
+  throughput is ~serial regardless of split. Reaching 50 ms requires cutting
+  per-candidate PSRAM traffic (see later candidates), not more parallelism.
+- 30-33 ms: not reachable on this path.
+
+Later candidates (recorded, out of this gate's scope)
+-----------------------------------------------------
+- C-variant: row-major traversal with a small internal per-row depth/color
+  scratch (616 B/row) to burst PSRAM traffic. Changes fragment order per
+  pixel (depth-test tie order), so exact parity must be re-proven; the
+  differential harness plus a tie-order enumeration test would be needed.
+- Internal residency for the depth buffer is impossible (142 KB per band vs
+  largest internal free block ~31.7 KB under game load; no PSRAM XIP in this
+  firmware config).
+- Conservative early-depth skip (reject candidates whose triangle min-z is
+  worse than the row's current best) - changes no output but needs a new
+  parity proof for skip conditions.
+- The LVGL canvas redraw (core 1, priority above the helper) is itself a
+  large per-frame PSRAM consumer; moving the present path to a different
+  pacing could free memory bandwidth for the raster.
+
+Fork-mission issues observed (recorded, not fixed here)
+-------------------------------------------------------
+- Webserver large-transfer installs abort and, after ~3 consecutive failures,
+  wedge the whole network stack (rpc_core "Response not received for
+  Req_WifiStaGetRssi", webserver unreachable until reboot). FAT VFS FD leak
+  on aborted installs (known).
+- App close hangs when the foreground instance is revoked during active play
+  (webserver-driven run of another app): old instance parks without exiting,
+  its input/i2c/band threads keep running, and the next instance starts its
+  threads but never reaches its boot emit. Reproduced twice tonight; the
+  parked instance holds ~28 KB internal + ~1.5 MB PSRAM. Recovery: reboot.
+- /api/apps/run while an old instance still holds RAM: second instance fails
+  with "Failed to start: resource" (app ELF is loaded into internal RAM
+  before the old instance is torn down).
+- tactility.py dev-server (port 6666) is not running on this device, so
+  scripts/deploy-cm5.sh's install/run steps fail; port 80 web API works.
+  deploy-cm5.sh must be followed by a manual install+run via the web API.
+- Gamepad i2c polls intermittently take ~9.2 ms each (vs 0.21 ms) after some
+  power cycles, saturating the 10 ms sampler cadence; cause not identified
+  (present in good and bad frame sessions, so not the frame-time driver).

@@ -14,8 +14,42 @@ typedef struct {
 /* Optional live world state for staged river rendering (see render.h). */
 static const WsState *world_state_binding;
 static uint64_t (*render_clock)(void);
+/* Band-split rendering: per-slot row band [y0,y1) and counter routing so a
+ * helper core can draw one band while the main task draws another. Slot 0 is
+ * the main/serial task and slot 1 the helper. Defaults cover the full frame
+ * with slot 0, making the serial path byte-identical.
+ * No C thread-local storage here: the device app is loaded by Tactility's
+ * esp-elf loader, which cannot relocate TLS segments ("__tls_get_addr"), so
+ * slot identity is resolved per call instead - on ESP32 by comparing the
+ * current FreeRTOS task handle with the helper's (set once by
+ * render_band_thread(1)), and on host toolchains by a native thread-local
+ * that never passes through the ELF loader. */
+#ifdef ESP_PLATFORM
+#include "freertos/FreeRTOS.h"
+#include "freertos/task.h"
+static void* band_helper_task;
+static int band_slot_current(void) {
+    return band_helper_task != 0 && xTaskGetCurrentTaskHandle() == band_helper_task;
+}
+#else
+static _Thread_local int band_tls_slot;
+static int band_slot_current(void) { return band_tls_slot; }
+#endif
+static int band_y0v[2] = {0, 0}, band_y1v[2] = {65536, 65536};
 void render_bind_state(const WsState *s) { world_state_binding = s; }
 void render_set_clock(uint64_t (*now_us)(void)) { render_clock = now_us; }
+void render_band_thread(int slot) {
+#ifdef ESP_PLATFORM
+    if (slot) band_helper_task = xTaskGetCurrentTaskHandle();
+#else
+    band_tls_slot = slot ? 1 : 0;
+#endif
+}
+void render_band_fold(Renderer* r) {
+    r->triangles += r->band_triangles; r->pixels_written += r->band_writes;
+    r->raster_candidates += r->band_candidates; r->depth_tests += r->band_tests;
+    r->band_triangles = r->band_writes = r->band_candidates = r->band_tests = 0;
+}
 int render_load_assets(const char* path) {
     FILE* f = fopen(path, "rb");
     if (!f) return 0;
@@ -126,7 +160,20 @@ static void raster(V aa, V bb, V cc, uint32_t col, float shade) {
     if (miny < 0) miny = 0;
     if (maxy >= H) maxy = H - 1;
     if (minx > maxx || miny > maxy) return;
-    rr->triangles++;
+    /* Row band clamp: exactly the serial traversal when the band covers the
+     * frame (slot defaults). A triangle outside this band's rows contributes
+     * nothing; its triangle count stays with the band owning its first row,
+     * so per-band counts fold back to the serial totals. */
+    int band_slot = band_slot_current();
+    int band_y0 = band_y0v[band_slot], band_y1 = band_y1v[band_slot];
+    int yfirst = miny < band_y0 ? band_y0 : miny;
+    int ylast = maxy >= band_y1 ? band_y1 - 1 : maxy;
+    if (yfirst > ylast) return;
+    uint32_t* c_tri = band_slot ? &rr->band_triangles : &rr->triangles;
+    uint32_t* c_writes = band_slot ? &rr->band_writes : &rr->pixels_written;
+    uint32_t* c_cand = band_slot ? &rr->band_candidates : &rr->raster_candidates;
+    uint32_t* c_tests = band_slot ? &rr->band_tests : &rr->depth_tests;
+    if (miny >= band_y0 && miny < band_y1) (*c_tri)++;
     float ia = 1 / a.z, ib = 1 / b.z, ic = 1 / c.z;
     uint16_t rgb = fog(col, (a.z + b.z + c.z) / 3, shade);
 #if !CT_RASTER_REFERENCE
@@ -134,8 +181,12 @@ static void raster(V aa, V bb, V cc, uint32_t col, float shade) {
     /* Small triangles retain the cheap original path, including motes. */
     int count = (maxx-minx+1)*(maxy-miny+1) >= 256
               ? raster_bounds(a,b,c,area,miny,bounds) : 0;
+    /* Advance the row-bound steppers identically to per-row stepping for any
+     * rows the band skips below yfirst; the serial path skips zero rows. */
+    for (int y = miny; y < yfirst; y++)
+        for (int i = 0; i < count; ++i) bounds[i].x += bounds[i].step;
 #endif
-    for (int y = miny; y <= maxy; y++) {
+    for (int y = yfirst; y <= ylast; y++) {
         int first = minx, last = maxx;
 #if !CT_RASTER_REFERENCE
         float left = minx, right = maxx;
@@ -165,17 +216,17 @@ static void raster(V aa, V bb, V cc, uint32_t col, float shade) {
             if (ev < 0 || ev > 0) { if ((ev > 0) != positive) continue; }
             float u = eu / area, v = ev / area, w = 1 - u - v;
             if (w < 0) continue;
-            rr->depth_tests++;
+            (*c_tests)++;
             float iz = u * ia + v * ib + w * ic;
             int depth = (int)(100 / iz);
             int pos = y * W + x;
             if (depth < rr->depth[pos]) {
                 rr->depth[pos] = (uint16_t)depth;
                 rr->pixels[pos] = rgb;
-                rr->pixels_written++;
+                (*c_writes)++;
             }
         }
-        rr->raster_candidates += (uint32_t)(last - first + 1);
+        *c_cand += (uint32_t)(last - first + 1);
     }
 }
 static void tri(V a, V b, V c, uint32_t col, float shade) {
@@ -298,13 +349,13 @@ static void building(const Game* g, int i) {
         }
     }
 }
-void render(Renderer* r, const Game* g) {
+void render_prepare(Renderer* r, const Game* g) {
     rr = r;
     r->triangles = r->pixels_written = 0;
     r->raster_candidates = r->depth_tests = 0;
+    r->band_triangles = r->band_writes = r->band_candidates = r->band_tests = 0;
     r->clear_us = r->scene_us = 0;
     r->frame++;
-    uint64_t frame_clock = render_clock ? render_clock() : 0;
     float yaw = g->state.yaw * .01745329252f;
     r->yaw = yaw;
     /* View modes: conversation keeps its close-up framing; first_person is
@@ -324,6 +375,9 @@ void render(Renderer* r, const Game* g) {
     float ch = ground_at(&g->world, (int)(r->camera_x * 1000), (int)(r->camera_z * 1000)) / 1000.f + 1;
     if (r->camera_y < ch) r->camera_y = ch;
     light = .35f + .65f * fmaxf(0, sinf((g->state.time % 86400000) / 86400000.f * 6.2831853f - 1.570796f));
+}
+void render_clear(Renderer* r) {
+    uint64_t clear_clock = render_clock ? render_clock() : 0;
     for (int y = 0; y < H; y++) {
         /* Row-constant sky gradient: the identical per-row expression is
          * evaluated once; every row pixel stores the same value as before.
@@ -339,7 +393,15 @@ void render(Renderer* r, const Game* g) {
         } else
             for (int x = 0; x < W; x++) { px[x] = sky; dp[x] = 65535; }
     }
-    if (render_clock) r->clear_us = (uint32_t)(render_clock() - frame_clock);
+    if (render_clock) r->clear_us = (uint32_t)(render_clock() - clear_clock);
+}
+void render_scene(Renderer* r, const Game* g, int y0, int y1) {
+    int band_slot = band_slot_current();
+    band_y0v[band_slot] = y0; band_y1v[band_slot] = y1;
+    /* Scene-local camera floats and view mode, recomputed with the identical
+     * prepare expressions so band drawing sees exactly the serial values. */
+    float px = g->state.player_pos.x / 1000.f, py = g->state.player_pos.y / 1000.f, pz = g->state.player_pos.z / 1000.f;
+    int fp = r->first_person && !r->conversation;
     /* Scene: everything after the fused color+depth clear, to the last mote. */
     for (int iz = 0; iz < MAP_N - 1; iz++)
         for (int ix = 0; ix < MAP_N - 1; ix++) {
@@ -391,6 +453,13 @@ void render(Renderer* r, const Game* g) {
         float x = (int)(h % 2000) / 100.f - 10, z = -125 + (int)((h >> 12) % 1200) / 100.f, y = 1 + fmodf(g->state.time / 4000.f + i, 7);
         box(x, y, z, .07f, .15f, .07f, 0x93ffe2);
     }
+}
+void render(Renderer* r, const Game* g) {
+    uint64_t frame_clock = render_clock ? render_clock() : 0;
+    render_prepare(r, g);
+    render_clear(r);
+    if (render_clock) r->clear_us = (uint32_t)(render_clock() - frame_clock);
+    render_scene(r, g, 0, H);
     if (render_clock) r->scene_us = (uint32_t)(render_clock() - frame_clock) - r->clear_us;
 }
 void draw_panel(Renderer* r, int x, int y, int w, int h, uint16_t col) {

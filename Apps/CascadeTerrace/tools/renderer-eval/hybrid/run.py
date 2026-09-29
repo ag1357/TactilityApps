@@ -6,7 +6,7 @@ app=Path(__file__).resolve().parents[3]
 build=app/'build/renderer-hybrid';build.mkdir(parents=True,exist_ok=True)
 ref_sha='347f90d2ce20c9f5d05f4d3169b8fa5d83e2915c'
 original=subprocess.check_output(['git','show',ref_sha+':Apps/CascadeTerrace/core/render.c'],cwd=app,text=True)
-names=['render_load_assets','render','render_world','render_bind_state','render_world_peer','render_world_marker','draw_text','draw_panel','screenshot','render_set_clock']
+names=['render_load_assets','render','render_world','render_bind_state','render_world_peer','render_world_marker','draw_text','draw_panel','screenshot','render_set_clock','render_prepare','render_clear','render_scene','render_band_thread','render_band_fold']
 source=''.join('#define '+x+' reference_'+x+'\n' for x in names)+original+'''
 void reference_raw(Renderer* r,const float* v,uint32_t col,float shade,float illumination,int clip) {
  rr=r;cy=cp=1;sy=sp=0;light=illumination;

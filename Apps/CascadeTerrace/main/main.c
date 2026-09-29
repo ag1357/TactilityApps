@@ -305,6 +305,10 @@ static bool keyboard_drain(struct Device *device,void *context) {
 static int32_t band_task(void *context) {
     (void)context;
     render_band_thread(1);
+    /* Helper-ready handshake: signals that the identity registration above
+     * is complete, so the main task only gates a frame on the helper after
+     * band identity is settled for both tasks. */
+    xSemaphoreGive(band_done);
     while (!atomic_load(&lifecycle.closing)) {
         if (xSemaphoreTake(band_go, portMAX_DELAY) != pdTRUE) break;
         if (atomic_load(&lifecycle.closing)) break;
@@ -449,6 +453,30 @@ static void menu_build(void) {
     if(ui_notice[0]){lv_obj_t *notice=lv_label_create(overlay);lv_obj_set_width(notice,LV_PCT(100));lv_label_set_text(notice,ui_notice);}
     set_focus(0);
 }
+/* The conversation input line normally sits at the committed -85 offset
+ * (clearing the on-screen controls strip). While the textarea is focused,
+ * Tactility's software keyboard is shown: a locked standard, bottom-anchored,
+ * full width, 50% of the display height. In that state the input line simply
+ * sits above the keyboard's rendered band instead. The check is the
+ * textarea's own focus state; nothing outside the app's objects is read.
+ * Emits its decision whenever it changes, so a live round shows exactly
+ * which focus/offset transitions occur. */
+static int textarea_offset=-1,textarea_focused=-1;
+static void textarea_align(void) {
+    if(!textarea)return;
+    lv_area_t view;lv_obj_get_coords(root_widget,&view);
+    int display_h=lv_display_get_vertical_resolution(lv_display_get_default());
+    int focused=lv_obj_has_state(textarea,LV_STATE_FOCUSED)?1:0;
+    int offset=85;
+    if(focused) {
+        int need=view.y2-display_h/2+4;
+        if(need>offset)offset=need;
+    }
+    if(offset==textarea_offset&&focused==textarea_focused)return;
+    textarea_offset=offset;textarea_focused=focused;
+    lv_obj_align(textarea,LV_ALIGN_BOTTOM_MID,0,-offset);
+    emit("{\"type\":\"textarea_align\",\"focused\":%d,\"offset\":%d,\"view_y2\":%d,\"display_h\":%d}\n",focused,offset,(int)view.y2,display_h);
+}
 static void layout(lv_event_t *event) {
     (void)event;if(!root_widget||!canvas)return;
     lv_area_t a;lv_obj_get_coords(root_widget,&a);
@@ -468,6 +496,10 @@ static void layout(lv_event_t *event) {
 static void submit(lv_event_t *e) {
     if(lv_event_get_code(e)==LV_EVENT_READY){snprintf(submitted,sizeof(submitted),"%s",lv_textarea_get_text(textarea));lv_textarea_set_text(textarea,"");atomic_store(&command,CMD_SUBMIT);wake();}
     if(lv_event_get_code(e)==LV_EVENT_KEY&&lv_event_get_key(e)==LV_KEY_ESC){atomic_store(&command,CMD_RESUME);wake();}
+    /* Tactility shows/hides the software keyboard on textarea focus/defocus.
+     * Re-align so the input line sits above/below the keyboard band. */
+    if(lv_event_get_code(e)==LV_EVENT_FOCUSED||lv_event_get_code(e)==LV_EVENT_DEFOCUSED||
+       lv_event_get_code(e)==LV_EVENT_READY)textarea_align();
 }
 static void create(lv_obj_t *root,void *context) {
     (void)context;root_widget=root;
@@ -484,18 +516,18 @@ static void create(lv_obj_t *root,void *context) {
     textarea=lv_textarea_create(root);lv_obj_set_size(textarea,LV_PCT(100),40);lv_obj_align(textarea,LV_ALIGN_BOTTOM_MID,0,-85);lv_textarea_set_one_line(textarea,true);lv_textarea_set_max_length(textarea,127);lv_textarea_set_placeholder_text(textarea,"Type, Enter; Esc or Menu to leave");
     lv_group_t *group=lv_group_get_default();if(group)lv_group_add_obj(group,textarea);
     lv_obj_add_event_cb(textarea,submit,LV_EVENT_ALL,NULL);
-    if(atomic_load(&mode)==CONVERSATION){lv_obj_remove_flag(textarea,LV_OBJ_FLAG_HIDDEN);lv_group_focus_obj(textarea);}else lv_obj_add_flag(textarea,LV_OBJ_FLAG_HIDDEN);
+    if(atomic_load(&mode)==CONVERSATION){lv_obj_remove_flag(textarea,LV_OBJ_FLAG_HIDDEN);lv_group_focus_obj(textarea);textarea_align();}else lv_obj_add_flag(textarea,LV_OBJ_FLAG_HIDDEN);
     menu_build();lifecycle_grant_locked();wake();
 }
 static void destroy(void *context) {
     (void)context;lifecycle_revoke_locked();
-    keyboards_latched(0);root_widget=canvas=overlay=textarea=hint=move_feedback=look_feedback=NULL;focus_count=0;touch_zone=-1;wake();
+    keyboards_latched(0);root_widget=canvas=overlay=textarea=hint=move_feedback=look_feedback=NULL;textarea_offset=textarea_focused=-1;focus_count=0;touch_zone=-1;wake();
 }
 static void change_mode(int m) {
     lvgl_lock();snprintf(ui_notice,sizeof(ui_notice),"%s",g->notice);
     if(atomic_load(&mode)==CONVERSATION&&m!=CONVERSATION){memset(&conversation_target,0,sizeof(conversation_target));memset(&conversation,0,sizeof(conversation));}
     atomic_store(&mode,m);clear_input();navigation_held=0;touch_zone=-1;atomic_store(&menu_steps,0);
-    if(textarea){lv_textarea_set_text(textarea,"");if(m==CONVERSATION){lv_obj_remove_flag(textarea,LV_OBJ_FLAG_HIDDEN);lv_group_focus_obj(textarea);}else lv_obj_add_flag(textarea,LV_OBJ_FLAG_HIDDEN);}
+    if(textarea){lv_textarea_set_text(textarea,"");if(m==CONVERSATION){lv_obj_remove_flag(textarea,LV_OBJ_FLAG_HIDDEN);lv_group_focus_obj(textarea);textarea_align();}else lv_obj_add_flag(textarea,LV_OBJ_FLAG_HIDDEN);}
     keyboards_latched(m!=CONVERSATION&&atomic_load(&lifecycle.granted));menu_build();lvgl_unlock();wake();
 }
 static void interact(void) {
@@ -507,9 +539,43 @@ static void interact(void) {
         snprintf(reply.text,sizeof(reply.text),"%s",target.label);change_mode(CONVERSATION);
     } else if(!game_apply(g,target.operation))snprintf(g->notice,sizeof(g->notice),"Requirements unmet or out of reach.");
 }
+/* Persistence diagnostics for controls.cfg: re-reads the saved file and
+ * reports existence, size, FNV-1a hash, line count, the first line that
+ * fails the same parse/range validation ai_bindings_load() applies, and
+ * the live binding count. Emitted at boot (post-load) and after every
+ * save, so a restart round-trip can be reproduced from clean boot. */
+static void bind_diag(const char *tag,int ok) {
+    FILE *f=fopen(binding_path,"rb");
+    unsigned exists=f!=0,size=0,lines=0,first_bad=0;
+    uint32_t crc=2166136261u;char bad[64]={0};
+    if(f) {
+        int c;while((c=fgetc(f))!=EOF){size++;crc=(crc^(uint32_t)(unsigned char)c)*16777619u;}
+        fseek(f,0,SEEK_SET);
+        char line[192];unsigned n=0;
+        while(fgets(line,sizeof(line),f)) {
+            n++;
+            if(n==1) {
+                if(strcmp(line,"ANAPHORUM_BINDINGS 1\n")){if(!first_bad){first_bad=1;snprintf(bad,sizeof(bad),"%.48s",line);}}
+                continue;
+            }
+            long long v[7];char extra;
+            if(sscanf(line,"%lld %lld %lld %lld %lld %lld %lld %c",&v[0],&v[1],&v[2],&v[3],&v[4],&v[5],&v[6],&extra)!=7||
+               v[0]<0||v[0]>AI_BACKEND_GAMEPAD||v[1]<0||v[1]>(long long)UINT32_MAX||v[2]<0||v[2]>UINT16_MAX||
+               (v[3]!=AI_DIGITAL&&v[3]!=AI_ANALOG)||(v[4]!=-1&&v[4]!=1)||v[5]<0||v[5]>=AI_ACTION_COUNT||(v[6]!=-1&&v[6]!=1)) {
+                if(!first_bad){first_bad=n;snprintf(bad,sizeof(bad),"%.48s",line);}
+                break;
+            }
+        }
+        lines=n;fclose(f);
+    }
+    lock_input();unsigned count=actions.binding_count;unlock_input();
+    emit("{\"type\":\"%s\",\"ok\":%d,\"count\":%u,\"exists\":%u,\"size\":%u,\"crc\":%lu,\"lines\":%u,\"first_bad\":%u,\"bad\":\"%.48s\"}\n",
+         tag,ok,count,exists,size,(unsigned long)crc,lines,first_bad,bad);
+}
 static void save_bindings(void) {
     lock_input();binding_snapshot=actions;unlock_input();
     int ok=ai_bindings_save(&binding_snapshot,binding_path);
+    bind_diag("bind_save",ok);
     snprintf(g->notice,sizeof(g->notice),ok?"Controls saved.":"Controls could not be saved.");
 }
 static void process_command(int cmd) {
@@ -553,6 +619,7 @@ int main(int argc,char **argv) {
     g=memory_calloc_with_policy(1,sizeof(*g),&policy);r=memory_calloc_with_policy(1,sizeof(*r),&policy);input_mutex=xSemaphoreCreateMutex();
     if(!g||!r||!input_mutex){memory_free(g);memory_free(r);if(input_mutex)vSemaphoreDelete(input_mutex);if(telemetry)fclose(telemetry);return 2;}
     game_new(g,42,-1);int reloaded=load_game(g,save_path);ai_init(&actions);int bindings_loaded=ai_bindings_load(&actions,binding_path,micros());
+    bind_diag("bind_load",bindings_loaded);
     emit("{\"type\":\"boot\",\"title\":\"Anaphorum\",\"reload\":%d,\"bindings_loaded\":%d,\"input_period_target_us\":10000,\"physical\":\"PENDING\"}\n",reloaded,bindings_loaded);
     emit("{\"type\":\"heap\",\"internal_free\":%u,\"internal_largest\":%u,\"psram_free\":%u,\"psram_largest\":%u}\n",(unsigned)heap_caps_get_free_size(MALLOC_CAP_INTERNAL),(unsigned)heap_caps_get_largest_free_block(MALLOC_CAP_INTERNAL),(unsigned)heap_caps_get_free_size(MALLOC_CAP_SPIRAM),(unsigned)heap_caps_get_largest_free_block(MALLOC_CAP_SPIRAM));
     task_event_group_construct(&events);task_event_group_construct(&sampler_events);task_event_group_construct(&i2c_events);task_event_group_claim_bit(&events,&window_bit);task_event_group_claim_bit(&sampler_events,&sampler_bit);task_event_group_claim_bit(&i2c_events,&i2c_bit);
@@ -587,7 +654,18 @@ int main(int argc,char **argv) {
          * (measured symmetric ~2x raster stretch from shared-memory
          * contention; see results/p4-band-split-optimization.txt). */
         band_helper=thread_alloc_full("anaphorum-band",4096,band_task,NULL,1);
-        if(band_helper&&thread_start(band_helper)==ERROR_NONE)band_active=1;
+        if(band_helper&&thread_start(band_helper)==ERROR_NONE) {
+            /* Helper-ready handshake (bounded): the helper registers its band
+             * identity, then signals ready. A wedged helper falls back to the
+             * serial renderer instead of hanging the app. The stray band a
+             * torn-down helper may draw lands before the first game frame and
+             * is fully overwritten by that frame's clear+scene. */
+            if(xSemaphoreTake(band_done,pdMS_TO_TICKS(200))==pdTRUE)band_active=1;
+            else {
+                xSemaphoreGive(band_go);thread_join(band_helper,portMAX_DELAY,1);
+                thread_free(band_helper);band_helper=NULL;
+            }
+        }
         else if(band_helper){thread_free(band_helper);band_helper=NULL;}
     }
     emit("{\"type\":\"band_config\",\"active\":%d}\n",band_active);
@@ -679,6 +757,9 @@ int main(int argc,char **argv) {
                 ps=micros();ct_viewport_scale_stride(canvas_pixels,r->pixels,&viewport,viewport_stride);prof_record(PS_SCALE,(uint32_t)(micros()-ps));
                 lv_obj_invalidate(canvas);
                 char label[80];snprintf(label,sizeof(label),"MOVE\n%d %d",frame.axes[0],frame.axes[1]);lv_label_set_text(move_feedback,label);snprintf(label,sizeof(label),"LOOK\n%d %d",frame.axes[2],frame.axes[3]);lv_label_set_text(look_feedback,label);
+                /* Per-pass re-align in conversation mode: tracks the software
+                 * keyboard's actual show/hide regardless of event ordering. */
+                if(m==CONVERSATION)textarea_align();
                 if(target_found||m==CONVERSATION){lv_obj_remove_flag(hint,LV_OBJ_FLAG_HIDDEN);lv_label_set_text(lv_obj_get_child(hint,0),m==CONVERSATION?"More reply":target.label);}else lv_obj_add_flag(hint,LV_OBJ_FLAG_HIDDEN);
             }lvgl_unlock();
             prof_record(PS_LOCKHOLD,(uint32_t)(micros()-hold));

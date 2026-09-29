@@ -57,8 +57,11 @@ Dual-core findings (measured, same static scene class)
 2. Balanced alternating quarter bands, helper raised above LVGL: scene
    84.7 ms, present p95 138.8 ms - REGRESSION. Both bands stretched ~2.0x
    symmetrically: with both cores rastering concurrently at full rate, the
-   shared memory path (PSRAM depth/canvas working set ~568 KB vs L2) halves
-   each core's raster rate, so the parallelism cancels itself. Reverted.
+   shared memory path halves each core's raster rate, so the parallelism
+   cancels itself. Reverted. (Memory math with the correct sizes: the
+   Renderer's pixels+depth arrays are 2 x 76,800 B = 153,600 B total in
+   PSRAM, 38,400 B depth per half-height band, plus the ~285 KB LVGL
+   canvas; see game.h W=160 H=240.)
 3. Session variance: an identical H/2 build measured scene 101-113 ms /
    present p95 127-129 ms in one boot (23:46) and 65.7-69.3 ms / 83-86 ms in
    another (23:53) with the same static view and same telemetry counters. The
@@ -87,8 +90,9 @@ Later candidates (recorded, out of this gate's scope)
   scratch (616 B/row) to burst PSRAM traffic. Changes fragment order per
   pixel (depth-test tie order), so exact parity must be re-proven; the
   differential harness plus a tie-order enumeration test would be needed.
-- Internal residency for the depth buffer is impossible (142 KB per band vs
-  largest internal free block ~31.7 KB under game load; no PSRAM XIP in this
+- Internal residency for the depth buffer is impossible (the full depth
+  buffer is 76,800 B total, 38,400 B per half-height band, vs largest
+  internal free block ~31.7 KB under game load; no PSRAM XIP in this
   firmware config).
 - Conservative early-depth skip (reject candidates whose triangle min-z is
   worse than the row's current best) - changes no output but needs a new

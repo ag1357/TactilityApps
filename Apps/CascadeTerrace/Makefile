@@ -109,7 +109,7 @@ build/gameplay_platform_test: $(CORE) tests/gameplay_platform.c | build
 gameplay-platform-test: build/gameplay_platform_test
 	./build/gameplay_platform_test
 build/raster_band_test: $(CORE) tests/raster_band.c | build
-	$(CC) $(CPPFLAGS) $(CFLAGS) $(filter %.c,$^) -lm -o $@
+	$(CC) $(CPPFLAGS) $(CFLAGS) $(filter %.c,$^) -lm -pthread -o $@
 raster-band-test: build/raster_band_test
 	./build/raster_band_test
 build/i2c_controls_test: core/action_input.c core/i2c_controls.c tests/i2c_controls.c | build

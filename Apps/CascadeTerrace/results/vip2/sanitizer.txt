@@ -6,7 +6,7 @@ PASS queued menu direction taps and analog navigation hysteresis
 PASS transitions inhibit held controls, capture conflict/cancel/replace/defaults
 PASS analog capture/negative direction/deadzone/hysteresis; pulse-only backend restrictions
 PASS versioned atomic binding round-trip and malformed/conflicting load rollback
-PASS independent host sampler during 150ms render stall: 12 ticks; mean 10.106ms min 10.058ms max 10.429ms
+PASS independent host sampler during 150ms render stall: 12 ticks; mean 10.096ms min 10.041ms max 10.307ms
 Action input tests passed
 VI-P2 lifecycle: 74 checks passed (150 ms render, revoke/resume, close/join)
 VI-P2 I2C: protocol, multi-device isolation, pulse semantics, config: PASS

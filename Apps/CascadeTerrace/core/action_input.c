@@ -285,9 +285,11 @@ void ai_format_binding(const AiBinding *binding, char *out, size_t capacity) {
             binding->action < AI_JUMP ? (binding->sign < 0 ? " -> -" : " -> +") : "");
 }
 int ai_bindings_save(const AiInput *input, const char *path) {
-    char temporary[1024];
-    if (!path || snprintf(temporary,sizeof(temporary),"%s.tmp",path) >= (int)sizeof(temporary)) return 0;
-    FILE *file = fopen(temporary,"w");
+    /* Direct write, like save_game: ESP-IDF FatFs f_rename fails with FR_EXIST
+       when the destination exists (vfs_fat_rename does not pre-delete), so an
+       atomic tmp+rename can only succeed on the very first save. */
+    if (!path) return 0;
+    FILE *file = fopen(path,"w");
     if (!file) return 0;
     int good = fprintf(file,"ANAPHORUM_BINDINGS 1\n") > 0;
     for (unsigned i=0; good && i<input->binding_count; ++i) {
@@ -295,10 +297,9 @@ int ai_bindings_save(const AiInput *input, const char *path) {
         good = fprintf(file,"%u %lu %u %u %d %u %d\n",b->source.backend,(unsigned long)b->source.device,
             b->source.control,b->source.kind,b->direction,b->action,b->sign) > 0;
     }
+    if (fflush(file)) good = 0;
     if (fclose(file)) good = 0;
-    if (good && rename(temporary,path) == 0) return 1;
-    remove(temporary);
-    return 0;
+    return good;
 }
 int ai_bindings_load(AiInput *input, const char *path, uint64_t now) {
     if (!path) return 0;

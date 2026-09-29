@@ -16,5 +16,11 @@ sdkconfig.old
 
 dependencies.lock
 
-# Doom sample app kept locally; excluded from pushes (scanner accommodation)
+# Doom sample app: intentional emergency exclusion, keep local, do not restore
+# or rework during this mission. Factory/Git secret scanning (Droid-Shield)
+# repeatedly blocked pushing the branch because the sample's keymap #defines
+# (DOOM_KEY_F10/F11 in doomgeneric_linuxvt.c) were flagged as secrets; a cast
+# accommodation did not clear the scanner. Per user direction the app was
+# untracked (f644148) so the branch could be preserved and pushed; the working
+# tree copy is retained locally.
 Apps/Doom/

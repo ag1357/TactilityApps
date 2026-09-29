@@ -1,0 +1,110 @@
+P4 reconciliation pass (post band-split commit 1ee660c)
+=====================================================
+
+Scope: binding persistence, keyboard-safe conversation input, renderer
+proof closure, close-path worker release, Doom exclusion documentation.
+Device A: Waveshare ESP32-P4 3.5" touch LCD, serial-verified, web-API
+install/run (port 80). Host: Pi CM5 via LLM8850-AP (ap0 hotspot,
+channel-following concurrent AP+STA on the single radio).
+
+1. Binding persistence (Bind New mappings not surviving restart)
+----------------------------------------------------------------
+Root cause (proven, not guessed): ESP-IDF FatFs f_rename() fails with
+FR_EXIST when the destination name already exists (ff.c, both FAT32 and
+exFAT paths: follow_path(dst) hit -> FR_EXIST unless same dir entry),
+and components/fatfs/vfs/vfs_fat.c vfs_fat_rename() passes it through
+with no pre-delete. The atomic tmp+rename pattern in ai_bindings_save()
+therefore only ever succeeded on the very first save of a fresh device;
+every later save failed and silently kept the old file.
+Evidence: bind_diag telemetry across six live save attempts - live
+table grew 39->47 bindings, file stayed byte-identical (628 B, 40 lines,
+crc 1453992239) - and the on-screen notice "Controls could not be
+saved.". save_game() never exhibited the bug because it writes its two
+generations directly (no rename).
+Fix: ai_bindings_save() writes the destination file directly, the
+same on-device pattern as save_game(); the strict load parse (header +
+per-line range validation) already detects a torn write and falls back
+to defaults. Load-side logic was audited first and is sound (overlaps
+are source-based, so a saved table always replays; AI_MAX_BINDINGS=96
+is not reachable from the live table).
+Round-trip proof on device: bind_save ok=1 after every Bind New; file
+grew to 46 bindings (794 B) and survived a restart (bind_load ok=1
+count=46), then 47 (817 B) across the next session's restart. The
+repro needed no hard-coded Seesaw mapping.
+
+2. Keyboard-safe conversation input
+-----------------------------------
+Design decision: the committed conversation UI (dialogue strip drawn
+in-canvas at H/2, single-line textarea at BOTTOM_MID -85 shown only in
+conversation) is Tactility-correct and stays; an intermediate rework
+(sized conversation panel + label) regressed the app (panel covered the
+on-screen controls; software keyboard popped up in menus because the
+textarea sat permanently in the shared keyboard nav group). That rework
+was reverted wholesale via git diff against HEAD.
+The only change kept: textarea_align(). While the textarea is focused,
+Tactility's software keyboard (locked standard: bottom-anchored, full
+width, 50% of the display height) is shown, so the input line sits
+above the keyboard's rendered band; otherwise it sits at the committed
+-85 offset clearing the on-screen controls. The check is the textarea's
+own focus state (lv_obj_has_state LV_STATE_FOCUSED); no Tactility-
+internal object is reached and no keyboard-height constant is used
+beyond the documented 50% standard. Verified on device: entering
+conversation, tap-to-show, submit-then-retap, tap-away-then-retap all
+keep the input line above the keyboard; outside conversation the
+keyboard never appears (the committed hidden-flag design).
+Rejected approach, for the record: walking candidate containers
+(app screen / lv_screen_active / lv_layer_top) for the keyboard object.
+It depends on Tactility's internal parenting, and the first attempt to
+ask the keyboard directly (lvgl_software_keyboard_get_last) failed to
+load on device - the esp-elf loader resolved it as "Can't find common
+lvgl_software_keyboard_get_last": the symbol is in the SDK header but
+not in the app import surface. scripts/audit-p4-imports.py catches
+exactly this and is now part of the pass (142->139 imports, none
+missing).
+
+3. Renderer proof closure
+--------------------------
+- Helper-ready handshake: the band helper registers its band identity,
+  then gives band_done; init takes it with a 200 ms bound and falls
+  back to the serial renderer on timeout. Every boot this session
+  emitted band_config active:1 (handshake completed).
+- Concurrent band parity: tests/raster_band.c gains a banded_concurrent
+  case (pthread helper draws the bottom band while the main thread
+  draws the top, mirroring the go-gate order). Host: 1200/1200 cases,
+  parity 1 (was 960 before).
+- Depth-buffer accounting (corrected): 160x240 half-bands, 2 B/px depth
+  -> 76,800 B total across both band slots (38,400 B per half band);
+  pixels+depth per band 115,200 B; ~285 KB LVGL canvas total.
+
+4. Quit / APP_EVENT_CLOSE worker release
+----------------------------------------
+Per instance, the close path is clean and fully evidenced: on each of
+three consecutive in-game Quits the serial log shows input_joined
+(sampler + i2c + band workers joined), close_save ok=1, app_scheduler
+"Task finished" with stack watermark, and RAM returns (next ELF maps).
+The "had to quit 3 times" experience was not a leak: repeated web-API
+runs had started three concurrent instances of the app, which Tactility
+retains in the background by design; each Quit cleanly exited exactly
+one instance. Known platform friction (documented, not app bugs):
+restarting an app while an old instance still holds RAM fails with
+"Failed to map elf: resource" until the old instance exits; a close
+during active heavy play can spin the old task ~5 s on core 1 (one
+IDLE1 watchdog hit observed during a transition).
+
+5. Doom exclusion (documented, do not rework)
+---------------------------------------------
+Apps/CascadeTerrace/.gitignore documents why Doom stays excluded:
+Droid-Shield's secret scanner blocks the repository on the DOOM_KEY
+#define constants; f644148 excluded it as an emergency workaround. This
+mission does not restore or rework it.
+
+6. Qualification
+----------------
+Host: make test (864 checks, 0 failures); qualify-vip2.sh full suite
+(action input incl. binding round-trip, gameplay 51, raster-band 1200
+parity 1, lifecycle 74, i2c suites, desktop suite); sanitize-vip2.sh
+(6 ASan/UBSan suites); sanitize-world-sdk.sh (10 suites).
+Device: P4 build elf 53281b45... audit-p4-imports clean (139 imports,
+none missing); boot telemetry clean on every start (bind_load, boot,
+i2c_config, band_config active:1); ~40 min of live play across the
+verification rounds.

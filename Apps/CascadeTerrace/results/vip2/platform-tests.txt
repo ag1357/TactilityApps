@@ -8,12 +8,12 @@ PASS queued menu direction taps and analog navigation hysteresis
 PASS transitions inhibit held controls, capture conflict/cancel/replace/defaults
 PASS analog capture/negative direction/deadzone/hysteresis; pulse-only backend restrictions
 PASS versioned atomic binding round-trip and malformed/conflicting load rollback
-PASS independent host sampler during 150ms render stall: 12 ticks; mean 10.096ms min 10.061ms max 10.278ms
+PASS independent host sampler during 150ms render stall: 12 ticks; mean 10.070ms min 10.059ms max 10.109ms
 Action input tests passed
 ./build/gameplay_platform_test
 VI-P2 gameplay: 51 checks passed
 ./build/raster_band_test
-{"stage":"raster-band","cases":960,"parity":1}
+{"stage":"raster-band","cases":1200,"parity":1}
 ./build/platform_lifecycle_test
 VI-P2 lifecycle: 74 checks passed (150 ms render, revoke/resume, close/join)
 ./build/i2c_controls_test

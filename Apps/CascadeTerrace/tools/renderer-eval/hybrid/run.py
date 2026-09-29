@@ -1,12 +1,12 @@
 #!/usr/bin/env python3
-"""Compare the candidate against the actual ca942d3 renderer, not a reimplementation."""
+"""Compare the candidate against the actual 347f90d renderer, not a reimplementation."""
 from pathlib import Path
 import subprocess,sys,json,platform,hashlib,os
 app=Path(__file__).resolve().parents[3]
 build=app/'build/renderer-hybrid';build.mkdir(parents=True,exist_ok=True)
-ref_sha='ca942d39f4d9677a3015739e013818598b820b41'
+ref_sha='347f90d2ce20c9f5d05f4d3169b8fa5d83e2915c'
 original=subprocess.check_output(['git','show',ref_sha+':Apps/CascadeTerrace/core/render.c'],cwd=app,text=True)
-names=['render_load_assets','render','render_world','render_bind_state','render_world_peer','render_world_marker','draw_text','draw_panel','screenshot']
+names=['render_load_assets','render','render_world','render_bind_state','render_world_peer','render_world_marker','draw_text','draw_panel','screenshot','render_set_clock']
 source=''.join('#define '+x+' reference_'+x+'\n' for x in names)+original+'''
 void reference_raw(Renderer* r,const float* v,uint32_t col,float shade,float illumination,int clip) {
  rr=r;cy=cp=1;sy=sp=0;light=illumination;

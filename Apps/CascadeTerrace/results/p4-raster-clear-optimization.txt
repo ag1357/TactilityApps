@@ -1,0 +1,45 @@
+P4 frame gate: clear + raster exact arithmetic round, Device A measurement (2026-09-28 22:26 UTC).
+
+Changes (core/render.c), all bit-exact by construction:
+1. Fused clear (render): the row-constant sky-gradient color() expression is
+   evaluated once per row (identical expression, same inputs); aligned
+   even-width rows write pixels and depth with one memcpy'd 32-bit pair
+   store per two pixels. render_world's constant clear likewise.
+2. Raster: row-invariant halves of both edge functions hoisted once per row
+   (the per-pixel expressions stay byte-identical); exact sign-based coverage
+   early-reject before the divisions: for finite nonzero edge values with the
+   fixed area sign, u < 0 exactly when the edge sign differs from the area
+   sign; zero and NaN edge values fall through to the original divisions.
+   Rejected candidates skip both edge divisions; accepted pixels keep the
+   identical u, v, w, iz, depth expressions and evaluation order.
+
+Differential parity (tools/renderer-eval/hybrid, reference updated to the
+immediate pre-gate promoted renderer 347f90d2ce20c, generator inverse
+projection fixed for the portrait W/H/PROJ_F constants after the stale
+ca942d3 landscape reference was found): exact color/depth/counter parity
+passes 12,000 generated primitives (including exact pixel-center and
+near-degenerate cases), 2 shared-edge cases both windings, 224 game/world
+camera views; ASan/UBSan pass. Host aarch64 replay is ~12% slower (fast host
+FDIV; branches cost more than they save there) - the device is the target.
+
+Device A (user's current denser scene: 902 triangles, ~168k span candidates,
+~88.5k depth tests, ~68.7k writes per frame; 30-frame windows):
+  clear   12,230 us -> 1,765 us mean  (-85%, scene-independent)
+  scene   per-candidate 722 ns (baseline spawn scene) / 660 ns (baseline
+          dense scene) -> 487 ns  (-33% / -26%)
+  render  mean 83.7 ms on the denser scene (baseline build: 107.7 ms on the
+          lighter spawn scene; old build on this class of dense scene ~144 ms)
+  present p95 ~106.3 ms on the denser scene (previous build: 119 ms on the
+          lighter scene; old build 192-230 ms on comparable scenes)
+Build: elf f86ff80a43d2a52d217d5a39b81f96c126ee0f3695bc5dc2ef2fadb7008e94a2.
+Host: VI-P2 suite green (14 PASS lines), 6 ASan/UBSan suites green.
+
+Estimated standard-scene render after this round: clear 1.8 ms + scene
+487 ns x 132,153 candidates ~ 66 ms; present ~76 ms. Remaining render cost is
+divisions on accepted pixels (u, v, 100/iz are correctly-rounded float
+divisions; no bit-exact substitute exists), PSRAM depth traffic, and edge
+multiplication. Depth locality option B (full internal depth) is measured
+infeasible (largest internal block 31.7 KB under load). Noted candidates:
+banded internal depth scratch with a deferred-triangle restructure (option C),
+exact conservative early-depth skip (depth >= (int)(100/max(ia,ib,ic)) bound),
+dual-core producer/consumer overlap (brief item 7).

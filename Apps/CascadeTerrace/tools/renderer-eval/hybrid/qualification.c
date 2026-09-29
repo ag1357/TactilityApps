@@ -55,13 +55,15 @@ static void primitive_tests(void) {
     for(unsigned n=0;n<12000;n++) {
         float v[9];
         for(int k=0;k<3;k++) {
-            float z=uniform(.2f,600.f),x=uniform(-300.f,540.f),y=uniform(-200.f,360.f);
+            /* Screen-space targets invert the current projection (W/2, H/2,
+             * PROJ_F); the reference renderer commit must match it. */
+            float z=uniform(.2f,600.f),x=uniform(-300.f,W+300.f),y=uniform(-280.f,H+280.f);
             if(n%6==0) { x=100.f+k*.12f; y=50.f+(k==1?.16f:0); }
             if(n%6==1) { x=uniform(-20000,20000); y=uniform(-20000,20000); }
             if(n%6==2) { x=floorf(x)+.5f; y=floorf(y)+.5f; }
             if(n%6==3) { x=40+k*70.f; y=40+k*25.f+uniform(-.0001f,.0001f); }
-            if(n%6==4) { x=uniform(0,240); y=uniform(0,160); z=uniform(.2f,1); }
-            v[3*k]=(x-120)*z/145; v[3*k+1]=(78-y)*z/145; v[3*k+2]=z;
+            if(n%6==4) { x=uniform(0,W); y=uniform(0,H); z=uniform(.2f,1); }
+            v[3*k]=(x-W/2)*z/(145.f*W/240); v[3*k+1]=(H/2-y)*z/(145.f*W/240); v[3*k+2]=z;
         }
         int clip=n%6==5;
         if(clip) { v[2]=uniform(-2.f,.1999f); v[5]=uniform(.01f,.4f); }

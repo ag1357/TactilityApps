@@ -149,9 +149,22 @@ static void raster(V aa, V bb, V cc, uint32_t col, float shade) {
         /* Cast only after clipping to the viewport; truncation widens a span. */
         first = (int)left; last = (int)right;
 #endif
+        /* Row-invariant halves of both edge functions, hoisted once per row.
+         * The per-pixel expressions below stay byte-identical to the direct
+         * edge() calls; only the invariant subtrahend is reused. */
+        float ub = (y + .5f - b.y) * (c.x - b.x), vc = (y + .5f - c.y) * (a.x - c.x);
+        float du = c.y - b.y, dv = a.y - c.y;
+        /* Coverage sign: for finite nonzero edge values with fixed area sign,
+         * u < 0 exactly when the edge sign differs from the area sign. Zero and
+         * NaN edge values fall through to the original divisions unchanged. */
+        const int positive = area > 0;
         for (int x = first; x <= last; x++) {
-            float u = edge(b, c, x + .5f, y + .5f) / area, v = edge(c, a, x + .5f, y + .5f) / area, w = 1 - u - v;
-            if (u < 0 || v < 0 || w < 0) continue;
+            float eu = (x + .5f - b.x) * du - ub;
+            if (eu < 0 || eu > 0) { if ((eu > 0) != positive) continue; }
+            float ev = (x + .5f - c.x) * dv - vc;
+            if (ev < 0 || ev > 0) { if ((ev > 0) != positive) continue; }
+            float u = eu / area, v = ev / area, w = 1 - u - v;
+            if (w < 0) continue;
             rr->depth_tests++;
             float iz = u * ia + v * ib + w * ic;
             int depth = (int)(100 / iz);
@@ -311,11 +324,21 @@ void render(Renderer* r, const Game* g) {
     float ch = ground_at(&g->world, (int)(r->camera_x * 1000), (int)(r->camera_z * 1000)) / 1000.f + 1;
     if (r->camera_y < ch) r->camera_y = ch;
     light = .35f + .65f * fmaxf(0, sinf((g->state.time % 86400000) / 86400000.f * 6.2831853f - 1.570796f));
-    for (int y = 0; y < H; y++)
-        for (int x = 0; x < W; x++) {
-            r->pixels[y * W + x] = color((int)((60 + y * .3f) * light), (int)((88 + y * .3f) * light), (int)((131 + y * .25f) * light));
-            r->depth[y * W + x] = 65535;
-        }
+    for (int y = 0; y < H; y++) {
+        /* Row-constant sky gradient: the identical per-row expression is
+         * evaluated once; every row pixel stores the same value as before.
+         * Aligned even-width rows take one memcpy'd 32-bit pair store per two
+         * pixels (little-endian halves; alias-safe through memcpy). */
+        uint16_t sky = color((int)((60 + y * .3f) * light), (int)((88 + y * .3f) * light), (int)((131 + y * .25f) * light));
+        uint16_t* px = r->pixels + (size_t)y * W;
+        uint16_t* dp = r->depth + (size_t)y * W;
+        uint32_t pk = (uint32_t)sky | (uint32_t)sky << 16, dk = 0xffffffffu;
+        if ((((uintptr_t)px | (uintptr_t)dp) & 3u) == 0u) {
+            for (int x = 0; x + 1 < W; x += 2) { memcpy(px + x, &pk, sizeof pk); memcpy(dp + x, &dk, sizeof dk); }
+            if (W & 1) { px[W - 1] = sky; dp[W - 1] = 65535; }
+        } else
+            for (int x = 0; x < W; x++) { px[x] = sky; dp[x] = 65535; }
+    }
     if (render_clock) r->clear_us = (uint32_t)(render_clock() - frame_clock);
     /* Scene: everything after the fused color+depth clear, to the last mote. */
     for (int iz = 0; iz < MAP_N - 1; iz++)
@@ -416,7 +439,12 @@ void render_world(Renderer *r,const WsRecipe *world,WsAddress player,int yaw,WsM
     uint64_t frame_clock=render_clock?render_clock():0;
     r->yaw=yaw*.01745329252f;r->pitch=-.19f;cy=cosf(r->yaw);sy=sinf(r->yaw);cp=cosf(r->pitch);sp=sinf(r->pitch);light=1;
     r->camera_x=player.pos.x/1000.f-6*sy;r->camera_z=player.pos.z/1000.f-6*cy;r->camera_y=player.pos.y/1000.f+4.3f;
-    for(int i=0;i<W*H;i++){r->pixels[i]=0x6393;r->depth[i]=65535;}
+    /* Constant fills: identical values, paired 32-bit alias-safe stores. */
+    if (((uintptr_t)r->pixels & 3u) == 0u && ((uintptr_t)r->depth & 3u) == 0u && ((W * H) & 1) == 0) {
+        uint32_t pk = 0x63936393u, dk = 0xffffffffu;
+        for (int i = 0; i + 1 < W * H; i += 2) { memcpy(r->pixels + i, &pk, sizeof pk); memcpy(r->depth + i, &dk, sizeof dk); }
+    } else
+        for (int i = 0; i < W * H; i++) { r->pixels[i] = 0x6393; r->depth[i] = 65535; }
     if(render_clock)r->clear_us=(uint32_t)(render_clock()-frame_clock);
     for(uint16_t i=0;i<world->count;i++) {
         WsModule m;ws_materialize(world,i,&m);if((m.kind>>8)<WS_STRUCTURE)continue;

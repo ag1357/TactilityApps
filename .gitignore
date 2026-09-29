@@ -15,3 +15,6 @@ sdkconfig.old
 .tactility/
 
 dependencies.lock
+
+# Doom sample app kept locally; excluded from pushes (scanner accommodation)
+Apps/Doom/

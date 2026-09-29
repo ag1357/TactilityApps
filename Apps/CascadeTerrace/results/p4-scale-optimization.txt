@@ -1,0 +1,34 @@
+P4 frame gate: presentation scale optimization, Device A measurement (2026-09-28 22:00 UTC).
+
+Change: core/viewport.c ct_viewport_scale_stride — exact incremental floor mapping.
+Per row, the source row base is computed once ((y*render_h/h)*render_w, one division);
+per destination pixel the column index steps by add/compare/subtract with
+rem = x*render_w mod w, which is exactly the direct x*render_w/w floor division
+for all nonnegative operands. No per-pixel 64-bit division remains. Destination
+pairs are written with one memcpy'd 32-bit word when dst is 4-byte aligned and
+stride is even (little-endian paired halves; same values); otherwise the scalar
+division-free loop runs. Output indices are identical to the previous direct form.
+
+Host qualification: full VI-P2 suite green (viewport exact-inverse test across
+8 aspect ratios incl. odd width and canary stride, gameplay 51, lifecycle 74,
+I2C suites, desktop selftest after libsdl2-dev restore on this host);
+6 ASan/UBSan suites green.
+
+Device A (same static scene, 30-frame windows):
+  scale  mean 81,980 us -> 8,032 us   (-90%)
+  lockhold 82,680 -> 8,790 us
+  present p95 192,392 -> 118,971 us  (-38%)
+  render/clear/scene/overlay/other stages unchanged (render ~107.7 ms mean)
+Build: elf dc3467214a0373226154b3455a8035eb35cc3d915d3f530698e7c868940e25c6.
+
+Operational finding (device, not this change): a webserver /api/apps/install
+transfer aborted mid-flight returned 500 and exhausted FAT VFS file descriptors
+(vfs_fat: open: no free file descriptors). Every later open fails until reboot,
+including the game's save, bindings and controls-i2c.cfg reads, so a fresh app
+instance reports reload:0/bindings_loaded:0/i2c_config:-1 although the files on
+the SD card are not deleted. This is the known webserver large-transfer fork
+issue with a worse failure mode. Recovery: reboot Device A, then re-verify
+reload/bindings/i2c_config telemetry before continuing the gate.
+
+Also observed again: app-side IDLE0 task-wdt warnings during dense scenes
+(known fork issue, present in earlier rounds at 21:36 as well).

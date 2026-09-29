@@ -1,0 +1,59 @@
+P4 frame-performance gate, Device A baseline physical profile (2026-09-28 21:34-21:36 UTC).
+
+Build: qualification-marked ag1357.cascadeterrace.app
+  elf_sha256  4ee3cddc85bf8a37afc6f1729c808076b5a272519098ffd35b1954e505e22e67
+  package_sha256 23badc0136c1b2a32947cb23941b9e30866a22415546f954d69ceca34be807a7
+  (mode 0 + qualification.flag; installed via PUT /api/apps/install multipart, run via POST /api/apps/run)
+Device: Device A, ESP32-P4 360 MHz, PSRAM 200 MHz HEX (malloc), L2 256 KB, flash 80 MHz.
+  Generated firmware sdkconfig has NO SPIRAM_XIP_FROM_PSRAM / SPIRAM_FETCH_INSTRUCTIONS /
+  SPIRAM_RODATA: instructions and rodata already execute from flash; the Quake-II-style
+  XIP comparison is not applicable. Nothing to benchmark there.
+Serial: /dev/ttyACM0 on the qualification host, logger /tmp/serial_logger4.py -> /tmp/device-p4.log.
+Web API path: device as STA on host AP, 192.168.4.185 port 80.
+I2C gamepad (Adafruit 5743 seesaw, 0x50, i2c-external) connected and live (backend:3).
+
+Profiling method: buffered per-stage profiler in main/main.c + core/render.c
+(render_set_clock esp_timer hook, per-frame clear/scene split, raster candidate/depth-test
+counters). All accumulation in RAM; one "prof" JSON line per 30 rendered frames.
+Static first-person scene, no user input during capture. 15 consecutive windows
+(450 frames), all n=30/loops=30 (no dropped or extra loop iterations).
+
+Per-stage timings per frame, microseconds, [min, mean, max] across windows:
+
+  evt        [25,  ~40,   68]   event poll
+  input      [13,  ~100, 1185]  ai_consume + capture accept
+  cmd        [3,   ~6,    14]   command/menu resolution
+  tick       [89,  ~120,  221] game_tick (20 ms substeps)
+  render     [103025, ~107700, 110685]  render() total
+    clear    [10930, ~12230, 13849]     fused sky-gradient color + depth=65535 clear
+    scene    [92284, ~95480, 97497]     terrain/buildings/trees/actor raster
+  overlay    [447, ~493,   624]  panels, text, interaction resolve
+  lockwait   [4,   ~4,     7]   lvgl_lock acquire wait
+  scale      [81693, ~81980, 82351]  ct_viewport_scale_stride 160x240 -> 308x462
+  lockhold   [82392, ~82680, 83029]  scale + LVGL label updates + invalidate
+  wait       [41,  ~560,  1493]  loop wait (1 ms target in PLAY)
+  present_p95_us ~192,400 (render_present p95 over 30-frame windows)
+  frame telemetry render_present_us: 190,941 - 190,987 (steady)
+
+Per-frame raster counters (window totals / 30, identical every window):
+  triangles 2488; span candidates 132,153; depth tests 41,089; writes 31,444.
+
+Explanation of the ~210 ms frame (now ~191 ms with emit printf out of the timed path):
+  render() 107.7 ms (56%): clear 12.2 + scene 95.5
+  presentation scale 82.0 ms (43%): 142,296 destination pixels at ~577 ns each
+    (~207 cycles/pixel at 360 MHz): two int64 divisions per pixel in the portable
+    nearest-neighbor scaler (core/viewport.c ct_viewport_scale_stride).
+  everything else ~1.2 ms (0.6%): overlay/tick/input/cmd/locks/wait.
+  The earlier ~210 ms frame figures (rounds e9f94a9/347f90d) included the telemetry
+  printf itself in the %30-frame sample; this build measures present at unlock.
+
+Input-worker cadence under the ~191 ms frame: sampler mean 23.2 ms vs 10 ms target,
+max gap 125.8 ms (PSRAM contention during scene), zero dropped events, zero disconnects.
+
+Baseline for gate targets: render p95 ~108 ms, present p95 ~192 ms.
+Optimization order per measured profile (brief order kept, data confirms all three):
+  1. depth-buffer locality (clear+scene depth traffic is PSRAM)
+  2. raster arithmetic (scene 95.5 ms: per-pixel float cross products + 2 divisions)
+  3. presentation scale arithmetic (82.0 ms: per-pixel integer divisions; exact-parity
+     incremental floor-division stepping available, no per-pixel division)
+  4. clear instrumentation/candidates (12.2 ms)

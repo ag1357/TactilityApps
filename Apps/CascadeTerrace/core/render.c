@@ -13,7 +13,9 @@ typedef struct {
 #include "kyra.inc"
 /* Optional live world state for staged river rendering (see render.h). */
 static const WsState *world_state_binding;
+static uint64_t (*render_clock)(void);
 void render_bind_state(const WsState *s) { world_state_binding = s; }
+void render_set_clock(uint64_t (*now_us)(void)) { render_clock = now_us; }
 int render_load_assets(const char* path) {
     FILE* f = fopen(path, "rb");
     if (!f) return 0;
@@ -150,6 +152,7 @@ static void raster(V aa, V bb, V cc, uint32_t col, float shade) {
         for (int x = first; x <= last; x++) {
             float u = edge(b, c, x + .5f, y + .5f) / area, v = edge(c, a, x + .5f, y + .5f) / area, w = 1 - u - v;
             if (u < 0 || v < 0 || w < 0) continue;
+            rr->depth_tests++;
             float iz = u * ia + v * ib + w * ic;
             int depth = (int)(100 / iz);
             int pos = y * W + x;
@@ -159,6 +162,7 @@ static void raster(V aa, V bb, V cc, uint32_t col, float shade) {
                 rr->pixels_written++;
             }
         }
+        rr->raster_candidates += (uint32_t)(last - first + 1);
     }
 }
 static void tri(V a, V b, V c, uint32_t col, float shade) {
@@ -284,7 +288,10 @@ static void building(const Game* g, int i) {
 void render(Renderer* r, const Game* g) {
     rr = r;
     r->triangles = r->pixels_written = 0;
+    r->raster_candidates = r->depth_tests = 0;
+    r->clear_us = r->scene_us = 0;
     r->frame++;
+    uint64_t frame_clock = render_clock ? render_clock() : 0;
     float yaw = g->state.yaw * .01745329252f;
     r->yaw = yaw;
     /* View modes: conversation keeps its close-up framing; first_person is
@@ -309,6 +316,8 @@ void render(Renderer* r, const Game* g) {
             r->pixels[y * W + x] = color((int)((60 + y * .3f) * light), (int)((88 + y * .3f) * light), (int)((131 + y * .25f) * light));
             r->depth[y * W + x] = 65535;
         }
+    if (render_clock) r->clear_us = (uint32_t)(render_clock() - frame_clock);
+    /* Scene: everything after the fused color+depth clear, to the last mote. */
     for (int iz = 0; iz < MAP_N - 1; iz++)
         for (int ix = 0; ix < MAP_N - 1; ix++) {
             float x = ix * 5 - 200, z = iz * 5 - 200;
@@ -359,6 +368,7 @@ void render(Renderer* r, const Game* g) {
         float x = (int)(h % 2000) / 100.f - 10, z = -125 + (int)((h >> 12) % 1200) / 100.f, y = 1 + fmodf(g->state.time / 4000.f + i, 7);
         box(x, y, z, .07f, .15f, .07f, 0x93ffe2);
     }
+    if (render_clock) r->scene_us = (uint32_t)(render_clock() - frame_clock) - r->clear_us;
 }
 void draw_panel(Renderer* r, int x, int y, int w, int h, uint16_t col) {
     for (int j = y; j < y + h; j++)
@@ -402,10 +412,12 @@ static void world_box(void *ctx,WsPos p,WsPos s,uint32_t c) {
     box(p.x/1000.f,p.y/1000.f,p.z/1000.f,s.x/2000.f,s.y/1000.f,s.z/2000.f,c);
 }
 void render_world(Renderer *r,const WsRecipe *world,WsAddress player,int yaw,WsMetrics *metrics) {
-    memset(metrics,0,sizeof(*metrics));rr=r;r->triangles=r->pixels_written=0;r->frame++;
+    memset(metrics,0,sizeof(*metrics));rr=r;r->triangles=r->pixels_written=0;r->raster_candidates=r->depth_tests=0;r->clear_us=r->scene_us=0;r->frame++;
+    uint64_t frame_clock=render_clock?render_clock():0;
     r->yaw=yaw*.01745329252f;r->pitch=-.19f;cy=cosf(r->yaw);sy=sinf(r->yaw);cp=cosf(r->pitch);sp=sinf(r->pitch);light=1;
     r->camera_x=player.pos.x/1000.f-6*sy;r->camera_z=player.pos.z/1000.f-6*cy;r->camera_y=player.pos.y/1000.f+4.3f;
     for(int i=0;i<W*H;i++){r->pixels[i]=0x6393;r->depth[i]=65535;}
+    if(render_clock)r->clear_us=(uint32_t)(render_clock()-frame_clock);
     for(uint16_t i=0;i<world->count;i++) {
         WsModule m;ws_materialize(world,i,&m);if((m.kind>>8)<WS_STRUCTURE)continue;
         if(player.scope==UINT16_MAX&&(m.flags&WS_INTERIOR))continue;
@@ -453,6 +465,7 @@ void render_world(Renderer *r,const WsRecipe *world,WsAddress player,int yaw,WsM
         }
     }
     person(player.pos.x/1000.f,player.pos.y/1000.f,player.pos.z/1000.f,0,0,0);
+    if(render_clock)r->scene_us=(uint32_t)(render_clock()-frame_clock)-r->clear_us;
 }
 void render_world_peer(WsPos p) { person(p.x/1000.f,p.y/1000.f,p.z/1000.f,1,0,0); }
 void render_world_marker(WsPos p,uint32_t rgb) { box(p.x/1000.f,p.y/1000.f,p.z/1000.f,.4f,.8f,.4f,rgb); }

@@ -66,9 +66,62 @@ static unsigned owned_keypad_count;
 static uint64_t micros(void) { return (uint64_t)esp_timer_get_time(); }
 static void emit(const char *fmt,...) {
     if(!qualify)return;
-    char line[512];va_list args;va_start(args,fmt);vsnprintf(line,sizeof(line),fmt,args);va_end(args);
+    char line[1024];va_list args;va_start(args,fmt);vsnprintf(line,sizeof(line),fmt,args);va_end(args);
     printf("%s",line);
     if(telemetry){fputs(line,telemetry);fclose(telemetry);telemetry=fopen(telemetry_path,"ab");}
+}
+
+/* Buffered per-stage frame profiler. All accumulation stays in RAM; the
+ * summary line is emitted only once per 30 rendered frames, never from the
+ * per-pixel or per-frame hot path. */
+enum { PS_EVT, PS_INPUT, PS_CMD, PS_TICK, PS_RENDER, PS_CLEAR, PS_SCENE,
+       PS_OVERLAY, PS_LOCKWAIT, PS_SCALE, PS_LOCKHOLD, PS_WAIT, PS_COUNT };
+static const char* const prof_names[PS_COUNT] =
+    { "evt", "input", "cmd", "tick", "render", "clear", "scene",
+      "overlay", "lockwait", "scale", "lockhold", "wait" };
+#define PROF_PRESENT_N 30
+typedef struct {
+    unsigned n, loops;
+    uint64_t sum[PS_COUNT];
+    uint32_t min[PS_COUNT], max[PS_COUNT];
+    uint32_t present[PROF_PRESENT_N];
+    unsigned present_n;
+    uint64_t tri, cands, tests, writes;
+} Prof;
+static Prof prof;
+static void prof_reset(void) { memset(&prof, 0, sizeof prof); for (int s = 0; s < PS_COUNT; s++) prof.min[s] = 0xFFFFFFFFu; }
+static void prof_record(int s, uint32_t us) {
+    prof.sum[s] += us;
+    if (us < prof.min[s]) prof.min[s] = us;
+    if (us > prof.max[s]) prof.max[s] = us;
+}
+static int prof_u32_cmp(const void* a, const void* b) {
+    uint32_t x = *(const uint32_t*)a, y = *(const uint32_t*)b;
+    return x < y ? -1 : x > y;
+}
+static void prof_emit(void) {
+    char line[768];
+    int off = snprintf(line, sizeof line, "{\"type\":\"prof\",\"n\":%u,\"loops\":%u", prof.n, prof.loops);
+    for (int s = 0; s < PS_COUNT; s++) {
+        unsigned div = (s == PS_EVT || s == PS_INPUT || s == PS_CMD || s == PS_TICK || s == PS_WAIT) ? prof.loops : prof.n;
+        off += snprintf(line + off, sizeof line - (size_t)off, ",\"%s\":[%lu,%lu,%lu]", prof_names[s],
+                        (unsigned long)(div ? prof.sum[s] / div : 0),
+                        (unsigned long)(prof.min[s] == 0xFFFFFFFFu ? 0 : prof.min[s]),
+                        (unsigned long)prof.max[s]);
+    }
+    uint32_t ring[PROF_PRESENT_N], sorted[PROF_PRESENT_N], pn = prof.present_n < PROF_PRESENT_N ? prof.present_n : PROF_PRESENT_N;
+    for (unsigned i = 0; i < pn; i++) ring[i] = prof.present[i];
+    memcpy(sorted, ring, sizeof sorted);
+    qsort(sorted, pn, sizeof sorted[0], prof_u32_cmp);
+    unsigned p95 = pn ? (pn * 95 + 99) / 100 - 1 : 0;
+    off += snprintf(line + off, sizeof line - (size_t)off, ",\"present_p95_us\":%lu,\"triangles\":%llu,\"candidates\":%llu,\"depth_tests\":%llu,\"writes\":%llu}\n",
+                    (unsigned long)(pn ? sorted[p95] : 0),
+                    (unsigned long long)(prof.n ? prof.tri / prof.n : 0),
+                    (unsigned long long)(prof.n ? prof.cands / prof.n : 0),
+                    (unsigned long long)(prof.n ? prof.tests / prof.n : 0),
+                    (unsigned long long)(prof.n ? prof.writes / prof.n : 0));
+    emit("%s", line);
+    prof_reset();
 }
 static void lock_input(void) { xSemaphoreTake(input_mutex,portMAX_DELAY); }
 static void unlock_input(void) { xSemaphoreGive(input_mutex); }
@@ -490,18 +543,28 @@ int main(int argc,char **argv) {
         }
     }
     emit("{\"type\":\"i2c_config\",\"configured\":%d,\"worker\":%d}\n",peripheral_count,i2c_worker!=NULL);
+    /* Stage profiler: buffered in RAM, emitted once per 30 rendered frames.
+     * No file or console I/O happens in the per-frame hot path. */
+    render_set_clock(micros);
+    prof_reset();
     unsigned jump_pending=0;
     float yaw_remainder=0;
     uint64_t previous=micros(),last_report=previous;
     unsigned seen_epoch=atomic_load(&lifecycle.epoch);
     while(!atomic_load(&lifecycle.closing)) {
+        uint64_t ps=micros();prof.loops++;
         struct AppEvent event;while(app_event_poll(&sub,&event)==ERROR_NONE)if(event.type==APP_EVENT_CLOSE)ct_lifecycle_close(&lifecycle);
+        if(atomic_load(&lifecycle.closing))break;
+        prof_record(PS_EVT,(uint32_t)(micros()-ps));
         if(atomic_load(&lifecycle.closing))break;
         if(!atomic_load(&lifecycle.granted)){task_event_group_wait_any(&events,NULL,portMAX_DELAY);previous=micros();continue;}
         unsigned epoch=atomic_load(&lifecycle.epoch);if(epoch!=seen_epoch){previous=micros();seen_epoch=epoch;jump_pending=0;yaw_remainder=0;}
+        ps=micros();
         AiFrame frame;lock_input();ai_consume(&actions,micros(),&frame);unsigned captured=actions.capture_state;
         if(captured==AI_CAPTURE_READY&&atomic_load(&mode)==CAPTURE){conflict_binding=actions.candidate;AiBindResult b=ai_capture_accept(&actions,0,micros());if(b!=AI_BIND_OK)ai_capture_cancel(&actions,micros());last_ui_capture=b==AI_BIND_OK?1:b==AI_BIND_CONFLICT?2:3;}
         unlock_input();
+        prof_record(PS_INPUT,(uint32_t)(micros()-ps));
+        ps=micros();
         if(last_ui_capture){unsigned ready=last_ui_capture;last_ui_capture=0;if(ready==1)save_bindings();if(ready==3)snprintf(g->notice,sizeof(g->notice),"Binding rejected or table full.");change_mode(ready==2?CONFLICT:CONTROLS);}
         int cmd=atomic_exchange(&command,CMD_NONE),m=atomic_load(&mode);
         if(!cmd&&(frame.pressed[AI_MENU]||frame.pressed[AI_BACK]))cmd=(m==PLAY?CMD_MENU:m==CAPTURE||m==CONFLICT?CMD_CANCEL:m==CONTROLS?CMD_MENU:CMD_RESUME);
@@ -513,7 +576,9 @@ int main(int argc,char **argv) {
         }
         if(!cmd&&m==PLAY&&frame.pressed[AI_INTERACT])cmd=CMD_INTERACT;
         if(cmd)process_command(cmd);
+        prof_record(PS_CMD,(uint32_t)(micros()-ps));
         m=atomic_load(&mode);if(atomic_load(&lifecycle.closing))break;
+        ps=micros();
         uint64_t current=micros();uint32_t elapsed=(uint32_t)((current-previous)/1000);previous=current;
         if(m==PLAY&&!cmd) {
             if(frame.pressed[AI_VIEW_TOGGLE]&1)first_person=!first_person;
@@ -530,24 +595,39 @@ int main(int argc,char **argv) {
         } else {
             jump_pending=0;yaw_remainder=0;
         }
+        prof_record(PS_TICK,(uint32_t)(micros()-ps));
         if((m==PLAY||m==CONVERSATION)&&atomic_load(&lifecycle.granted)) {
-            uint64_t start=micros();r->conversation=m==CONVERSATION;r->first_person=first_person;render(r,g);
+            uint64_t start=micros();r->conversation=m==CONVERSATION;r->first_person=first_person;
+            ps=micros();render(r,g);prof_record(PS_RENDER,(uint32_t)(micros()-ps));
+            prof_record(PS_CLEAR,r->clear_us);prof_record(PS_SCENE,r->scene_us);
+            prof.tri+=r->triangles;prof.cands+=r->raster_candidates;prof.tests+=r->depth_tests;prof.writes+=r->pixels_written;prof.n++;
+            ps=micros();
             draw_panel(r,0,0,W,12,0x1108);draw_text(r,2,2,"ANAPHORUM",0xffff,W-4);
             if(m==CONVERSATION){draw_panel(r,0,H/2,W,70,0x1108);draw_text(r,2,H/2+1,reply.text+reply_offset,0xffff,W-4);}
             else if(g->notice[0]){draw_panel(r,0,H-32,W,30,0x1108);draw_text(r,2,H-31,g->notice,0xffff,W-4);}
             CtInteraction target;int target_found=ct_interaction_resolve(g,&target);
-            lvgl_lock();if(canvas&&epoch==atomic_load(&lifecycle.epoch)) {
-                ct_viewport_scale_stride(canvas_pixels,r->pixels,&viewport,viewport_stride);lv_obj_invalidate(canvas);
+            prof_record(PS_OVERLAY,(uint32_t)(micros()-ps));
+            ps=micros();lvgl_lock();prof_record(PS_LOCKWAIT,(uint32_t)(micros()-ps));
+            uint64_t hold=micros();
+            if(canvas&&epoch==atomic_load(&lifecycle.epoch)) {
+                ps=micros();ct_viewport_scale_stride(canvas_pixels,r->pixels,&viewport,viewport_stride);prof_record(PS_SCALE,(uint32_t)(micros()-ps));
+                lv_obj_invalidate(canvas);
                 char label[80];snprintf(label,sizeof(label),"MOVE\n%d %d",frame.axes[0],frame.axes[1]);lv_label_set_text(move_feedback,label);snprintf(label,sizeof(label),"LOOK\n%d %d",frame.axes[2],frame.axes[3]);lv_label_set_text(look_feedback,label);
                 if(target_found||m==CONVERSATION){lv_obj_remove_flag(hint,LV_OBJ_FLAG_HIDDEN);lv_label_set_text(lv_obj_get_child(hint,0),m==CONVERSATION?"More reply":target.label);}else lv_obj_add_flag(hint,LV_OBJ_FLAG_HIDDEN);
             }lvgl_unlock();
-            if(qualify&&r->frame%30==0)emit("{\"type\":\"frame\",\"frame\":%lu,\"render_present_us\":%llu,\"viewport_w\":%d,\"viewport_h\":%d}\n",(unsigned long)r->frame,(unsigned long long)(micros()-start),viewport.w,viewport.h);
+            prof_record(PS_LOCKHOLD,(uint32_t)(micros()-hold));
+            uint32_t present_us=(uint32_t)(micros()-start);
+            prof.present[prof.present_n%PROF_PRESENT_N]=present_us;prof.present_n++;
+            if(qualify&&r->frame%30==0)emit("{\"type\":\"frame\",\"frame\":%lu,\"render_present_us\":%llu,\"viewport_w\":%d,\"viewport_h\":%d}\n",(unsigned long)r->frame,(unsigned long long)present_us,viewport.w,viewport.h);
+            if(qualify&&prof.n>=30)prof_emit();
         }
         if(qualify&&current-last_report>=2000000) {
             lock_input();uint32_t count=input_samples,min=input_min_us,max=input_max_us,ev=input_events,dis=input_disconnects,drop=actions.dropped_events;uint64_t sum=input_total_us;AiControl source=last_source;int value=last_source_value;unlock_input();
             emit("{\"type\":\"input\",\"samples\":%lu,\"mean_us\":%llu,\"min_us\":%lu,\"max_us\":%lu,\"events\":%lu,\"disconnects\":%lu,\"dropped\":%lu}\n",(unsigned long)count,(unsigned long long)(count?sum/count:0),(unsigned long)min,(unsigned long)max,(unsigned long)ev,(unsigned long)dis,(unsigned long)drop);emit("{\"type\":\"source_action\",\"backend\":%u,\"device\":%lu,\"control\":%u,\"value\":%d,\"held\":%lu,\"axes\":[%d,%d,%d,%d],\"jump_edges\":%u,\"interact_edges\":%u}\n",source.backend,(unsigned long)source.device,source.control,value,(unsigned long)frame.held,frame.axes[0],frame.axes[1],frame.axes[2],frame.axes[3],frame.pressed[AI_JUMP],frame.pressed[AI_INTERACT]);last_report=current;
         }
+        ps=micros();
         task_event_group_wait_any(&events,NULL,pdMS_TO_TICKS(m==PLAY||m==CONVERSATION?1:10));
+        prof_record(PS_WAIT,(uint32_t)(micros()-ps));
     }
 cleanup:
     ct_lifecycle_close(&lifecycle);wake();

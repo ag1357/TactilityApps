@@ -1,0 +1,29 @@
+{
+  "date": "2026-10-02",
+  "gate": "BLOCKED: physical UI retest and device access",
+  "reference_head": "c5c96674d26bd7a09333c52643130e91f5a6c233",
+  "recovery_worktree": "clean at reference; no reset",
+  "scope": "Anaphorum app only; no multiplayer/Atlas/renderer/firmware changes",
+  "host_checks": {
+    "conversation_layout": 95861,
+    "real_lvgl_9_3_widgets": "PASS (production helpers, simulated firmware keyboard hooks)",
+    "world_sdk_qualification": "PASS",
+    "vip2_qualification": "PASS",
+    "world_asan_ubsan_suites": 10,
+    "vip2_asan_ubsan_suites": 7,
+    "leak_sanitizer": "disabled by existing workspace restriction",
+    "legacy_checks": 864,
+    "legacy_failures": 0,
+    "raster_band_cases": 1200,
+    "raster_band_parity": 1
+  },
+  "physical_checks": {
+    "first_candidate_ui": "FAIL: input offscreen; software entry not exercised",
+    "binding_app_restart": "PASS, human reported",
+    "binding_device_reboot": "NOT VERIFIED",
+    "quit_cleanup": "NOT VERIFIED",
+    "corrected_candidate": "NOT DEPLOYED OR RETESTED"
+  },
+  "blocker": "CM5 ap0 unavailable; human declined internet-disrupting network changes and requested blocked checkpoint",
+  "next_action": "Human supplies reachable P4 development-server address without altering working internet; deploy candidate once and physically retest before multiplayer"
+}

@@ -1,5 +1,15 @@
 > VI-P2 continuation: [report](VI_P2_REPORT.md). This proving branch preserves the long mission and Gates I–VI. Input/layout/lifecycle implementation and host/P4 build gates pass; the preserved race-fix rerun (Gates I–VI + VI-P2 + sanitizers + corrected-SDK cross-build, ELF `5a7634bd…`) is complete at `e240e8d`. Physical and shared-input ownership qualifications remain. Do not advance to multiplayer from this checkpoint.
 
+> **2026-10-02 continuation override: UI recovery BLOCKED.** Read
+> [current state](../STATE.md), [handoff](../HANDOFF.md) and
+> [progress](../PROGRESS.md) first. Starting worktree was clean at published
+> `c5c9667`. The first physical UI candidate failed; corrected app-only
+> alignment/focus/Leave changes pass offline widget tests and the P4 build but
+> are not physically retested or deployed. P4 access is unavailable without
+> disrupting the human's internet. Multiplayer has not started. Use the
+> corrected SDK at `repos/Tactility/release/TactilitySDK`, not its stale
+> versioned subdirectory. Do not restart completed renderer/world/input gates.
+
 # Factory continuation: World SDK foundation
 
 Repository: ag1357/TactilityApps. Branch: `work/cascade-world-sdk`.

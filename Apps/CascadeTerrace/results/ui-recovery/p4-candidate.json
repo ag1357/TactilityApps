@@ -1,0 +1,20 @@
+{
+  "status": "P4 BUILD PRODUCED; PENDING PHYSICAL VALIDATION",
+  "binary_bytes": 222784,
+  "package_bytes": 235520,
+  "elf_sha256": "75708a0e0515680d74f8740f32ac7a11f836cffc9deab607399f60239dcd8b90",
+  "package_sha256": "fbab2d9d6f0629684b78d755d651162927bc71524fad5dbee08ebd33e0a2e716",
+  "format": "Tactility manifest v0.3 / USTAR / esp32p4 external ELF",
+  "gate": "BLOCKED: corrected candidate not physically retested or deployed",
+  "last_deployed_elf_sha256": "e093572a030179e4bb82704b624c93435799e2ffe74a10e3e9c218ba1a1e4a30",
+  "last_deployed_physical_ui_result": "FAIL: input offscreen; corrected TOP_LEFT alignment is in this candidate only",
+  "sdk_path": "/media/cloud/2982-E16B/tactility_p4_work/repos/Tactility/release/TactilitySDK",
+  "lvgl": "9.3.0",
+  "source_sha256": {
+    "main/main.c": "ffa80678375292822ff79ad4386f5d69cf79466f4230e2a1e65f06d6ddda52f4",
+    "main/conversation_widgets.h": "e4ef76819233e8bf8b1ad492db11a762717391e68c25b70672df282585f47800",
+    "core/conversation_layout.c": "ea3972a873f06d0f6538013606ca841e80b2ff5f38ff0e5d3dd82641fcbaf03b",
+    "core/conversation_layout.h": "3ff26ec714616c35d5f7f768f69b7573f7c914aed63946ec794f00e5462941eb",
+    "core/action_input.c": "5f44f1c8c70cb59933e6a367f1d1abed7ef93fbe432b8b5f7b4e0e2a750b9258"
+  }
+}

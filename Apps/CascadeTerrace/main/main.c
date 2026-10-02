@@ -2,6 +2,8 @@
 #include "game.h"
 #include "render.h"
 #include "viewport.h"
+#include "conversation_layout.h"
+#include "conversation_widgets.h"
 #include "action_input.h"
 #include "interaction.h"
 #include "i2c_input.h"
@@ -45,7 +47,7 @@ static struct TaskEventGroup events, sampler_events, i2c_events;
 static uint32_t window_bit, sampler_bit, i2c_bit;
 static atomic_int mode, command;
 static CtLifecycle lifecycle;
-static lv_obj_t *root_widget,*canvas,*overlay,*textarea,*hint,*move_feedback,*look_feedback;
+static lv_obj_t *root_widget,*canvas,*overlay,*textarea,*reply_label,*leave_button,*hint,*move_feedback,*look_feedback;
 static lv_obj_t *focus_buttons[32];
 static int focus_count,focus_index,navigation_held,first_person,reply_offset,qualify;
 static uint16_t *canvas_pixels;
@@ -453,29 +455,53 @@ static void menu_build(void) {
     if(ui_notice[0]){lv_obj_t *notice=lv_label_create(overlay);lv_obj_set_width(notice,LV_PCT(100));lv_label_set_text(notice,ui_notice);}
     set_focus(0);
 }
-/* The conversation input line normally sits at the committed -85 offset
- * (clearing the on-screen controls strip). While the textarea is focused,
- * Tactility's software keyboard is shown: a locked standard, bottom-anchored,
- * full width, 50% of the display height. In that state the input line simply
- * sits above the keyboard's rendered band instead. The check is the
- * textarea's own focus state; nothing outside the app's objects is read.
- * Emits its decision whenever it changes, so a live round shows exactly
- * which focus/offset transitions occur. */
-static int textarea_offset=-1,textarea_focused=-1;
+/* On this hotplug platform a ready kernel keyboard is present. Only use the
+ * public ledger, never software-keyboard objects or private LVGL structures.
+ * The firmware itself decides whether to show its keyboard on focus. */
+static bool keyboard_present(struct Device *device,void *context) {
+    if(!device_is_ready(device))return true;
+    *(int*)context=1;return false;
+}
+static int hardware_text_input(void) {
+    int present=0;device_for_each_of_type(&KEYBOARD_TYPE,&present,keyboard_present);return present;
+}
+static CtConversationLayout text_layout;
+static int textarea_focused=-1,textarea_hardware=-1;
 static void textarea_align(void) {
-    if(!textarea)return;
+    if(!textarea||!reply_label||!atomic_load(&lifecycle.granted)||atomic_load(&mode)!=CONVERSATION)return;
     lv_area_t view;lv_obj_get_coords(root_widget,&view);
     int display_h=lv_display_get_vertical_resolution(lv_display_get_default());
     int focused=lv_obj_has_state(textarea,LV_STATE_FOCUSED)?1:0;
-    int offset=85;
-    if(focused) {
-        int need=view.y2-display_h/2+4;
-        if(need>offset)offset=need;
+    int hardware=hardware_text_input();
+    CtConversationLayout next=ct_conversation_layout(
+        (CtUiRect){view.x1,view.y1,lv_area_get_width(&view),lv_area_get_height(&view)},
+        display_h,focused&&!hardware);
+    if(!next.input.h) {
+        lv_obj_add_flag(textarea,LV_OBJ_FLAG_HIDDEN);lv_obj_add_flag(reply_label,LV_OBJ_FLAG_HIDDEN);return;
     }
-    if(offset==textarea_offset&&focused==textarea_focused)return;
-    textarea_offset=offset;textarea_focused=focused;
-    lv_obj_align(textarea,LV_ALIGN_BOTTOM_MID,0,-offset);
-    emit("{\"type\":\"textarea_align\",\"focused\":%d,\"offset\":%d,\"view_y2\":%d,\"display_h\":%d}\n",focused,offset,(int)view.y2,display_h);
+    lv_obj_remove_flag(textarea,LV_OBJ_FLAG_HIDDEN);lv_obj_remove_flag(reply_label,LV_OBJ_FLAG_HIDDEN);
+    if(!memcmp(&next,&text_layout,sizeof(next))&&focused==textarea_focused&&hardware==textarea_hardware)return;
+    text_layout=next;textarea_focused=focused;textarea_hardware=hardware;
+    ct_conversation_place(textarea,next.input,view.x1,view.y1);
+    ct_conversation_place(reply_label,next.reply,view.x1,view.y1);
+    lv_obj_update_layout(root_widget);
+    lv_area_t input_area,reply_area;lv_obj_get_coords(textarea,&input_area);lv_obj_get_coords(reply_label,&reply_area);
+    emit("{\"type\":\"conversation_layout\",\"focused\":%d,\"hardware\":%d,\"software_entry\":%d,\"input\":[%d,%d,%d,%d],\"reply\":[%d,%d,%d,%d],\"actual_input\":[%d,%d,%d,%d],\"actual_reply\":[%d,%d,%d,%d],\"display_h\":%d}\n",
+         focused,hardware,focused&&!hardware,next.input.x,next.input.y,next.input.w,next.input.h,
+         next.reply.x,next.reply.y,next.reply.w,next.reply.h,
+         (int)input_area.x1,(int)input_area.y1,(int)lv_area_get_width(&input_area),(int)lv_area_get_height(&input_area),
+         (int)reply_area.x1,(int)reply_area.y1,(int)lv_area_get_width(&reply_area),(int)lv_area_get_height(&reply_area),display_h);
+}
+static void text_blur(void) {
+    if(!textarea)return;
+    /* Non-group pointer focus also needs the event: hiding a focused object
+     * alone does not ask Tactility to hide its attached software keyboard. */
+    ct_conversation_blur(textarea);
+}
+static void text_focus(void) {
+    if(!textarea||atomic_load(&mode)!=CONVERSATION)return;
+    ct_conversation_focus(textarea);
+    textarea_align();
 }
 static void layout(lv_event_t *event) {
     (void)event;if(!root_widget||!canvas)return;
@@ -492,12 +518,13 @@ static void layout(lv_event_t *event) {
     viewport=next;viewport_stride=stride;memset(canvas_pixels,0,bytes);
     lv_canvas_set_buffer(canvas,canvas_pixels,viewport.w,viewport.h,LV_COLOR_FORMAT_RGB565);
     lv_obj_set_pos(canvas,viewport.x-a.x1,viewport.y-a.y1);lv_obj_remove_flag(canvas,LV_OBJ_FLAG_HIDDEN);
+    textarea_align();
 }
 static void submit(lv_event_t *e) {
-    if(lv_event_get_code(e)==LV_EVENT_READY){snprintf(submitted,sizeof(submitted),"%s",lv_textarea_get_text(textarea));lv_textarea_set_text(textarea,"");atomic_store(&command,CMD_SUBMIT);wake();}
+    if(lv_event_get_code(e)==LV_EVENT_CLICKED)text_focus();
+    if(lv_event_get_code(e)==LV_EVENT_READY){snprintf(submitted,sizeof(submitted),"%s",lv_textarea_get_text(textarea));lv_textarea_set_text(textarea,"");if(!hardware_text_input())text_blur();atomic_store(&command,CMD_SUBMIT);wake();}
     if(lv_event_get_code(e)==LV_EVENT_KEY&&lv_event_get_key(e)==LV_KEY_ESC){atomic_store(&command,CMD_RESUME);wake();}
-    /* Tactility shows/hides the software keyboard on textarea focus/defocus.
-     * Re-align so the input line sits above/below the keyboard band. */
+    /* Tactility owns keyboard show/hide; the app owns both visible text areas. */
     if(lv_event_get_code(e)==LV_EVENT_FOCUSED||lv_event_get_code(e)==LV_EVENT_DEFOCUSED||
        lv_event_get_code(e)==LV_EVENT_READY)textarea_align();
 }
@@ -508,26 +535,38 @@ static void create(lv_obj_t *root,void *context) {
     canvas=lv_canvas_create(root);layout(NULL);
     lv_obj_add_event_cb(root,layout,LV_EVENT_SIZE_CHANGED,NULL);lv_obj_add_flag(canvas,LV_OBJ_FLAG_CLICKABLE);lv_obj_add_event_cb(canvas,touch,LV_EVENT_ALL,NULL);
     lv_obj_t *b=lv_button_create(root);lv_obj_align(b,LV_ALIGN_TOP_RIGHT,-4,4);lv_obj_add_event_cb(b,ui_command,LV_EVENT_CLICKED,(void*)CMD_MENU);lv_obj_t *l=lv_label_create(b);lv_label_set_text(l,"Menu");
+    leave_button=lv_button_create(root);lv_obj_align(leave_button,LV_ALIGN_TOP_LEFT,4,4);lv_obj_add_event_cb(leave_button,ui_command,LV_EVENT_CLICKED,(void*)CMD_RESUME);l=lv_label_create(leave_button);lv_label_set_text(l,"Leave");
+    if(atomic_load(&mode)!=CONVERSATION)lv_obj_add_flag(leave_button,LV_OBJ_FLAG_HIDDEN);
     b=lv_button_create(canvas);lv_obj_align(b,LV_ALIGN_BOTTOM_RIGHT,-4,-4);lv_obj_add_event_cb(b,touch_button,LV_EVENT_ALL,(void*)AI_JUMP);l=lv_label_create(b);lv_label_set_text(l,"Jump");
     b=lv_button_create(canvas);lv_obj_align(b,LV_ALIGN_BOTTOM_LEFT,4,-4);lv_obj_add_event_cb(b,touch_button,LV_EVENT_ALL,(void*)AI_RUN);l=lv_label_create(b);lv_label_set_text(l,"Run");
     hint=lv_button_create(canvas);lv_obj_align(hint,LV_ALIGN_BOTTOM_MID,0,-44);lv_obj_add_event_cb(hint,ui_command,LV_EVENT_CLICKED,(void*)CMD_INTERACT);l=lv_label_create(hint);lv_label_set_text(l,"Interact");
     move_feedback=lv_label_create(canvas);lv_obj_align(move_feedback,LV_ALIGN_LEFT_MID,4,0);lv_label_set_text(move_feedback,"MOVE");lv_obj_set_style_text_color(move_feedback,lv_color_white(),0);
     look_feedback=lv_label_create(canvas);lv_obj_align(look_feedback,LV_ALIGN_RIGHT_MID,-4,0);lv_label_set_text(look_feedback,"LOOK");lv_obj_set_style_text_color(look_feedback,lv_color_white(),0);
-    textarea=lv_textarea_create(root);lv_obj_set_size(textarea,LV_PCT(100),40);lv_obj_align(textarea,LV_ALIGN_BOTTOM_MID,0,-85);lv_textarea_set_one_line(textarea,true);lv_textarea_set_max_length(textarea,127);lv_textarea_set_placeholder_text(textarea,"Type, Enter; Esc or Menu to leave");
-    lv_group_t *group=lv_group_get_default();if(group)lv_group_add_obj(group,textarea);
+    reply_label=lv_label_create(root);lv_label_set_long_mode(reply_label,LV_LABEL_LONG_CLIP);
+    lv_obj_set_style_bg_color(reply_label,lv_color_hex(0x101820),0);lv_obj_set_style_bg_opa(reply_label,LV_OPA_COVER,0);
+    lv_obj_set_style_text_color(reply_label,lv_color_white(),0);lv_obj_set_style_pad_all(reply_label,4,0);
+    lv_obj_add_flag(reply_label,LV_OBJ_FLAG_CLICKABLE);lv_obj_add_event_cb(reply_label,ui_command,LV_EVENT_CLICKED,(void*)CMD_INTERACT);
+    lv_obj_add_flag(reply_label,LV_OBJ_FLAG_HIDDEN);
+    textarea=lv_textarea_create(root);lv_obj_set_size(textarea,LV_PCT(100),40);lv_obj_align(textarea,LV_ALIGN_BOTTOM_MID,0,-85);lv_textarea_set_one_line(textarea,true);lv_textarea_set_max_length(textarea,127);lv_textarea_set_placeholder_text(textarea,"Tap to type; Enter to send");
+    /* The firmware wrapper automatically groups new textareas. Remove this
+     * one immediately, under the same LVGL lock, before it can acquire focus
+     * in PLAY, Menu, Controls or capture. */
+    text_blur();
     lv_obj_add_event_cb(textarea,submit,LV_EVENT_ALL,NULL);
-    if(atomic_load(&mode)==CONVERSATION){lv_obj_remove_flag(textarea,LV_OBJ_FLAG_HIDDEN);lv_group_focus_obj(textarea);textarea_align();}else lv_obj_add_flag(textarea,LV_OBJ_FLAG_HIDDEN);
+    if(atomic_load(&mode)==CONVERSATION){textarea_align();if(hardware_text_input())text_focus();}else lv_obj_add_flag(textarea,LV_OBJ_FLAG_HIDDEN);
     menu_build();lifecycle_grant_locked();wake();
 }
 static void destroy(void *context) {
     (void)context;lifecycle_revoke_locked();
-    keyboards_latched(0);root_widget=canvas=overlay=textarea=hint=move_feedback=look_feedback=NULL;textarea_offset=textarea_focused=-1;focus_count=0;touch_zone=-1;wake();
+    text_blur();
+    keyboards_latched(0);root_widget=canvas=overlay=textarea=reply_label=leave_button=hint=move_feedback=look_feedback=NULL;memset(&text_layout,0,sizeof(text_layout));textarea_focused=textarea_hardware=-1;focus_count=0;touch_zone=-1;wake();
 }
 static void change_mode(int m) {
     lvgl_lock();snprintf(ui_notice,sizeof(ui_notice),"%s",g->notice);
     if(atomic_load(&mode)==CONVERSATION&&m!=CONVERSATION){memset(&conversation_target,0,sizeof(conversation_target));memset(&conversation,0,sizeof(conversation));}
     atomic_store(&mode,m);clear_input();navigation_held=0;touch_zone=-1;atomic_store(&menu_steps,0);
-    if(textarea){lv_textarea_set_text(textarea,"");if(m==CONVERSATION){lv_obj_remove_flag(textarea,LV_OBJ_FLAG_HIDDEN);lv_group_focus_obj(textarea);textarea_align();}else lv_obj_add_flag(textarea,LV_OBJ_FLAG_HIDDEN);}
+    if(textarea){text_blur();lv_textarea_set_text(textarea,"");if(m==CONVERSATION){textarea_align();if(hardware_text_input())text_focus();}else {lv_obj_add_flag(textarea,LV_OBJ_FLAG_HIDDEN);lv_obj_add_flag(reply_label,LV_OBJ_FLAG_HIDDEN);}}
+    if(leave_button){if(m==CONVERSATION)lv_obj_remove_flag(leave_button,LV_OBJ_FLAG_HIDDEN);else lv_obj_add_flag(leave_button,LV_OBJ_FLAG_HIDDEN);}
     keyboards_latched(m!=CONVERSATION&&atomic_load(&lifecycle.granted));menu_build();lvgl_unlock();wake();
 }
 static void interact(void) {
@@ -747,8 +786,7 @@ int main(int argc,char **argv) {
             prof.tri+=r->triangles;prof.cands+=r->raster_candidates;prof.tests+=r->depth_tests;prof.writes+=r->pixels_written;prof.n++;
             ps=micros();
             draw_panel(r,0,0,W,12,0x1108);draw_text(r,2,2,"ANAPHORUM",0xffff,W-4);
-            if(m==CONVERSATION){draw_panel(r,0,H/2,W,70,0x1108);draw_text(r,2,H/2+1,reply.text+reply_offset,0xffff,W-4);}
-            else if(g->notice[0]){draw_panel(r,0,H-32,W,30,0x1108);draw_text(r,2,H-31,g->notice,0xffff,W-4);}
+            if(m!=CONVERSATION&&g->notice[0]){draw_panel(r,0,H-32,W,30,0x1108);draw_text(r,2,H-31,g->notice,0xffff,W-4);}
             CtInteraction target;int target_found=ct_interaction_resolve(g,&target);
             prof_record(PS_OVERLAY,(uint32_t)(micros()-ps));
             ps=micros();lvgl_lock();prof_record(PS_LOCKWAIT,(uint32_t)(micros()-ps));
@@ -759,7 +797,7 @@ int main(int argc,char **argv) {
                 char label[80];snprintf(label,sizeof(label),"MOVE\n%d %d",frame.axes[0],frame.axes[1]);lv_label_set_text(move_feedback,label);snprintf(label,sizeof(label),"LOOK\n%d %d",frame.axes[2],frame.axes[3]);lv_label_set_text(look_feedback,label);
                 /* Per-pass re-align in conversation mode: tracks the software
                  * keyboard's actual show/hide regardless of event ordering. */
-                if(m==CONVERSATION)textarea_align();
+                if(m==CONVERSATION){textarea_align();char page[161];snprintf(page,sizeof(page),"%.160s",reply.text+reply_offset);lv_label_set_text(reply_label,page);}
                 if(target_found||m==CONVERSATION){lv_obj_remove_flag(hint,LV_OBJ_FLAG_HIDDEN);lv_label_set_text(lv_obj_get_child(hint,0),m==CONVERSATION?"More reply":target.label);}else lv_obj_add_flag(hint,LV_OBJ_FLAG_HIDDEN);
             }lvgl_unlock();
             prof_record(PS_LOCKHOLD,(uint32_t)(micros()-hold));

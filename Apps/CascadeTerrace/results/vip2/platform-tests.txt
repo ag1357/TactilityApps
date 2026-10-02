@@ -7,8 +7,8 @@ PASS independent devices, two gamepad identities, disconnect reconciliation
 PASS queued menu direction taps and analog navigation hysteresis
 PASS transitions inhibit held controls, capture conflict/cancel/replace/defaults
 PASS analog capture/negative direction/deadzone/hysteresis; pulse-only backend restrictions
-PASS versioned atomic binding round-trip and malformed/conflicting load rollback
-PASS independent host sampler during 150ms render stall: 12 ticks; mean 10.070ms min 10.059ms max 10.109ms
+PASS versioned binding overwrite/restart round-trip and malformed/conflicting load rollback
+PASS independent host sampler during 150ms render stall: 12 ticks; mean 10.068ms min 10.017ms max 10.153ms
 Action input tests passed
 ./build/gameplay_platform_test
 VI-P2 gameplay: 51 checks passed
@@ -20,3 +20,5 @@ VI-P2 lifecycle: 74 checks passed (150 ms render, revoke/resume, close/join)
 VI-P2 I2C: protocol, multi-device isolation, pulse semantics, config: PASS
 ./build/i2c_platform_test
 VI-P2 I2C platform: operation-scoped refs, reconnect, failures, close: PASS
+./build/conversation_layout_test
+{"stage":"conversation_layout","checks":95861,"physical":"PENDING"}

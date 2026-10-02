@@ -1,0 +1,16 @@
+/media/cloud/2982-E16B/tactility_p4_work/repos/TactilityApps/Apps/CascadeTerrace/build-p4-native/cascadeterrace.app.elf  :
+section          size     addr
+.hash            1116      212
+.dynsym          2336     1328
+.dynstr          2387     3664
+.rela.dyn        5472     6052
+.rela.plt        1692    11524
+.plt             2288    13216
+.text           87846    15504
+.rodata        114348   103352
+.data.rel.ro     3288   221796
+.got               24   225228
+.got.plt          572   225252
+.data             348   225824
+.bss           147864   226176
+Total          369581

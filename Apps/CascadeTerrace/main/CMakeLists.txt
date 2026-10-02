@@ -1,6 +1,6 @@
 option(CT_PRESENT_PIE "Compile experimental P4 PIE nearest-neighbor backend" OFF)
 option(CT_PRESENT_PPA "Compile experimental PPA backend; requires firmware PPA exports" OFF)
-set(CT_PRESENT_SOURCES "presentation_p4.c" "../core/presentation.c" "../core/viewport.c")
+set(CT_PRESENT_SOURCES "presentation_p4.c" "../core/presentation.c" "../core/viewport.c" "../core/conversation_layout.c")
 if(CT_PRESENT_PIE)
     list(APPEND CT_PRESENT_SOURCES "presentation_pie.S")
 endif()

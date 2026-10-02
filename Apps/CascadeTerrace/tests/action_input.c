@@ -200,6 +200,17 @@ static void persistence(void) {
         ai_format_binding(&loaded.bindings[i],b,sizeof(b));
         assert(!strcmp(a,b));
     }
+    /* A second Bind New must overwrite an existing configuration, too.
+     * FatFs cannot rename a temporary file over an existing destination. */
+    assert(ai_bind(&input,binding(axis(0x1051,0),1,AI_LOOK_X,1),0,0)==AI_BIND_OK);
+    assert(ai_bindings_save(&input,path));
+    ai_init(&loaded);
+    assert(ai_bindings_load(&loaded,path,0));
+    assert(input.binding_count==loaded.binding_count);
+    for(unsigned i=0;i<input.binding_count;i++) {
+        char a[128],b[128];ai_format_binding(&input.bindings[i],a,sizeof(a));
+        ai_format_binding(&loaded.bindings[i],b,sizeof(b));assert(!strcmp(a,b));
+    }
     const char *invalid[] = {
         "ANAPHORUM_BINDINGS 2\n",
         "ANAPHORUM_BINDINGS 1\n1 0 119 1 1 1 1\n1 0 119 1 1 4 1\n",
@@ -216,7 +227,7 @@ static void persistence(void) {
     }
     unlink(path);
     assert(!ai_bindings_load(&loaded,path,0));
-    puts("PASS versioned atomic binding round-trip and malformed/conflicting load rollback");
+    puts("PASS versioned binding overwrite/restart round-trip and malformed/conflicting load rollback");
 }
 #ifdef AI_TEST_THREADS
 typedef struct {

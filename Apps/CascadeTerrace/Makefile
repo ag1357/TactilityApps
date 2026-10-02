@@ -5,7 +5,7 @@ SDL_CFLAGS ?= $(shell sdl2-config --cflags)
 SDL_LIBS ?= $(shell sdl2-config --libs)
 SEMANTIC = core/semantic.c core/decision.c
 WORLD_SDK = world/schema.c world/recipe.c world/geometry.c world/traversal.c world/state.c world/resource.c world/creature.c world/social.c world/persistence.c
-CORE = core/action_input.c core/viewport.c core/interaction.c content/cascade_interaction.c $(WORLD_SDK) content/cascade_adapter.c $(SEMANTIC) core/general_dialogue.c research/rung_a/cognition.c core/world.c core/state.c core/dialogue.c core/persistence.c core/render.c
+CORE = core/action_input.c core/viewport.c core/conversation_layout.c core/interaction.c content/cascade_interaction.c $(WORLD_SDK) content/cascade_adapter.c $(SEMANTIC) core/general_dialogue.c research/rung_a/cognition.c core/world.c core/state.c core/dialogue.c core/persistence.c core/render.c
 all: build/cascade build/test
 build/world_sdk_test: $(WORLD_SDK) tests/world_sdk.c world/sdk.h | build
 	$(CC) $(CFLAGS) $(filter %.c,$^) -o $@
@@ -126,5 +126,13 @@ build/i2c_platform_test: main/i2c_input.c core/i2c_controls.c tests/i2c_platform
 	$(CC) $(CFLAGS) -Itests/i2c_stubs -Icore $(filter %.c,$^) -o $@
 i2c-platform-test: build/i2c_platform_test
 	./build/i2c_platform_test
+build/conversation_layout_test: core/conversation_layout.c tests/conversation_layout.c core/conversation_layout.h | build
+	$(CC) $(CPPFLAGS) $(CFLAGS) $(filter %.c,$^) -o $@
+conversation-layout-test: build/conversation_layout_test
+	./build/conversation_layout_test
+conversation-lvgl-test:
+	cmake -S tests/lvgl_conversation -B build/conversation-lvgl -DLVGL_SOURCE="$(LVGL_SOURCE)" -DCMAKE_BUILD_TYPE=Debug
+	cmake --build build/conversation-lvgl -j4
+	ctest --test-dir build/conversation-lvgl --output-on-failure
 .PHONY: vip2-test
-vip2-test: viewport-test action-input-test gameplay-platform-test raster-band-test platform-lifecycle-test i2c-controls-test i2c-platform-test
+vip2-test: viewport-test action-input-test gameplay-platform-test raster-band-test platform-lifecycle-test i2c-controls-test i2c-platform-test conversation-layout-test

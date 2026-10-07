@@ -1,0 +1,233 @@
+{
+  "date": "2026-10-07",
+  "reference_head": "4c34501b2e89b30a3c7a964b6e36bdccb906dd20",
+  "scope": "Normal installed app, human physical inputs; no synthetic UI probe in this session",
+  "human_report": {
+    "controls": "PASS",
+    "bind_new": "PASS",
+    "cardkb_at_reported_3_3v": "PASS in this setup, not a general electrical guarantee",
+    "wired_typing_enter_repeat_entry": "PASS",
+    "conversation_exit_back_binding": "PASS",
+    "manual_quit": "PASS",
+    "on_screen_keyboard": "NOT TESTED",
+    "reply_and_leave_button_visibility": "NOT EXPLICITLY REPORTED",
+    "keyboard_absence_outside_conversation": "NOT EXPLICITLY REPORTED"
+  },
+  "telemetry": {
+    "rendered_frames": 3434,
+    "binding_save_operations": 18,
+    "binding_save_failures": 0,
+    "final_binding_count": 57,
+    "controls_bytes": 1051,
+    "controls_sha256": "15f303bb8b118360016417fc83a45d5eee85c1564046a2efd3f1123c3adb04cc",
+    "i2c_ready_masks": [
+      7
+    ],
+    "last_i2c_status": {
+      "type": "i2c_status",
+      "configured": 3,
+      "ready_mask": 7,
+      "polls": 35950,
+      "failures": 0
+    },
+    "last_input_status": {
+      "type": "input",
+      "samples": 38929,
+      "mean_us": 14132,
+      "min_us": 143,
+      "max_us": 134252,
+      "events": 191794,
+      "disconnects": 0,
+      "dropped": 0
+    },
+    "conversation_layouts": [
+      {
+        "type": "conversation_layout",
+        "focused": 0,
+        "hardware": 1,
+        "software_entry": 0,
+        "input": [
+          4,
+          355,
+          312,
+          40
+        ],
+        "reply": [
+          4,
+          211,
+          312,
+          140
+        ],
+        "actual_input": [
+          4,
+          355,
+          312,
+          40
+        ],
+        "actual_reply": [
+          4,
+          211,
+          312,
+          140
+        ],
+        "display_h": 480
+      }
+    ],
+    "close_save": {
+      "type": "close_save",
+      "ok": 1
+    },
+    "close_done": {
+      "type": "close_done",
+      "input_task_joined": true,
+      "buffers_released": true,
+      "internal_free": 127911,
+      "internal_largest": 43008,
+      "psram_free": 32853380,
+      "psram_largest": 32505856
+    },
+    "post_unload_task_count": 31,
+    "post_unload_heap": {
+      "free": 144447,
+      "total": 427563,
+      "min_free": 76796,
+      "largest_block": 59392
+    },
+    "post_unload_psram": {
+      "free": 33461388,
+      "total": 33554432,
+      "min_free": 32363304,
+      "largest_block": 32505856
+    }
+  },
+  "preservation": "Current 57-binding profile backed up privately; never restore the older 47-binding baseline over user changes",
+  "remaining_gate": "Keyboard-disconnected software entry/touch, visible reply/input/Leave and keyboard absence in Play/Menu/Controls/Bind New",
+  "user_profile_persistence": {
+    "scope": "Real saved 57-binding user profile reloaded on native P4; opt-in synthetic UI probe supplied bounded Quit, not physical input",
+    "phases": [
+      {
+        "phase": "user-bindings-app-restart",
+        "task_count_after": 31,
+        "user_controls_unchanged": true,
+        "user_binding_count": 57,
+        "events": [
+          {
+            "type": "bind_load",
+            "ok": 1,
+            "count": 57,
+            "exists": 1,
+            "size": 1051,
+            "crc": 1770851094,
+            "lines": 58,
+            "first_bad": 0,
+            "bad": ""
+          },
+          {
+            "type": "boot",
+            "title": "Anaphorum",
+            "reload": 1,
+            "bindings_loaded": 1,
+            "input_period_target_us": 10000,
+            "physical": "PENDING"
+          },
+          {
+            "type": "i2c_status",
+            "configured": 3,
+            "ready_mask": 7,
+            "polls": 15,
+            "failures": 0
+          },
+          {
+            "type": "ui_probe_summary",
+            "failures": 0,
+            "kernel_keyboard": 0,
+            "i2c_ready_mask": 7,
+            "telemetry_dropped": 0,
+            "physical_touch_keys": "NOT_TESTED",
+            "keyboard_pixels": "NOT_INSPECTED"
+          },
+          {
+            "type": "input_joined",
+            "frame": 3
+          },
+          {
+            "type": "close_save",
+            "ok": 1
+          },
+          {
+            "type": "close_done",
+            "input_task_joined": true,
+            "buffers_released": true,
+            "internal_free": 127307,
+            "internal_largest": 43008,
+            "psram_free": 32852076,
+            "psram_largest": 31981568
+          }
+        ]
+      },
+      {
+        "phase": "user-bindings-device-reboot",
+        "task_count_after": 31,
+        "user_controls_unchanged": true,
+        "user_binding_count": 57,
+        "events": [
+          {
+            "type": "bind_load",
+            "ok": 1,
+            "count": 57,
+            "exists": 1,
+            "size": 1051,
+            "crc": 1770851094,
+            "lines": 58,
+            "first_bad": 0,
+            "bad": ""
+          },
+          {
+            "type": "boot",
+            "title": "Anaphorum",
+            "reload": 1,
+            "bindings_loaded": 1,
+            "input_period_target_us": 10000,
+            "physical": "PENDING"
+          },
+          {
+            "type": "i2c_status",
+            "configured": 3,
+            "ready_mask": 7,
+            "polls": 15,
+            "failures": 0
+          },
+          {
+            "type": "ui_probe_summary",
+            "failures": 0,
+            "kernel_keyboard": 0,
+            "i2c_ready_mask": 7,
+            "telemetry_dropped": 0,
+            "physical_touch_keys": "NOT_TESTED",
+            "keyboard_pixels": "NOT_INSPECTED"
+          },
+          {
+            "type": "input_joined",
+            "frame": 3
+          },
+          {
+            "type": "close_save",
+            "ok": 1
+          },
+          {
+            "type": "close_done",
+            "input_task_joined": true,
+            "buffers_released": true,
+            "internal_free": 133295,
+            "internal_largest": 53248,
+            "psram_free": 32852436,
+            "psram_largest": 31981568
+          }
+        ]
+      }
+    ],
+    "controls_sha256": "15f303bb8b118360016417fc83a45d5eee85c1564046a2efd3f1123c3adb04cc",
+    "normal_package_restored": true,
+    "app_closed": true
+  }
+}

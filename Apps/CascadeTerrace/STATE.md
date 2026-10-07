@@ -1,10 +1,34 @@
 # Anaphorum recovery state, 2026-10-07
 
-**Native automated UI/lifecycle qualification: PASS. Physical touch/key and
-display inspection gate: STILL OPEN. Multiplayer has not started.**
+**Native UI/lifecycle and physical wired controls/text/Bind New/Quit: PASS.
+Keyboard-disconnected touch/visibility gate: STILL OPEN. Multiplayer has not started.**
 Device access is restored; this is no longer a network-blocked checkpoint.
 
 ## Current verified state
+
+- Follow-up to published `4c34501b2e89b30a3c7a964b6e36bdccb906dd20`:
+  the user confirmed controls, Bind New and CardKB operation at the reported
+  3.3 V supply, then manual Quit. They additionally confirmed wired typing,
+  Enter, repeat entry and conversation exit through the Back binding.
+  They explicitly **did not test the on-screen keyboard**. Reply/Leave-button
+  visibility and keyboard absence outside conversation were not explicitly
+  reported; do not infer those from the wired test.
+- Retrieved the normal human session, not a synthetic probe: 3,434 rendered
+  frames, 18 successful binding saves, 35,950 I2C polls with zero failures,
+  ready mask 7 throughout all 271 status reports, zero input disconnects or
+  dropped events. Manual Quit emitted input joined, save success and buffers
+  released; post-unload tasks were 31 and PSRAM free 33,461,388 B.
+  Sampler mean was 14,132 µs, maximum 134,252 µs: target 10 ms is not a
+  measured hard deadline. No performance rewrite is authorized by this evidence.
+- The user's new profile contains **57 bindings**, 1,051 B. Preserve it:
+  `/media/cloud/2982-E16B/tactility_p4_work/backups/anaphorum-manual-20261007-5z6zstmq/`.
+  Do not restore the older 47-binding baseline over these user changes.
+  Using the bounded probe only for automatic Quit, verified the actual user
+  file reloads all 57 bindings after app restart and actual P4 reboot and
+  remains byte-identical to this new backup. Restored/hash-checked the normal
+  package without the probe flag and left the app closed.
+  Evidence: `results/ui-recovery/manual-qualification.json`; private raw
+  bindings, entered text and complete telemetry are not published.
 
 - Continued published `22d9317ebe6942a282b006212fa5edfd5ffdd704`, not a reset
   to an earlier research gate. CM5 and P4 use the existing home LAN:
@@ -22,8 +46,9 @@ Device access is restored; this is no longer a network-blocked checkpoint.
 - Binding capture/save/overwrite/reload uses a separate
   `controls-ui-probe.cfg`, restoring the original input state afterward.
   The synthetic mapping survived app restart and an actual P4 reboot.
-  Original `controls.cfg` remains byte-identical to the predeployment backup;
-  each normal boot reloads its 47 bindings.
+  At that automated checkpoint, original `controls.cfg` was byte-identical to
+  the predeployment backup and boot reloaded 47 bindings. The later human
+  changes and current 57-binding baseline above supersede that count.
 - The user confirmed two wired gamepads and CardKB2 on 3.3 V/GND/GPIO4/5,
   with gamepad 2's address trace cut. The app configuration previously listed
   only `0x50`; it now lists seesaw `0x50`, seesaw `0x51`, CardKB2 `0x5f`.
@@ -83,13 +108,14 @@ Device access is restored; this is no longer a network-blocked checkpoint.
 
 ## Remaining mandatory gate
 
-Synthetic events on the real P4 are **not** physical touch/key injection.
-No keyboard pixels were inspected. The final UI still needs a short hands-on
-check: visible reply/input and Leave, actual wired text/submit/retap, software
-entry after disconnect, no keyboard in PLAY/Menu/Controls/capture, and actual
-pad controls/capture. Protocol readiness is not a button/typing qualification.
-CardKB2 specifies a 5 V power input; successful reads at the reported 3.3 V do
-not establish reliable electrical operation. Keep P4 signal levels at 3.3 V.
+Wired controls, Bind New, typing/Enter/repeat entry, Back and Quit now have
+human evidence. The remaining hands-on check is keyboard-disconnected
+software entry/touch, visible reply/input/Leave, and no keyboard in
+PLAY/Menu/Controls/capture. The on-screen keyboard was explicitly not tested.
+Synthetic events and coordinates do not substitute for that visual/touch check.
+CardKB2 operation at 3.3 V passed in this reported setup; this is not a general
+electrical guarantee. Its specified power input remains 5 V, with P4 signal
+levels at 3.3 V.
 
 After that evidence is recorded, TEST → COMMIT → PUSH the promoted UI checkpoint
 before normal-game desktop multiplayer, then P4 transport and measured

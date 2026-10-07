@@ -21,8 +21,16 @@ already route directly to conversation; the textarea remains blurred/ungrouped
 while that adapter is ready, avoiding a software keyboard triggered by the
 kernel ledger's lack of an app-owned device. Disconnect enables ordinary
 intentional focus on the next tap. Real LVGL host tests cover the policy;
-native synthetic callbacks verify the wired branch. Actual keys/touch still
-need the small hands-on UI check. Evidence: `results/ui-recovery/native-qualification.json`.
+native synthetic callbacks verify the wired branch.
+
+Same-day human follow-up confirmed controls, Bind New, wired typing/Enter/
+repeat entry, Back and manual Quit, with CardKB operating at the reported
+3.3 V supply in this setup. The normal session recorded 35,950 I2C polls and
+zero failures; all three devices stayed ready. The new 57-binding user profile
+reloads unchanged after app restart and P4 reboot. Only keyboard-disconnected
+software entry/touch/visibility remains untested, not the wired input path.
+Evidence: `results/ui-recovery/native-qualification.json` and
+`results/ui-recovery/manual-qualification.json`.
 
 ## Implemented boundary
 

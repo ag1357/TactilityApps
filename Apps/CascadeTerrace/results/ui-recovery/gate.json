@@ -1,7 +1,7 @@
 {
   "date": "2026-10-07",
-  "gate": "Native automated UI/lifecycle and physical I2C readiness PASS; hands-on touch/key/display gate OPEN",
-  "reference_head": "22d9317ebe6942a282b006212fa5edfd5ffdd704",
+  "gate": "Native UI/lifecycle and physical wired controls/text/Bind New/Quit PASS; keyboard-disconnected visual/touch gate OPEN",
+  "reference_head": "4c34501b2e89b30a3c7a964b6e36bdccb906dd20",
   "recovery_worktree": "continued preserved checkpoint; no reset",
   "scope": "Anaphorum app only; no multiplayer/Atlas/renderer/firmware changes",
   "host_checks": {
@@ -19,14 +19,18 @@
   },
   "physical_checks": {
     "historical_first_candidate_ui": "FAIL: input offscreen; software entry not exercised",
-    "binding_app_restart": "PASS: prior human report; native synthetic capture persists in separate probe file",
-    "binding_device_reboot": "PASS: native synthetic mapping reloads after actual reboot; user Controls file byte-identical",
-    "quit_cleanup": "PASS: native synthetic Menu Quit callback, worker join/save/buffer release; 31 tasks before and after",
+    "binding_app_restart": "PASS: actual new 57-binding user profile reloads; file byte-identical to current backup",
+    "binding_device_reboot": "PASS: actual new 57-binding user profile reloads after P4 reboot; file byte-identical",
+    "quit_cleanup": "PASS: human manual Quit; normal session worker join/save/buffer release; 31 tasks after unload",
     "corrected_candidate": "Normal package installed; downloaded ELF hash matches; app closed",
     "i2c_three_devices": "PASS: seesaw 0x50/0x51 and CardKB2 0x5f, ready mask 7, zero failures, reboot reload",
-    "touch_keys_and_keyboard_pixels": "NOT VERIFIED: native UI events were explicitly synthetic"
+    "wired_controls_and_bind_new": "PASS: human reported; 18 successful save operations, final 57 bindings",
+    "wired_text_and_back": "PASS: human confirmed typing, Enter, repeat entry and Back-binding conversation exit",
+    "cardkb_at_reported_3_3v": "PASS in this setup; not a general electrical guarantee",
+    "software_keyboard": "NOT TESTED: human explicitly reported",
+    "reply_leave_visibility_and_nonconversation_keyboard_absence": "NOT EXPLICITLY REPORTED"
   },
-  "evidence": "native-qualification.json",
-  "blocker": "Brief hands-on physical touch/key/display check; network access is restored on existing home LAN",
-  "next_action": "Human launches installed normal Anaphorum once from Tactility Home, checks actual wired/software text and pad controls, then Menu Quit; record evidence before promoting UI gate or multiplayer"
+  "evidence": ["native-qualification.json", "manual-qualification.json"],
+  "blocker": "Only keyboard-disconnected software entry/touch/visibility and keyboard absence outside conversation remain",
+  "next_action": "Human checks on-screen entry after keyboard disconnect plus reply/input/Leave visibility and nonconversation keyboard absence, then Quit; preserve new 57-binding profile"
 }

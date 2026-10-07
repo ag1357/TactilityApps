@@ -113,3 +113,31 @@ hash/content verification and `git diff --check` pass.
 - Evidence explicitly labels synthetic events and uninspected keyboard pixels.
   No physical typing/buttons/touch claim or multiplayer implementation.
   Current checkpoint remains gated on that small hands-on UI check.
+
+### 2026-10-07 follow-up, physical wired input and manual Quit PASS
+
+- Continued clean published `4c34501`. User reported: “controls work, new
+  binding worked, cardkb worked on 3.3v.game quit”. Clarified that wired typing,
+  Enter and repeat entry worked, and Back binding exited conversation.
+  User explicitly did not test the on-screen keyboard.
+- With the app closed, retrieved and privately backed up current controls,
+  I2C config, full journal and latest normal session at
+  `/media/cloud/2982-E16B/tactility_p4_work/backups/anaphorum-manual-20261007-5z6zstmq/`.
+  No synthetic-probe summary in the manual session; 3,434 frames, 18 successful
+  binding saves, final count 57. I2C mask 7 throughout 271 reports, final
+  polls 35,950/failures 0; no input disconnects or drops.
+- Manual Quit emitted input joined, close-save success and released buffers.
+  Post-unload 31 tasks and PSRAM free 33,461,388 B. Input sampler mean
+  14.132 ms, max 134.252 ms; do not claim a hard 10 ms sampling deadline.
+- Verified the actual new 57-binding user profile after app restart and
+  actual P4 reboot. Bounded opt-in probe supplied automatic Quit; each boot
+  loaded 57 user bindings, all 16 synthetic checks passed, and the user file
+  remained byte-identical to the new backup. Restored the normal package,
+  verified installed ELF and probe-marker absence, left app closed.
+- Generated `results/ui-recovery/manual-qualification.json` with bounded
+  telemetry, user-confirmed scope and explicit remaining checks. No binding
+  contents or entered text published. Never restore the older 47-binding
+  baseline over the new human mappings.
+- No code, firmware, renderer or network changes. Full UI promotion/multiplayer
+  remains gated on keyboard-disconnected software entry/touch/visibility and
+  keyboard absence in nonconversation modes, not on already-passed wired tests.

@@ -1,0 +1,119 @@
+{
+  "status": "PASS bounded desktop checkpoint; full multiplayer pending",
+  "architecture": "aarch64",
+  "normal_clients": {
+    "status": "PASS",
+    "scope": "Two normal desktop game clients, not SDK viewer",
+    "clients": [
+      {
+        "snapshots": 590,
+        "reconciliations": 578,
+        "connections": 1,
+        "peers_seen_max": 1,
+        "bytes_sent": 66324,
+        "bytes_received": 142459,
+        "receipts": 1,
+        "successful_actions": 1,
+        "queue_overflow": 0,
+        "authority_start_mm": [
+          22000,
+          3420,
+          -90000
+        ],
+        "authority_last_mm": [
+          22000,
+          3023,
+          -81060
+        ]
+      },
+      {
+        "snapshots": 612,
+        "reconciliations": 597,
+        "connections": 1,
+        "peers_seen_max": 1,
+        "bytes_sent": 68628,
+        "bytes_received": 146351,
+        "receipts": 1,
+        "successful_actions": 1,
+        "queue_overflow": 0,
+        "authority_start_mm": [
+          22000,
+          3420,
+          -90000
+        ],
+        "authority_last_mm": [
+          30940,
+          3065,
+          -90000
+        ]
+      }
+    ],
+    "server": {
+      "players_peak": 2,
+      "elapsed_s": 57.56310235800083,
+      "bytes_sent": 288810,
+      "bytes_received": 134952,
+      "bytes_client_second": 3680.847475562619,
+      "world_tick_us": {
+        "p50": 124.704,
+        "p95": 240.076,
+        "p99": 430.521
+      },
+      "authority_loop_work_us": {
+        "p50": 140.77900050324388,
+        "p95": 443.7610004970338,
+        "p99": 889.282999196439
+      },
+      "ticks": 2794,
+      "cpu_seconds": 1.983287,
+      "rss_max_kib": 26576,
+      "persistence_us": {
+        "p50": 2851.405,
+        "p99": 2851.405
+      },
+      "reconciliation_us": {
+        "p50": 0,
+        "p99": 0
+      },
+      "interest_fanout_max": 1,
+      "interest_fanout_sum": 1179,
+      "inference_demand": 0,
+      "offline_history_demand": 0,
+      "scope": "Development transport; no public deployment or native P4 claim"
+    }
+  },
+  "source_sha256": {
+    "Makefile": "368a800fe10e3377f3a401057ad44fc3b3f225d922b7a17af1459da040323789",
+    "content/online_authority.c": "599875f07e4402e7d67b0789150d5f1db5a585107fa36fd7f16ed67d15f4d106",
+    "core/game.h": "03ca313c723dd627de84157e90502ab45ed9c03209a5f9f3e46b0ebc62a34cc2",
+    "core/render.c": "90d86d9ae9bdaa90da6fd7b0566186ef07333f2b43e1f510893762a119d23f80",
+    "core/render.h": "49705bd0c4fb622f9d55b923b4b9314aaed7710ec870b8c1424390c191f7db03",
+    "core/state.c": "54de17b040da67f5e995d551992348059ce78b7d705a09f73c7138fcd70e85f9",
+    "desktop/main.c": "4732c63f3f4e429ab2c3b23e843039f5fa9d81e6220fa86a79df63ca13ba7eb4",
+    "multiplayer/__init__.py": "8a5f6174a426f56aa9a61540802f18a8c389f9dadf4d15f68f342bed6664b253",
+    "multiplayer/backend.py": "fed02013a53cd65d67b4f15f1e300791cf8dea47df0c9b2e718ea685146ffda3",
+    "multiplayer/client.c": "21f6842da13df0eb5eaac9bf854f24a6d281011f3e708c5fa5bce6a6ed805642",
+    "multiplayer/client.h": "9f54e2bfe157bc7ab5345638f0c460ac08700d4669c18b676872cebebce63720",
+    "multiplayer/fingerprint.py": "e7a58ab9520bb9e73fd92ab4492e63ce3dff5fffbb0d05e82498e4b6faa52094",
+    "multiplayer/inference.py": "b9f1a521b453ef70ec477050db7a26874509e2ce6d87714fa1f62e6f6b89275e",
+    "multiplayer/protocol.py": "7b40a0272c24c498ea53e21def2948abcc8a350f99a180b4e335c29282714c43",
+    "multiplayer/server.py": "0ca29185d581c66ab54babe65a5f2f41e0b364f3e24ede8fd69ab5d4d1b77dee",
+    "multiplayer/simulation.py": "af16e15c0805a4047fbe21f7ce80f556f0fbea2ac79774f7eeb7100311e945dc",
+    "multiplayer/storage.py": "d2d9b40c95c4ee511ba8735e9403cf789921853dfebff6b5a903417c7a98da98"
+  },
+  "gates": {
+    "authority_tests": 11,
+    "real_client_fault_tests": 3,
+    "world_sanitizer_suites": 10,
+    "vip2_sanitizer_suites": 7,
+    "multiplayer_sanitizers": "authority C harness and normal C client fault suite",
+    "lvgl": "9.3 regression passed",
+    "p4_shared_core": "cross-build/import tables only; not deployed"
+  },
+  "limits": [
+    "Plaintext development transport only",
+    "Timed jobs/full NPC/quest/offline/P4 transport pending",
+    "No sustained mixed-load capacity claim",
+    "Zero load event/inference latency fields have no samples"
+  ]
+}

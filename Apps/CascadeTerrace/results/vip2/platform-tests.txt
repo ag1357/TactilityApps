@@ -8,10 +8,12 @@ PASS queued menu direction taps and analog navigation hysteresis
 PASS transitions inhibit held controls, capture conflict/cancel/replace/defaults
 PASS analog capture/negative direction/deadzone/hysteresis; pulse-only backend restrictions
 PASS versioned binding overwrite/restart round-trip and malformed/conflicting load rollback
-PASS independent host sampler during 150ms render stall: 12 ticks; mean 10.079ms min 10.056ms max 10.146ms
+PASS independent host sampler during 150ms render stall: 12 ticks; mean 10.064ms min 10.054ms max 10.105ms
 Action input tests passed
+cc -Icore -DCG_TRAINED_MODEL -O2 -g -std=c11 -Wall -Wextra -Werror -Wno-misleading-indentation core/action_input.c core/viewport.c core/conversation_layout.c core/interaction.c content/cascade_interaction.c world/schema.c world/recipe.c world/geometry.c world/traversal.c world/state.c world/resource.c world/creature.c world/social.c world/persistence.c content/cascade_adapter.c core/semantic.c core/decision.c core/general_dialogue.c research/rung_a/cognition.c core/world.c core/state.c core/dialogue.c core/persistence.c core/render.c tests/gameplay_platform.c -lm -o build/gameplay_platform_test
 ./build/gameplay_platform_test
 VI-P2 gameplay: 51 checks passed
+cc -Icore -DCG_TRAINED_MODEL -O2 -g -std=c11 -Wall -Wextra -Werror -Wno-misleading-indentation core/action_input.c core/viewport.c core/conversation_layout.c core/interaction.c content/cascade_interaction.c world/schema.c world/recipe.c world/geometry.c world/traversal.c world/state.c world/resource.c world/creature.c world/social.c world/persistence.c content/cascade_adapter.c core/semantic.c core/decision.c core/general_dialogue.c research/rung_a/cognition.c core/world.c core/state.c core/dialogue.c core/persistence.c core/render.c tests/raster_band.c -lm -pthread -o build/raster_band_test
 ./build/raster_band_test
 {"stage":"raster-band","cases":1200,"parity":1}
 ./build/platform_lifecycle_test

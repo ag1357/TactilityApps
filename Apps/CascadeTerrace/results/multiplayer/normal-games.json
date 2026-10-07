@@ -1,0 +1,81 @@
+{
+  "status": "PASS",
+  "scope": "Two normal desktop game clients, not SDK viewer",
+  "clients": [
+    {
+      "snapshots": 590,
+      "reconciliations": 578,
+      "connections": 1,
+      "peers_seen_max": 1,
+      "bytes_sent": 66324,
+      "bytes_received": 142459,
+      "receipts": 1,
+      "successful_actions": 1,
+      "queue_overflow": 0,
+      "authority_start_mm": [
+        22000,
+        3420,
+        -90000
+      ],
+      "authority_last_mm": [
+        22000,
+        3023,
+        -81060
+      ]
+    },
+    {
+      "snapshots": 612,
+      "reconciliations": 597,
+      "connections": 1,
+      "peers_seen_max": 1,
+      "bytes_sent": 68628,
+      "bytes_received": 146351,
+      "receipts": 1,
+      "successful_actions": 1,
+      "queue_overflow": 0,
+      "authority_start_mm": [
+        22000,
+        3420,
+        -90000
+      ],
+      "authority_last_mm": [
+        30940,
+        3065,
+        -90000
+      ]
+    }
+  ],
+  "server": {
+    "players_peak": 2,
+    "elapsed_s": 57.56310235800083,
+    "bytes_sent": 288810,
+    "bytes_received": 134952,
+    "bytes_client_second": 3680.847475562619,
+    "world_tick_us": {
+      "p50": 124.704,
+      "p95": 240.076,
+      "p99": 430.521
+    },
+    "authority_loop_work_us": {
+      "p50": 140.77900050324388,
+      "p95": 443.7610004970338,
+      "p99": 889.282999196439
+    },
+    "ticks": 2794,
+    "cpu_seconds": 1.983287,
+    "rss_max_kib": 26576,
+    "persistence_us": {
+      "p50": 2851.405,
+      "p99": 2851.405
+    },
+    "reconciliation_us": {
+      "p50": 0,
+      "p99": 0
+    },
+    "interest_fanout_max": 1,
+    "interest_fanout_sum": 1179,
+    "inference_demand": 0,
+    "offline_history_demand": 0,
+    "scope": "Development transport; no public deployment or native P4 claim"
+  }
+}

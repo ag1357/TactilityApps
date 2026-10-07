@@ -7,6 +7,9 @@ SEMANTIC = core/semantic.c core/decision.c
 WORLD_SDK = world/schema.c world/recipe.c world/geometry.c world/traversal.c world/state.c world/resource.c world/creature.c world/social.c world/persistence.c
 CORE = core/action_input.c core/viewport.c core/conversation_layout.c core/interaction.c content/cascade_interaction.c $(WORLD_SDK) content/cascade_adapter.c $(SEMANTIC) core/general_dialogue.c research/rung_a/cognition.c core/world.c core/state.c core/dialogue.c core/persistence.c core/render.c
 all: build/cascade build/test
+build/libanaphorum.so: $(CORE) content/online_authority.c core/game.h | build
+	$(CC) $(CPPFLAGS) $(CFLAGS) -shared -fPIC $(filter %.c,$^) -lm -o $@
+build/libanaphorum.so: $(wildcard core/*.h core/*.inc world/*.h) content/worlds/cascade.inc research/models/decision_int8.inc
 build/world_sdk_test: $(WORLD_SDK) tests/world_sdk.c world/sdk.h | build
 	$(CC) $(CFLAGS) $(filter %.c,$^) -o $@
 sdk-test: build/world_sdk_test
@@ -37,8 +40,10 @@ bridge-test: build/bridge_sdk_test
 	./build/bridge_sdk_test
 build:
 	mkdir -p build
-build/cascade: $(CORE) desktop/main.c | build
-	$(CC) $(CPPFLAGS) $(CFLAGS) $(SDL_CFLAGS) $(filter %.c,$^) $(SDL_LIBS) -lm -o $@
+build/content_fingerprint.h: content/worlds/cascade.inc multiplayer/fingerprint.py | build
+	python3 multiplayer/fingerprint.py > $@
+build/cascade: $(CORE) desktop/main.c multiplayer/client.c multiplayer/client.h build/content_fingerprint.h | build
+	$(CC) $(CPPFLAGS) -Ibuild $(CFLAGS) $(SDL_CFLAGS) $(filter %.c,$^) $(SDL_LIBS) -lm -pthread -o $@
 build/test: $(CORE) tests/test.c | build
 	$(CC) $(CPPFLAGS) $(CFLAGS) $(filter %.c,$^) -lm -o $@
 test: build/test
@@ -46,6 +51,10 @@ test: build/test
 clean:
 	rm -rf build
 .PHONY: all clean test
+.PHONY: multiplayer-test
+multiplayer-test: build/cascade build/libanaphorum.so
+	python3 -m unittest discover -s tests -p 'test_multiplayer.py' -v
+	python3 -m unittest discover -s tests -p 'test_network_client.py' -v
 build/evaluate: $(CORE) tests/evaluate.c | build
 	$(CC) $(CPPFLAGS) $(CFLAGS) $(filter %.c,$^) -lm -o $@
 build/benchmark: $(CORE) tests/benchmark.c | build

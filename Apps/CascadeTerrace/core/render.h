@@ -36,6 +36,7 @@ void render_world(Renderer*,const WsRecipe*,WsAddress,int,WsMetrics*);
    simulation. Unbound (NULL) rendering stays exactly the declared geometry. */
 void render_bind_state(const WsState*);
 void render_world_peer(WsPos);
+void render_game_peer(Pos,const CtActorPresentation*);
 void render_world_marker(WsPos,uint32_t);
 void draw_text(Renderer*, int, int, const char*, uint16_t, int);
 void draw_panel(Renderer*, int, int, int, int, uint16_t);

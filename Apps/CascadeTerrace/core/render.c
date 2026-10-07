@@ -565,4 +565,7 @@ void render_world(Renderer *r,const WsRecipe *world,WsAddress player,int yaw,WsM
     if(render_clock)r->scene_us=(uint32_t)(render_clock()-frame_clock)-r->clear_us;
 }
 void render_world_peer(WsPos p) { person(p.x/1000.f,p.y/1000.f,p.z/1000.f,1,0,0); }
+void render_game_peer(Pos p,const CtActorPresentation *a) {
+    person(p.x/1000.f,p.y/1000.f,p.z/1000.f,0,a->phase_milliradians/1000.f,a->facing*.01745329252f);
+}
 void render_world_marker(WsPos p,uint32_t rgb) { box(p.x/1000.f,p.y/1000.f,p.z/1000.f,.4f,.8f,.4f,rgb); }

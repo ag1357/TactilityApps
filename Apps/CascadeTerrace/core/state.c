@@ -251,13 +251,13 @@ int game_apply(Game* g, Operation o) {
     snprintf(g->notice, sizeof(g->notice), "%s: %s", op_name(o.op), item_name(o.item));
     return 1;
 }
-void game_tick(Game* g, Input in, uint32_t real_ms) {
+static void tick(Game* g, Input in, uint32_t real_ms, int advance) {
     if (real_ms > 250) real_ms = 250;
     g->substep += real_ms;
     State* s = &g->state;
     while (g->substep >= 20) {
         g->substep -= 20;
-        world_advance(g, 600);
+        if(advance)world_advance(g, 600);
         s->yaw = (s->yaw + in.turn + 360) % 360;
         int yaw = s->yaw, cs = sine[(yaw + 90) % 360], sn = sine[yaw];
         int speed = in.run ? 120 : 60;
@@ -316,3 +316,5 @@ void game_tick(Game* g, Input in, uint32_t real_ms) {
         s->player_pos = p;
     }
 }
+void game_tick(Game* g,Input in,uint32_t ms) {tick(g,in,ms,1);}
+void game_motion_tick(Game* g,Input in,uint32_t ms) {tick(g,in,ms,0);}

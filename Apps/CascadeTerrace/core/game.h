@@ -160,6 +160,9 @@ Pos npc_position(const Game*);
 int walk_edge(const Game*, Pos, Pos);
 int can_stand(const Game*, Pos, int32_t);
 void game_tick(Game*, Input, uint32_t real_ms);
+/* Shared movement/collision for authority and prediction; no world clock or
+ * consequential state advance. The authority advances the world once. */
+void game_motion_tick(Game*, Input, uint32_t real_ms);
 int game_apply(Game*, Operation);
 int32_t field_level(const Game*, int64_t time);
 int market_price(const Game*);

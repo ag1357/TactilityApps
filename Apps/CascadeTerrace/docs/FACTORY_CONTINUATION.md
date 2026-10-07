@@ -1,4 +1,17 @@
-> VI-P2 continuation: [report](VI_P2_REPORT.md). This proving branch preserves the long mission and Gates I–VI. Input/layout/lifecycle implementation and host/P4 build gates pass; the preserved race-fix rerun (Gates I–VI + VI-P2 + sanitizers + corrected-SDK cross-build, ELF `5a7634bd…`) is complete at `e240e8d`. Physical and shared-input ownership qualifications remain. Do not advance to multiplayer from this checkpoint.
+> **2026-10-07 multiplayer initiation override:** the user's addendum explicitly
+> authorizes building now on the CM5. Earlier statements below that hold
+> multiplayer for the software-keyboard check are historical and superseded.
+> Read [current state](../STATE.md), [handoff](../HANDOFF.md) and
+> [multiplayer implementation/limits](MULTIPLAYER.md). Two normal desktop game
+> clients now move/predict/reconcile and receive authoritative game-action
+> receipts. Stable identities, bounded nearby replicas, SQLite migration-safe
+> receipts, limited offline journals and a mock broker boundary are implemented.
+> CM5 load checkpoints cover 64 through 1,000 TCP clients, but larger counts
+> miss the tick budget and are not gameplay-capacity claims. Timed actions,
+> full NPC/private projection/offline quest integration and native P4 transport
+> remain. Keep building those, not production infrastructure or Atlas.
+
+> Historical VI-P2 continuation: [report](VI_P2_REPORT.md). This proving branch preserves the long mission and Gates I–VI. Input/layout/lifecycle implementation and host/P4 build gates pass; the preserved race-fix rerun (Gates I–VI + VI-P2 + sanitizers + corrected-SDK cross-build, ELF `5a7634bd…`) is complete at `e240e8d`. Physical and shared-input ownership qualifications remain. Its earlier multiplayer hold is superseded by the addendum above.
 
 > **2026-10-07 continuation override: native automated UI and I2C checks PASS;
 > keyboard-disconnected visual/touch gate remains OPEN.** Read [current state](../STATE.md),

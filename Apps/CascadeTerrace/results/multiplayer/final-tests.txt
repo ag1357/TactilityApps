@@ -1,0 +1,27 @@
+cc -Icore -DCG_TRAINED_MODEL -Ibuild -O2 -g -std=c11 -Wall -Wextra -Werror -Wno-misleading-indentation -I/usr/include/SDL2 -D_REENTRANT core/action_input.c core/viewport.c core/conversation_layout.c core/interaction.c content/cascade_interaction.c world/schema.c world/recipe.c world/geometry.c world/traversal.c world/state.c world/resource.c world/creature.c world/social.c world/persistence.c content/cascade_adapter.c core/semantic.c core/decision.c core/general_dialogue.c research/rung_a/cognition.c core/world.c core/state.c core/dialogue.c core/persistence.c core/render.c desktop/main.c multiplayer/client.c -lSDL2 -lm -pthread -o build/cascade
+python3 -m unittest discover -s tests -p 'test_multiplayer.py' -v
+test_archive_permission_and_schema_fail_closed (test_multiplayer.Authority.test_archive_permission_and_schema_fail_closed) ... ok
+test_authentication_and_namespace (test_multiplayer.Authority.test_authentication_and_namespace) ... ok
+test_backup_migration_world_and_receipts (test_multiplayer.Authority.test_backup_migration_world_and_receipts) ... ok
+test_commit_failure_rolls_back (test_multiplayer.Authority.test_commit_failure_rolls_back) ... ok
+test_dense_query_cache_excludes_each_caller_and_invalidates (test_multiplayer.Authority.test_dense_query_cache_excludes_each_caller_and_invalidates) ... ok
+test_durable_idempotent_action_and_changed_retry (test_multiplayer.Authority.test_durable_idempotent_action_and_changed_retry) ... ok
+test_input_authority_sequence_and_range (test_multiplayer.Authority.test_input_authority_sequence_and_range) ... ok
+test_leave_storage_failure_still_releases_projection (test_multiplayer.Authority.test_leave_storage_failure_still_releases_projection) ... ok
+test_no_total_population_match_cap_and_interest_bound (test_multiplayer.Authority.test_no_total_population_match_cap_and_interest_bound) ... ok
+test_offline_history_reconciles_only_authoritative_personal_budget (test_multiplayer.Authority.test_offline_history_reconciles_only_authoritative_personal_budget) ... ok
+test_protocol_bounds_and_mock_broker (test_multiplayer.Authority.test_protocol_bounds_and_mock_broker) ... ok
+
+----------------------------------------------------------------------
+Ran 11 tests in 0.243s
+
+OK
+python3 -m unittest discover -s tests -p 'test_network_client.py' -v
+test_bad_snapshot_crc_requests_bounded_full_repair (test_network_client.NetworkClient.test_bad_snapshot_crc_requests_bounded_full_repair) ... ok
+test_lost_receipt_reconnects_without_repeating_mutation (test_network_client.NetworkClient.test_lost_receipt_reconnects_without_repeating_mutation) ... ok
+test_offline_journal_survives_process_restart_and_reconciles (test_network_client.NetworkClient.test_offline_journal_survives_process_restart_and_reconciles) ... ok
+
+----------------------------------------------------------------------
+Ran 3 tests in 10.053s
+
+OK

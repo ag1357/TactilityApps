@@ -1,0 +1,192 @@
+[
+  {
+    "players_peak": 64,
+    "elapsed_s": 5.03033361999951,
+    "bytes_sent": 5673984,
+    "bytes_received": 325504,
+    "bytes_client_second": 18635.344508225506,
+    "world_tick_us": {
+      "p50": 966.831,
+      "p95": 1590.347,
+      "p99": 2879.862
+    },
+    "authority_loop_work_us": {
+      "p50": 1007.0340013044188,
+      "p95": 5682.816999978968,
+      "p99": 9346.06600094412
+    },
+    "ticks": 197,
+    "cpu_seconds": 1.6425290000000001,
+    "rss_max_kib": 29088,
+    "persistence_us": {
+      "p50": 0,
+      "p99": 0
+    },
+    "reconciliation_us": {
+      "p50": 0,
+      "p99": 0
+    },
+    "interest_fanout_max": 32,
+    "interest_fanout_sum": 81392,
+    "inference_demand": 0,
+    "offline_history_demand": 0,
+    "scope": "Development transport; no public deployment or native P4 claim",
+    "requested_clients": 64,
+    "client_failures": 0,
+    "snapshots_consumed": 2560,
+    "input_flow_control": "at most 32 unacknowledged sequenced inputs",
+    "distribution": "dense colocated neutral-input TCP clients"
+  },
+  {
+    "players_peak": 128,
+    "elapsed_s": 5.664713089001452,
+    "bytes_sent": 11381760,
+    "bytes_received": 662576,
+    "bytes_client_second": 16610.969262096703,
+    "world_tick_us": {
+      "p50": 1897.939,
+      "p95": 3699.972,
+      "p99": 4742.784
+    },
+    "authority_loop_work_us": {
+      "p50": 1999.1609988210257,
+      "p95": 12147.392000770196,
+      "p99": 17053.526999006863
+    },
+    "ticks": 195,
+    "cpu_seconds": 2.723908,
+    "rss_max_kib": 32672,
+    "persistence_us": {
+      "p50": 0,
+      "p99": 0
+    },
+    "reconciliation_us": {
+      "p50": 0,
+      "p99": 0
+    },
+    "interest_fanout_max": 32,
+    "interest_fanout_sum": 163312,
+    "inference_demand": 0,
+    "offline_history_demand": 0,
+    "scope": "Development transport; no public deployment or native P4 claim",
+    "requested_clients": 128,
+    "client_failures": 0,
+    "snapshots_consumed": 5120,
+    "input_flow_control": "at most 32 unacknowledged sequenced inputs",
+    "distribution": "dense colocated neutral-input TCP clients"
+  },
+  {
+    "players_peak": 256,
+    "elapsed_s": 6.260791999999128,
+    "bytes_sent": 21090816,
+    "bytes_received": 1237120,
+    "bytes_client_second": 13930.905227327812,
+    "world_tick_us": {
+      "p50": 3586.324,
+      "p95": 5678.3,
+      "p99": 7287.517
+    },
+    "authority_loop_work_us": {
+      "p50": 3630.027998951846,
+      "p95": 18943.41300067026,
+      "p99": 23701.25199922768
+    },
+    "ticks": 176,
+    "cpu_seconds": 4.2288120000000005,
+    "rss_max_kib": 38336,
+    "persistence_us": {
+      "p50": 0,
+      "p99": 0
+    },
+    "reconciliation_us": {
+      "p50": 0,
+      "p99": 0
+    },
+    "interest_fanout_max": 32,
+    "interest_fanout_sum": 302576,
+    "inference_demand": 0,
+    "offline_history_demand": 0,
+    "scope": "Development transport; no public deployment or native P4 claim",
+    "requested_clients": 256,
+    "client_failures": 0,
+    "snapshots_consumed": 9472,
+    "input_flow_control": "at most 32 unacknowledged sequenced inputs",
+    "distribution": "dense colocated neutral-input TCP clients"
+  },
+  {
+    "players_peak": 512,
+    "elapsed_s": 8.115404023999872,
+    "bytes_sent": 45412882,
+    "bytes_received": 1521632,
+    "bytes_client_second": 11295.675777220114,
+    "world_tick_us": {
+      "p50": 7394.537,
+      "p95": 11033.824,
+      "p99": 12679.412
+    },
+    "authority_loop_work_us": {
+      "p50": 8597.534000728047,
+      "p95": 40526.71399949759,
+      "p99": 45111.46199911309
+    },
+    "ticks": 98,
+    "cpu_seconds": 5.404727,
+    "rss_max_kib": 49600,
+    "persistence_us": {
+      "p50": 0,
+      "p99": 0
+    },
+    "reconciliation_us": {
+      "p50": 0,
+      "p99": 0
+    },
+    "interest_fanout_max": 32,
+    "interest_fanout_sum": 651728,
+    "inference_demand": 0,
+    "offline_history_demand": 0,
+    "scope": "Development transport; no public deployment or native P4 claim",
+    "requested_clients": 512,
+    "client_failures": 0,
+    "snapshots_consumed": 19944,
+    "input_flow_control": "at most 32 unacknowledged sequenced inputs",
+    "distribution": "dense colocated neutral-input TCP clients"
+  },
+  {
+    "players_peak": 1000,
+    "elapsed_s": 11.494139096999788,
+    "bytes_sent": 69269974,
+    "bytes_received": 1504096,
+    "bytes_client_second": 6157.405039449499,
+    "world_tick_us": {
+      "p50": 14658.818,
+      "p95": 19996.954,
+      "p99": 21462.913
+    },
+    "authority_loop_work_us": {
+      "p50": 68561.58499977028,
+      "p95": 77603.94999968412,
+      "p99": 78421.65200054296
+    },
+    "ticks": 38,
+    "cpu_seconds": 6.898466000000001,
+    "rss_max_kib": 68032,
+    "persistence_us": {
+      "p50": 0,
+      "p99": 0
+    },
+    "reconciliation_us": {
+      "p50": 0,
+      "p99": 0
+    },
+    "interest_fanout_max": 32,
+    "interest_fanout_sum": 993168,
+    "inference_demand": 0,
+    "offline_history_demand": 0,
+    "scope": "Development transport; no public deployment or native P4 claim",
+    "requested_clients": 1000,
+    "client_failures": 0,
+    "snapshots_consumed": 30011,
+    "input_flow_control": "at most 32 unacknowledged sequenced inputs",
+    "distribution": "dense colocated neutral-input TCP clients"
+  }
+]

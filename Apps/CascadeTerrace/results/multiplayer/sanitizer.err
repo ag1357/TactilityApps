@@ -1,0 +1,8 @@
+test_bad_snapshot_crc_requests_bounded_full_repair (test_network_client.NetworkClient.test_bad_snapshot_crc_requests_bounded_full_repair) ... ok
+test_lost_receipt_reconnects_without_repeating_mutation (test_network_client.NetworkClient.test_lost_receipt_reconnects_without_repeating_mutation) ... ok
+test_offline_journal_survives_process_restart_and_reconciles (test_network_client.NetworkClient.test_offline_journal_survives_process_restart_and_reconciles) ... ok
+
+----------------------------------------------------------------------
+Ran 3 tests in 10.681s
+
+OK

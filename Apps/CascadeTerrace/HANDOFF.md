@@ -1,96 +1,119 @@
-# Anaphorum native UI qualification handoff, 2026-10-07
+# Anaphorum multiplayer initiation handoff, 2026-10-07
 
 ## Done
 
-Continued published `22d9317`, restored access over the existing home LAN,
-preserved device data, deployed the corrected UI and added an explicitly
-opt-in native UI probe. Verified actual widget placement, focus/group isolation,
-submit callback, Leave, persisted synthetic Bind New and normal Quit cleanup
-across app restart and device reboot. Confirmed both physical gamepads and
-CardKB2 on GPIO4/5. Added wired-entry focus policy without firmware internals.
-FatFs overwrite, renderer/helper synchronization and input acquisition remain.
+Continued published `5976d02` under the user's initiation addendum: build
+multiplayer now on CM5, do not wait for final hardware/public networking or
+the separately untested software keyboard. Implemented one persistent
+authority and **normal SDL game** transport/prediction/reconciliation/peer
+rendering, not a renamed fixture. Added stable account/player/device/session/
+world IDs, bounded inputs and scope/entity actions, SQLite durable receipts/
+rollback/checkpoints/backup migration, spatial interest and finite client
+journals. Kept standalone offline saves independent. Added the server-only
+mock inference abstraction without exposing model endpoints.
 
 ## Verified
 
-The follow-up human test confirmed controls, Bind New, wired CardKB typing,
-Enter/repeat entry, Back-binding conversation exit and manual Quit. Retrieved
-the normal session: 3,434 frames, 18 successful saves, all three I2C devices
-ready, 35,950 polls/zero failures, no input disconnects/drops, clean save/join/
-buffer release and 31 tasks after unload. Current **57 user bindings** were
-preserved and reloaded byte-identically after app restart and actual reboot,
-using the bounded synthetic probe only for automated Quit. See
-`results/ui-recovery/manual-qualification.json`.
+Two normal clients move horizontally, see each other, reconcile and receive
+successful personal condense receipts. TCP proxy tests prove lost-receipt
+reconnect does not repeat the mutation, own-state CRC repair requests a full
+snapshot, and disconnected bounded history survives a process restart and
+reconciles against the server's retained budget.
 
-See `STATE.md`, `PROGRESS.md`, `results/ui-recovery/native-qualification.json`.
-Final native runs pass 16 checks each, devices ready at `0x50`, `0x51`, `0x5f`,
-zero I2C failures, successful save/join/buffer-release telemetry, 31→31 tasks.
-User Controls were unchanged by those automated tests; the user's later
-57-binding profile supersedes the original 47-binding backup. Three-device
-config survives reboot.
-Real LVGL 9.3, full World/VI-P2 and ten + seven ASan/UBSan suites pass;
-LVGL/VI-P2/seven sanitizers rerun after the wired-entry change.
-Final corrected-SDK build: 226,864-byte ELF, 146 imports, none missing.
-Installed normal package's downloaded ELF matches the preserved artifact.
+CM5 short dense TCP measurements at 64/128/256/512/1,000 clients have bounded
+32-peer replicas, no match/population cap and explicit flow control. Preserved
+the earlier 128-client input-backlog failure and all pre-cache measurements.
+One-tick identical-query reuse reduced the 1,000-client full-loop p99 from
+about 1,421 to 78 ms. More than 128 clients exceeds the 20 ms budget in this
+run; 1,000 connections are **not** qualified responsive gameplay.
+Final repeated-sweep p99 at 1,000 was about 95 ms, peak RSS about 68 MiB.
+
+Evidence and commands: `docs/MULTIPLAYER.md`, `results/multiplayer/`.
+Preserved World SDK/VI-P2 qualifications and ten world/seven VI-P2 sanitizer
+suites pass. New authority/C client ASan/UBSan and 11 authority + 3 real-client
+fault tests pass; leak detection remains disabled for the existing ptrace
+restriction. Shared-core corrected-SDK P4 cross-build passes, separately from
+the installed UI artifact. No new multiplayer package was deployed.
 
 ## Not done
 
-The user explicitly did not test the on-screen keyboard. Software entry/touch
-after disconnect, visible reply/input/Leave, and keyboard absence outside
-conversation still need the brief hands-on check. Synthetic events on real P4
-are not physical touch/key injection. Wired typing/control/capture/Back/Quit
-already passed; do not ask the user to repeat those tests.
-Do not promote the full physical UI gate from coordinate/protocol evidence.
-No normal-game multiplayer, P4 transport or CM5↔P4 gameplay-link measurements.
-Existing two-client SDK fixtures remain substrate, not normal-game integration.
+This is the first normal-game checkpoint, not completed multiplayer.
+Server-clocked WAIT/extraction/repair and full shared quest are unfinished;
+legacy fast-forward variants are rejected online. NPC broker/action routing
+is not wired; only the mock boundary is tested. Own-state snapshots still use
+legacy State and require hidden-truth/private-NPC minimization. Full offline
+history vocabulary, player-player trade/PvP/destruction rules, multi-product/
+scope traversal/partitioning and rare divergent instances remain.
+No native P4 networking or CM5↔P4 gameplay-link measurements.
+Transport is plaintext development-only, loopback by default, not public-ready.
+Flood controls, production auth/TLS/revocation, storage-fault service behavior
+and sustained mixed moving loads remain.
+
+The user explicitly did not test the on-screen keyboard. Do not promote that
+physical UI gate from coordinates/synthetic callbacks. Wired typing, Enter,
+repeat, Bind New, Back, Quit and 57-binding reboot persistence already passed;
+do not ask them to repeat those or block multiplayer on them.
 
 ## Current state
 
 - Repo: `/media/cloud/2982-E16B/tactility_p4_work/repos/TactilityApps`.
-- App: `Apps/CascadeTerrace`.
-- Branch: `work/anaphorum-vipp4-frame-performance`, tracking `fork`.
-- Previous published checkpoint: `4c34501b2e89b30a3c7a964b6e36bdccb906dd20`.
-  Resolve this handoff's containing commit with `git rev-parse HEAD`.
+- App: `Apps/CascadeTerrace`; branch `work/anaphorum-vipp4-frame-performance`,
+  tracking `fork`. Resolve this handoff's containing checkpoint with
+  `git rev-parse HEAD`. Prior published baseline was `5976d02`.
+  **Local commit preserved, push blocked:** GitHub returned `Internal Server
+  Error` twice. Remote was verified still at `5976d02` after the first failure.
+  Do not reset this unpublished checkpoint.
+- Server: `python3 -m multiplayer.server`; storage/bind/port/seed/checkpoint/
+  interest/inference/session values configurable. `--dev-enrolment` allows
+  automatic in-game development accounts. LAN plaintext requires explicit
+  `--allow-plaintext-lan`; never expose it publicly. Broker provider: `mock`.
+- Normal client: `build/cascade --server HOST --port PORT --identity PRIVATE_PATH`.
+  The identity is owner-only `ANI3`, with `.history` bounded records and a
+  separate `.cache`. No real credentials/database/user text are in Git.
+- SQLite schema 2 checks schema/seed/product and refuses incompatible reopen.
+  `Store.backup(new_destination)` uses SQLite backup, preserves identity and
+  refuses overwriting an existing destination. Do not copy only a live DB file.
+- CM5 `192.168.1.171`, P4 `192.168.1.147`, existing working home LAN.
+  Do not switch to CM5's incompatible 5 GHz/channel-52 hotspot.
 - Corrected SDK:
   `/media/cloud/2982-E16B/tactility_p4_work/repos/Tactility/release/TactilitySDK`.
-  The nested versioned SDK has stale 9.4 headers; do not use it.
-- Installed normal candidate: `releases/ui-recovery/ag1357.cascadeterrace.app`,
-  ELF SHA-256 `14ab8313451aee7e84236ede72d735ea0209d79fed7259fc620ce6d85e44861c`.
-  Mode 0, qualification logging, no auto-probe marker. **App is closed.**
-- P4 `192.168.1.147`, CM5 `192.168.1.171`, working home LAN. CM5 is the
-  intended test server. Do not switch to its incompatible 5 GHz hotspot.
-- Saved app I2C config selects `i2c-external`: two seesaws `0x50`/`0x51`,
-  CardKB2 `0x5f`. SDA4/SCL5, firmware bus 100 kHz. Power reliability at reported
-  3.3 V is not proven; CardKB2 documents 5 V input, P4 signals must stay 3.3 V.
-- Current backup:
-  `/media/cloud/2982-E16B/tactility_p4_work/backups/anaphorum-device-20261007-90dv0vk1/`.
-  Original recovery archive is still at the path in `STATE.md`.
-- Latest human binding/telemetry backup:
+  Do not use its stale nested 9.4 SDK; keep IDF 6.1.
+- Installed P4 normal artifact remains
+  `releases/ui-recovery/ag1357.cascadeterrace.app`; ELF SHA-256
+  `14ab8313451aee7e84236ede72d735ea0209d79fed7259fc620ce6d85e44861c`.
+  No auto-probe marker. App was closed before multiplayer work and no device
+  launch/install occurred here.
+- Current human backup:
   `/media/cloud/2982-E16B/tactility_p4_work/backups/anaphorum-manual-20261007-5z6zstmq/`.
-  Preserve these **57 bindings**. Never restore the earlier 47-binding profile.
-- `releases/ui-recovery/ui-probe.app` auto-quits after bounded synthetic tests.
-  Do not deploy it for the hands-on test or mistake Home afterward for a
-  background game. Do not reopen serial: doing so reset P4 previously.
+  Preserve **57 bindings**, never restore the older 47-binding profile.
+  Existing three-device I2C config is `0x50`/`0x51`/`0x5f`, SDA4/SCL5.
 
 ## Exact next action
 
-**Decision: obtain only the keyboard-disconnected visual/touch check on the
-already installed normal candidate.** No network setup, reinstall, binding
-restore or repeated wired-controls/reboot-persistence test is needed.
+Retry publication when GitHub accepts writes:
+
+```sh
+git -C /media/cloud/2982-E16B/tactility_p4_work/repos/TactilityApps push fork HEAD:work/anaphorum-vipp4-frame-performance
+```
+
+Then **implement server-clocked WAIT/extraction/repair jobs through the
+content adapter and simulation queue, rather than calling legacy fast-forward
+actions.** Preserve receipt idempotence/rollback and the responsive movement
+lane. Qualify two normal clients against those jobs before full NPC/private
+projection integration and P4 transport. Reuse `make multiplayer-test` and
+the normal-client qualification; do not restart completed SDK gates.
 
 ## Needs from human
 
-Disconnect the keyboard, launch Anaphorum once from Home, confirm visible
-reply/input/Leave, tap/type/submit/retap using the on-screen keyboard, and
-check that no keyboard appears in PLAY/Menu/Controls/Bind New. Then Quit.
-Record what actually happened before promoting the gate.
-Then retrieve the appended journal from
-`/sdcard/tactility/user/app/ag1357.cascadeterrace/qualification.jsonl`.
+Nothing blocks the next implementation step. No new hardware, networking,
+account/browser provisioning or repeated wired UI test is needed.
+The brief software-keyboard visual/touch check remains optional parallel
+human qualification, not a hold on the addendum's multiplayer work.
 
 ## Do not repeat
 
-No renderer optimization or Gates I–VI research. No resets to discard candidate
-work. No Tactility/LVGL internal changes, firmware flashing, network changes or
-Atlas. No multiplayer implementation until a physically verified UI recovery
-checkpoint has been tested, committed and pushed. Then integrate two **normal
-desktop game clients**, keeping movement responsive/predicted and persistent
-actions authoritative through existing canonical events/receipts, before P4.
+No firmware/LVGL/network changes, production infrastructure campaign, Atlas,
+renderer rewrite or SDK Gates I–VI research restart. Keep private credentials,
+databases, histories, bindings and human text out of Git/logs. Do not reopen
+serial: it previously reset P4. Do not confuse probe Home, cross-build exports,
+automated SDL inputs or 1,000 connections with physical/runtime/capacity proof.

@@ -1,5 +1,75 @@
 # Recovery progress
 
+## 2026-10-07, multiplayer initiation on CM5
+
+- Continued published `5976d02` under the user's initiation addendum. The
+  untested software keyboard stays separate; no final hardware, public domain,
+  isolated NIC, account/browser or infrastructure detour was introduced.
+- Added motion-only shared ticks and normal SDL client networking/prediction/
+  acknowledgment replay/peer rendering. C worker never touches Game/LVGL.
+  Existing offline tick/save behavior and SDK fixtures remain intact.
+- Implemented one logical persistent authority: content-local C projection,
+  typed stable identity/scope/entity messages, sequenced bounded inputs,
+  nearby spatial replicas, durable SQLite action receipts/checkpoints/rollback,
+  owner-only generated credentials and migration backup API. Content role/
+  offline vocabulary lives in the backend, not socket/simulation logic.
+- Persisted finite client action journals with retries, receipt removal and a
+  separate offline cache; standalone user saves are not overwritten online.
+  Only retained-authoritative-budget CONDENSE reconciles in this vocabulary.
+  Legacy timed actions and mutation-capable enrolled dialogue remain blocked.
+  Mock inference broker is independent and server-only, not yet NPC-integrated.
+- Added real-client TCP fault tests: receipt dropped after commit, reconnect/
+  exact replay, corrupt own-state CRC/full repair, disconnected journal,
+  process restart and authoritative reconciliation. SQLite backup reopen
+  preserves identity/player state/receipts; schema/product mismatch refuses
+  startup instead of resetting data.
+- Errors corrected before qualification:
+  `storage size of 'tv' isn't known` (missing `<sys/time.h>`);
+  `ModuleNotFoundError: 'multiplayer' is not a package` (test filename shadow,
+  renamed `tests/test_multiplayer.py`);
+  `conflicting types for 'process_event'; have 'void(const SDL_Event *)'`
+  (matched forward declaration).
+  An intentional proxy reset also emitted
+  `ConnectionResetError: [Errno 104] Connection reset by peer` during teardown;
+  the proxy now handles expected close errors and final tests rerun cleanly.
+- Measured initial dense TCP load at 64 then 128. At 128, 48 synthetic clients
+  hit the server's bounded input backlog. Preserved
+  `load-128-backlog-failure.json`, then added realistic bounded acknowledgment
+  flow control to the harness, not a larger server queue or fixture bypass.
+- Flow-controlled sweep reached 64/128/256/512/1,000. Full-loop p99 at 1,000 was
+  about 1,421 ms despite a much smaller physics-only tick metric. Reused
+  identical public spatial queries for one tick with per-caller self exclusion,
+  invalidation and a regression. First post-cache p99 was about 78 ms at 1,000.
+  Preserved all pre-cache reports. Larger counts miss 20 ms and are not an
+  acceptable sustained gameplay-capacity claim. Action/offline/inference cost
+  is not represented by zero-work load fields.
+- Commands completed: `scripts/qualify-world-sdk.sh`,
+  `scripts/qualify-vip2.sh`, `scripts/sanitize-world-sdk.sh`,
+  `scripts/sanitize-vip2.sh`, `make multiplayer-test`,
+  `scripts/sanitize-multiplayer.sh`, `scripts/qualify-multiplayer.py`,
+  real LVGL 9.3 conversation test and corrected-SDK P4 shared-core cross-build.
+  Legacy 864/0, band parity 1,200/1,200, layout 95,861; 11 authority and three
+  real-client fault tests; ten world/seven VI-P2 plus new authority/client
+  ASan/UBSan checks. Existing ptrace limitation keeps leak detection disabled.
+- New cross-built offline/shared-core ELF: 226,920 B,
+  `a198b8435c9d541c0ba5a9b6615a8889f36aadb08216b1f229845e79c9847e53`,
+  146 imports, none missing from pinned exports. Existing SDK dependency
+  CMake warning and Kconfig notifications remain; no compiler warnings.
+  This ELF was **not packaged/deployed** and does not include P4 transport.
+  Installed `14ab8313…` UI artifact and human 57-binding profile stay untouched.
+- Current plan/limits: `docs/MULTIPLAYER.md`, `HANDOFF.md`, `STATE.md`.
+  Final source rerun passes; final load includes reader-failure propagation
+  and all five requested counts with zero client failures. Final full-loop
+  p99 is about 9/15/27/46/95 ms, peak RSS about 68 MiB at 1,000. Earlier
+  post-cache figures remain in `load-after-cache-first.json`. Final code/test
+  provenance and bounded claims are in `results/multiplayer/qualification.json`.
+  Continue server-clocked jobs, NPC/private projection/full quest/offline
+  semantics, then native P4 transport. Do not wait for production deployment.
+- Publication failed twice with `remote: Internal Server Error` and
+  `! [remote rejected] HEAD -> work/anaphorum-vipp4-frame-performance (Internal Server Error)`.
+  Verified the remote still at `5976d02` after the first failure. Preserved the
+  tested local commit and documented the normal retry, no force/reset/rebase.
+
 ## 2026-10-02, UI recovery, BLOCKED
 
 - Recorded clean `c5c96674d26bd7a09333c52643130e91f5a6c233` HEAD/status,

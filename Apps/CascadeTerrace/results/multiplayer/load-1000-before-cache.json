@@ -1,0 +1,38 @@
+{
+  "players_peak": 1000,
+  "elapsed_s": 12.709382234999794,
+  "bytes_sent": 11058018,
+  "bytes_received": 876448,
+  "bytes_client_second": 939.028017202458,
+  "world_tick_us": {
+    "p50": 109.779,
+    "p95": 17100.84,
+    "p99": 17100.84
+  },
+  "authority_loop_work_us": {
+    "p50": 120.22400005662348,
+    "p95": 1420909.206000033,
+    "p99": 1420909.206000033
+  },
+  "ticks": 14,
+  "cpu_seconds": 8.456212,
+  "rss_max_kib": 70080,
+  "persistence_us": {
+    "p50": 0,
+    "p99": 0
+  },
+  "reconciliation_us": {
+    "p50": 0,
+    "p99": 0
+  },
+  "interest_fanout_max": 32,
+  "interest_fanout_sum": 154832,
+  "inference_demand": 0,
+  "offline_history_demand": 0,
+  "scope": "Development transport; no public deployment or native P4 claim",
+  "requested_clients": 1000,
+  "client_failures": 0,
+  "snapshots_consumed": 3869,
+  "input_flow_control": "at most 32 unacknowledged sequenced inputs",
+  "distribution": "dense colocated neutral-input TCP clients"
+}

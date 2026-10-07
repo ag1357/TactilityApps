@@ -4,6 +4,7 @@
 #include "action_input.h"
 #include "viewport.h"
 #include "interaction.h"
+#include "../multiplayer/client.h"
 #include <assert.h>
 #include <SDL.h>
 #include <math.h>
@@ -13,6 +14,11 @@
 #include <sys/stat.h>
 static Game game;
 static Renderer frame;
+static MpClient *network;
+static char server_host[256],identity_path[512],network_report[512];
+static unsigned server_port=7788,network_seconds;
+static void process_event(const SDL_Event *);
+static void consume_actions(uint32_t);
 static Conversation convo;
 static Reply reply;
 static SDL_Window* window;
@@ -114,6 +120,13 @@ static int64_t dist2(Pos a, Pos b) {
 static void present(void) {
     frame.conversation = dialogue_open;
     render(&frame, &game);
+    if(network) {
+        MpPeer peers[MP_PEER_CAP];unsigned count=mp_peers(network,peers,MP_PEER_CAP);
+        for(unsigned i=0;i<count;i++) {
+            CtActorPresentation actor={.facing=peers[i].facing,.phase_milliradians=peers[i].phase};
+            render_game_peer(peers[i].pos,&actor);
+        }
+    }
     char hud[160];
     int minute = (int)(game.state.time / 60000);
     snprintf(hud, sizeof(hud), "ANAPHORUM D%d %02d:%02d", minute / 1440 + 1, minute / 60 % 24, minute % 60);
@@ -161,6 +174,12 @@ static void present(void) {
     }
 }
 static int apply(OpCode op, ItemId item, int amount, uint32_t target) {
+    if(network) {
+        if(!mp_connected(network))return mp_offline_action(network,&game,(Operation){op,PLAYER_ID,target,item,amount,NULL});
+        int queued=mp_action(network,op,item,amount,target);
+        snprintf(game.notice,sizeof(game.notice),"%s",queued?"Action submitted to authority.":"Online action unavailable; no local shared mutation.");
+        return queued;
+    }
     int ok = game_apply(&game, (Operation) {op, PLAYER_ID, target, item, amount, NULL});
     if (!ok) snprintf(game.notice, sizeof(game.notice), "Action unavailable here or requirements unmet.");
     return ok;
@@ -177,6 +196,10 @@ static int talk(const char* s) {
     Pos n=nearby.position;
     game.state.yaw = (int)(atan2(n.x - game.state.player_pos.x, n.z - game.state.player_pos.z) * 180 / 3.141592653589793 + 360) % 360;
     reply_offset = 0;
+    if(network) {
+        snprintf(reply.text,sizeof(reply.text),"Enrolled NPC dialogue/history is not integrated in this checkpoint.");
+        (void)s;return 1;
+    }
     uint64_t a = SDL_GetPerformanceCounter();
     dialogue(&game, &convo, s, comp, &reply);
     double ms = (SDL_GetPerformanceCounter() - a) * 1000. / SDL_GetPerformanceFrequency();
@@ -196,7 +219,8 @@ static int segment(int x, int z) {
             return 1;
         }
         game.state.yaw = (int)(atan2(x - game.state.player_pos.x, z - game.state.player_pos.z) * 180 / 3.141592653589793 + 360) % 360;
-        game_tick(&game, (Input) {.forward = 1000, .run = 1}, 20);
+        if(network){mp_pump(network,&game);mp_motion(network,&game,(Input){.forward=1000,.run=1},20);SDL_Delay(20);}
+        else game_tick(&game, (Input) {.forward = 1000, .run = 1}, 20);
         if (i % 20 == 0) {
             present();
             if (llabs(last - d) < 100) stalled++;
@@ -257,7 +281,22 @@ static int command(char* line) {
     char op[32] = {0}, arg[200] = {0};
     sscanf(line, "%31s %199[^\n]", op, arg);
     int ok = 1;
-    if (!strcmp(op, "say")) ok = talk(arg);
+    if(!strcmp(op,"hold")||!strcmp(op,"idle")) {
+        char key=0;unsigned milliseconds=0;
+        if(!strcmp(op,"hold")){if(sscanf(arg,"%c %u",&key,&milliseconds)!=2)return 0;}
+        else if(sscanf(arg,"%u",&milliseconds)!=1)return 0;
+        if(milliseconds>120000)return 0;
+        SDL_Event event={0};event.type=SDL_KEYDOWN;event.key.keysym.sym=key;event.common.timestamp=SDL_GetTicks();
+        if(key)process_event(&event);
+        uint32_t start=SDL_GetTicks(),previous=start;
+        do {
+            if(network)mp_pump(network,&game);
+            uint32_t current=SDL_GetTicks();consume_actions(current-previous);previous=current;
+            present();SDL_Delay(20);
+        }while(SDL_GetTicks()-start<milliseconds);
+        event.type=SDL_KEYUP;event.common.timestamp=SDL_GetTicks();if(key)process_event(&event);
+    }
+    else if (!strcmp(op, "say")) ok = talk(arg);
     else if (!strcmp(op, "walk")) {
         int x, z;
         if (sscanf(arg, "%d %d", &x, &z) != 2) return 0;
@@ -292,10 +331,10 @@ static int command(char* line) {
     else if (!strcmp(op, "repair"))
         ok = apply(REPAIR, IT_COUPLING, 1, 0);
     else if (!strcmp(op, "save"))
-        ok = save_game(&game, save_path);
+        ok = network ? mp_local_cache(network,&game,0) : save_game(&game, save_path);
     else if (!strcmp(op, "load")) {
         memset(&convo, 0, sizeof(convo));
-        ok = load_game(&game, save_path);
+        ok = !network && load_game(&game, save_path);
     } else if (!strcmp(op, "snapshot")) {
         present();
         ok = screenshot(&frame, arg);
@@ -314,7 +353,9 @@ static int command(char* line) {
 }
 static void menu_activate(void) {
     if(menu_row==0) set_menu(0);
-    else if(menu_row==1) snprintf(menu_notice,sizeof(menu_notice),"%s",save_game(&game,save_path)?"Game saved":"Save failed");
+    else if(menu_row==1) snprintf(menu_notice,sizeof(menu_notice),"%s",network?
+        (mp_local_cache(network,&game,0)?"Local cache saved; authority owns shared state.":"Cache save failed"):
+        (save_game(&game,save_path)?"Game saved":"Save failed"));
     else if(menu_row==2) set_menu(2);
     else running=0;
 }
@@ -449,7 +490,7 @@ static void process_event(const SDL_Event *event) {
         ai_device_event(&actions,instance,(AiControl){AI_BACKEND_KEYBOARD,(uint16_t)key,0,AI_DIGITAL},down,stamp);
         if(down&&qualify&&!menu&&!dialogue_open){
             SDL_Keycode k=e.key.keysym.sym;
-            if(k==SDLK_F5)save_game(&game,save_path);else if(k==SDLK_F9)load_game(&game,save_path);
+            if(k==SDLK_F5){if(!network)save_game(&game,save_path);}else if(k==SDLK_F9){if(!network)load_game(&game,save_path);}
             else if(k==SDLK_m)apply(EXTRACT,IT_CHIT,20,0);else if(k==SDLK_c)apply(CONDENSE,IT_CHIT,1,0);
             else if(k==SDLK_b)apply(BUY,IT_COUPLING,1,3);else if(k==SDLK_n)apply(WAIT,IT_CHIT,60,0);
         }
@@ -488,7 +529,7 @@ static void consume_actions(uint32_t dt) {
         CtInteraction target;
         if(ct_interaction_resolve(&game,&target)) {
             if(ct_interaction_dialogue_supported(&target)){conversation_target=target;talk("Hello");return;}
-            if(target.kind!=CT_INTERACT_NPC)game_apply(&game,target.operation);
+            if(target.kind!=CT_INTERACT_NPC)apply(target.operation.op,target.operation.item,target.operation.amount,target.operation.target);
             else snprintf(game.notice,sizeof(game.notice),"%s has no conversation available.",target.label);
         } else snprintf(game.notice,sizeof(game.notice),"No nearby interaction.");
     }
@@ -502,8 +543,9 @@ static void consume_actions(uint32_t dt) {
     game.state.yaw=(game.state.yaw+yaw_step+360)%360;
     jump_pending|=input.pressed[AI_JUMP]!=0;
     int advanced=game.substep+dt>=20;
-    game_tick(&game,(Input){.forward=input.average_axes[AI_MOVE_Y],.strafe=input.average_axes[AI_MOVE_X],
-        .jump=jump_pending,.run=(input.held&(1u<<AI_RUN))!=0},dt);
+    Input motion={.forward=input.average_axes[AI_MOVE_Y],.strafe=input.average_axes[AI_MOVE_X],
+        .jump=jump_pending,.run=(input.held&(1u<<AI_RUN))!=0};
+    if(network)mp_motion(network,&game,motion,dt);else game_tick(&game,motion,dt);
     if(advanced)jump_pending=0;
 }
 static void screenshot_window(const char *name) {
@@ -565,6 +607,11 @@ int main(int argc, char** argv) {
     for (int i = 1; i < argc; i++) {
         if (!strcmp(argv[i], "--headless")) headless = 1;
         else if (!strcmp(argv[i], "--qualify")) qualify=1;
+        else if(!strcmp(argv[i],"--server")&&i+1<argc)snprintf(server_host,sizeof(server_host),"%s",argv[++i]);
+        else if(!strcmp(argv[i],"--port")&&i+1<argc)server_port=(unsigned)strtoul(argv[++i],NULL,10);
+        else if(!strcmp(argv[i],"--identity")&&i+1<argc)snprintf(identity_path,sizeof(identity_path),"%s",argv[++i]);
+        else if(!strcmp(argv[i],"--network-report")&&i+1<argc)snprintf(network_report,sizeof(network_report),"%s",argv[++i]);
+        else if(!strcmp(argv[i],"--network-seconds")&&i+1<argc)network_seconds=(unsigned)strtoul(argv[++i],NULL,10);
         else if (!strcmp(argv[i], "--platform-selftest")&&i+1<argc) {selftest=1;headless=1;selftest_dir=argv[++i];}
         else if (!strcmp(argv[i], "--load"))
             load = 1;
@@ -614,11 +661,17 @@ int main(int argc, char** argv) {
     for(int device=0;device<SDL_NumJoysticks();device++)controller_add(device);
     render_load_assets("assets/kyra.mesh");
     game_new(&game, seed, variant);
-    if (load && !load_game(&game, save_path)) {
+    if (load && (*server_host || !load_game(&game, save_path))) {
         fprintf(stderr, "Cannot load save\n");
         return 1;
     }
     if (*capture_dir) mkdir(capture_dir, 0755);
+    if(*server_host) {
+        if(!*identity_path)snprintf(identity_path,sizeof(identity_path),"%s.keys",save_path);
+        network=mp_open(server_host,server_port,identity_path);
+        if(!network){fprintf(stderr,"Cannot initialize network identity/transport\n");return 2;}
+        if(!mp_local_cache(network,&game,1))game_new(&game,seed,variant);
+    }
     present();
     if (script) {
         FILE* f = fopen(script, "r");
@@ -637,17 +690,22 @@ int main(int argc, char** argv) {
             }
         }
         fclose(f);
+        if(*network_report)mp_report(network,network_report);
+        mp_close(network);
         SDL_Quit();
         return failed;
     }
-    if(selftest){int result=platform_selftest();SDL_Quit();return result;}
-    if (headless) {
+    if(selftest){int result=platform_selftest();mp_close(network);SDL_Quit();return result;}
+    if (headless&&!network_seconds) {
+        mp_close(network);
         SDL_Quit();
         return 0;
     }
     SDL_StartTextInput();
     uint32_t previous = SDL_GetTicks();
+    uint32_t network_start=previous;
     while(running) {
+        if(network)mp_pump(network,&game);
         SDL_Event event;
         if(!focused) {
             if(SDL_WaitEventTimeout(&event,250))process_event(&event);
@@ -656,12 +714,15 @@ int main(int argc, char** argv) {
         while(SDL_PollEvent(&event))process_event(&event);
         uint32_t current=SDL_GetTicks(),dt=current-previous;previous=current;
         consume_actions(dt);
+        if(network_seconds&&current-network_start>=network_seconds*1000)running=0;
         if(focused&&running)present();
         SDL_Delay(10);
     }
     clear_input();
     for(unsigned i=0;i<8;i++)if(controllers[i])SDL_GameControllerClose(controllers[i]);
-    save_game(&game, save_path);
+    if(network)mp_local_cache(network,&game,0);else save_game(&game, save_path);
+    if(*network_report)mp_report(network,network_report);
+    mp_close(network);
     SDL_DestroyTexture(texture);
     SDL_DestroyRenderer(display);
     SDL_DestroyWindow(window);

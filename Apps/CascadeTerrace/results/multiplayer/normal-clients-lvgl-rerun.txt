@@ -1,0 +1,131 @@
+cc -Icore -DCG_TRAINED_MODEL -Ibuild -O2 -g -std=c11 -Wall -Wextra -Werror -Wno-misleading-indentation -I/usr/include/SDL2 -D_REENTRANT core/action_input.c core/viewport.c core/conversation_layout.c core/interaction.c content/cascade_interaction.c world/schema.c world/recipe.c world/geometry.c world/traversal.c world/state.c world/resource.c world/creature.c world/social.c world/persistence.c content/cascade_adapter.c core/semantic.c core/decision.c core/general_dialogue.c research/rung_a/cognition.c core/world.c core/state.c core/dialogue.c core/persistence.c core/render.c desktop/main.c multiplayer/client.c -lSDL2 -lm -pthread -o build/cascade
+python3 -m unittest discover -s tests -p 'test_multiplayer.py' -v
+test_archive_permission_and_schema_fail_closed (test_multiplayer.Authority.test_archive_permission_and_schema_fail_closed) ... ok
+test_authentication_and_namespace (test_multiplayer.Authority.test_authentication_and_namespace) ... ok
+test_backup_migration_world_and_receipts (test_multiplayer.Authority.test_backup_migration_world_and_receipts) ... ok
+test_commit_failure_rolls_back (test_multiplayer.Authority.test_commit_failure_rolls_back) ... ok
+test_dense_query_cache_excludes_each_caller_and_invalidates (test_multiplayer.Authority.test_dense_query_cache_excludes_each_caller_and_invalidates) ... ok
+test_durable_idempotent_action_and_changed_retry (test_multiplayer.Authority.test_durable_idempotent_action_and_changed_retry) ... ok
+test_input_authority_sequence_and_range (test_multiplayer.Authority.test_input_authority_sequence_and_range) ... ok
+test_leave_storage_failure_still_releases_projection (test_multiplayer.Authority.test_leave_storage_failure_still_releases_projection) ... ok
+test_no_total_population_match_cap_and_interest_bound (test_multiplayer.Authority.test_no_total_population_match_cap_and_interest_bound) ... ok
+test_offline_history_reconciles_only_authoritative_personal_budget (test_multiplayer.Authority.test_offline_history_reconciles_only_authoritative_personal_budget) ... ok
+test_protocol_bounds_and_mock_broker (test_multiplayer.Authority.test_protocol_bounds_and_mock_broker) ... ok
+
+----------------------------------------------------------------------
+Ran 11 tests in 0.248s
+
+OK
+python3 -m unittest discover -s tests -p 'test_network_client.py' -v
+test_bad_snapshot_crc_requests_bounded_full_repair (test_network_client.NetworkClient.test_bad_snapshot_crc_requests_bounded_full_repair) ... ok
+test_lost_receipt_reconnects_without_repeating_mutation (test_network_client.NetworkClient.test_lost_receipt_reconnects_without_repeating_mutation) ... ok
+test_offline_journal_survives_process_restart_and_reconciles (test_network_client.NetworkClient.test_offline_journal_survives_process_restart_and_reconciles) ... ok
+
+----------------------------------------------------------------------
+Ran 3 tests in 10.114s
+
+OK
+make: 'build/content_fingerprint.h' is up to date.
+make: 'build/libanaphorum.so' is up to date.
+Multiplayer authority/client ASan/UBSan: passed
+{
+  "status": "PASS",
+  "scope": "Two normal desktop game clients, not SDK viewer",
+  "clients": [
+    {
+      "snapshots": 591,
+      "reconciliations": 575,
+      "connections": 1,
+      "peers_seen_max": 1,
+      "bytes_sent": 66444,
+      "bytes_received": 142761,
+      "receipts": 1,
+      "successful_actions": 1,
+      "queue_overflow": 0,
+      "authority_start_mm": [
+        22000,
+        3420,
+        -90000
+      ],
+      "authority_last_mm": [
+        22000,
+        3023,
+        -81060
+      ]
+    },
+    {
+      "snapshots": 613,
+      "reconciliations": 598,
+      "connections": 1,
+      "peers_seen_max": 1,
+      "bytes_sent": 68748,
+      "bytes_received": 146525,
+      "receipts": 1,
+      "successful_actions": 1,
+      "queue_overflow": 0,
+      "authority_start_mm": [
+        22000,
+        3420,
+        -90000
+      ],
+      "authority_last_mm": [
+        31000,
+        3090,
+        -90000
+      ]
+    }
+  ],
+  "server": {
+    "players_peak": 2,
+    "elapsed_s": 57.564144116000534,
+    "bytes_sent": 289286,
+    "bytes_received": 135192,
+    "bytes_client_second": 3687.000011192836,
+    "world_tick_us": {
+      "p50": 128.056,
+      "p95": 232.205,
+      "p99": 432.854
+    },
+    "authority_loop_work_us": {
+      "p50": 142.89000137068797,
+      "p95": 414.2990001128055,
+      "p99": 703.3550009509781
+    },
+    "ticks": 2798,
+    "cpu_seconds": 1.975222,
+    "rss_max_kib": 27056,
+    "persistence_us": {
+      "p50": 5744.197,
+      "p99": 5744.197
+    },
+    "reconciliation_us": {
+      "p50": 0,
+      "p99": 0
+    },
+    "interest_fanout_max": 1,
+    "interest_fanout_sum": 1181,
+    "inference_demand": 0,
+    "offline_history_demand": 0,
+    "scope": "Development transport; no public deployment or native P4 claim"
+  }
+}
+cmake -S tests/lvgl_conversation -B build/conversation-lvgl -DLVGL_SOURCE="/media/cloud/2982-E16B/tactility_p4_work/repos/Tactility/managed_components/lvgl__lvgl" -DCMAKE_BUILD_TYPE=Debug
+-- /media/cloud/2982-E16B/tactility_p4_work/repos/TactilityApps/Apps/CascadeTerrace/tests/lvgl_conversation/lv_conf.h
+-- Using configuration: /media/cloud/2982-E16B/tactility_p4_work/repos/TactilityApps/Apps/CascadeTerrace/tests/lvgl_conversation/lv_conf.h
+-- Configuring done (0.0s)
+-- Generating done (0.1s)
+-- Build files have been written to: /media/cloud/2982-E16B/tactility_p4_work/repos/TactilityApps/Apps/CascadeTerrace/build/conversation-lvgl
+cmake --build build/conversation-lvgl -j4
+gmake[1]: Entering directory '/media/cloud/2982-E16B/tactility_p4_work/repos/TactilityApps/Apps/CascadeTerrace/build/conversation-lvgl'
+[100%] Built target lvgl
+[100%] Built target conversation_lvgl
+gmake[1]: Leaving directory '/media/cloud/2982-E16B/tactility_p4_work/repos/TactilityApps/Apps/CascadeTerrace/build/conversation-lvgl'
+ctest --test-dir build/conversation-lvgl --output-on-failure
+Internal ctest changing into directory: /media/cloud/2982-E16B/tactility_p4_work/repos/TactilityApps/Apps/CascadeTerrace/build/conversation-lvgl
+Test project /media/cloud/2982-E16B/tactility_p4_work/repos/TactilityApps/Apps/CascadeTerrace/build/conversation-lvgl
+    Start 1: conversation_lvgl
+1/1 Test #1: conversation_lvgl ................   Passed    0.00 sec
+
+100% tests passed, 0 tests failed out of 1
+
+Total Test time (real) =   0.00 sec

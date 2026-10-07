@@ -1,8 +1,57 @@
 # Anaphorum recovery state, 2026-10-07
 
 **Native UI/lifecycle and physical wired controls/text/Bind New/Quit: PASS.
-Keyboard-disconnected touch/visibility gate: STILL OPEN. Multiplayer has not started.**
+Keyboard-disconnected touch/visibility gate: STILL OPEN, not a multiplayer
+blocker under the user's initiation addendum. Desktop multiplayer has started.**
 Device access is restored; this is no longer a network-blocked checkpoint.
+
+Publication is temporarily blocked by GitHub's `Internal Server Error` on
+two normal push attempts. The tested checkpoint is committed locally;
+remote branch still resolved to published `5976d02` after the first failure.
+Resolve the containing local commit with `git rev-parse HEAD`. Do not reset
+or drop it; retry the normal branch push when GitHub accepts writes.
+
+## Multiplayer initiation, current override
+
+Continued published `5976d02`, not a completed-gate restart. The user explicitly
+authorized multiplayer now on the CM5, with one persistent authority and no
+production infrastructure detour. See [implementation and limits](docs/MULTIPLAYER.md).
+
+Two normal SDL clients now predict/reconcile shared-rule movement, render
+nearby actor replicas and receive successful authoritative condense receipts.
+Stable typed identities, sequenced bounded inputs, scope/entity/revision/hash
+envelopes, SQLite durable receipts/rollback/backup migration, a server-only
+mock broker and finite client journals are implemented. TCP proxy tests cover
+receipt loss/reconnect, CRC repair and limited disconnected append upload
+after a process restart. Ordinary standalone save/play remains independent.
+
+CM5 dense TCP load measurements cover 64/128/256/512/1,000 clients. Preserved
+the 128-client input-backlog failure and pre-cache results. Identical spatial
+query reuse reduced 1,000-client full-loop p99 from about 1,421 to 78 ms.
+The final repeated sweep was about 95 ms at 1,000; both measurements are
+preserved, not a stable capacity guarantee.
+This is not responsive 1,000-player capacity: the larger checkpoints miss
+the 20 ms budget. Replica fanout stays at 32, with no total match/player cap.
+Zero inference/offline/action fields in load reports mean no such workload.
+
+The original SDK contracts/fixtures remain intact. Server-clocked timed
+actions, full NPC broker integration/private projections, full offline
+histories, shared quest/PvP/trade semantics and native P4 transport are still
+unfinished. Continue those major portions, not infrastructure or renderer
+work. No new physical UI or P4 multiplayer claim is made.
+
+The installed P4 UI artifact below was **not** replaced; the 57-binding user
+profile remains preserved. A shared-core cross-build is separate from that
+installed artifact and does not validate P4 transport.
+
+Current gates pass: preserved World SDK/VI-P2 qualifications, ten world and
+seven VI-P2 ASan/UBSan suites, new C authority/client sanitizer tests, 11
+authority and three real-client fault tests, normal-client action/movement
+qualification and real LVGL 9.3 conversation regression. LSan remains disabled.
+Current shared-core P4 cross-build: 226,920 B, 146 imports, none missing;
+SHA-256 `a198b8435c9d541c0ba5a9b6615a8889f36aadb08216b1f229845e79c9847e53`.
+No new package/deployment. Evidence: `results/multiplayer/`, including failures
+and separate build/export-table scope.
 
 ## Current verified state
 
@@ -117,9 +166,11 @@ CardKB2 operation at 3.3 V passed in this reported setup; this is not a general
 electrical guarantee. Its specified power input remains 5 V, with P4 signal
 levels at 3.3 V.
 
-After that evidence is recorded, TEST → COMMIT → PUSH the promoted UI checkpoint
-before normal-game desktop multiplayer, then P4 transport and measured
-CM5↔P4 latency/jitter/loss/bandwidth/memory. Keep the generic SDK boundaries,
+The later initiation addendum supersedes waiting on that evidence: continue
+normal-game desktop multiplayer now, then P4 transport and measured
+CM5↔P4 latency/jitter/loss/bandwidth/memory. TEST → COMMIT → PUSH qualified
+checkpoints while keeping the unfinished physical UI gate separate.
+Keep the generic SDK boundaries,
 bounded products/deltas, predicted movement and authoritative event receipts.
 No Atlas, renderer campaign, firmware changes or completed-gate restart.
 

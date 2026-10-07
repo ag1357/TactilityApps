@@ -1,6 +1,17 @@
 > VI-P2 continuation: [report](VI_P2_REPORT.md). This proving branch preserves the long mission and Gates I–VI. Input/layout/lifecycle implementation and host/P4 build gates pass; the preserved race-fix rerun (Gates I–VI + VI-P2 + sanitizers + corrected-SDK cross-build, ELF `5a7634bd…`) is complete at `e240e8d`. Physical and shared-input ownership qualifications remain. Do not advance to multiplayer from this checkpoint.
 
-> **2026-10-02 continuation override: UI recovery BLOCKED.** Read
+> **2026-10-07 continuation override: native automated UI and I2C checks PASS;
+> hands-on touch/key/display gate remains OPEN.** Read [current state](../STATE.md),
+> [handoff](../HANDOFF.md) and [progress](../PROGRESS.md) first. Continued `22d9317`.
+> P4 `192.168.1.147` is reachable on the home LAN; the corrected normal app is
+> installed/hash-verified and closed. Both pads (`0x50`/`0x51`) and CardKB2
+> (`0x5f`) responded on GPIO4/5, with zero failures; native widget, binding
+> restart/reboot and Quit/join checks pass with explicitly synthetic events.
+> No physical touch/key or keyboard-pixel claim. Multiplayer remains gated.
+> CM5 `192.168.1.171` is the intended server; no networking/firmware changes.
+> Use the corrected SDK at `repos/Tactility/release/TactilitySDK`.
+
+> **Historical 2026-10-02 override, superseded by the current state above.** Read
 > [current state](../STATE.md), [handoff](../HANDOFF.md) and
 > [progress](../PROGRESS.md) first. Starting worktree was clean at published
 > `c5c9667`. The first physical UI candidate failed; corrected app-only

@@ -35,6 +35,8 @@ static Game *g;
 static Renderer *r;
 static AiInput actions;
 static SemaphoreHandle_t input_mutex;
+static SemaphoreHandle_t telemetry_mutex;
+static atomic_uint telemetry_dropped;
 static Thread *sampler,*i2c_worker,*band_helper;
 static SemaphoreHandle_t band_go,band_done;
 static int band_active;
@@ -50,6 +52,7 @@ static CtLifecycle lifecycle;
 static lv_obj_t *root_widget,*canvas,*overlay,*textarea,*reply_label,*leave_button,*hint,*move_feedback,*look_feedback;
 static lv_obj_t *focus_buttons[32];
 static int focus_count,focus_index,navigation_held,first_person,reply_offset,qualify;
+static int ui_probe_enabled,ui_probe_ran;
 static uint16_t *canvas_pixels;
 static size_t canvas_capacity;
 static CtViewport viewport;
@@ -60,6 +63,9 @@ static Reply reply;
 static AiBinding conflict_binding;
 static char ui_notice[192];
 static unsigned i2c_epoch;
+/* Published by the I2C worker; the UI never races its mutable device state. */
+static atomic_uint i2c_ready_mask,i2c_polls,i2c_failures;
+static atomic_int i2c_text_ready;
 static char submitted[128],save_path[256],binding_path[256],i2c_path[256],telemetry_path[256];
 static FILE *telemetry;
 static uint32_t input_samples,input_events,input_disconnects,input_max_us,input_min_us;
@@ -74,8 +80,12 @@ static uint64_t micros(void) { return (uint64_t)esp_timer_get_time(); }
 static void emit(const char *fmt,...) {
     if(!qualify)return;
     char line[1024];va_list args;va_start(args,fmt);vsnprintf(line,sizeof(line),fmt,args);va_end(args);
+    /* LVGL callbacks may emit while the main task reports. Protect the
+     * close/reopen journal pointer without waiting under the LVGL lock. */
+    if(!telemetry_mutex||xSemaphoreTake(telemetry_mutex,0)!=pdTRUE){atomic_fetch_add(&telemetry_dropped,1);return;}
     printf("%s",line);
     if(telemetry){fputs(line,telemetry);fclose(telemetry);telemetry=fopen(telemetry_path,"ab");}
+    xSemaphoreGive(telemetry_mutex);
 }
 
 /* Buffered per-stage frame profiler. All accumulation stays in RAM; the
@@ -380,9 +390,31 @@ static int32_t i2c_task(void *context) {
         }
         i2c_epoch=atomic_load(&lifecycle.epoch);
         ct_i2c_input_poll(&peripherals,micros());
+        unsigned ready=0;int text_ready=0;
+        for(unsigned i=0;i<peripherals.count;i++)
+            if(peripherals.devices[i].control.ready) {
+                ready|=1u<<i;
+                if(peripherals.devices[i].control.config.kind==CT_I2C_CARDKB2)text_ready=1;
+            }
+        atomic_store(&i2c_ready_mask,ready);
+        atomic_store(&i2c_text_ready,text_ready);
+        atomic_store(&i2c_polls,peripherals.polls);
+        atomic_store(&i2c_failures,peripherals.failures);
         task_event_group_wait_any(&i2c_events,NULL,pdMS_TO_TICKS(10)?pdMS_TO_TICKS(10):1);
     }
     ct_i2c_input_close(&peripherals,micros());return 0;
+}
+/* Main-task telemetry only: emit() closes/reopens the journal and must not
+ * run concurrently in the worker. Config fields are immutable until join. */
+static void i2c_status(void) {
+    unsigned ready=atomic_load(&i2c_ready_mask);
+    emit("{\"type\":\"i2c_status\",\"configured\":%u,\"ready_mask\":%u,\"polls\":%u,\"failures\":%u}\n",
+         peripherals.count,ready,atomic_load(&i2c_polls),atomic_load(&i2c_failures));
+    for(unsigned i=0;i<peripherals.count;i++) {
+        CtI2cConfig *c=&peripherals.devices[i].control.config;
+        emit("{\"type\":\"i2c_device\",\"index\":%u,\"address\":%u,\"kind\":%u,\"identity\":%lu,\"ready\":%u}\n",
+             i,c->address,c->kind,(unsigned long)peripherals.devices[i].control.identity,!!(ready&(1u<<i)));
+    }
 }
 static void ui_command(lv_event_t *e) { atomic_store(&command,(int)(intptr_t)lv_event_get_user_data(e));wake(); }
 static void touch_button(lv_event_t *e) {
@@ -472,7 +504,10 @@ static void textarea_align(void) {
     lv_area_t view;lv_obj_get_coords(root_widget,&view);
     int display_h=lv_display_get_vertical_resolution(lv_display_get_default());
     int focused=lv_obj_has_state(textarea,LV_STATE_FOCUSED)?1:0;
-    int hardware=hardware_text_input();
+    if(focused&&atomic_load(&i2c_text_ready)) {
+        ct_conversation_entry(textarea,1);focused=0;
+    }
+    int hardware=hardware_text_input()||atomic_load(&i2c_text_ready);
     CtConversationLayout next=ct_conversation_layout(
         (CtUiRect){view.x1,view.y1,lv_area_get_width(&view),lv_area_get_height(&view)},
         display_h,focused&&!hardware);
@@ -500,7 +535,7 @@ static void text_blur(void) {
 }
 static void text_focus(void) {
     if(!textarea||atomic_load(&mode)!=CONVERSATION)return;
-    ct_conversation_focus(textarea);
+    ct_conversation_entry(textarea,atomic_load(&i2c_text_ready));
     textarea_align();
 }
 static void layout(lv_event_t *event) {
@@ -643,6 +678,111 @@ static void process_command(int cmd) {
         default:break;
     }
 }
+/* Opt-in device qualification. Synthetic LVGL/input events exercise the actual
+ * app callbacks and persistence, never claim physical touch/key injection.
+ * A separate bindings file keeps the user's Controls configuration untouched. */
+static unsigned ui_probe_failures;
+static void ui_probe_check(const char *step,int ok) {
+    if(!ok)ui_probe_failures++;
+    emit("{\"type\":\"ui_probe\",\"step\":\"%s\",\"ok\":%d,\"synthetic_events\":true}\n",step,!!ok);
+}
+static void ui_probe_hidden(const char *step) {
+    lvgl_lock();
+    int ok=textarea&&lv_obj_has_flag(textarea,LV_OBJ_FLAG_HIDDEN)&&
+        !lv_obj_get_group(textarea)&&!lv_obj_has_state(textarea,LV_STATE_FOCUSED);
+    lvgl_unlock();ui_probe_check(step,ok);
+}
+static void ui_probe_rectangles(const char *step) {
+    lvgl_lock();textarea_align();lv_obj_update_layout(root_widget);
+    lv_area_t a,b;lv_obj_get_coords(textarea,&a);lv_obj_get_coords(reply_label,&b);
+    int ok=a.x1==text_layout.input.x&&a.y1==text_layout.input.y&&
+        lv_area_get_width(&a)==text_layout.input.w&&lv_area_get_height(&a)==text_layout.input.h&&
+        b.x1==text_layout.reply.x&&b.y1==text_layout.reply.y&&
+        lv_area_get_width(&b)==text_layout.reply.w&&lv_area_get_height(&b)==text_layout.reply.h&&b.y2<a.y1;
+    if(textarea_focused&&!textarea_hardware)
+        ok=ok&&a.y2<lv_display_get_vertical_resolution(lv_display_get_default())/2;
+    lvgl_unlock();ui_probe_check(step,ok);
+}
+static void ui_probe_run(void) {
+    unsigned wanted=(1u<<peripherals.count)-1;uint64_t deadline=micros()+2000000;
+    while(atomic_load(&i2c_ready_mask)!=wanted&&micros()<deadline)
+        task_event_group_wait_any(&events,NULL,pdMS_TO_TICKS(20));
+    i2c_status();
+    if(peripherals.count)ui_probe_check("configured_i2c_ready",atomic_load(&i2c_ready_mask)==wanted);
+    char original_path[sizeof(binding_path)],probe_path[256];
+    snprintf(original_path,sizeof(original_path),"%s",binding_path);
+    struct MemoryPolicy policy={MEMORY_CAPABILITY_EXTERNAL,0,16};
+    AiInput *original=memory_alloc_with_policy(sizeof(*original),&policy);
+    if(!original){ui_probe_check("workspace",0);process_command(CMD_QUIT);return;}
+    lock_input();*original=actions;unlock_input();
+    int path_ok=app_paths_get_user_data_path("ag1357.cascadeterrace","controls-ui-probe.cfg",probe_path,sizeof(probe_path))==ERROR_NONE;
+    ui_probe_check("path",path_ok);
+    const AiControl source={AI_BACKEND_GAMEPAD,65500,0x51554901u,AI_DIGITAL};
+    if(path_ok) {
+        snprintf(binding_path,sizeof(binding_path),"%s",probe_path);
+        lock_input();
+        int loaded=ai_bindings_load(&actions,binding_path,micros()),found=0;
+        if(loaded)for(unsigned i=0;i<actions.binding_count;i++) {
+            AiBinding *b=&actions.bindings[i];
+            if(b->source.backend==source.backend&&b->source.device==source.device&&
+               b->source.control==source.control&&b->action==AI_VIEW_TOGGLE)found=1;
+        }
+        unlock_input();
+        if(loaded)ui_probe_check("binding_restore",found);
+        else {
+            /* Create the destination first, then overwrite it through Bind New.
+             * This specifically exercises the old FatFs FR_EXIST failure. */
+            lock_input();binding_snapshot=actions;unlock_input();
+            ui_probe_check("binding_initial_save",ai_bindings_save(&binding_snapshot,binding_path));
+            process_command(CMD_BIND+AI_VIEW_TOGGLE*2);ui_probe_hidden("capture_text_hidden");
+            lock_input();
+            ai_device_event(&actions,0xfffffff7u,source,0,micros());
+            ai_device_event(&actions,0xfffffff7u,source,1,micros());
+            AiBindResult accepted=ai_capture_accept(&actions,0,micros());
+            ai_device_event(&actions,0xfffffff7u,source,0,micros());
+            unlock_input();ui_probe_check("binding_capture",accepted==AI_BIND_OK);
+            if(accepted==AI_BIND_OK)save_bindings();
+        }
+        lock_input();unsigned expected=actions.binding_count;
+        int restored=ai_bindings_load(&actions,binding_path,micros());
+        int same=restored&&actions.binding_count==expected;
+        unlock_input();ui_probe_check("binding_overwrite_reload",same);
+    }
+    snprintf(binding_path,sizeof(binding_path),"%s",original_path);
+    lock_input();actions=*original;ai_clear(&actions,micros());unlock_input();
+    memory_free(original);
+    change_mode(PLAY);ui_probe_hidden("play_text_hidden");
+    change_mode(MENU);ui_probe_hidden("menu_text_hidden");
+    change_mode(CONTROLS);ui_probe_hidden("controls_text_hidden");
+    change_mode(CAPTURE);ui_probe_hidden("capture_text_hidden");
+    change_mode(PLAY);
+    /* Layout/focus only: no NPC/game operation and no canonical world mutation. */
+    snprintf(reply.text,sizeof(reply.text),"Device UI probe: reply and input must remain visible.");
+    change_mode(CONVERSATION);ui_probe_rectangles("conversation_entry_rectangles");
+    lvgl_lock();int hardware=hardware_text_input();
+    int entry_ok=hardware||!lv_obj_has_state(textarea,LV_STATE_FOCUSED);
+    lv_label_set_text(reply_label,reply.text);
+    lv_obj_send_event(textarea,LV_EVENT_CLICKED,NULL);
+    int focus_ok=atomic_load(&i2c_text_ready)?
+        !lv_obj_has_state(textarea,LV_STATE_FOCUSED)&&!lv_obj_get_group(textarea):
+        lv_obj_has_state(textarea,LV_STATE_FOCUSED);
+    lvgl_unlock();ui_probe_check("intentional_entry",entry_ok&&focus_ok);
+    ui_probe_rectangles("focused_rectangles");
+    task_event_group_wait_any(&events,NULL,pdMS_TO_TICKS(150));
+    lvgl_lock();lv_textarea_set_text(textarea,"UI probe");
+    lv_obj_send_event(textarea,LV_EVENT_READY,NULL);lvgl_unlock();
+    ui_probe_check("submit_queued",atomic_exchange(&command,CMD_NONE)==CMD_SUBMIT);
+    lvgl_lock();lv_obj_send_event(textarea,LV_EVENT_CLICKED,NULL);lvgl_unlock();
+    ui_probe_rectangles("retap_rectangles");
+    lvgl_lock();lv_obj_send_event(leave_button,LV_EVENT_CLICKED,NULL);lvgl_unlock();
+    int leave=atomic_exchange(&command,CMD_NONE);ui_probe_check("leave_command",leave==CMD_RESUME);
+    process_command(leave);ui_probe_hidden("leave_clears_focus");
+    change_mode(MENU);
+    lvgl_lock();if(focus_count==4)lv_obj_send_event(focus_buttons[3],LV_EVENT_CLICKED,NULL);lvgl_unlock();
+    int quit=atomic_exchange(&command,CMD_NONE);ui_probe_check("quit_button",quit==CMD_QUIT);
+    emit("{\"type\":\"ui_probe_summary\",\"failures\":%u,\"kernel_keyboard\":%d,\"i2c_ready_mask\":%u,\"telemetry_dropped\":%u,\"physical_touch_keys\":\"NOT_TESTED\",\"keyboard_pixels\":\"NOT_INSPECTED\"}\n",ui_probe_failures,hardware,atomic_load(&i2c_ready_mask),atomic_load(&telemetry_dropped));
+    process_command(CMD_QUIT);
+}
 int main(int argc,char **argv) {
     ct_lifecycle_init(&lifecycle);
     for(int i=1;i<argc;i++)if(!strcmp(argv[i],"--qualify"))qualify=1;
@@ -652,11 +792,13 @@ int main(int argc,char **argv) {
     app_paths_get_user_data_path("ag1357.cascadeterrace","controls.cfg",binding_path,sizeof(binding_path));
     app_paths_get_user_data_path("ag1357.cascadeterrace","controls-i2c.cfg",i2c_path,sizeof(i2c_path));
     if(app_paths_get_assets_path("ag1357.cascadeterrace","qualification.flag",asset,sizeof(asset))==ERROR_NONE){FILE *f=fopen(asset,"rb");if(f){qualify=1;fclose(f);}}
+    if(app_paths_get_assets_path("ag1357.cascadeterrace","ui-probe.flag",asset,sizeof(asset))==ERROR_NONE){FILE *f=fopen(asset,"rb");if(f){ui_probe_enabled=qualify=1;fclose(f);}}
     if(qualify&&app_paths_get_user_data_path("ag1357.cascadeterrace","qualification.jsonl",telemetry_path,sizeof(telemetry_path))==ERROR_NONE)telemetry=fopen(telemetry_path,"ab");
     if(app_paths_get_assets_path("ag1357.cascadeterrace","kyra.mesh",asset,sizeof(asset))==ERROR_NONE)render_load_assets(asset);
     struct MemoryPolicy policy={MEMORY_CAPABILITY_EXTERNAL,0,16};
     g=memory_calloc_with_policy(1,sizeof(*g),&policy);r=memory_calloc_with_policy(1,sizeof(*r),&policy);input_mutex=xSemaphoreCreateMutex();
-    if(!g||!r||!input_mutex){memory_free(g);memory_free(r);if(input_mutex)vSemaphoreDelete(input_mutex);if(telemetry)fclose(telemetry);return 2;}
+    telemetry_mutex=qualify?xSemaphoreCreateMutex():NULL;
+    if(!g||!r||!input_mutex||(qualify&&!telemetry_mutex)){memory_free(g);memory_free(r);if(input_mutex)vSemaphoreDelete(input_mutex);if(telemetry_mutex)vSemaphoreDelete(telemetry_mutex);if(telemetry)fclose(telemetry);return 2;}
     game_new(g,42,-1);int reloaded=load_game(g,save_path);ai_init(&actions);int bindings_loaded=ai_bindings_load(&actions,binding_path,micros());
     bind_diag("bind_load",bindings_loaded);
     emit("{\"type\":\"boot\",\"title\":\"Anaphorum\",\"reload\":%d,\"bindings_loaded\":%d,\"input_period_target_us\":10000,\"physical\":\"PENDING\"}\n",reloaded,bindings_loaded);
@@ -807,9 +949,11 @@ int main(int argc,char **argv) {
             if(qualify&&prof.n>=30)prof_emit();
         }
         if(qualify&&current-last_report>=2000000) {
+            i2c_status();
             lock_input();uint32_t count=input_samples,min=input_min_us,max=input_max_us,ev=input_events,dis=input_disconnects,drop=actions.dropped_events;uint64_t sum=input_total_us;AiControl source=last_source;int value=last_source_value;unlock_input();
             emit("{\"type\":\"input\",\"samples\":%lu,\"mean_us\":%llu,\"min_us\":%lu,\"max_us\":%lu,\"events\":%lu,\"disconnects\":%lu,\"dropped\":%lu}\n",(unsigned long)count,(unsigned long long)(count?sum/count:0),(unsigned long)min,(unsigned long)max,(unsigned long)ev,(unsigned long)dis,(unsigned long)drop);emit("{\"type\":\"source_action\",\"backend\":%u,\"device\":%lu,\"control\":%u,\"value\":%d,\"held\":%lu,\"axes\":[%d,%d,%d,%d],\"jump_edges\":%u,\"interact_edges\":%u}\n",source.backend,(unsigned long)source.device,source.control,value,(unsigned long)frame.held,frame.axes[0],frame.axes[1],frame.axes[2],frame.axes[3],frame.pressed[AI_JUMP],frame.pressed[AI_INTERACT]);emit("{\"type\":\"heap\",\"internal_free\":%u,\"internal_largest\":%u,\"psram_free\":%u,\"psram_largest\":%u}\n",(unsigned)heap_caps_get_free_size(MALLOC_CAP_INTERNAL),(unsigned)heap_caps_get_largest_free_block(MALLOC_CAP_INTERNAL),(unsigned)heap_caps_get_free_size(MALLOC_CAP_SPIRAM),(unsigned)heap_caps_get_largest_free_block(MALLOC_CAP_SPIRAM));last_report=current;
         }
+        if(ui_probe_enabled&&!ui_probe_ran&&r->frame>=3){ui_probe_ran=1;ui_probe_run();}
         ps=micros();
         task_event_group_wait_any(&events,NULL,pdMS_TO_TICKS(m==PLAY||m==CONVERSATION?1:10));
         prof_record(PS_WAIT,(uint32_t)(micros()-ps));
@@ -829,5 +973,5 @@ cleanup:
     task_event_group_destruct(&events);task_event_group_destruct(&sampler_events);task_event_group_destruct(&i2c_events);
     memory_free(canvas_pixels);memory_free(r);memory_free(g);vSemaphoreDelete(input_mutex);
     emit("{\"type\":\"close_done\",\"input_task_joined\":true,\"buffers_released\":true,\"internal_free\":%u,\"internal_largest\":%u,\"psram_free\":%u,\"psram_largest\":%u}\n",(unsigned)heap_caps_get_free_size(MALLOC_CAP_INTERNAL),(unsigned)heap_caps_get_largest_free_block(MALLOC_CAP_INTERNAL),(unsigned)heap_caps_get_free_size(MALLOC_CAP_SPIRAM),(unsigned)heap_caps_get_largest_free_block(MALLOC_CAP_SPIRAM));
-    if(telemetry)fclose(telemetry);return result;
+    if(telemetry)fclose(telemetry);if(telemetry_mutex)vSemaphoreDelete(telemetry_mutex);return result;
 }

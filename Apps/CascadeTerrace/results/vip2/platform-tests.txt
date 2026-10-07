@@ -8,7 +8,7 @@ PASS queued menu direction taps and analog navigation hysteresis
 PASS transitions inhibit held controls, capture conflict/cancel/replace/defaults
 PASS analog capture/negative direction/deadzone/hysteresis; pulse-only backend restrictions
 PASS versioned binding overwrite/restart round-trip and malformed/conflicting load rollback
-PASS independent host sampler during 150ms render stall: 12 ticks; mean 10.068ms min 10.017ms max 10.153ms
+PASS independent host sampler during 150ms render stall: 12 ticks; mean 10.079ms min 10.056ms max 10.146ms
 Action input tests passed
 ./build/gameplay_platform_test
 VI-P2 gameplay: 51 checks passed

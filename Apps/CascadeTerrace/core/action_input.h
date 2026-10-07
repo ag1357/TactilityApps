@@ -83,7 +83,8 @@ AiBindResult ai_bind(AiInput *input, AiBinding binding, int replace_conflicts,
 void ai_capture_begin(AiInput *input, AiAction action, int sign, uint64_t now_us);
 AiBindResult ai_capture_accept(AiInput *input, int replace_conflicts, uint64_t now_us);
 void ai_capture_cancel(AiInput *input, uint64_t now_us);
-/* Versioned app-local file, atomic replacement; load failure leaves state unchanged. */
+/* Versioned app-local file, direct overwrite for FatFs (not atomic).
+ * Load failure leaves state unchanged. */
 int ai_bindings_save(const AiInput *input, const char *path);
 int ai_bindings_load(AiInput *input, const char *path, uint64_t now_us);
 

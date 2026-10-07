@@ -18,4 +18,11 @@ static inline void ct_conversation_focus(lv_obj_t *widget) {
     if(group){lv_group_add_obj(group,widget);lv_group_focus_obj(widget);if(focused)lv_obj_send_event(widget,LV_EVENT_FOCUSED,NULL);}
     else {lv_obj_add_state(widget,LV_STATE_FOCUSED);lv_obj_send_event(widget,LV_EVENT_FOCUSED,NULL);}
 }
+/* App-owned character adapters already write the textarea directly. They are
+ * not kernel keyboard devices, so do not focus and trigger the firmware's
+ * software keyboard. A later tap after disconnect restores normal focus. */
+static inline void ct_conversation_entry(lv_obj_t *widget,int direct_text_input) {
+    if(direct_text_input)ct_conversation_blur(widget);
+    else ct_conversation_focus(widget);
+}
 #endif

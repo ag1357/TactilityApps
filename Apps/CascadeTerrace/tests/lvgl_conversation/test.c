@@ -3,6 +3,7 @@
 #include "conversation_widgets.h"
 #include <assert.h>
 #include <stdio.h>
+#include <string.h>
 #if LVGL_VERSION_MAJOR != 9 || LVGL_VERSION_MINOR != 3
 #error This regression test must use firmware-matched LVGL 9.3.
 #endif
@@ -48,6 +49,13 @@ int main(void) {
     ct_conversation_focus(input);assert(software_visible&&lv_obj_has_state(input,LV_STATE_FOCUSED));
     ct_conversation_blur(input);assert(!software_visible&&!lv_obj_has_state(input,LV_STATE_FOCUSED));
     ct_conversation_focus(input);assert(software_visible);
+    /* Wired app-owned text input isn't in the firmware keyboard ledger.
+     * It must blur even if pointer focus or a hotplug follows software entry. */
+    ct_conversation_entry(input,1);
+    assert(!software_visible&&!lv_obj_get_group(input)&&!lv_obj_has_state(input,LV_STATE_FOCUSED));
+    ct_conversation_entry(input,1);assert(!software_visible);
+    lv_textarea_set_text(input,"wired text");assert(!strcmp(lv_textarea_get_text(input),"wired text"));
+    ct_conversation_entry(input,0);assert(software_visible&&lv_obj_has_state(input,LV_STATE_FOCUSED));
     hardware=1;ct_conversation_blur(input);ct_conversation_focus(input);assert(!software_visible);
     /* Hardware unplug while focused: the next intentional tap re-emits focus. */
     hardware=0;ct_conversation_focus(input);assert(software_visible);
@@ -59,5 +67,5 @@ int main(void) {
     assert(!lv_obj_has_state(input,LV_STATE_FOCUSED|LV_STATE_FOCUS_KEY|LV_STATE_EDITED));
     lv_obj_delete(root);lv_group_set_default(NULL);lv_group_delete(group);lv_display_delete(display);
     lv_deinit();
-    puts("PASS real LVGL 9.3: production placement, ungrouped menus, intentional focus, submit/retap, unplug/retap, leave blur");
+    puts("PASS real LVGL 9.3: production placement, ungrouped menus, intentional focus, wired entry/disconnect, submit/retap, unplug/retap, leave blur");
 }

@@ -14,6 +14,8 @@ with tarfile.open(out,'w',format=tarfile.USTAR_FORMAT) as tar:
   marker=tarfile.TarInfo('assets/cognition.mode');marker.size=1;marker.mtime=0;tar.addfile(marker,io.BytesIO(str(mode).encode()))
  if '--qualification' in sys.argv:
   marker=tarfile.TarInfo('assets/qualification.flag');marker.size=1;tar.addfile(marker,io.BytesIO(b'1'))
+ if '--ui-probe' in sys.argv:
+  marker=tarfile.TarInfo('assets/ui-probe.flag');marker.size=1;tar.addfile(marker,io.BytesIO(b'1'))
  for src,dst in [(root/'manifest.properties','manifest.properties'),(elf,'bin/esp32p4/cascadeterrace.elf')]+[(p,'assets/'+p.name) for p in sorted((root/'assets').iterdir()) if p.is_file()]:
   info=tar.gettarinfo(str(src),dst);info.uid=info.gid=0;info.uname=info.gname='';info.mtime=0
   with src.open('rb') as f:tar.addfile(info,f)

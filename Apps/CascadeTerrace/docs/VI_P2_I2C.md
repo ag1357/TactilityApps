@@ -1,5 +1,29 @@
 # VI-P2 optional wired input
 
+## 2026-10-07 native verification
+
+On the pinned `d9f7434e` firmware, `i2c-external` is provisioned on SDA GPIO4 /
+SCL GPIO5 at 100 kHz. The user reported both pads and CardKB2 connected,
+with pad 2's address trace cut. The former one-pad app configuration was backed
+up and expanded to the three entries below. Real device protocol polls verified
+both seesaw products at **0x50 / 0x51** and a successful CardKB2 FIFO read at
+**0x5f**. Final short runs showed mask 7, 15–16 polls, zero failures, and
+successful detection again after P4 reboot. Source identities are distinct.
+
+This proves protocol readiness, not physical button/typing behavior or
+electrical reliability. CardKB2 specifies 5 V power input; successful reads
+with the reported 3.3 V supply do not prove reliable power operation. Do not
+raise P4 signal voltage. No wire, firmware, pin assignment or address EEPROM
+was changed by the agent.
+
+The worker publishes atomic readiness for app UI policy. CardKB2 characters
+already route directly to conversation; the textarea remains blurred/ungrouped
+while that adapter is ready, avoiding a software keyboard triggered by the
+kernel ledger's lack of an app-owned device. Disconnect enables ordinary
+intentional focus on the next tap. Real LVGL host tests cover the policy;
+native synthetic callbacks verify the wired branch. Actual keys/touch still
+need the small hands-on UI check. Evidence: `results/ui-recovery/native-qualification.json`.
+
 ## Implemented boundary
 
 `core/i2c_controls.c` implements a portable, mock-tested transport adapter for
@@ -29,8 +53,8 @@ seesaw i2c-external 0x51
 cardkb2 i2c-external 0x5f
 ```
 
-The controller name above is illustrative: **the current examined board does
-not instantiate it**. Up to four lines/devices are supported. Each line selects
+The controller above was illustrative in the initial audit; the pinned board
+now instantiates it as described above. Up to four lines/devices are supported. Each line selects
 its own controller, allowing separate buses. Blank lines and whole-line `#`
 comments after the header are accepted. Invalid versions, unknown backend
 names, duplicate bus/address pairs, out-of-range addresses and more than four

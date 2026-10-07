@@ -1,0 +1,10 @@
+{
+  "main/main.c": "f8cf4234f84bf2e4bc8a0e34e8e44d15790521a7ade7d52798ee4783cde879f1",
+  "main/conversation_widgets.h": "db8176e4339a222556dc1ff3339f3b44f6a4814ee266ade7cdc1d42317a0a806",
+  "core/action_input.h": "e9f018657a50ea163ae99ccaa271c8c652547df5ed305f08d1f2fe44bab27a19",
+  "core/action_input.c": "5f44f1c8c70cb59933e6a367f1d1abed7ef93fbe432b8b5f7b4e0e2a750b9258",
+  "main/i2c_input.c": "5d61c9bdea79a7a0634bc6b02f509df15267db29690f054777701c11e47217c7",
+  "core/i2c_controls.c": "685060687cc9818c12c960b4f77d352d1639f19ca7b29236f84c36cb7fa02980",
+  "scripts/package-p4.py": "1f5f0d2b8a950b87fb64572f057d15ad7d53d06d2427461d56957113c27fbf44",
+  "tests/lvgl_conversation/test.c": "f4c1b9baf430a4a467daf37d61cfa577fac159fc64f82346b58ff5bdba69303c"
+}

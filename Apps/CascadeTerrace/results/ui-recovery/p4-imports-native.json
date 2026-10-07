@@ -1,0 +1,8 @@
+{
+  "elf_sha256": "14ab8313451aee7e84236ede72d735ea0209d79fed7259fc620ce6d85e44861c",
+  "elf_bytes": 226864,
+  "import_count": 146,
+  "missing_from_pinned_export_tables": [],
+  "firmware_checkout": "d9f7434eb2cdceefb4aba0115a0c5116bb808712",
+  "scope": "Source-table membership; physical loader and enabled runtime modules remain unmeasured"
+}

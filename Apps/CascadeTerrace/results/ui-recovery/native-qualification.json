@@ -1,0 +1,1032 @@
+{
+  "date": "2026-10-07",
+  "scope": "Real P4 execution; synthetic LVGL/input events; no physical touch/key or keyboard-pixel claim",
+  "normal_build": {
+    "status": "P4 BUILD PRODUCED; PENDING PHYSICAL VALIDATION",
+    "binary_bytes": 226864,
+    "package_bytes": 245760,
+    "elf_sha256": "14ab8313451aee7e84236ede72d735ea0209d79fed7259fc620ce6d85e44861c",
+    "package_sha256": "6fa87add1413d277ddc4d1a753817df69b25db87f7744b21ef1756315f5d66a2",
+    "format": "Tactility manifest v0.3 / USTAR / esp32p4 external ELF"
+  },
+  "probe_package_sha256": "40b0c85ad7783284c5995b7924ed068b3e2ef3d952204a1842f770947653fd58",
+  "phases": [
+    {
+      "phase": "app-restart",
+      "events": [
+        {
+          "type": "bind_load",
+          "ok": 1,
+          "count": 47,
+          "exists": 1,
+          "size": 817,
+          "crc": 2014066975,
+          "lines": 48,
+          "first_bad": 0,
+          "bad": ""
+        },
+        {
+          "type": "boot",
+          "title": "Anaphorum",
+          "reload": 1,
+          "bindings_loaded": 1,
+          "input_period_target_us": 10000,
+          "physical": "PENDING"
+        },
+        {
+          "type": "ui_probe",
+          "step": "path",
+          "ok": 1,
+          "synthetic_events": true
+        },
+        {
+          "type": "ui_probe",
+          "step": "binding_restore",
+          "ok": 1,
+          "synthetic_events": true
+        },
+        {
+          "type": "ui_probe",
+          "step": "binding_overwrite_reload",
+          "ok": 1,
+          "synthetic_events": true
+        },
+        {
+          "type": "ui_probe",
+          "step": "play_text_hidden",
+          "ok": 1,
+          "synthetic_events": true
+        },
+        {
+          "type": "ui_probe",
+          "step": "menu_text_hidden",
+          "ok": 1,
+          "synthetic_events": true
+        },
+        {
+          "type": "ui_probe",
+          "step": "controls_text_hidden",
+          "ok": 1,
+          "synthetic_events": true
+        },
+        {
+          "type": "ui_probe",
+          "step": "capture_text_hidden",
+          "ok": 1,
+          "synthetic_events": true
+        },
+        {
+          "type": "conversation_layout",
+          "focused": 0,
+          "hardware": 0,
+          "software_entry": 0,
+          "input": [
+            4,
+            355,
+            312,
+            40
+          ],
+          "reply": [
+            4,
+            211,
+            312,
+            140
+          ],
+          "actual_input": [
+            4,
+            355,
+            312,
+            40
+          ],
+          "actual_reply": [
+            4,
+            211,
+            312,
+            140
+          ],
+          "display_h": 480
+        },
+        {
+          "type": "ui_probe",
+          "step": "conversation_entry_rectangles",
+          "ok": 1,
+          "synthetic_events": true
+        },
+        {
+          "type": "conversation_layout",
+          "focused": 1,
+          "hardware": 0,
+          "software_entry": 1,
+          "input": [
+            4,
+            196,
+            312,
+            40
+          ],
+          "reply": [
+            4,
+            62,
+            312,
+            130
+          ],
+          "actual_input": [
+            4,
+            196,
+            312,
+            40
+          ],
+          "actual_reply": [
+            4,
+            62,
+            312,
+            130
+          ],
+          "display_h": 480
+        },
+        {
+          "type": "ui_probe",
+          "step": "intentional_entry",
+          "ok": 1,
+          "synthetic_events": true
+        },
+        {
+          "type": "ui_probe",
+          "step": "focused_rectangles",
+          "ok": 1,
+          "synthetic_events": true
+        },
+        {
+          "type": "conversation_layout",
+          "focused": 0,
+          "hardware": 0,
+          "software_entry": 0,
+          "input": [
+            4,
+            355,
+            312,
+            40
+          ],
+          "reply": [
+            4,
+            211,
+            312,
+            140
+          ],
+          "actual_input": [
+            4,
+            355,
+            312,
+            40
+          ],
+          "actual_reply": [
+            4,
+            211,
+            312,
+            140
+          ],
+          "display_h": 480
+        },
+        {
+          "type": "ui_probe",
+          "step": "submit_queued",
+          "ok": 1,
+          "synthetic_events": true
+        },
+        {
+          "type": "conversation_layout",
+          "focused": 1,
+          "hardware": 0,
+          "software_entry": 1,
+          "input": [
+            4,
+            196,
+            312,
+            40
+          ],
+          "reply": [
+            4,
+            62,
+            312,
+            130
+          ],
+          "actual_input": [
+            4,
+            196,
+            312,
+            40
+          ],
+          "actual_reply": [
+            4,
+            62,
+            312,
+            130
+          ],
+          "display_h": 480
+        },
+        {
+          "type": "ui_probe",
+          "step": "retap_rectangles",
+          "ok": 1,
+          "synthetic_events": true
+        },
+        {
+          "type": "ui_probe",
+          "step": "leave_command",
+          "ok": 1,
+          "synthetic_events": true
+        },
+        {
+          "type": "ui_probe",
+          "step": "leave_clears_focus",
+          "ok": 1,
+          "synthetic_events": true
+        },
+        {
+          "type": "ui_probe",
+          "step": "quit_button",
+          "ok": 1,
+          "synthetic_events": true
+        },
+        {
+          "type": "ui_probe_summary",
+          "failures": 0,
+          "hardware_keyboard": 0,
+          "physical_touch_keys": "NOT_TESTED",
+          "keyboard_pixels": "NOT_INSPECTED"
+        },
+        {
+          "type": "input_joined",
+          "frame": 3
+        },
+        {
+          "type": "close_save",
+          "ok": 1
+        },
+        {
+          "type": "close_done",
+          "input_task_joined": true,
+          "buffers_released": true,
+          "internal_free": 127507,
+          "internal_largest": 47104,
+          "psram_free": 32855784,
+          "psram_largest": 32505856
+        }
+      ],
+      "tasks_before": 31,
+      "tasks_after": 31,
+      "heap_after": {
+        "free": 143951,
+        "total": 427563,
+        "min_free": 73684,
+        "largest_block": 63488
+      },
+      "psram_after": {
+        "free": 33459108,
+        "total": 33554432,
+        "min_free": 32367060,
+        "largest_block": 32505856
+      },
+      "user_controls_unchanged": true
+    },
+    {
+      "phase": "device-reboot",
+      "events": [
+        {
+          "type": "bind_load",
+          "ok": 1,
+          "count": 47,
+          "exists": 1,
+          "size": 817,
+          "crc": 2014066975,
+          "lines": 48,
+          "first_bad": 0,
+          "bad": ""
+        },
+        {
+          "type": "boot",
+          "title": "Anaphorum",
+          "reload": 1,
+          "bindings_loaded": 1,
+          "input_period_target_us": 10000,
+          "physical": "PENDING"
+        },
+        {
+          "type": "ui_probe",
+          "step": "path",
+          "ok": 1,
+          "synthetic_events": true
+        },
+        {
+          "type": "ui_probe",
+          "step": "binding_restore",
+          "ok": 1,
+          "synthetic_events": true
+        },
+        {
+          "type": "ui_probe",
+          "step": "binding_overwrite_reload",
+          "ok": 1,
+          "synthetic_events": true
+        },
+        {
+          "type": "ui_probe",
+          "step": "play_text_hidden",
+          "ok": 1,
+          "synthetic_events": true
+        },
+        {
+          "type": "ui_probe",
+          "step": "menu_text_hidden",
+          "ok": 1,
+          "synthetic_events": true
+        },
+        {
+          "type": "ui_probe",
+          "step": "controls_text_hidden",
+          "ok": 1,
+          "synthetic_events": true
+        },
+        {
+          "type": "ui_probe",
+          "step": "capture_text_hidden",
+          "ok": 1,
+          "synthetic_events": true
+        },
+        {
+          "type": "conversation_layout",
+          "focused": 0,
+          "hardware": 0,
+          "software_entry": 0,
+          "input": [
+            4,
+            355,
+            312,
+            40
+          ],
+          "reply": [
+            4,
+            211,
+            312,
+            140
+          ],
+          "actual_input": [
+            4,
+            355,
+            312,
+            40
+          ],
+          "actual_reply": [
+            4,
+            211,
+            312,
+            140
+          ],
+          "display_h": 480
+        },
+        {
+          "type": "ui_probe",
+          "step": "conversation_entry_rectangles",
+          "ok": 1,
+          "synthetic_events": true
+        },
+        {
+          "type": "conversation_layout",
+          "focused": 1,
+          "hardware": 0,
+          "software_entry": 1,
+          "input": [
+            4,
+            196,
+            312,
+            40
+          ],
+          "reply": [
+            4,
+            62,
+            312,
+            130
+          ],
+          "actual_input": [
+            4,
+            196,
+            312,
+            40
+          ],
+          "actual_reply": [
+            4,
+            62,
+            312,
+            130
+          ],
+          "display_h": 480
+        },
+        {
+          "type": "ui_probe",
+          "step": "intentional_entry",
+          "ok": 1,
+          "synthetic_events": true
+        },
+        {
+          "type": "ui_probe",
+          "step": "focused_rectangles",
+          "ok": 1,
+          "synthetic_events": true
+        },
+        {
+          "type": "conversation_layout",
+          "focused": 0,
+          "hardware": 0,
+          "software_entry": 0,
+          "input": [
+            4,
+            355,
+            312,
+            40
+          ],
+          "reply": [
+            4,
+            211,
+            312,
+            140
+          ],
+          "actual_input": [
+            4,
+            355,
+            312,
+            40
+          ],
+          "actual_reply": [
+            4,
+            211,
+            312,
+            140
+          ],
+          "display_h": 480
+        },
+        {
+          "type": "ui_probe",
+          "step": "submit_queued",
+          "ok": 1,
+          "synthetic_events": true
+        },
+        {
+          "type": "conversation_layout",
+          "focused": 1,
+          "hardware": 0,
+          "software_entry": 1,
+          "input": [
+            4,
+            196,
+            312,
+            40
+          ],
+          "reply": [
+            4,
+            62,
+            312,
+            130
+          ],
+          "actual_input": [
+            4,
+            196,
+            312,
+            40
+          ],
+          "actual_reply": [
+            4,
+            62,
+            312,
+            130
+          ],
+          "display_h": 480
+        },
+        {
+          "type": "ui_probe",
+          "step": "retap_rectangles",
+          "ok": 1,
+          "synthetic_events": true
+        },
+        {
+          "type": "ui_probe",
+          "step": "leave_command",
+          "ok": 1,
+          "synthetic_events": true
+        },
+        {
+          "type": "ui_probe",
+          "step": "leave_clears_focus",
+          "ok": 1,
+          "synthetic_events": true
+        },
+        {
+          "type": "ui_probe",
+          "step": "quit_button",
+          "ok": 1,
+          "synthetic_events": true
+        },
+        {
+          "type": "ui_probe_summary",
+          "failures": 0,
+          "hardware_keyboard": 0,
+          "physical_touch_keys": "NOT_TESTED",
+          "keyboard_pixels": "NOT_INSPECTED"
+        },
+        {
+          "type": "input_joined",
+          "frame": 3
+        },
+        {
+          "type": "close_save",
+          "ok": 1
+        },
+        {
+          "type": "close_done",
+          "input_task_joined": true,
+          "buffers_released": true,
+          "internal_free": 133391,
+          "internal_largest": 53248,
+          "psram_free": 32857156,
+          "psram_largest": 31981568
+        }
+      ],
+      "tasks_before": 31,
+      "tasks_after": 31,
+      "heap_after": {
+        "free": 149839,
+        "total": 427563,
+        "min_free": 79568,
+        "largest_block": 69632
+      },
+      "psram_after": {
+        "free": 33460468,
+        "total": 33554432,
+        "min_free": 32368440,
+        "largest_block": 32505856
+      },
+      "user_controls_unchanged": true
+    },
+    {
+      "phase": "guarded-final-restart",
+      "events": [
+        {
+          "type": "bind_load",
+          "ok": 1,
+          "count": 47,
+          "exists": 1,
+          "size": 817,
+          "crc": 2014066975,
+          "lines": 48,
+          "first_bad": 0,
+          "bad": ""
+        },
+        {
+          "type": "boot",
+          "title": "Anaphorum",
+          "reload": 1,
+          "bindings_loaded": 1,
+          "input_period_target_us": 10000,
+          "physical": "PENDING"
+        },
+        {
+          "type": "i2c_config",
+          "configured": 3,
+          "worker": 1
+        },
+        {
+          "type": "i2c_status",
+          "configured": 3,
+          "ready_mask": 7,
+          "polls": 16,
+          "failures": 0
+        },
+        {
+          "type": "i2c_device",
+          "index": 0,
+          "address": 80,
+          "kind": 1,
+          "identity": 3358264790,
+          "ready": 1
+        },
+        {
+          "type": "i2c_device",
+          "index": 1,
+          "address": 81,
+          "kind": 1,
+          "identity": 2754123411,
+          "ready": 1
+        },
+        {
+          "type": "i2c_device",
+          "index": 2,
+          "address": 95,
+          "kind": 2,
+          "identity": 3041608600,
+          "ready": 1
+        },
+        {
+          "type": "ui_probe",
+          "step": "configured_i2c_ready",
+          "ok": 1,
+          "synthetic_events": true
+        },
+        {
+          "type": "ui_probe",
+          "step": "path",
+          "ok": 1,
+          "synthetic_events": true
+        },
+        {
+          "type": "ui_probe",
+          "step": "binding_restore",
+          "ok": 1,
+          "synthetic_events": true
+        },
+        {
+          "type": "ui_probe",
+          "step": "binding_overwrite_reload",
+          "ok": 1,
+          "synthetic_events": true
+        },
+        {
+          "type": "ui_probe",
+          "step": "play_text_hidden",
+          "ok": 1,
+          "synthetic_events": true
+        },
+        {
+          "type": "ui_probe",
+          "step": "menu_text_hidden",
+          "ok": 1,
+          "synthetic_events": true
+        },
+        {
+          "type": "ui_probe",
+          "step": "controls_text_hidden",
+          "ok": 1,
+          "synthetic_events": true
+        },
+        {
+          "type": "ui_probe",
+          "step": "capture_text_hidden",
+          "ok": 1,
+          "synthetic_events": true
+        },
+        {
+          "type": "conversation_layout",
+          "focused": 0,
+          "hardware": 1,
+          "software_entry": 0,
+          "input": [
+            4,
+            355,
+            312,
+            40
+          ],
+          "reply": [
+            4,
+            211,
+            312,
+            140
+          ],
+          "actual_input": [
+            4,
+            355,
+            312,
+            40
+          ],
+          "actual_reply": [
+            4,
+            211,
+            312,
+            140
+          ],
+          "display_h": 480
+        },
+        {
+          "type": "ui_probe",
+          "step": "conversation_entry_rectangles",
+          "ok": 1,
+          "synthetic_events": true
+        },
+        {
+          "type": "ui_probe",
+          "step": "intentional_entry",
+          "ok": 1,
+          "synthetic_events": true
+        },
+        {
+          "type": "ui_probe",
+          "step": "focused_rectangles",
+          "ok": 1,
+          "synthetic_events": true
+        },
+        {
+          "type": "ui_probe",
+          "step": "submit_queued",
+          "ok": 1,
+          "synthetic_events": true
+        },
+        {
+          "type": "ui_probe",
+          "step": "retap_rectangles",
+          "ok": 1,
+          "synthetic_events": true
+        },
+        {
+          "type": "ui_probe",
+          "step": "leave_command",
+          "ok": 1,
+          "synthetic_events": true
+        },
+        {
+          "type": "ui_probe",
+          "step": "leave_clears_focus",
+          "ok": 1,
+          "synthetic_events": true
+        },
+        {
+          "type": "ui_probe",
+          "step": "quit_button",
+          "ok": 1,
+          "synthetic_events": true
+        },
+        {
+          "type": "ui_probe_summary",
+          "failures": 0,
+          "kernel_keyboard": 0,
+          "i2c_ready_mask": 7,
+          "telemetry_dropped": 0,
+          "physical_touch_keys": "NOT_TESTED",
+          "keyboard_pixels": "NOT_INSPECTED"
+        },
+        {
+          "type": "input_joined",
+          "frame": 3
+        },
+        {
+          "type": "close_save",
+          "ok": 1
+        },
+        {
+          "type": "close_done",
+          "input_task_joined": true,
+          "buffers_released": true,
+          "internal_free": 127851,
+          "internal_largest": 45056,
+          "psram_free": 32852528,
+          "psram_largest": 31981568
+        }
+      ],
+      "tasks_before": 31,
+      "tasks_after": 31,
+      "heap_after": {
+        "free": 144367,
+        "total": 427563,
+        "min_free": 74016,
+        "largest_block": 61440
+      },
+      "psram_after": {
+        "free": 33460580,
+        "total": 33554432,
+        "min_free": 32363800,
+        "largest_block": 31981568
+      },
+      "user_controls_unchanged": true
+    },
+    {
+      "phase": "guarded-final-reboot",
+      "events": [
+        {
+          "type": "bind_load",
+          "ok": 1,
+          "count": 47,
+          "exists": 1,
+          "size": 817,
+          "crc": 2014066975,
+          "lines": 48,
+          "first_bad": 0,
+          "bad": ""
+        },
+        {
+          "type": "boot",
+          "title": "Anaphorum",
+          "reload": 1,
+          "bindings_loaded": 1,
+          "input_period_target_us": 10000,
+          "physical": "PENDING"
+        },
+        {
+          "type": "i2c_config",
+          "configured": 3,
+          "worker": 1
+        },
+        {
+          "type": "i2c_status",
+          "configured": 3,
+          "ready_mask": 7,
+          "polls": 16,
+          "failures": 0
+        },
+        {
+          "type": "i2c_device",
+          "index": 0,
+          "address": 80,
+          "kind": 1,
+          "identity": 3358264790,
+          "ready": 1
+        },
+        {
+          "type": "i2c_device",
+          "index": 1,
+          "address": 81,
+          "kind": 1,
+          "identity": 2754123411,
+          "ready": 1
+        },
+        {
+          "type": "i2c_device",
+          "index": 2,
+          "address": 95,
+          "kind": 2,
+          "identity": 3041608600,
+          "ready": 1
+        },
+        {
+          "type": "ui_probe",
+          "step": "configured_i2c_ready",
+          "ok": 1,
+          "synthetic_events": true
+        },
+        {
+          "type": "ui_probe",
+          "step": "path",
+          "ok": 1,
+          "synthetic_events": true
+        },
+        {
+          "type": "ui_probe",
+          "step": "binding_restore",
+          "ok": 1,
+          "synthetic_events": true
+        },
+        {
+          "type": "ui_probe",
+          "step": "binding_overwrite_reload",
+          "ok": 1,
+          "synthetic_events": true
+        },
+        {
+          "type": "ui_probe",
+          "step": "play_text_hidden",
+          "ok": 1,
+          "synthetic_events": true
+        },
+        {
+          "type": "ui_probe",
+          "step": "menu_text_hidden",
+          "ok": 1,
+          "synthetic_events": true
+        },
+        {
+          "type": "ui_probe",
+          "step": "controls_text_hidden",
+          "ok": 1,
+          "synthetic_events": true
+        },
+        {
+          "type": "ui_probe",
+          "step": "capture_text_hidden",
+          "ok": 1,
+          "synthetic_events": true
+        },
+        {
+          "type": "conversation_layout",
+          "focused": 0,
+          "hardware": 1,
+          "software_entry": 0,
+          "input": [
+            4,
+            355,
+            312,
+            40
+          ],
+          "reply": [
+            4,
+            211,
+            312,
+            140
+          ],
+          "actual_input": [
+            4,
+            355,
+            312,
+            40
+          ],
+          "actual_reply": [
+            4,
+            211,
+            312,
+            140
+          ],
+          "display_h": 480
+        },
+        {
+          "type": "ui_probe",
+          "step": "conversation_entry_rectangles",
+          "ok": 1,
+          "synthetic_events": true
+        },
+        {
+          "type": "ui_probe",
+          "step": "intentional_entry",
+          "ok": 1,
+          "synthetic_events": true
+        },
+        {
+          "type": "ui_probe",
+          "step": "focused_rectangles",
+          "ok": 1,
+          "synthetic_events": true
+        },
+        {
+          "type": "ui_probe",
+          "step": "submit_queued",
+          "ok": 1,
+          "synthetic_events": true
+        },
+        {
+          "type": "ui_probe",
+          "step": "retap_rectangles",
+          "ok": 1,
+          "synthetic_events": true
+        },
+        {
+          "type": "ui_probe",
+          "step": "leave_command",
+          "ok": 1,
+          "synthetic_events": true
+        },
+        {
+          "type": "ui_probe",
+          "step": "leave_clears_focus",
+          "ok": 1,
+          "synthetic_events": true
+        },
+        {
+          "type": "ui_probe",
+          "step": "quit_button",
+          "ok": 1,
+          "synthetic_events": true
+        },
+        {
+          "type": "ui_probe_summary",
+          "failures": 0,
+          "kernel_keyboard": 0,
+          "i2c_ready_mask": 7,
+          "telemetry_dropped": 0,
+          "physical_touch_keys": "NOT_TESTED",
+          "keyboard_pixels": "NOT_INSPECTED"
+        },
+        {
+          "type": "input_joined",
+          "frame": 3
+        },
+        {
+          "type": "close_save",
+          "ok": 1
+        },
+        {
+          "type": "close_done",
+          "input_task_joined": true,
+          "buffers_released": true,
+          "internal_free": 133835,
+          "internal_largest": 53248,
+          "psram_free": 32852412,
+          "psram_largest": 31981568
+        }
+      ],
+      "tasks_before": 31,
+      "tasks_after": 31,
+      "heap_after": {
+        "free": 150359,
+        "total": 427563,
+        "min_free": 79992,
+        "largest_block": 69632
+      },
+      "psram_after": {
+        "free": 33460464,
+        "total": 33554432,
+        "min_free": 32363672,
+        "largest_block": 32505856
+      },
+      "user_controls_unchanged": true
+    }
+  ],
+  "normal_restored": {
+    "status": "NORMAL PACKAGE INSTALLED; APP CLOSED",
+    "elf_sha256": "14ab8313451aee7e84236ede72d735ea0209d79fed7259fc620ce6d85e44861c",
+    "auto_probe_marker": false,
+    "user_controls_unchanged": true,
+    "three_device_config_retained": true
+  }
+}

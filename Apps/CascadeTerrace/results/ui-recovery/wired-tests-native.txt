@@ -1,0 +1,49 @@
+cmake -S tests/lvgl_conversation -B build/conversation-lvgl -DLVGL_SOURCE="/media/cloud/2982-E16B/tactility_p4_work/repos/Tactility/managed_components/lvgl__lvgl" -DCMAKE_BUILD_TYPE=Debug
+-- /media/cloud/2982-E16B/tactility_p4_work/repos/TactilityApps/Apps/CascadeTerrace/tests/lvgl_conversation/lv_conf.h
+-- Using configuration: /media/cloud/2982-E16B/tactility_p4_work/repos/TactilityApps/Apps/CascadeTerrace/tests/lvgl_conversation/lv_conf.h
+-- Configuring done (0.0s)
+-- Generating done (0.1s)
+-- Build files have been written to: /media/cloud/2982-E16B/tactility_p4_work/repos/TactilityApps/Apps/CascadeTerrace/build/conversation-lvgl
+cmake --build build/conversation-lvgl -j4
+gmake[1]: Entering directory '/media/cloud/2982-E16B/tactility_p4_work/repos/TactilityApps/Apps/CascadeTerrace/build/conversation-lvgl'
+[100%] Built target lvgl
+[100%] Building C object CMakeFiles/conversation_lvgl.dir/test.c.o
+[100%] Linking C executable conversation_lvgl
+[100%] Built target conversation_lvgl
+gmake[1]: Leaving directory '/media/cloud/2982-E16B/tactility_p4_work/repos/TactilityApps/Apps/CascadeTerrace/build/conversation-lvgl'
+ctest --test-dir build/conversation-lvgl --output-on-failure
+Internal ctest changing into directory: /media/cloud/2982-E16B/tactility_p4_work/repos/TactilityApps/Apps/CascadeTerrace/build/conversation-lvgl
+Test project /media/cloud/2982-E16B/tactility_p4_work/repos/TactilityApps/Apps/CascadeTerrace/build/conversation-lvgl
+    Start 1: conversation_lvgl
+1/1 Test #1: conversation_lvgl ................   Passed    0.00 sec
+
+100% tests passed, 0 tests failed out of 1
+
+Total Test time (real) =   0.00 sec
+./build/viewport_test
+{"stage":"viewport","pixel_inverse_checks":1723276,"sizes":8}
+./build/action_input_test
+PASS defaults, held chords, opposing directions, no artificial release
+PASS slow-frame queued edges, repeat suppression, time-weighted movement, overflow telemetry
+PASS independent devices, two gamepad identities, disconnect reconciliation
+PASS queued menu direction taps and analog navigation hysteresis
+PASS transitions inhibit held controls, capture conflict/cancel/replace/defaults
+PASS analog capture/negative direction/deadzone/hysteresis; pulse-only backend restrictions
+PASS versioned binding overwrite/restart round-trip and malformed/conflicting load rollback
+PASS independent host sampler during 150ms render stall: 12 ticks; mean 10.079ms min 10.056ms max 10.146ms
+Action input tests passed
+./build/gameplay_platform_test
+VI-P2 gameplay: 51 checks passed
+./build/raster_band_test
+{"stage":"raster-band","cases":1200,"parity":1}
+./build/platform_lifecycle_test
+VI-P2 lifecycle: 74 checks passed (150 ms render, revoke/resume, close/join)
+./build/i2c_controls_test
+VI-P2 I2C: protocol, multi-device isolation, pulse semantics, config: PASS
+./build/i2c_platform_test
+VI-P2 I2C platform: operation-scoped refs, reconnect, failures, close: PASS
+./build/conversation_layout_test
+{"stage":"conversation_layout","checks":95861,"physical":"PENDING"}
+make: 'build/cascade' is up to date.
+VI-P2 desktop: layouts, menu, capture/conflict/capacity, short tap through 150ms stall, queued menu tap, focus reconciliation, per-finger outside release, Quit passed.
+VI-P2: 7 ASan/UBSan suites passed
